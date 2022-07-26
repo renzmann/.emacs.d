@@ -11,6 +11,7 @@ Cheatsheet:
 M-z "zap-to-char"
 M-% "Query replace"
 C-x C-v "revert buffer/reload file"
+C-u C-SPC "Jump back to mark"
 
 
 Notes:
