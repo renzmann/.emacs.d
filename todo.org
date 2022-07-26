@@ -1,0 +1,17 @@
+* Set indentation/tabbing behavior for SQL
+* Figure out why I can't double-tab inside triple strings in Python
+* Learn how to use pyright as compiler (also remote version)
+* Figure out pyright LSP integration (also remote version)
+* Learn etags set up for definition jumps
+* How to run debugger protocol for interactive python sessions
+
+
+Cheatsheet:
+
+M-z "zap-to-char"
+M-% "Query replace"
+C-x C-v "revert buffer/reload file"
+
+
+Notes:
++ `compile` is tramp-aware
