@@ -9,3 +9,8 @@
 
 # Undo-tree save-files
 *.~undo-tree
+
+recentf
+network-security.data
+elpa/
+server/
