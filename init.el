@@ -33,7 +33,7 @@
 (load-theme 'wombat)
 
 ;; Default font
-(set-frame-font "Hack" nil t)
+;; (set-frame-font "Hack" nil t)
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
@@ -111,8 +111,6 @@
 ;; ============================================================================
 ;; Reserved for users: C-c <letter>
 (global-set-key (kbd "C-c /") 'comment-line)
-(global-set-key (kbd "C-c r") 'comment-or-uncomment-region)  ;; can we make the same keybinding as above work based on whether we've highlighted a region?
-(global-set-key (kbd "C-c g") 'magit)
 (global-set-key (kbd "C-c p") (lambda () (interactive) (customize-variable 'package-selected-packages)))
 
 ;; Reserved for users: f5 - f8
