@@ -16,12 +16,12 @@
        (proto (if no-ssl "http" "https")))
   (when no-ssl (warn "Your version of Emacs does not support SSL connections."))
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  (add-to-list 'package-archives '(cons "melpa-stable" (concat proto "://stable.melpa.org/packages/"))))
+  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/"))))
 
 (setq package-archive-priorities '(("gnu" . 30)("melpa-stable" . 20)("melpa" . 10)))
 
 ;; Add new packages interactively with either M-x package-install, or by adding it via `M-x customize-variable RET package-selected-packages`
-(package-install-selected-packages)
+(unless (package-installed-p 'magit) (package-refresh-contents) (package-install-selected-packages))
 ;; Remove packages by:
 ;; 1. Remove the entry from package-selected-packages via M-x customize-variable
 ;; 2. Either restart emacs or load-file ~/.emacs.d/custom.el
@@ -31,6 +31,9 @@
 ;; ============================================================================
 ;; Some parts of the theme are also modified in ~/.emacs.d/custom.el
 (load-theme 'wombat)
+
+;; Default font
+(set-frame-font "Hack" nil t)
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
