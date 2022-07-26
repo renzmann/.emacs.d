@@ -18,7 +18,7 @@
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
   (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/"))))
 
-(setq package-archive-priorities '(("gnu" . 30)("melpa-stable" . 20)("melpa" . 10)))
+(setq package-archive-priorities '(("gnu" . 30) ("melpa-stable" . 20) ("melpa" . 10)))
 
 ;; Add new packages interactively with either M-x package-install, or by adding it via `M-x customize-variable RET package-selected-packages`
 (unless (package-installed-p 'magit) (package-refresh-contents) (package-install-selected-packages))
@@ -112,6 +112,8 @@
 ;; Reserved for users: C-c <letter>
 (global-set-key (kbd "C-c /") 'comment-line)
 (global-set-key (kbd "C-c r") 'comment-or-uncomment-region)  ;; can we make the same keybinding as above work based on whether we've highlighted a region?
+(global-set-key (kbd "C-c g") 'magit)
+(global-set-key (kbd "C-c p") (lambda () (interactive) (customize-variable 'package-selected-packages)))
 
 ;; Reserved for users: f5 - f8
 (global-set-key (kbd "<f5>") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
