@@ -7,30 +7,30 @@
 ;;
 ;;; Code
 
+
 ;; External Packages
 ;; ============================================================================
 ;; Enable MELPA
 (require 'package)
-(let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
-              (not (gnutls-available-p))))
-       (proto (if no-ssl "http" "https")))
-  (when no-ssl (warn "Your version of Emacs does not support SSL connections."))
-  (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
-  (add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/"))))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+(add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
 
 (setq package-archive-priorities '(("gnu" . 30) ("melpa-stable" . 20) ("melpa" . 10)))
 
-;; Add new packages interactively with either M-x package-install, or by adding it via `M-x customize-variable RET package-selected-packages`
-(unless (package-installed-p 'magit) (package-refresh-contents) (package-install-selected-packages))
+;; Add new packages interactively with either M-x package-install or the M-x list-packages UI
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
 ;; Remove packages by:
 ;; 1. Remove the entry from package-selected-packages via M-x customize-variable
 ;; 2. Either restart emacs or load-file ~/.emacs.d/custom.el
 ;; 3. Use (package-autoremove)
 
+
 ;; Editor Settings
 ;; ============================================================================
 ;; Some parts of the theme are also modified in ~/.emacs.d/custom.el
-(load-theme 'wombat)
+;; (load-theme 'wombat)
 
 ;; Default font
 ;; (set-frame-font "Hack" nil t)
@@ -106,6 +106,12 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
+;; When running as a daemon or on macOS, ensure PATH is set correctly
+(when (or (memq window-system '(mac ns x))
+	  (daemonp))
+  (require 'exec-path-from-shell)
+  (exec-path-from-shell-initialize))
+
 
 ;; Keybindings
 ;; ============================================================================
@@ -118,3 +124,87 @@
 (global-set-key (kbd "S-<f5>") 'find-file-at-point)
 (global-set-key (kbd "<f6>") 'find-function-at-point)
 (global-set-key (kbd "S-<f6>") 'find-symbol-at-point)
+
+
+;; Language Server Specs
+;; ============================================================================
+(use-package rust-mode :ensure t)
+(use-package lsp-mode
+  :ensure t
+  :hook ((c-mode          ; clangd
+	  c++-mode        ; clangd
+	  c-or-c++-mode   ; clangd
+	  go-mode         ; gopls
+	  java-mode       ; eclipse-jdtls
+	  js-mode         ; ts-ls (tsserver wrapper)
+	  js-jsx-mode     ; ts-ls (tsserver wrapper)
+	  rust-mode       ; rust-analyzer
+	  typescript-mode ; ts-ls (tsserver wrapper)
+	  python-mode     ; pyright
+	  web-mode        ; ts-ls/HTML/CSS
+	  ) . lsp-deferred)
+  :commands lsp
+  :config
+  (setq lsp-auto-guess-root t)
+  (setq lsp-log-io t)
+  (setq lsp-restart 'ignore) ; 'interactive auto-restart ignore
+  (setq lsp-enable-symbol-highlighting t)
+  (setq lsp-enable-on-type-formatting nil)
+  (setq lsp-signature-auto-activate nil)
+  (setq lsp-signature-render-documentation nil)
+  (setq lsp-eldoc-hook nil)
+  (setq lsp-modeline-code-actions-enable nil)
+  (setq lsp-modeline-diagnostics-enable nil)
+  (setq lsp-headerline-breadcrumb-enable nil)
+  (setq lsp-semantic-tokens-enable t)
+  (setq lsp-enable-folding nil)
+  (setq lsp-enable-imenu nil) ; when t, works with lsp-ui-imenu, consult-imenu, etc .. just not super useful in my workflow
+  (setq lsp-enable-snippet t)
+  (setq read-process-output-max (* 1024 1024)) ;; 1MB
+  (setq lsp-idle-delay 0.5)
+  (setq lsp-enable-file-watchers nil) ;; disable watching files all over the workspace - see https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
+  (setq lsp-enable-suggest-server-download nil) ;; don't offer to download servers all the time
+  )
+
+(use-package lsp-pyright
+  :ensure t
+  :hook (python-mode . (lambda () (require 'lsp-pyright)))
+  :init (when (executable-find "python3")
+          (setq lsp-pyright-python-executable-cmd "python3")))
+
+;; LSP tramp remotes ---------------------------
+;; need this to enable my user paths, like ~/go/bin
+(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+
+;; From a very helpful reddit comment by /u/FrozenOnPluto:
+;; https://www.reddit.com/r/emacs/comments/vhihjl/comment/igs6v68/?utm_source=share&utm_medium=web2x&context=3
+(lsp-register-client
+ (make-lsp-client
+  :new-connection (lsp-tramp-connection (lambda ()
+					  (cons "pyright-langserver"
+						lsp-pyright-langserver-command-args)))
+  :major-modes '(python-mode)
+  :remote? t
+  :server-id 'pyright-remote
+  :multi-root t
+  :priority 3
+  :initialization-options (lambda () (ht-merge (lsp-configuration-section "pyright")
+                                               (lsp-configuration-section "python")))
+  :initialized-fn (lambda (workspace)
+                    (with-lsp-workspace workspace
+                      (lsp--set-configuration
+                       (ht-merge (lsp-configuration-section "pyright")
+                                 (lsp-configuration-section "python")))))
+  :download-server-fn (lambda (_client callback error-callback _update?)
+                        (lsp-package-ensure 'pyright callback error-callback))
+  :notification-handlers (lsp-ht ("pyright/beginProgress" 'lsp-pyright--begin-progress-callback)
+                                 ("pyright/reportProgress" 'lsp-pyright--report-progress-callback)
+                                 ("pyright/endProgress" 'lsp-pyright--end-progress-callback))))
+
+(use-package go-mode :ensure t)
+(lsp-register-client
+ (make-lsp-client
+  :new-connection (lsp-tramp-connection "gopls")
+  :major-modes '(go-mode)
+  :remote? t
+  :server-id 'gopls-remote))

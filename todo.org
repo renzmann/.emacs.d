@@ -16,3 +16,6 @@ C-u C-SPC "Jump back to mark"
 
 Notes:
 + `compile` is tramp-aware
++ https://xenodium.com/speeding-up-emacs-tramp-via-controlmaster/
++ The info mode index is very handy
++ In info mode, to find elisp stuff, use `d` `m` elisp `RET`; followed by `I` and then type the thing to "list" or search for
