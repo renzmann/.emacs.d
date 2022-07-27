@@ -18,9 +18,7 @@
 (setq package-archive-priorities '(("gnu" . 30) ("melpa-stable" . 20) ("melpa" . 10)))
 
 ;; Add new packages interactively with either M-x package-install or the M-x list-packages UI
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(package-install-selected-packages)
 ;; Remove packages by:
 ;; 1. Remove the entry from package-selected-packages via M-x customize-variable
 ;; 2. Either restart emacs or load-file ~/.emacs.d/custom.el
