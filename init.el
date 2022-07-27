@@ -17,7 +17,14 @@
 
 (setq package-archive-priorities '(("gnu" . 30) ("melpa-stable" . 20) ("melpa" . 10)))
 
+;; Redirect custom so it doesn't edit this file
+(setq custom-file "~/.emacs.d/custom.el")
+;; Load the custom file, which sets the 'package-selected-packages variable for package-install-selected-packages
+(when (file-exists-p custom-file)
+  (load custom-file))
+
 ;; Add new packages interactively with either M-x package-install or the M-x list-packages UI
+(package-refresh-contents)
 (package-install-selected-packages)
 ;; Remove packages by:
 ;; 1. Remove the entry from package-selected-packages via M-x customize-variable
@@ -29,6 +36,7 @@
 ;; ============================================================================
 ;; Some parts of the theme are also modified in ~/.emacs.d/custom.el
 ;; (load-theme 'wombat)
+;; (load-theme 'nord)
 
 ;; Default font
 ;; (set-frame-font "Hack" nil t)
@@ -99,10 +107,6 @@
     (interactive)
     (revert-buffer :ignore-auto :noconfirm))
 
-;; redirect custom so it doesn't edit this file
-(setq custom-file "~/.emacs.d/custom.el")
-(when (file-exists-p custom-file)
-  (load custom-file))
 
 ;; When running as a daemon or on macOS, ensure PATH is set correctly
 (when (or (memq window-system '(mac ns x))
@@ -122,6 +126,17 @@
 (global-set-key (kbd "S-<f5>") 'find-file-at-point)
 (global-set-key (kbd "<f6>") 'find-function-at-point)
 (global-set-key (kbd "S-<f6>") 'find-symbol-at-point)
+
+
+;; Tree-sitter
+;; ============================================================================
+(require 'tree-sitter)
+(require 'tree-sitter-hl)
+(require 'tree-sitter-langs)
+(require 'tree-sitter-debug)
+(require 'tree-sitter-query)
+(global-tree-sitter-mode)
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
 
 ;; Language Server Specs

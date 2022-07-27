@@ -4,6 +4,7 @@
 * Figure out pyright LSP integration (also remote version)
 * Learn etags set up for definition jumps
 * How to run debugger protocol for interactive python sessions
+* The (package-refresh-contents) and (package-install-selected-packages) should be run only when we're missing an installation
 
 
 Cheatsheet:
@@ -11,7 +12,7 @@ Cheatsheet:
 M-z "zap-to-char"
 M-% "Query replace"
 C-x C-v "revert buffer/reload file"
-C-u C-SPC "Jump back to mark"
+C-u C-SPC "Jump back to mark in current buffer"
 
 
 Notes:
