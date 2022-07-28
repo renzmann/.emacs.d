@@ -15,3 +15,6 @@ network-security.data
 elpa/
 server/
 transient/
+/.lsp-session-v1
+/ido.last
+/tramp
