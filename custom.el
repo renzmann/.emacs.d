@@ -14,7 +14,7 @@
      ("Sans Serif" "helv" "helvetica" "arial" "fixed")
      ("helv" "helvetica" "arial" "fixed")))
  '(package-selected-packages
-   '(tree-sitter-langs tree-sitter nord-theme rust-mode go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit)))
+   '(company tree-sitter-langs tree-sitter nord-theme rust-mode go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
