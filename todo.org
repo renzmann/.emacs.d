@@ -1,22 +1,40 @@
-* Set indentation/tabbing behavior for SQL
-* Figure out why I can't double-tab inside triple strings in Python
-* Learn how to use pyright as compiler (also remote version)
-* Figure out pyright LSP integration (also remote version)
-* Learn etags set up for definition jumps
-* How to run debugger protocol for interactive python sessions
-* The (package-refresh-contents) and (package-install-selected-packages) should be run only when we're missing an installation
+* Figure these out (eventually)
++ Set indentation/tabbing behavior for SQL
++ Figure out why I can't double-tab inside triple strings in Python
++ Learn how to use pyright as compiler (also remote version)
++ Figure out pyright LSP integration (also remote version)
++ Learn etags set up for definition jumps
++ How to run debugger protocol for interactive python sessions
++ The (package-refresh-contents) and (package-install-selected-packages) should be run only when we're missing an installation
++ add git-gutter integration
++ add EIN (Jupyter) (https://github.com/millejoh/emacs-ipython-notebook/tree/master) -- this requires `elpy`, its official python module, which is unmaintained
++ Buttons and what not look terrible in most color themes - finding a good theme is really hard
++ It looks like org-mode can actually do a lot of what jupyter does
 
 
-Cheatsheet:
+* Cheatsheet
++ M-z "zap-to-char"
++ M-% "Query replace"
++ C-x C-v "revert buffer/reload file"
++ C-u C-SPC "Jump back to mark in current buffer"
++ M-@ "Expand region forward by a word"
 
-M-z "zap-to-char"
-M-% "Query replace"
-C-x C-v "revert buffer/reload file"
-C-u C-SPC "Jump back to mark in current buffer"
-
-
-Notes:
+* Notes
 + `compile` is tramp-aware
 + https://xenodium.com/speeding-up-emacs-tramp-via-controlmaster/
 + The info mode index is very handy
 + In info mode, to find elisp stuff, use `d` `m` elisp `RET`; followed by `I` and then type the thing to "list" or search for
++ There's a great minimal config here: https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
++ It looks like outline-show-all and outline-mode in general can do the code folding I've been after
++ Even the /most minimal/ configs I've seen include:
+  - company-mode
+  - use-package
+  - expand-region
+  - lsp-mode (over eglot)
++ Comments like these: https://www.reddit.com/r/emacs/comments/k4kemb/comment/gegw9ws/?utm_source=share&utm_medium=web2x&context=3 show a striking
+  difference of attitude from Vim (less so neovim)
++ Company has company-tng-mode for completion with just TAB
+
+* Some good example configs
++ https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
++ https://gist.github.com/Nathan-Furnal/b327f14e861f009c014af36c1790ec49  <-- python specific

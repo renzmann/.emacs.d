@@ -5,10 +5,10 @@
 ;;; Commentary:
 ;; I put this here to make the linter stop whining.
 ;;
-;;; Code
+;;;* Code
 
 
-;; External Packages
+;;;* External Packages
 ;; ============================================================================
 ;; Enable MELPA
 (require 'package)
@@ -23,8 +23,9 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;; Add new packages interactively with either M-x package-install or the M-x list-packages UI
-(package-refresh-contents)
+;; Add new packages interactively with either M-x package-install or the M-x list-packages
+(unless package-archive-contents
+  (package-refresh-contents)
 (package-install-selected-packages)
 ;; Remove packages by:
 ;; 1. Remove the entry from package-selected-packages via M-x customize-variable
@@ -32,7 +33,7 @@
 ;; 3. Use (package-autoremove)
 
 
-;; Editor Settings
+;;;* Editor Settings
 ;; ============================================================================
 ;; Some parts of the theme are also modified in ~/.emacs.d/custom.el
 ;; (load-theme 'wombat)
