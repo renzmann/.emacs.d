@@ -12,10 +12,8 @@
 ;; ============================================================================
 ;; Enable MELPA
 (require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (add-to-list 'package-archives '("melpa-stable" . "https://stable.melpa.org/packages/") t)
-
-(setq package-archive-priorities '(("gnu" . 30) ("melpa-stable" . 20) ("melpa" . 10)))
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 
 ;; Redirect custom so it doesn't edit this file
 (setq custom-file "~/.emacs.d/custom.el")
@@ -24,6 +22,7 @@
   (load custom-file))
 
 ;; Add new packages interactively with either M-x package-install or the M-x list-packages
+(package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
 (package-install-selected-packages)
@@ -116,6 +115,18 @@
   (exec-path-from-shell-initialize))
 
 
+;; Autocomplete / Intellisense (company-mode)
+;; ============================================================================
+(require 'company)
+
+(add-hook 'prog-mode-hook 'company-mode)
+(setq company-minimum-prefix-length 1)
+(setq company-idle-delay 0)
+;; Maybe look into this tng thing eventually: https://github.com/company-mode/company-mode/blob/master/company-tng.el
+;; (require 'company-tng)
+;; (add-hook 'after-init-hook 'company-tng-mode)
+
+
 ;; Keybindings
 ;; ============================================================================
 ;; Reserved for users: C-c <letter>
@@ -142,9 +153,7 @@
 
 ;; Language Server Specs
 ;; ============================================================================
-(use-package rust-mode :ensure t)
 (use-package lsp-mode
-  :ensure t
   :hook ((c-mode          ; clangd
 	  c++-mode        ; clangd
 	  c-or-c++-mode   ; clangd
@@ -181,12 +190,12 @@
   )
 
 (use-package lsp-pyright
-  :ensure t
   :hook (python-mode . (lambda () (require 'lsp-pyright)))
   :init (when (executable-find "python3")
           (setq lsp-pyright-python-executable-cmd "python3")))
 
-;; LSP tramp remotes ---------------------------
+;; LSP tramp remotes
+;; ============================================================================
 ;; need this to enable my user paths, like ~/go/bin
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
@@ -215,6 +224,7 @@
                                  ("pyright/reportProgress" 'lsp-pyright--report-progress-callback)
                                  ("pyright/endProgress" 'lsp-pyright--end-progress-callback))))
 
+;; This is based on the default example: https://emacs-lsp.github.io/lsp-mode/page/remote/
 (use-package go-mode :ensure t)
 (lsp-register-client
  (make-lsp-client

@@ -8,9 +8,10 @@
 + The (package-refresh-contents) and (package-install-selected-packages) should be run only when we're missing an installation
 + add git-gutter integration
 + add EIN (Jupyter) (https://github.com/millejoh/emacs-ipython-notebook/tree/master) -- this requires `elpy`, its official python module, which is unmaintained
+  - other options include this: https://github.com/nnicandro/emacs-jupyter
+  - and this: https://github.com/gregsexton/ob-ipython (it looks like org-mode can actually do a lot of what jupyter does)
 + Buttons and what not look terrible in most color themes - finding a good theme is really hard
-+ It looks like org-mode can actually do a lot of what jupyter does
-
++ There is probably some way to get `flx` working with company-mode
 
 * Cheatsheet
 + M-z "zap-to-char"
@@ -33,7 +34,10 @@
   - lsp-mode (over eglot)
 + Comments like these: https://www.reddit.com/r/emacs/comments/k4kemb/comment/gegw9ws/?utm_source=share&utm_medium=web2x&context=3 show a striking
   difference of attitude from Vim (less so neovim)
-+ Company has company-tng-mode for completion with just TAB
++ Company has company-tng-mode (tab 'n' go) for completion with just TAB, but didn't get it working
++ Virtual environment management looks kinda stale - maybe something like this is good? https://github.com/marcwebbie/auto-virtualenv
++ dired looks incredibly powerful, but some features are confusing
++ I have no idea whether we should foray into the `flx` world: https://github.com/lewang/flx and company-flx too
 
 * Some good example configs
 + https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
