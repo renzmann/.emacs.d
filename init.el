@@ -44,8 +44,13 @@
 ;; 0123456789abcdefghijklmnopqrstuvwxyz [] () :;,. !@#$^&*
 ;; 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ {} <> "'`  ~-_/|\?
 ;; TODO loop this over possible font names
-(when (member "Hack Nerd Font Mono" (font-family-list))
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-12"))
+;; TODO good excercise for learning `let` block
+(if (eq system-type 'windows-nt)
+    (setq my-font "Hack NF")
+  (setq my-font "Hack Nerd Font Mono"))
+
+(when (member my-font (font-family-list))
+  (set-face-attribute 'default nil :font (concat my-font "-12")))
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
