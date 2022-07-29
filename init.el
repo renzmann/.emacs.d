@@ -38,9 +38,14 @@
 ;; Some parts of the theme are also modified in ~/.emacs.d/custom.el
 ;; (load-theme 'wombat)
 ;; (load-theme 'nord)
+(load-theme 'material)
 
-;; Default font
-;; (set-frame-font "Hack" nil t)
+;; Test char and monospace:
+;; 0123456789abcdefghijklmnopqrstuvwxyz [] () :;,. !@#$^&*
+;; 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ {} <> "'`  ~-_/|\?
+;; TODO loop this over possible font names
+(when (member "Hack Nerd Font Mono" (font-family-list))
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-12"))
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
