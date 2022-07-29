@@ -30,6 +30,7 @@
 ;; 1. Remove the entry from package-selected-packages via M-x customize-variable
 ;; 2. Either restart emacs or load-file ~/.emacs.d/custom.el
 ;; 3. Use (package-autoremove)
+(require 'use-package)
 
 
 ;;;* Editor Settings
@@ -197,6 +198,7 @@
 ;; LSP tramp remotes
 ;; ============================================================================
 ;; need this to enable my user paths, like ~/go/bin
+(require 'tramp)
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
 ;; From a very helpful reddit comment by /u/FrozenOnPluto:
