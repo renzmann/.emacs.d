@@ -20,6 +20,7 @@
 + C-x C-v "revert buffer/reload file"
 + C-u C-SPC "Jump back to mark in current buffer"
 + M-@ "Expand region forward by a word"
++ M-m "go to first non-whitespace character"
 
 * Notes
 + `compile` is tramp-aware
