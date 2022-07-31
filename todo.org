@@ -12,6 +12,7 @@
   - and this: https://github.com/gregsexton/ob-ipython (it looks like org-mode can actually do a lot of what jupyter does)
 + Buttons and what not look terrible in most color themes - finding a good theme is really hard
 + There is probably some way to get `flx` working with company-mode
++ `ispell` missing on Windows
 
 * Cheatsheet
 + M-z "zap-to-char"
@@ -41,6 +42,8 @@
 + `vertico` https://github.com/minad/vertico also looks like a compelling completion framework
 + The "flickering" sensation on Windows is likely because of a lack of "double buffering" support: https://news.ycombinator.com/item?id=12830409
 + Someone is working on dark-mode toolbars for emacs on windows: https://github.com/vsalvino/emacs
++ `term` doesn't work on Windows native Emacs build, but the Cygwin builds do support it: https://itecnote.com/tecnote/bash-m-x-term-with-emacs-on-ms-windows-error-spawning-child-process-invalid-argument/
++ To get flyspell working on Windows, had to install `aspell` and `aspell-en` with pacman
 
 * Some good example configs
 + https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el

@@ -8,7 +8,8 @@
 ;;;* Code
 
 
-;;;* External Packages
+
+;; External Packages
 ;; ============================================================================
 ;; Enable MELPA
 (require 'package)
@@ -21,7 +22,7 @@
 (when (file-exists-p custom-file)
   (load custom-file))
 
-;; Add new packages interactively with either M-x package-install or the M-x list-packages
+;; Add new packages interactively with either M-x package-install or M-x list-packages
 (package-initialize)
 (unless package-archive-contents
   (package-refresh-contents))
@@ -30,10 +31,13 @@
 ;; 1. Remove the entry from package-selected-packages via M-x customize-variable
 ;; 2. Either restart emacs or load-file ~/.emacs.d/custom.el
 ;; 3. Use (package-autoremove)
+;; 4. Remove any configuration in this file
 (require 'use-package)
+(require 'writeroom-mode)
 
 
-;;;* Editor Settings
+
+;; Editor Settings
 ;; ============================================================================
 ;; Some parts of the theme are also modified in ~/.emacs.d/custom.el
 ;; (load-theme 'wombat)
@@ -51,6 +55,10 @@
 
 (when (member my-font (font-family-list))
   (set-face-attribute 'default nil :font (concat my-font "-12")))
+
+;; On Windows, with Msys, use aspell instead of ispell for spellchecking
+(when (eq system-type 'windows-nt)
+  (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe"))
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
@@ -126,6 +134,7 @@
   (exec-path-from-shell-initialize))
 
 
+
 ;; Autocomplete / Intellisense (company-mode)
 ;; ============================================================================
 (require 'company)
@@ -138,6 +147,7 @@
 ;; (add-hook 'after-init-hook 'company-tng-mode)
 
 
+
 ;; Keybindings
 ;; ============================================================================
 ;; Reserved for users: C-c <letter>
@@ -149,8 +159,10 @@
 (global-set-key (kbd "S-<f5>") 'find-file-at-point)
 (global-set-key (kbd "<f6>") 'find-function-at-point)
 (global-set-key (kbd "S-<f6>") 'find-symbol-at-point)
+(global-set-key (kbd "<f8>") 'writeroom-mode)
 
 
+
 ;; Tree-sitter
 ;; ============================================================================
 (require 'tree-sitter)
@@ -162,6 +174,7 @@
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 
 
+
 ;; Language Server Specs
 ;; ============================================================================
 (use-package lsp-mode
@@ -205,6 +218,8 @@
   :init (when (executable-find "python3")
           (setq lsp-pyright-python-executable-cmd "python3")))
 
+
+
 ;; LSP tramp remotes
 ;; ============================================================================
 ;; need this to enable my user paths, like ~/go/bin
