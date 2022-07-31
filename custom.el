@@ -13,6 +13,12 @@
      ("courier" "CMU Typewriter Text" "fixed")
      ("Sans Serif" "helv" "helvetica" "arial" "fixed")
      ("helv" "helvetica" "arial" "fixed")))
+ '(fido-mode t)
+ '(fido-vertical-mode t)
+ '(icomplete-compute-delay 0.0)
+ '(icomplete-mode t)
+ '(icomplete-prospects-height 7)
+ '(icomplete-vertical-mode t)
  '(package-selected-packages
    '(use-package material-theme pyvenv company tree-sitter-langs tree-sitter nord-theme rust-mode go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit)))
 (custom-set-faces

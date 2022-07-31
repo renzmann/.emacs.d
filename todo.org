@@ -41,6 +41,7 @@
 + `vertico` https://github.com/minad/vertico also looks like a compelling completion framework
 + The "flickering" sensation on Windows is likely because of a lack of "double buffering" support: https://news.ycombinator.com/item?id=12830409
 + Someone is working on dark-mode toolbars for emacs on windows: https://github.com/vsalvino/emacs
++ FIDO mode is built-in, has a vertical mode, and improves on IDO since Emacs 27, so we've switched to that
 
 * Some good example configs
 + https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
