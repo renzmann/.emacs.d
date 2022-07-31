@@ -45,6 +45,7 @@
 + Someone is working on dark-mode toolbars for emacs on windows: https://github.com/vsalvino/emacs
 + `term` doesn't work on Windows native Emacs build, but the Cygwin builds do support it: https://itecnote.com/tecnote/bash-m-x-term-with-emacs-on-ms-windows-error-spawning-child-process-invalid-argument/
 + To get flyspell working on Windows, had to install `aspell` and `aspell-en` with pacman
++ FIDO mode is built-in, has a vertical mode, and improves on IDO since Emacs 27, so we've switched to that
 
 * Some good example configs
 + https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
