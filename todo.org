@@ -21,6 +21,7 @@
 + C-u C-SPC "Jump back to mark in current buffer"
 + M-@ "Expand region forward by a word"
 + M-m "go to first non-whitespace character"
++ C-M-<SPC> and C-M-@ "mark next s-expression"
 
 * Notes
 + `compile` is tramp-aware

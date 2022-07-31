@@ -96,7 +96,7 @@
 (setq vc-follow-symlinks t)
 
 ;; Show markers for trailing whitespace and delete on save
-(setq-default show-trailing-whitespace t)
+(add-hook 'prog-mode-hook (setq show-trailing-whitespace t))
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Don't wrap lines
@@ -127,13 +127,14 @@
     (interactive)
     (revert-buffer :ignore-auto :noconfirm))
 
-
 ;; When running as a daemon or on macOS, ensure PATH is set correctly
 (when (or (memq window-system '(mac ns x))
 	  (daemonp))
   (require 'exec-path-from-shell)
   (exec-path-from-shell-initialize))
 
+;; Use nov.el when opening an epub file
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 
 
 ;; Autocomplete / Intellisense (company-mode)
