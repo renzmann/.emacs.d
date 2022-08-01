@@ -121,7 +121,7 @@
 
 ;; When running as a daemon or on macOS, ensure PATH is set correctly
 (when (or (memq window-system '(mac ns x))
-	  (daemonp))
+          (daemonp))
   (require 'exec-path-from-shell)
   (exec-path-from-shell-initialize))
 
@@ -142,6 +142,14 @@
   ;; enabled right away. Note that this forces loading the package.
   (marginalia-mode))
 
+(use-package pyvenv
+  :config
+  (setq python-shell-completion-native-enable nil))
+
+(use-package which-key
+  :init
+  (which-key-mode))
+
 
 
 ;; Autocomplete / Intellisense
@@ -153,8 +161,8 @@
 (use-package orderless
   :config
   (setq completion-styles '(orderless basic)
-	completion-category-defaults nil
-	completion-category-overrides '((file (styles partial-completion)))))
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
 
 ;; From the documentation: https://github.com/minad/corfu#installation-and-configuration
 (use-package corfu
@@ -199,10 +207,13 @@
 
 
 
-;; Keybindings
+;; Keybindings / keymaps
 ;; ============================================================================
 ;; Better defaults
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
+(define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+(define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
+(define-key flymake-mode-map (kbd "C-c d") 'flymake-show-buffer-diagnostics)
 
 ;; Reserved for users: C-c <letter>
 (global-set-key (kbd "C-c /") 'comment-line)
@@ -234,17 +245,17 @@
 ;; ============================================================================
 (use-package lsp-mode
   :hook ((c-mode          ; clangd
-	  c++-mode        ; clangd
-	  c-or-c++-mode   ; clangd
-	  go-mode         ; gopls
-	  java-mode       ; eclipse-jdtls
-	  js-mode         ; ts-ls (tsserver wrapper)
-	  js-jsx-mode     ; ts-ls (tsserver wrapper)
-	  rust-mode       ; rust-analyzer
-	  typescript-mode ; ts-ls (tsserver wrapper)
-	  python-mode     ; pyright
-	  web-mode        ; ts-ls/HTML/CSS
-	  ) . lsp-deferred)
+          c++-mode        ; clangd
+          c-or-c++-mode   ; clangd
+          go-mode         ; gopls
+          java-mode       ; eclipse-jdtls
+          js-mode         ; ts-ls (tsserver wrapper)
+          js-jsx-mode     ; ts-ls (tsserver wrapper)
+          rust-mode       ; rust-analyzer
+          typescript-mode ; ts-ls (tsserver wrapper)
+          python-mode     ; pyright
+          web-mode        ; ts-ls/HTML/CSS
+          ) . lsp-deferred)
   :commands lsp
   :config
   (setq lsp-auto-guess-root t)
@@ -285,9 +296,7 @@
 ;; https://www.reddit.com/r/emacs/comments/vhihjl/comment/igs6v68/?utm_source=share&utm_medium=web2x&context=3
 (lsp-register-client
  (make-lsp-client
-  :new-connection (lsp-tramp-connection (lambda ()
-					  (cons "pyright-langserver"
-						lsp-pyright-langserver-command-args)))
+  :new-connection (lsp-tramp-connection (lambda () (cons "pyright-langserver" lsp-pyright-langserver-command-args)))
   :major-modes '(python-mode)
   :remote? t
   :server-id 'pyright-remote
