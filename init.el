@@ -53,8 +53,12 @@
     (setq my-font "Hack NF")
   (setq my-font "Hack Nerd Font Mono"))
 
+(if (eq system-type "darwin")
+    (setq my-font-size "-12")
+  (setq my-font-size "-15"))
+
 (when (member my-font (font-family-list))
-  (set-face-attribute 'default nil :font (concat my-font "-12")))
+  (set-face-attribute 'default nil :font (concat my-font my-font-size)))
 
 ;; On Windows, with Msys, use aspell instead of ispell for spellchecking
 (when (eq system-type 'windows-nt)
