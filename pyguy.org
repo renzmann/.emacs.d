@@ -1,24 +1,42 @@
-#+BEGIN_SRC python :python /Users/robbenzmann/lsp_test/.venv/bin/python :session
-  "Hello, world!"
+#+BEGIN_SRC python :python ~/.emacs.d/.venv/bin/python :session
+  hello = "!"
+  hello
 #+END_SRC
 
 #+RESULTS:
 : Hello, world!
 
+#+begin_src python :session
+  hello
+#+end_src
+
+#+RESULTS:
+: Hello, world!
+
+#+begin_src python :python ~/.emacs.d/.venv/bin/python :session :results output
+  nobody_here
+#+end_src
+
+#+RESULTS:
+
+#+begin_src python :session
+  raise ValueError("What????")
+#+end_src
+
+#+RESULTS:
 
 #+BEGIN_SRC python :python /Users/robbenzmann/lsp_test/.venv/bin/python :session :results file
   import numpy, math, matplotlib.pyplot as plt
-  %matplotlib inline
 
   x = numpy.linspace(0, 2*math.pi)
   fig = plt.figure()
-  fig.plot(x, numpy.sin(x))
+  plt.plot(x, numpy.sin(x))
   fig.savefig("img.png")
   "img.png"
 #+END_SRC
 
 #+RESULTS:
-[[file:]]
+[[file:img.png]]
 
 #+BEGIN_SRC python :session
   1 + 2

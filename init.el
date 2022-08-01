@@ -54,8 +54,8 @@
   (setq my-font "Hack Nerd Font Mono"))
 
 (if (eq system-type "darwin")
-    (setq my-font-size "-12")
-  (setq my-font-size "-15"))
+    (setq my-font-size "-15")
+  (setq my-font-size "-12"))
 
 (when (member my-font (font-family-list))
   (set-face-attribute 'default nil :font (concat my-font my-font-size)))

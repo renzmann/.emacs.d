@@ -64,6 +64,7 @@
   + vanilla minibuffer complete
   + consult
   + marginalia
++ Trying out org-babel with just bare python, using :python and :session, and turning off the confirm prompt
 
 * Some good example configs
 + https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
