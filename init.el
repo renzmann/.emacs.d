@@ -211,9 +211,12 @@
 ;; ============================================================================
 ;; Better defaults
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
-(define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
-(define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
-(define-key flymake-mode-map (kbd "C-c d") 'flymake-show-buffer-diagnostics)
+
+(use-package flymake
+  :config
+  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
+  (define-key flymake-mode-map (kbd "C-c d") 'flymake-show-buffer-diagnostics))
 
 ;; Reserved for users: C-c <letter>
 (global-set-key (kbd "C-c /") 'comment-line)
