@@ -17,8 +17,7 @@
  '(global-whitespace-mode t)
  '(package-selected-packages
    '(ein pyvenv which-key marginalia orderless vertico restart-emacs corfu consult nov writeroom-mode use-package material-theme tree-sitter-langs tree-sitter nord-theme rust-mode go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit))
- '(whitespace-style
-   '(face trailing tabs indentation::space indentation tab-mark)))
+ '(whitespace-style '(face tabs tab-mark)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
