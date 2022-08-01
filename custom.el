@@ -13,14 +13,8 @@
      ("courier" "CMU Typewriter Text" "fixed")
      ("Sans Serif" "helv" "helvetica" "arial" "fixed")
      ("helv" "helvetica" "arial" "fixed")))
- '(fido-mode t)
- '(fido-vertical-mode t)
- '(icomplete-compute-delay 0.0)
- '(icomplete-mode t)
- '(icomplete-prospects-height 7)
- '(icomplete-vertical-mode t)
  '(package-selected-packages
-   '(nov writeroom-mode use-package material-theme pyvenv company tree-sitter-langs tree-sitter nord-theme rust-mode go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit)))
+   '(orderless vertico restart-emacs corfu consult nov writeroom-mode use-package material-theme tree-sitter-langs tree-sitter nord-theme rust-mode go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
