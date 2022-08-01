@@ -69,19 +69,6 @@
 ;; Enable split-window dired copying
 (setq dired-dwim-target t)
 
-;; Interactive completion (bundled with emacs)
-;; Very helpful resource on it: https://www.masteringemacs.org/article/introduction-to-ido-mode
-;; Replaced by FIDO, though
-;; (require 'ido)
-;; (setq ido-enable-flex-matching t)
-;; (setq ido-everywhere t)
-;; `ffap` find file at point - we can try this later but "some people hate it"
-;; (setq ido-use-filename-at-point 'guess)
-;; (setq ido-file-extensions-order '(".org" ".txt" ".py" ".emacs" ".xml" ".el" ".ini" ".cfg" ".cnf"))
-;; modify 'completion-ignored-extensions with regexes to ignore some things (maybe useful for backup and object files?)
-;; (setq ido-ignore-extensions t)
-;; (ido-mode t)
-
 ;; Line and number modes
 (when (version<= "26.0.50" emacs-version)
   (global-display-line-numbers-mode))
@@ -137,16 +124,17 @@
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 
 
-;; Autocomplete / Intellisense (company-mode)
+;; Autocomplete / Intellisense
 ;; ============================================================================
-(require 'company)
+(require 'vertico)
+(vertico-mode)
+(require 'orderless)
+(setq completion-styles '(orderless basic)
+      completion-category-defaults nil
+      completion-category-overrides '((file (styles partial-completion))))
+(require 'corfu)
+(setq tab-always-indent 'complete)
 
-(add-hook 'prog-mode-hook 'company-mode)
-(setq company-minimum-prefix-length 1)
-(setq company-idle-delay 0)
-;; Maybe look into this tng thing eventually: https://github.com/company-mode/company-mode/blob/master/company-tng.el
-;; (require 'company-tng)
-;; (add-hook 'after-init-hook 'company-tng-mode)
 
 
 
