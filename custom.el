@@ -15,7 +15,7 @@
      ("helv" "helvetica" "arial" "fixed")))
  '(global-whitespace-mode t)
  '(package-selected-packages
-   '(marginalia orderless vertico restart-emacs corfu consult nov writeroom-mode use-package material-theme tree-sitter-langs tree-sitter nord-theme rust-mode go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit))
+   '(pyvenv which-key marginalia orderless vertico restart-emacs corfu consult nov writeroom-mode use-package material-theme tree-sitter-langs tree-sitter nord-theme rust-mode go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit))
  '(whitespace-style
    '(face trailing tabs spaces indentation::space indentation tab-mark)))
 (custom-set-faces
