@@ -22,6 +22,10 @@
 + M-@ "Expand region forward by a word"
 + M-m "go to first non-whitespace character"
 + C-M-<SPC> and C-M-@ "mark next s-expression"
++ M-r to move cursor between top, bottom, middle
+  - M-r reposition center
+  - M-0 M-r top
+  - M-- M-r bottom
 
 * Notes
 + `compile` is tramp-aware
@@ -47,6 +51,14 @@
 + `term` doesn't work on Windows native Emacs build, but the Cygwin builds do support it: https://itecnote.com/tecnote/bash-m-x-term-with-emacs-on-ms-windows-error-spawning-child-process-invalid-argument/
 + To get flyspell working on Windows, had to install `aspell` and `aspell-en` with pacman
 + FIDO mode is built-in, has a vertical mode, and improves on IDO since Emacs 27, so we've switched to that
++ Fuzzy finding is tougher to find
+  - =fzf= support is second class, but a couple solutions out there:
+    - https://www.youtube.com/watch?v=IDkx48JwDco
+    - https://github.com/bling/fzf.el
+    - could try writing our own
+  - =consult-find= is slow and relies on =find=
+  - vanilla method, =find-name-dired= is also slow, synchronous, relies on =find=
++ try out prot's completion config: https://www.youtube.com/watch?v=43Dg5zYPHTU
 
 * Some good example configs
 + https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el

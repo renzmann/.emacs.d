@@ -64,16 +64,17 @@
 (setq ring-bell-function 'ignore)
 
 ;; Clock in statusline
+(setq display-time-day-and-date t)
 (display-time)
 
 ;; Enable split-window dired copying
 (setq dired-dwim-target t)
 
 ;; Line and number modes
-(when (version<= "26.0.50" emacs-version)
-  (global-display-line-numbers-mode))
-(setq display-line-numbers-type 'relative)
-(setq column-number-mode t)
+;; (when (version<= "26.0.50" emacs-version)
+;;   (global-display-line-numbers-mode))
+;; (setq display-line-numbers-type 'relative)
+;; (setq column-number-mode t)
 
 ;; Automatically create matching parens in lisp mode
 (add-hook 'prog-mode-hook (electric-pair-mode t))
@@ -123,23 +124,47 @@
 ;; Use nov.el when opening an epub file
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 
+;; Enable richer annotations using the Marginalia package
+(use-package marginalia
+  ;; Either bind `marginalia-cycle` globally or only in the minibuffer
+  :bind (("M-A" . marginalia-cycle)
+         :map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+
+  ;; The :init configuration is always executed (Not lazy!)
+  :init
+
+  ;; Must be in the :init section of use-package such that the mode gets
+  ;; enabled right away. Note that this forces loading the package.
+  (marginalia-mode))
+
+
 
 ;; Autocomplete / Intellisense
 ;; ============================================================================
-(require 'vertico)
-(vertico-mode)
-(require 'orderless)
-(setq completion-styles '(orderless basic)
-      completion-category-defaults nil
-      completion-category-overrides '((file (styles partial-completion))))
-(require 'corfu)
-(setq tab-always-indent 'complete)
+(use-package vertico
+  :init
+  (vertico-mode))
 
+(use-package orderless
+  :config
+  (setq completion-styles '(orderless basic)
+	completion-category-defaults nil
+	completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package corfu
+  :config
+  (setq tab-always-indent 'complete)
+  :init
+  (corfu-mode))
 
 
 
 ;; Keybindings
 ;; ============================================================================
+;; Better defaults
+(global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
+
 ;; Reserved for users: C-c <letter>
 (global-set-key (kbd "C-c /") 'comment-line)
 (global-set-key (kbd "C-c p") (lambda () (interactive) (customize-variable 'package-selected-packages)))
