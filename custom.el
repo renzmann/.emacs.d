@@ -17,7 +17,7 @@
  '(global-whitespace-mode t)
  '(org-babel-load-languages '((emacs-lisp . t) (python . t) (awk . t) (ein . t)))
  '(package-selected-packages
-   '(ein which-key marginalia orderless vertico restart-emacs nov writeroom-mode use-package material-theme tree-sitter-langs tree-sitter nord-theme rust-mode go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit))
+   '(which-key marginalia orderless vertico restart-emacs nov writeroom-mode use-package material-theme tree-sitter-langs tree-sitter nord-theme rust-mode go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit))
  '(python-indent-guess-indent-offset-verbose nil)
  '(python-shell-completion-native-enable nil)
  '(whitespace-style '(face tabs tab-mark)))
