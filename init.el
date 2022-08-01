@@ -142,10 +142,6 @@
   ;; enabled right away. Note that this forces loading the package.
   (marginalia-mode))
 
-(use-package pyvenv
-  :config
-  (setq python-shell-completion-native-enable nil))
-
 (use-package which-key
   :init
   (which-key-mode))
@@ -165,7 +161,7 @@
         completion-category-overrides '((file (styles partial-completion)))))
 
 ;; From the documentation: https://github.com/minad/corfu#installation-and-configuration
-(use-package corfu
+;; (use-package corfu
   ;; Optional customizations
   ;; :custom
   ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
@@ -187,8 +183,8 @@
   ;; Recommended: Enable Corfu globally.
   ;; This is recommended since Dabbrev can be used globally (M-/).
   ;; See also `corfu-excluded-modes'.
-  :init
-  (global-corfu-mode))
+  ;; :init
+  ;; (global-corfu-mode))
 
 ;; A few more useful configurations...
 (use-package emacs

@@ -1,0 +1,33 @@
+#+BEGIN_SRC python :python /Users/robbenzmann/lsp_test/.venv/bin/python :session
+  "Hello, world!"
+#+END_SRC
+
+#+RESULTS:
+: Hello, world!
+
+
+#+BEGIN_SRC python :python /Users/robbenzmann/lsp_test/.venv/bin/python :session :results file
+  import numpy, math, matplotlib.pyplot as plt
+  %matplotlib inline
+
+  x = numpy.linspace(0, 2*math.pi)
+  fig = plt.figure()
+  fig.plot(x, numpy.sin(x))
+  fig.savefig("img.png")
+  "img.png"
+#+END_SRC
+
+#+RESULTS:
+[[file:]]
+
+#+BEGIN_SRC python :session
+  1 + 2
+#+END_SRC
+
+#+RESULTS:
+: 3
+
+#+begin_src python :session
+  1__dummy_completion__
+
+#+end_src
