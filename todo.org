@@ -50,7 +50,7 @@
 + Someone is working on dark-mode toolbars for emacs on windows: https://github.com/vsalvino/emacs
 + `term` doesn't work on Windows native Emacs build, but the Cygwin builds do support it: https://itecnote.com/tecnote/bash-m-x-term-with-emacs-on-ms-windows-error-spawning-child-process-invalid-argument/
 + To get flyspell working on Windows, had to install `aspell` and `aspell-en` with pacman
-+ FIDO mode is built-in, has a vertical mode, and improves on IDO since Emacs 27, so we've switched to that
++ FIDO (Fake IDO) mode is built-in, has a vertical mode, and improves on IDO since Emacs 27, so we've switched to that
 + Fuzzy finding is tougher to find
   - =fzf= support is second class, but a couple solutions out there:
     - https://www.youtube.com/watch?v=IDkx48JwDco
@@ -59,6 +59,11 @@
   - =consult-find= is slow and relies on =find=
   - vanilla method, =find-name-dired= is also slow, synchronous, relies on =find=
 + try out prot's completion config: https://www.youtube.com/watch?v=43Dg5zYPHTU
+  + embark: https://github.com/oantolin/embark
+  + which-key: https://github.com/justbur/emacs-which-key
+  + vanilla minibuffer complete
+  + consult
+  + marginalia
 
 * Some good example configs
 + https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
