@@ -40,13 +40,11 @@
 ;; Editor Settings
 ;; ============================================================================
 ;; Some parts of the theme are also modified in ~/.emacs.d/custom.el
-;; (load-theme 'wombat)
-;; (load-theme 'nord)
 (load-theme 'material)
 
 ;; Test char and monospace:
 ;; 0123456789abcdefghijklmnopqrstuvwxyz [] () :;,. !@#$^&*
-;; 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ {} <> "'`  ~-_/|\?
+;; -> =>     ABCDEFGHIJKLMNOPQRSTUVWXYZ {} <> "'`  ~-_/|\?
 ;; TODO loop this over possible font names
 ;; TODO good excercise for learning `let` block
 (if (eq system-type 'windows-nt)
@@ -63,6 +61,10 @@
 ;; On Windows, with Msys, use aspell instead of ispell for spellchecking
 (when (eq system-type 'windows-nt)
   (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe"))
+
+;; TODO: On Windows, set default shell to powershell (pwsh)
+;;
+;;
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
