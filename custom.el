@@ -13,6 +13,8 @@
      ("courier" "CMU Typewriter Text" "fixed")
      ("Sans Serif" "helv" "helvetica" "arial" "fixed")
      ("helv" "helvetica" "arial" "fixed")))
+ '(fido-mode t)
+ '(fido-vertical-mode t)
  '(global-whitespace-mode t)
  '(org-babel-load-languages '((emacs-lisp . t) (python . t) (awk . t)))
  '(org-confirm-babel-evaluate nil)

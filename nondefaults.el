@@ -85,7 +85,7 @@
 (setq lsp-enable-file-watchers nil) ;; disable watching files all over the workspace - see https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
 (setq lsp-enable-suggest-server-download nil) ;; don't offer to download servers all the time
 
-(add-hook 'python-mode (lambda () (require 'lsp-pyright) (lsp))
+(add-hook 'python-mode (lambda () (require 'lsp-pyright) (lsp)))
 (add-hook 'go-mode 'lsp)
 (add-hook 'rust-mode 'lsp)
 

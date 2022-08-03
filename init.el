@@ -122,8 +122,10 @@
 (setq tab-always-indent 'complete)
 
 ;; Enable fuzzy matching in minibuffer
-(setq completion-styles '(flex basic))
+;; (setq completion-styles '(flex basic))
 ;; IComplete vertical mode is still a little crazy - C-j vs. RET vs. C-M-i vs. TAB
+;; (setq icomplete-scroll t)
+;; (setq icomplete-show-matches-on-no-input t)
 
 
 ;; Non-default configuration

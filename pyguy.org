@@ -6,6 +6,13 @@
 #+RESULTS:
 : Hello, world!
 
+#+begin_src python :python C:\Users\robbe\.emacs.d\.venv\bin\python.exe :session
+  hello = "Hello"
+  hello
+#+end_src
+
+#+RESULTS:
+
 #+begin_src python :session
   hello
 #+end_src
