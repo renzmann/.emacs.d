@@ -10,10 +10,25 @@
 
 ;; Reserved for users: C-c <letter>
 ;; (global-set-key (kbd "C-c /") 'comment-line)
-(global-set-key (kbd "C-c p") (lambda () (interactive) (customize-variable 'package-selected-packages)))
+(defun renzmann-manage-packages ()
+  "Interactively manage the package-selected-packages variable."
+  (interactive)
+  (customize-variable 'package-selected-packages))
+(global-set-key (kbd "C-c p") 'renzmann-manage-packages)
+
+(defun renzmann-open-init ()
+  "Go to my init.el file"
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+(global-set-key (kbd "C-c i") 'renzmann-open-init)
+
+(defun renzmann-open-keymaps ()
+  "Go to my keymaps.el file"
+  (interactive)
+  (find-file "~/.emacs.d/keymaps.el"))
+(global-set-key (kbd "C-c k") 'renzmann-open-keymaps)
 
 ;; Reserved for users: f5 - f8
-(global-set-key (kbd "C-c i") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (global-set-key (kbd "S-<f5>") 'find-file-at-point)
 (global-set-key (kbd "<f6>") 'find-function-at-point)
 (global-set-key (kbd "S-<f6>") 'find-symbol-at-point)
