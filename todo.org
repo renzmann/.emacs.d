@@ -66,6 +66,7 @@
   + consult
   + marginalia
 + Trying out org-babel with just bare python, using :python and :session, and turning off the confirm prompt
++ Using defined functions instead of lambdas makes their name and docstring appear when doing C-c C-h, which is helpful
 
 * Some good example configs
 + https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
@@ -77,3 +78,4 @@
   - No LSP connect
   - No corfu tab-completion support
   - Interface is clunky
++ There is an alpha integration between tangled org mode and lsp-mode
