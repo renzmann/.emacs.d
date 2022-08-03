@@ -1,17 +1,19 @@
+Starting a session with =:session= keeps a long-running python for all blocks.
+
 #+BEGIN_SRC python :python ~/.emacs.d/.venv/bin/python :session
   hello = "!"
   hello
 #+END_SRC
 
 #+RESULTS:
-: Hello, world!
+: !
 
-#+begin_src python :python C:\Users\robbe\.emacs.d\.venv\bin\python.exe :session
-  hello = "Hello"
+#+begin_src python :session
   hello
 #+end_src
 
 #+RESULTS:
+: !
 
 #+begin_src python :session
   hello
@@ -20,7 +22,10 @@
 #+RESULTS:
 : Hello, world!
 
-#+begin_src python :python ~/.emacs.d/.venv/bin/python :session :results output
+Below, we try a couple examples of raising an error. They occur in the
+running *Python* buffer, instead of appearing below
+
+#+begin_src python :session :results output
   nobody_here
 #+end_src
 
@@ -32,7 +37,11 @@
 
 #+RESULTS:
 
-#+BEGIN_SRC python :python /Users/robbenzmann/lsp_test/.venv/bin/python :session :results file
+The fact we /have/ to save to a file and then have the cell return the
+same filename is a bit Byzantine. Any way to make a QoL improvement
+there?
+
+#+BEGIN_SRC python :session :results file
   import numpy, math, matplotlib.pyplot as plt
 
   x = numpy.linspace(0, 2*math.pi)
@@ -53,6 +62,9 @@
 : 3
 
 #+begin_src python :session
-  1__dummy_completion__
-
+  import sys
+  sys.executable
 #+end_src
+
+#+RESULTS:
+: /home/renzmann/.emacs.d/.venv/bin/python
