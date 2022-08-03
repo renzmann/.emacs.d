@@ -26,6 +26,7 @@
   - M-r reposition center
   - M-0 M-r top
   - M-- M-r bottom
++ M-; to comment stuff
 
 * Notes
 + `compile` is tramp-aware
