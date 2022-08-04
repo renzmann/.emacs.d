@@ -27,6 +27,10 @@
   - M-0 M-r top
   - M-- M-r bottom
 + M-; to comment stuff
++ C-x p f  find file in project
++ C-x v + to update project from git
++ C-; in flyspell mode to correct last misspelling
+
 
 * Notes
 + `compile` is tramp-aware
@@ -59,6 +63,7 @@
     - could try writing our own
   - =consult-find= is slow and relies on =find=
   - vanilla method, =find-name-dired= is also slow, synchronous, relies on =find=
+  - `C-x p f` looks like the best built-in default, from project.el
 + try out prot's completion config: https://www.youtube.com/watch?v=43Dg5zYPHTU
   + embark: https://github.com/oantolin/embark
   + which-key: https://github.com/justbur/emacs-which-key
