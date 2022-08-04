@@ -1,19 +1,30 @@
-Starting a session with =:session= keeps a long-running python for all blocks.
+#+TITLE: Trying out org as a jupyter replacement
+#+AUTHOR: Robb Enzmann
 
-#+BEGIN_SRC python :python ~/.emacs.d/.venv/bin/python :session
-  hello = "!"
+* Sessions need only be specified once
+Starting a session with =:session= keeps a long-running python for all
+blocks.  From a shell, I set up a virtual environment with =python -m
+venv .venv= in the same directory as this org file.
+
+#+BEGIN_SRC python :python .venv/bin/python :session
+  hello = "Hello, world!"
   hello
 #+END_SRC
 
 #+RESULTS:
-: !
+: Hello, world!
+
+All of the interpreting happens in the =*Python*= buffer.
 
 #+begin_src python :session
-  hello
+  import sys
+  sys.executable
 #+end_src
 
 #+RESULTS:
-: !
+: /home/robb/.emacs.d/.venv/bin/python
+
+The variable we set near the top is still available:
 
 #+begin_src python :session
   hello
@@ -22,8 +33,10 @@ Starting a session with =:session= keeps a long-running python for all blocks.
 #+RESULTS:
 : Hello, world!
 
+* Errors are silent /here/, but not in the =*Python*= running process
+
 Below, we try a couple examples of raising an error. They occur in the
-running *Python* buffer, instead of appearing below
+running =*Python*= buffer, instead of appearing below
 
 #+begin_src python :session :results output
   nobody_here
@@ -42,29 +55,19 @@ same filename is a bit Byzantine. Any way to make a QoL improvement
 there?
 
 #+BEGIN_SRC python :session :results file
-  import numpy, math, matplotlib.pyplot as plt
+  import math
 
-  x = numpy.linspace(0, 2*math.pi)
+  import numpy
+  import matplotlib.pyplot as plt
+
+
+  filename = "img.png"
+  x = numpy.linspace(0, 2 * math.pi)
   fig = plt.figure()
   plt.plot(x, numpy.sin(x))
-  fig.savefig("img.png")
-  "img.png"
+  fig.savefig(filename)
+  filename
 #+END_SRC
 
 #+RESULTS:
 [[file:img.png]]
-
-#+BEGIN_SRC python :session
-  1 + 2
-#+END_SRC
-
-#+RESULTS:
-: 3
-
-#+begin_src python :session
-  import sys
-  sys.executable
-#+end_src
-
-#+RESULTS:
-: /home/renzmann/.emacs.d/.venv/bin/python
