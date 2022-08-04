@@ -21,3 +21,4 @@ transient/
 /.lsp-session-v1
 /ido.last
 /tramp
+.venv
