@@ -23,7 +23,6 @@
   (load custom-file))
 
 ;; Add new packages interactively with either M-x package-install or M-x list-packages
-(package-initialize)
 (package-refresh-contents)
 (package-install-selected-packages)
 ;; Remove packages by:
