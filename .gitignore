@@ -22,3 +22,6 @@ transient/
 /ido.last
 /tramp
 .venv
+eshell/
+projects
+url/
