@@ -45,6 +45,7 @@
 ;; Editor Settings
 ;; ============================================================================
 ;; Some parts of the theme are also modified in ~/.emacs.d/custom.el
+;; TODO set theme based on time of day: https://stackoverflow.com/a/14760833/13215205
 (if (version< emacs-version "28.1")
     (package-install 'modus-themes))
 
@@ -54,7 +55,7 @@
 
 ;; Test char and monospace:
 ;; 0123456789abcdefghijklmnopqrstuvwxyz [] () :;,. !@#$^&*
-;; -> =>     ABCDEFGHIJKLMNOPQRSTUVWXYZ {} <> "'`  ~-_/|\?
+;; -> => <=  ABCDEFGHIJKLMNOPQRSTUVWXYZ {} <> "'`  ~-_/|\?
 ;; TODO loop this over possible font names
 ;; TODO good excercise for learning `let` block
 (if (eq system-type 'windows-nt)
@@ -267,6 +268,7 @@
   )
 
 (use-package lsp-pyright
+  :after lsp-mode
   :hook (python-mode . (lambda () (require 'lsp-pyright)))
   :init
   (when (executable-find "python3")
@@ -302,7 +304,7 @@
 ;; ============================================================================
 ;; need this to enable my user paths, like ~/go/bin
 (use-package tramp
-  :init
+  :config
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 
