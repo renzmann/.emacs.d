@@ -16,7 +16,7 @@
  '(org-babel-load-languages '((emacs-lisp . t) (python . t) (awk . t)))
  '(org-confirm-babel-evaluate nil)
  '(package-selected-packages
-   '(rust-mode orderless vertico marginalia restart-emacs nov writeroom-mode use-package tree-sitter-langs tree-sitter go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit))
+   '(corfu rust-mode orderless vertico marginalia restart-emacs nov writeroom-mode use-package tree-sitter-langs tree-sitter go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit))
  '(python-indent-guess-indent-offset-verbose nil)
  '(python-shell-completion-native-enable nil)
  '(warning-suppress-types '((org)))
