@@ -38,6 +38,7 @@
 ;;   1. Hack the package management myself, with potential pitfalls from not understanding startup process, but probably
 ;;      learn along the way
 ;;   2. Use use-package, even the the whole 'macro' thing doesn't make sense yet
+
 (eval-when-compile
   (require 'use-package))
 
