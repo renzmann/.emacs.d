@@ -27,6 +27,7 @@
 (global-set-key (kbd "C-c c") #'org-capture)
 
 ;; Reserved for users: f5 - f8
+;; (global-set-key (kbd "<f5>") #'modus-themes-toggle)
 (global-set-key (kbd "S-<f5>") 'find-file-at-point)
 (global-set-key (kbd "<f6>") 'find-function-at-point)
 (global-set-key (kbd "S-<f6>") 'find-symbol-at-point)
