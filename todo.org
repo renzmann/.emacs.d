@@ -13,6 +13,7 @@
 + Buttons and what not look terrible in most color themes - finding a good theme is really hard
 + There is probably some way to get =flx= working with company-mode
 + configure pyvenv-auto to work with poetry: https://github.com/nryotaro/pyvenv-auto
++ Bookmarks and .notes file
 
 * Cheatsheet
 + M-z "zap-to-char"
