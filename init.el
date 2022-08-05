@@ -188,6 +188,9 @@
          ("M-p" . #'flymake-goto-prev-error)
          ("C-c d" . #'flymake-show-buffer-diagnostics)))
 
+;; Allow for custom resize of images when displaying in org mode
+(setq org-image-actual-width nil)
+
 
 ;; Autocomplete / Intellisense
 ;; ============================================================================
