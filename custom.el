@@ -20,10 +20,11 @@
  '(python-indent-guess-indent-offset-verbose nil)
  '(python-shell-completion-native-enable nil)
  '(warning-suppress-types '((org)))
- '(whitespace-style '(face tabs tab-mark)))
+ '(whitespace-style '(face trailing tabs tab-mark)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(font-lock-comment-face ((t (:foreground "#616e88" :slant italic)))))
+ '(font-lock-comment-face ((t (:foreground "#616e88" :slant italic))))
+ '(whitespace-tab ((t (:foreground "#aa9e9f")))))
