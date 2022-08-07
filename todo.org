@@ -2,6 +2,8 @@
 + Set indentation/tabbing behavior for SQL
 + Figure out why I can't double-tab inside triple strings in Python
 + Learn how to use pyright as compiler (also remote version)
+  + Figure out the regex for this and publish it as a package
++ What's the proper way to install and use fonts? Sometimes we don't get italics, etc.
 + Figure out pyright LSP integration (also remote version)
 + Learn etags set up for definition jumps
 + How to run debugger protocol for interactive python sessions
@@ -14,6 +16,7 @@
 + There is probably some way to get =flx= working with company-mode
 + configure pyvenv-auto to work with poetry: https://github.com/nryotaro/pyvenv-auto
 + Bookmarks and .notes file
++ Copy doom-vibrant theme or whichever other one we want directly to avoid bloat
 
 * Cheatsheet
 + M-z "zap-to-char"
@@ -85,3 +88,6 @@
   - No corfu tab-completion support
   - Interface is clunky
 + There is an alpha integration between tangled org mode and lsp-mode
+
+* Blog
+** Building a pyright regex entry

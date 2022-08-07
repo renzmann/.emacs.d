@@ -26,9 +26,10 @@
 (unless (package-installed-p 'use-package)
   (package-refresh-contents))
 
+(package-autoremove)
 (package-install-selected-packages)
 ;; Remove packages by:
-;; 1. Remove the entry from package-selected-packages via M-x customize-variable RET package-selected-packages
+;; 1. Remove the entry from package-selected-packages via M-x package-delete or M-x list-packages
 ;; 2. Remove any configuration in this file
 ;; 3. Either restart emacs or load-file ~/.emacs.d/custom.el
 ;; 4. Use (package-autoremove)
@@ -47,13 +48,34 @@
 ;; ============================================================================
 ;; Some parts of the theme are also modified in ~/.emacs.d/custom.el
 ;; TODO set theme based on time of day: https://stackoverflow.com/a/14760833/13215205
-(if (version< emacs-version "28.1")
-    (package-install 'modus-themes))
+;; (use-package modus-themes
+;;   :init (load-theme 'modus-vivendi)
+;;   :bind ("<f5>" . 'modus-themes-toggle))
+(use-package doom-themes)
+;; Themes considered:
+;; doom-dark+
+;; doom-dracula
+;; doom-acario-dark
+;; doom-gruvbox
+;; doom-material-dark
+;; doom-material
+;; doom-miarmare
+;; doom-monokai-machine
+;; doom-monokai-pro
+;; doom-monokai-spectrum
+;; doom-nord-aurora
+;; doom-one
+;; doom-palenight
+;; doom-sourcerer
+;; doom-spacegrey
+;; doom-tomorrow-night
+;; doom-vibrant
+;; doom-xcode
+;;
+;; When I find one I want to stick with I'll remove the doom-themes
+;; package to avoid bloat and just add in the theme I like under ~/.emacs.d/themes/
 
-(use-package modus-themes
-  :init (load-theme 'modus-vivendi)
-  :bind ("<f5>" . 'modus-themes-toggle))
-
+;; Set a pretty Nerd Font
 ;; Test char and monospace:
 ;; 0123456789abcdefghijklmnopqrstuvwxyz [] () :;,. !@#$^&*
 ;; -> => <=  ABCDEFGHIJKLMNOPQRSTUVWXYZ {} <> "'`  ~-_/|\?
@@ -97,7 +119,7 @@
 ;; (setq display-line-numbers-type 'relative)
 ;; (setq column-number-mode t)
 
-;; Automatically create matching parens in lisp mode
+;; Automatically create matching parens in programming modes
 (add-hook 'prog-mode-hook (electric-pair-mode t))
 (add-hook 'prog-mode-hook (show-paren-mode t))
 
@@ -110,6 +132,7 @@
 
 ;; Don't wrap lines
 (setq-default truncate-lines t)
+(add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
 
 ;; Follow symlinks to the real file
 (setq vc-follow-symlinks t)
@@ -141,13 +164,13 @@
 (setq tab-always-indent 'complete)
 
 ;; Enable the powerful 'orderless' completion style: https://github.com/oantolin/orderless
-;; (use-package orderless
-;;   :demand
-;;   :custom
-;;   (completion-styles '(orderless))
-;;   (completion-category-defaults nil)
-;;   (completion-category-overrides '((file (styles . (partial-completion))))))
-(setq completion-styles '(flex basic))
+(use-package orderless
+  :demand
+  :custom
+  (completion-styles '(orderless))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles . (partial-completion))))))
+;; (setq completion-styles '(flex basic))
 
 ;; Enable fuzzy matching in minibuffer
 ;; (require 'icomplete)
@@ -170,6 +193,9 @@
 ;; keymaps ala C-j --> RET and C-M-i --> TAB
 (use-package vertico
   :init (vertico-mode))
+
+;; Diable tool bar
+(tool-bar-mode -1)
 
 ;; Distraction-free writing (usually for my blog)
 (use-package writeroom-mode)
@@ -201,11 +227,11 @@
 ;; From the documentation: https://github.com/minad/corfu#installation-and-configuration
 (use-package corfu
   ;; Optional customizations
-  :custom
+  ;; :custom
   ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   ;; (corfu-auto t)                 ;; Enable auto completion
-  (corfu-separator ?\s)          ;; Orderless field separator
-  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  ;; (corfu-separator ?\s)          ;; Orderless field separator
+  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
   ;; (corfu-preview-current nil)    ;; Disable current candidate preview
   ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
@@ -267,13 +293,17 @@
   (setq lsp-headerline-breadcrumb-enable nil)
   (setq lsp-semantic-tokens-enable t)
   (setq lsp-enable-folding nil)
-  ;; (setq lsp-enable-imenu nil) ; when t, works with lsp-ui-imenu, consult-imenu, etc .. just not super useful in my workflow
+  (setq lsp-enable-imenu t) ; when t, works with lsp-ui-imenu, consult-imenu, etc
   (setq lsp-enable-snippet t)
   (setq read-process-output-max (* 1024 1024)) ;; 1MB
   (setq lsp-idle-delay 0.5)
   (setq lsp-enable-file-watchers nil) ;; disable watching files all over the workspace - see https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
   (setq lsp-enable-suggest-server-download nil) ;; don't offer to download servers all the time
   )
+
+(use-package lsp-ui
+  :config
+  (setq lsp-ui-sideline-show-diagnostics t))
 
 (use-package lsp-pyright
   :after lsp-mode
@@ -330,6 +360,20 @@
 ;; I would love it if eglot works but I just can't get it to connect easily
 ;; (use-package eglot
 ;;   :ensure t)
+
+
+;; Example error from pyright
+;; --------------------------
+;; /home/robb/tmp/errors.py/
+;;   /home/robb/tmp/errors.py:1:1 - error: "foo" is not defined (reportUndefinedVariable)
+;;   /home/robb/tmp/errors.py:1:1 - warning: Expression value is unused (reportUnusedExpression)
+;;   /home/robb/tmp/errors.py:4:12 - error: Operator "+" not supported for types "str" and "Literal[1]"
+;;     Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
+;; 2 errors, 1 warning, 0 informations
+(add-to-list 'compilation-error-regexp-alist 'pyright)
+(add-to-list 'compilation-error-regexp-alist-alist
+	     ;; It would be nice if we could also capture the \\(error\\|warning\\) part as "KIND", but I got messed up on it
+	     '(pyright "^[[:blank:]]+\\([A-Za-z0-9.\/\[:blank:]]+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
 
 
 ;; Keymaps
