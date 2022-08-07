@@ -78,6 +78,9 @@
 ;;
 ;;
 
+;; Only visualize whitespace in programming modes
+(add-hook 'prog-mode-hook (whitespace-mode))
+
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
 
@@ -197,11 +200,11 @@
 ;; From the documentation: https://github.com/minad/corfu#installation-and-configuration
 (use-package corfu
   ;; Optional customizations
-  ;; :custom
+  :custom
   ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
   ;; (corfu-auto t)                 ;; Enable auto completion
-  ;; (corfu-separator ?\s)          ;; Orderless field separator
-  ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
+  (corfu-separator ?\s)          ;; Orderless field separator
+  (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
   ;; (corfu-preview-current nil)    ;; Disable current candidate preview
   ;; (corfu-preselect-first nil)    ;; Disable candidate preselection
