@@ -141,12 +141,13 @@
 (setq tab-always-indent 'complete)
 
 ;; Enable the powerful 'orderless' completion style: https://github.com/oantolin/orderless
-(use-package orderless
-  :demand
-  :custom
-  (completion-styles '(orderless))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles . (partial-completion))))))
+;; (use-package orderless
+;;   :demand
+;;   :custom
+;;   (completion-styles '(orderless))
+;;   (completion-category-defaults nil)
+;;   (completion-category-overrides '((file (styles . (partial-completion))))))
+(setq completion-styles '(flex basic))
 
 ;; Enable fuzzy matching in minibuffer
 ;; (require 'icomplete)
