@@ -162,45 +162,37 @@
 ;; `completion-at-point' is often bound to M-TAB.
 (setq tab-always-indent 'complete)
 
-;; Enable the powerful 'orderless' completion style: https://github.com/oantolin/orderless
+;; The powerful 'orderless' completion style: https://github.com/oantolin/orderless
+;; Trying to figure out how how to get this only for M-x in icomplete
 ;; (use-package orderless
-;;   :demand
 ;;   :custom
-;;   (completion-styles '(orderless default))
-;;   (completion-category-defaults nil)
-;;   (completion-category-overrides '((file (styles . (partial-completion)))
-;;                                    (eglot (styles . (orderless flex))))))
-
-;; Built-in "fuzzy" completion style:
-(setq completion-styles '(flex basic))
+;;   (completion-styles '(flex basic partial-completion))
+;;   (completion-category-overrides '())
 
 ;; Enable fuzzy matching in minibuffer
-;; (require 'icomplete)
-;; (icomplete-mode 1)
-;; (setq completion-styles '(flex basic))
-;; (setq icomplete-scroll t)
-;; (setq icomplete-show-matches-on-no-input t)
-;; (setq icomplete-hide-common-prefix nil)
-;; (setq icomplete-in-buffer t)
-;; (unless (version< emacs-version "28.1")
-;;   (setq icomplete-vertical-mode t))
+;; Built-in "fuzzy" completion style:
+(setq completion-styles '(flex basic))
 
 (if (version< emacs-version "27.1")
     (progn
       (setq ido-enable-flex-matching t)
       (setq ido-everywhere t)
       (ido-mode 1))
-  (fido-mode))
+  (fido-mode)
+  ;; Have TAB complete using the first option and continue, instead of
+  ;; popping up the *Completions* buffer
+  (define-key icomplete-minibuffer-map [remap minibuffer-complete] 'icomplete-force-complete))
 
 (unless (version< emacs-version "28.1")
+  ;; I had to customize the icomplete-compute-delay variable to 0.0 to avoid delay on M-x popup
   (fido-vertical-mode))
 
-;; I tried both of the built-in options above and I can't stand the
-;; popup delay. Vertico is still much faster, and works on older
-;; versions of emacs, too.  I also don't feel like configuring the
-;; keymaps ala C-j --> RET and C-M-i --> TAB
+;; Before setting the built-in support above, I was using =vertico=,
+;; but this had an occasional issue where the minibuffer would stall
+;; after messing up some text, instead of automatically resetting
 ;; (use-package vertico
-;;   :init (vertico-mode))
+;;   :init
+;;   (vertico-mode))
 
 ;; Diable tool bar
 (tool-bar-mode -1)
@@ -208,7 +200,7 @@
 ;; Distraction-free writing (usually for my blog)
 (use-package writeroom-mode)
 
-;; Enable richer annotations using the Marginalia package
+;; Enable richer minibuffer annotations using the Marginalia package
 (marginalia-mode 1)
 
 ;; Use nov.el when opening an epub file
