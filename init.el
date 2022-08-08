@@ -52,6 +52,7 @@
 ;;   :init (load-theme 'modus-vivendi)
 ;;   :bind ("<f5>" . 'modus-themes-toggle))
 (use-package doom-themes)
+(global-hl-line-mode)
 ;; Themes considered:
 ;; doom-dark+
 ;; doom-dracula
@@ -100,8 +101,8 @@
 ;;
 ;;
 
-;; Only visualize whitespace in programming modes
-(add-hook 'prog-mode-hook (whitespace-mode))
+;; Visualize whitespace
+(global-whitespace-mode)
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
@@ -112,6 +113,9 @@
 
 ;; Enable split-window dired copying
 (setq dired-dwim-target t)
+
+;; Enable EDE mode: https://www.gnu.org/software/emacs/manual/html_node/emacs/EDE.html
+;; (global-ede-mode t)
 
 ;; Line and number modes
 ;; (when (version<= "26.0.50" emacs-version)
@@ -134,13 +138,9 @@
 (setq-default truncate-lines t)
 (add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
 
-;; Follow symlinks to the real file
-(setq vc-follow-symlinks t)
-
 ;; Delete the region when we yank on top of it
 (delete-selection-mode t)
 
-;; (require 'recentf)
 ;; Add a "File -> Open recent..." option to the menu
 (recentf-mode t)
 
@@ -169,7 +169,8 @@
   :custom
   (completion-styles '(orderless flex default))
   (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles . (partial-completion))))))
+  (completion-category-overrides '((file (styles . (partial-completion)))
+                                   (eglot (styles . (orderless flex))))))
 
 ;; Built-in "fuzzy" completion style:
 ;; (setq completion-styles '(flex basic))
@@ -267,77 +268,78 @@
 
 ;; Language Server (LSP) Specs
 ;; ============================================================================
+;; I would love it if eglot just worked but I just can't get it to connect easily to pyright over tramp
+(use-package eglot
+  :hook (python-mode . eglot-ensure))
+
 ;; From a very helpful reddit comment by /u/FrozenOnPluto about geting LSP set up on remote systems:
 ;; https://www.reddit.com/r/emacs/comments/vhihjl/comment/igs6v68/?utm_source=share&utm_medium=web2x&context=3
-(use-package lsp-mode
-  :hook ((c-mode          ; clangd
-          c++-mode        ; clangd
-          c-or-c++-mode   ; clangd
-          java-mode       ; eclipse-jdtls
-          js-mode         ; ts-ls (tsserver wrapper)
-          js-jsx-mode     ; ts-ls (tsserver wrapper)
-          typescript-mode ; ts-ls (tsserver wrapper)
-          python-mode     ; pyright
-          web-mode        ; ts-ls/HTML/CSS
-          )
-	 . lsp-deferred)
-  :commands lsp
-  :config
-  (setq lsp-auto-guess-root t)
-  (setq lsp-log-io t)
-  (setq lsp-restart 'ignore) ; 'interactive auto-restart ignore
-  (setq lsp-enable-symbol-highlighting t)
-  (setq lsp-enable-on-type-formatting nil)
-  (setq lsp-signature-auto-activate nil)
-  (setq lsp-signature-render-documentation nil)
-  (setq lsp-eldoc-hook nil)
-  (setq lsp-modeline-code-actions-enable nil)
-  (setq lsp-modeline-diagnostics-enable nil)
-  (setq lsp-headerline-breadcrumb-enable nil)
-  (setq lsp-semantic-tokens-enable t)
-  (setq lsp-enable-folding nil)
-  (setq lsp-enable-imenu t) ; when t, works with lsp-ui-imenu, consult-imenu, etc
-  (setq lsp-enable-snippet t)
-  (setq read-process-output-max (* 1024 1024)) ;; 1MB
-  (setq lsp-idle-delay 0.5)
-  (setq lsp-enable-file-watchers nil) ;; disable watching files all over the workspace - see https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
-  (setq lsp-enable-suggest-server-download nil) ;; don't offer to download servers all the time
-  )
+;; (use-package lsp-mode
+;;   :hook ((c-mode          ; clangd
+;;           c++-mode        ; clangd
+;;           c-or-c++-mode   ; clangd
+;;           java-mode       ; eclipse-jdtls
+;;           js-mode         ; ts-ls (tsserver wrapper)
+;;           js-jsx-mode     ; ts-ls (tsserver wrapper)
+;;           typescript-mode ; ts-ls (tsserver wrapper)
+;;           python-mode     ; pyright
+;;           web-mode        ; ts-ls/HTML/CSS
+;;           )
+;; 	 . lsp-deferred)
+;;   :commands lsp
+;;   :config
+;;   (setq lsp-auto-guess-root t)
+;;   (setq lsp-log-io t)
+;;   (setq lsp-restart 'ignore) ; 'interactive auto-restart ignore
+;;   (setq lsp-enable-symbol-highlighting t)
+;;   (setq lsp-enable-on-type-formatting nil)
+;;   (setq lsp-signature-auto-activate nil)
+;;   (setq lsp-signature-render-documentation nil)
+;;   (setq lsp-eldoc-hook nil)
+;;   (setq lsp-modeline-code-actions-enable nil)
+;;   (setq lsp-modeline-diagnostics-enable nil)
+;;   (setq lsp-headerline-breadcrumb-enable nil)
+;;   (setq lsp-semantic-tokens-enable t)
+;;   (setq lsp-enable-folding nil)
+;;   (setq lsp-enable-imenu t) ; when t, works with lsp-ui-imenu, consult-imenu, etc
+;;   (setq lsp-enable-snippet t)
+;;   (setq read-process-output-max (* 1024 1024)) ;; 1MB
+;;   (setq lsp-idle-delay 0.5)
+;;   (setq lsp-enable-file-watchers nil) ;; disable watching files all over the workspace - see https://emacs-lsp.github.io/lsp-mode/page/file-watchers/
+;;   (setq lsp-enable-suggest-server-download nil) ;; don't offer to download servers all the time
+;;   )
 
-(use-package lsp-ui
-  :config
-  (setq lsp-ui-sideline-show-diagnostics t))
+;; (use-package lsp-ui
+;;   :config
+;;   (setq lsp-ui-sideline-show-diagnostics t))
 
-(use-package lsp-pyright
-  :after lsp-mode
-  :hook (python-mode . (lambda () (require 'lsp-pyright)))
-  :init
-  (when (executable-find "python3")
-    (setq lsp-pyright-python-executable-cmd "python3"))
+;; (use-package lsp-pyright
+;;   :after lsp-mode
+;;   :hook (python-mode . (lambda () (require 'lsp-pyright)))
+;;   :init
+;;   (when (executable-find "python3")
+;;     (setq lsp-pyright-python-executable-cmd "python3"))
+;;   (lsp-register-client
+;;    (make-lsp-client
+;;     :new-connection (lsp-tramp-connection (lambda () (cons "pyright-langserver" lsp-pyright-langserver-command-args)))
+;;     :major-modes '(python-mode)
+;;     :remote? t
+;;     :server-id 'pyright-remote
+;;     :multi-root t
+;;     :priority 3
+;;     :initialization-options (lambda () (ht-merge (lsp-configuration-section "pyright")
+;;                                                  (lsp-configuration-section "python")))
+;;     :initialized-fn (lambda (workspace)
+;;                       (with-lsp-workspace workspace
+;;                         (lsp--set-configuration
+;;                          (ht-merge (lsp-configuration-section "pyright")
+;;                                    (lsp-configuration-section "python")))))
+;;     :download-server-fn (lambda (_client callback error-callback _update?)
+;;                           (lsp-package-ensure 'pyright callback error-callback))
+;;     :notification-handlers (lsp-ht ("pyright/beginProgress" 'lsp-pyright--begin-progress-callback)
+;;                                    ("pyright/reportProgress" 'lsp-pyright--report-progress-callback)
+;;                                    ("pyright/endProgress" 'lsp-pyright--end-progress-callback)))))
 
-  (lsp-register-client
-   (make-lsp-client
-    :new-connection (lsp-tramp-connection (lambda () (cons "pyright-langserver" lsp-pyright-langserver-command-args)))
-    :major-modes '(python-mode)
-    :remote? t
-    :server-id 'pyright-remote
-    :multi-root t
-    :priority 3
-    :initialization-options (lambda () (ht-merge (lsp-configuration-section "pyright")
-                                                 (lsp-configuration-section "python")))
-    :initialized-fn (lambda (workspace)
-                      (with-lsp-workspace workspace
-                        (lsp--set-configuration
-                         (ht-merge (lsp-configuration-section "pyright")
-                                   (lsp-configuration-section "python")))))
-    :download-server-fn (lambda (_client callback error-callback _update?)
-                          (lsp-package-ensure 'pyright callback error-callback))
-    :notification-handlers (lsp-ht ("pyright/beginProgress" 'lsp-pyright--begin-progress-callback)
-                                   ("pyright/reportProgress" 'lsp-pyright--report-progress-callback)
-                                   ("pyright/endProgress" 'lsp-pyright--end-progress-callback)))))
-
-(use-package rust-mode
-  :hook (rust-mode . lsp))
 
 
 ;; LSP tramp remotes
@@ -348,20 +350,25 @@
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 
+
+;; Go (golang.org)
+;; ============================================================================
 ;; This is based on the default example: https://emacs-lsp.github.io/lsp-mode/page/remote/
-(use-package go-mode
-  :hook lsp
-  :config
-  (lsp-register-client
-   (make-lsp-client
-    :new-connection (lsp-tramp-connection "gopls")
-    :major-modes '(go-mode)
-    :remote? t
-    :server-id 'gopls-remote)))
+;; (use-package go-mode
+;;   :hook lsp
+;;   :config
+;;   (lsp-register-client
+;;    (make-lsp-client
+;;     :new-connection (lsp-tramp-connection "gopls")
+;;     :major-modes '(go-mode)
+;;     :remote? t
+;;     :server-id 'gopls-remote)))
 
-;; I would love it if eglot works but I just can't get it to connect easily
-;; (use-package eglot
-;;   :ensure t)
+
+;; Rust (rust-lang.org)
+;; ============================================================================
+;; (use-package rust-mode
+;;   :hook (rust-mode . lsp))
 
 
 ;; Example error from pyright
@@ -372,10 +379,10 @@
 ;;   /home/robb/tmp/errors.py:4:12 - error: Operator "+" not supported for types "str" and "Literal[1]"
 ;;     Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
 ;; 2 errors, 1 warning, 0 informations
-(add-to-list 'compilation-error-regexp-alist 'pyright)
 (add-to-list 'compilation-error-regexp-alist-alist
-	     ;; It would be nice if we could also capture the \\(error\\|warning\\) part as "KIND", but I got messed up on it
-	     '(pyright "^[[:blank:]]+\\([A-Za-z0-9.\/\[:blank:]]+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
+             ;; It would be nice if we could also capture the \\(error\\|warning\\) part as "KIND", but I got messed up on it
+             '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
+(add-to-list 'compilation-error-regexp-alist 'pyright)
 
 
 ;; Keymaps
