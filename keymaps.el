@@ -4,6 +4,12 @@
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-z") 'zap-up-to-char)
 
+;; When in an error-checking mode, bind helpful up/down commands
+(require 'flymake)
+(define-key flymake-mode-map (kbd "M-n") #'flymake-goto-next-error)
+(define-key flymake-mode-map (kbd "M-p") #'flymake-goto-prev-error)
+(define-key flymake-mode-map (kbd "C-c d") #'flymake-show-buffer-diagnostics)
+
 ;; Reserved for users: C-c <letter>
 (defun renzmann-manage-packages ()
   "Interactively manage the package-selected-packages variable."

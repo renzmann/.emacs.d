@@ -46,36 +46,10 @@
 
 ;; Editor Settings
 ;; ============================================================================
-;; Some parts of the theme are also modified in ~/.emacs.d/custom.el
-;; TODO set theme based on time of day: https://stackoverflow.com/a/14760833/13215205
-;; (use-package modus-themes
-;;   :init (load-theme 'modus-vivendi)
-;;   :bind ("<f5>" . 'modus-themes-toggle))
-(use-package doom-themes)
-;; Themes considered -- set using customize
-;; doom-dark+
-;; doom-dracula
-;; doom-gruvbox
-;; doom-material-dark
-;; doom-material
-;; doom-miarmare
-;; doom-monokai-machine
-;; doom-monokai-pro
-;; doom-monokai-spectrum
-;; doom-nord-aurora
-;; doom-one
-;; doom-palenight
-;; doom-sourcerer
-;; doom-spacegrey
-;; doom-tomorrow-night
-;; doom-vibrant
-;; doom-xcode
-;;
-;; When I find one I want to stick with I'll remove the doom-themes
-;; package to avoid bloat and just add in the theme I like under ~/.emacs.d/themes/
+(load-theme 'wombat)
 
 ;; Highlight line that point is on
-(global-hl-line-mode)
+;; (global-hl-line-mode)
 
 ;; Set a pretty Nerd Font
 ;; Test char and monospace:
@@ -101,9 +75,6 @@
 ;; TODO: On Windows, set default shell to powershell (pwsh)
 ;;
 ;;
-
-;; Visualize whitespace in programming buffers
-(add-hook 'prog-mode-hook (whitespace-mode 1))
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
@@ -132,7 +103,7 @@
 (setq vc-follow-symlinks t)
 
 ;; Show markers for trailing whitespace and delete on save
-(add-hook 'prog-mode-hook (setq show-trailing-whitespace t))
+(add-hook 'prog-mode-hook 'whitespace-mode)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 ;; Don't wrap lines
@@ -148,8 +119,15 @@
 ;; Enable mouse in terminal
 (xterm-mouse-mode 1)
 
-;; Scroll the compilation window as text appears
+;; Scroll the *compilation* window as text appears
 (setq compilation-scroll-output t)
+
+;; Enable colors in *compilation* buffer
+(require 'ansi-color)
+(defun colorize-compilation-buffer ()
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 ;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
 (defun revert-buffer-no-confirm ()
@@ -158,7 +136,7 @@
     (revert-buffer :ignore-auto :noconfirm))
 
 ;; TAB cycle if there are only few candidates
-(setq completion-cycle-threshold 3)
+;; (setq completion-cycle-threshold 3)
 
 ;; Enable indentation+completion using the TAB key.
 ;; `completion-at-point' is often bound to M-TAB.
@@ -173,7 +151,7 @@
 
 ;; Enable fuzzy matching in minibuffer
 ;; Built-in "fuzzy" completion style:
-(setq completion-styles '(flex basic))
+(setq completion-styles '(flex basic partial-completion))
 
 (if (version< emacs-version "27.1")
     (progn
@@ -199,9 +177,6 @@
 ;; Diable tool bar
 (tool-bar-mode -1)
 
-;; Distraction-free writing (usually for my blog)
-(use-package writeroom-mode)
-
 ;; Enable richer minibuffer annotations using the Marginalia package
 (marginalia-mode 1)
 
@@ -214,21 +189,8 @@
   (require 'exec-path-from-shell)
   (exec-path-from-shell-initialize))
 
-;; When in an error-checking mode, bind helpful up/down commands
-(use-package flymake
-  :bind (("M-n" . #'flymake-goto-next-error)
-         ("M-p" . #'flymake-goto-prev-error)
-         ("C-c d" . #'flymake-show-buffer-diagnostics)))
-
 ;; Allow for custom resize of images when displaying in org mode
 (setq org-image-actual-width nil)
-
-;; Enable colors in *compilation* buffer
-(require 'ansi-color)
-(defun colorize-compilation-buffer ()
-  (let ((inhibit-read-only t))
-    (ansi-color-apply-on-region (point-min) (point-max))))
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 
 ;; Autocomplete / Intellisense
@@ -327,7 +289,7 @@
 ;;           python-mode     ; pyright
 ;;           web-mode        ; ts-ls/HTML/CSS
 ;;           )
-;; 	 . lsp-deferred)
+;;           . lsp-deferred)
 ;;   :commands lsp
 ;;   :config
 ;;   (setq lsp-auto-guess-root t)
@@ -387,10 +349,8 @@
 ;; LSP tramp remotes
 ;; ============================================================================
 ;; need this to enable my user paths, like ~/go/bin
-(use-package tramp
-  :config
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
-
+(require 'tramp)
+(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
 
 ;; Go (golang.org)
@@ -413,6 +373,8 @@
 ;;   :hook (rust-mode . lsp))
 
 
+;; Python
+;; ============================================================================
 ;; Example error from pyright
 ;; --------------------------
 ;; /home/robb/tmp/errors.py/
