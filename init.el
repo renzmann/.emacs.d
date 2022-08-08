@@ -53,10 +53,9 @@
 ;;   :bind ("<f5>" . 'modus-themes-toggle))
 (use-package doom-themes)
 (global-hl-line-mode)
-;; Themes considered:
+;; Themes considered -- set using customize
 ;; doom-dark+
 ;; doom-dracula
-;; doom-acario-dark
 ;; doom-gruvbox
 ;; doom-material-dark
 ;; doom-material
@@ -101,8 +100,8 @@
 ;;
 ;;
 
-;; Visualize whitespace
-(global-whitespace-mode)
+;; Visualize whitespace in programming buffers
+(add-hook 'prog-mode-hook (whitespace-mode 1))
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
@@ -164,16 +163,16 @@
 (setq tab-always-indent 'complete)
 
 ;; Enable the powerful 'orderless' completion style: https://github.com/oantolin/orderless
-(use-package orderless
-  :demand
-  :custom
-  (completion-styles '(orderless flex default))
-  (completion-category-defaults nil)
-  (completion-category-overrides '((file (styles . (partial-completion)))
-                                   (eglot (styles . (orderless flex))))))
+;; (use-package orderless
+;;   :demand
+;;   :custom
+;;   (completion-styles '(orderless default))
+;;   (completion-category-defaults nil)
+;;   (completion-category-overrides '((file (styles . (partial-completion)))
+;;                                    (eglot (styles . (orderless flex))))))
 
 ;; Built-in "fuzzy" completion style:
-;; (setq completion-styles '(flex basic))
+(setq completion-styles '(flex basic))
 
 ;; Enable fuzzy matching in minibuffer
 ;; (require 'icomplete)
@@ -186,16 +185,22 @@
 ;; (unless (version< emacs-version "28.1")
 ;;   (setq icomplete-vertical-mode t))
 
-;; (fido-mode)
-;; (unless (version< emacs-version "28.1")
-;;   (fido-vertical-mode))
+(if (version< emacs-version "27.1")
+    (progn
+      (setq ido-enable-flex-matching t)
+      (setq ido-everywhere t)
+      (ido-mode 1))
+  (fido-mode))
+
+(unless (version< emacs-version "28.1")
+  (fido-vertical-mode))
 
 ;; I tried both of the built-in options above and I can't stand the
 ;; popup delay. Vertico is still much faster, and works on older
 ;; versions of emacs, too.  I also don't feel like configuring the
 ;; keymaps ala C-j --> RET and C-M-i --> TAB
-(use-package vertico
-  :init (vertico-mode))
+;; (use-package vertico
+;;   :init (vertico-mode))
 
 ;; Diable tool bar
 (tool-bar-mode -1)
