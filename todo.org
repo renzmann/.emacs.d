@@ -44,7 +44,6 @@
 + There's a great minimal config here: https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
 + It looks like outline-show-all and outline-mode in general can do the code folding I've been after
 + Even the /most minimal/ configs I've seen include:
-  - company-mode
   - use-package
   - expand-region
   - lsp-mode (over eglot)
@@ -66,8 +65,8 @@
     - https://github.com/bling/fzf.el
     - could try writing our own
   - =consult-find= is slow and relies on =find=
-  - vanilla method, =find-name-dired= is also slow, synchronous, relies on =find=
-  - `C-x p f` looks like the best built-in default, from project.el
+  - =find-name-dired= is also slow, synchronous, relies on =find=
+  - `C-x p f` looks like the best built-in default, from project.el, but uses =git ls= to get the potential files we can visit
 + try out prot's completion config: https://www.youtube.com/watch?v=43Dg5zYPHTU
   + embark: https://github.com/oantolin/embark
   + which-key: https://github.com/justbur/emacs-which-key
@@ -76,6 +75,7 @@
   + marginalia
 + Trying out org-babel with just bare python, using :python and :session, and turning off the confirm prompt
 + Using defined functions instead of lambdas makes their name and docstring appear when doing C-c C-h, which is helpful
++ We can use =C-u C-c C-p= to add a =poetry run= prefix to the python start command
 
 * Some good example configs
 + https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
@@ -90,4 +90,8 @@
 + There is an alpha integration between tangled org mode and lsp-mode
 
 * Blog
-** Building a pyright regex entry
+** The "vanilla" python workflow with pyright an poetry
+*** =C-u C-c C-p= to insert =poetry run=
+*** Building a pyright regex entry
+*** using =M-x compile= for project management commands like =poetry update=
+****

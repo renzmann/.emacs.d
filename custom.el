@@ -20,7 +20,7 @@
  '(org-confirm-babel-evaluate nil)
  '(org-edit-src-content-indentation 0)
  '(package-selected-packages
-   '(eglot doom-themes corfu rust-mode marginalia writeroom-mode use-package tree-sitter-langs tree-sitter go-mode exec-path-from-shell lua-mode markdown-mode magit restart-emacs))
+   '(doom-themes cape eglot corfu rust-mode marginalia writeroom-mode use-package tree-sitter-langs tree-sitter go-mode exec-path-from-shell lua-mode markdown-mode magit restart-emacs))
  '(python-indent-guess-indent-offset-verbose nil)
  '(python-shell-completion-native-enable nil)
  '(warning-suppress-types '((org)))
@@ -30,6 +30,4 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(font-lock-comment-face ((t (:foreground "#616e88" :slant italic))))
- '(icomplete-selected-match ((t (:background "gray25"))))
- '(whitespace-tab ((t (:foreground "#aa9e9f")))))
+ '(icomplete-selected-match ((t (:background "gray25")))))
