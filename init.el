@@ -167,9 +167,11 @@
 (use-package orderless
   :demand
   :custom
-  (completion-styles '(orderless))
+  (completion-styles '(orderless flex default))
   (completion-category-defaults nil)
   (completion-category-overrides '((file (styles . (partial-completion))))))
+
+;; Built-in "fuzzy" completion style:
 ;; (setq completion-styles '(flex basic))
 
 ;; Enable fuzzy matching in minibuffer
@@ -227,9 +229,9 @@
 ;; From the documentation: https://github.com/minad/corfu#installation-and-configuration
 (use-package corfu
   ;; Optional customizations
-  ;; :custom
-  ;; (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  ;; (corfu-auto t)                 ;; Enable auto completion
+  :custom
+  (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
+  (corfu-auto t)                 ;; Enable auto completion
   ;; (corfu-separator ?\s)          ;; Orderless field separator
   ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
@@ -277,7 +279,8 @@
           typescript-mode ; ts-ls (tsserver wrapper)
           python-mode     ; pyright
           web-mode        ; ts-ls/HTML/CSS
-          ) . lsp-deferred)
+          )
+	 . lsp-deferred)
   :commands lsp
   :config
   (setq lsp-auto-guess-root t)
@@ -334,8 +337,7 @@
                                    ("pyright/endProgress" 'lsp-pyright--end-progress-callback)))))
 
 (use-package rust-mode
-  :init
-  (add-hook 'rust-mode 'lsp))
+  :hook (rust-mode . lsp))
 
 
 ;; LSP tramp remotes
