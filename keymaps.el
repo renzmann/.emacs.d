@@ -2,6 +2,7 @@
 ;; ============================================================================
 ;; Better defaults
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
+(global-set-key (kbd "C-M-z") 'zap-up-to-char)
 
 ;; Reserved for users: C-c <letter>
 (defun renzmann-manage-packages ()
