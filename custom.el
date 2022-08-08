@@ -18,7 +18,7 @@
  '(org-confirm-babel-evaluate nil)
  '(org-edit-src-content-indentation 0)
  '(package-selected-packages
-   '(orderless doom-themes lsp-ui corfu rust-mode vertico marginalia writeroom-mode use-package tree-sitter-langs tree-sitter go-mode lsp-mode lsp-pyright exec-path-from-shell lua-mode markdown-mode magit restart-emacs))
+   '(eglot orderless doom-themes corfu rust-mode vertico marginalia writeroom-mode use-package tree-sitter-langs tree-sitter go-mode exec-path-from-shell lua-mode markdown-mode magit restart-emacs))
  '(python-indent-guess-indent-offset-verbose nil)
  '(python-shell-completion-native-enable nil)
  '(warning-suppress-types '((org)))
