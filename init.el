@@ -406,6 +406,16 @@
              '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
 (add-to-list 'compilation-error-regexp-alist 'pyright)
 
+(if (executable-find "ipython")
+    ;; Ipython is a superior REPL, and always has tab-complete, even
+    ;; on Windows, so if we can, we should use it
+    (setq python-shell-interpreter "ipython"
+          python-shell-interpreter-args "-i")
+  (when (eq system-type 'windows-nt)
+    ;; Windows redirects 'python' and 'python3' to the Microsoft
+    ;; store, sometimes...
+    (setq python-shell-interpreter "py")))
+
 
 ;; Keymaps
 ;; ============================================================================
