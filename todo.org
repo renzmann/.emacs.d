@@ -2,7 +2,7 @@
 + Set indentation/tabbing behavior for SQL
 + Figure out why I can't double-tab inside triple strings in Python
 + Learn how to use pyright as compiler (also remote version)
-  + Figure out the regex for this and publish it as a package
++ Figure out the regex for this and publish it as a package
 + What's the proper way to install and use fonts? Sometimes we don't get italics, etc.
 + Figure out pyright LSP integration (also remote version)
 + Learn etags set up for definition jumps
@@ -10,13 +10,14 @@
 + The (package-refresh-contents) and (package-install-selected-packages) should be run only when we're missing an installation
 + add git-gutter integration
 + add EIN (Jupyter) (https://github.com/millejoh/emacs-ipython-notebook/tree/master) -- this requires `elpy`, its official python module, which is unmaintained
-  - other options include this: https://github.com/nnicandro/emacs-jupyter
-  - and this: https://github.com/gregsexton/ob-ipython (it looks like org-mode can actually do a lot of what jupyter does)
+- other options include this: https://github.com/nnicandro/emacs-jupyter
+- and this: https://github.com/gregsexton/ob-ipython (it looks like org-mode can actually do a lot of what jupyter does)
 + Buttons and what not look terrible in most color themes - finding a good theme is really hard
 + There is probably some way to get =flx= working with company-mode
 + configure pyvenv-auto to work with poetry: https://github.com/nryotaro/pyvenv-auto
 + Bookmarks and .notes file
 + Copy doom-vibrant theme or whichever other one we want directly to avoid bloat
++ Compiling emacs - use Cairo and Harfbuzz for graphics
 
 * Cheatsheet
 + M-z "zap-to-char"
@@ -27,9 +28,9 @@
 + M-m "go to first non-whitespace character"
 + C-M-<SPC> and C-M-@ "mark next s-expression"
 + M-r to move cursor between top, bottom, middle
-  - M-r reposition center
-  - M-0 M-r top
-  - M-- M-r bottom
+- M-r reposition center
+- M-0 M-r top
+- M-- M-r bottom
 + M-; to comment stuff
 + C-x p f  find file in project
 + C-x v + to update project from git
@@ -44,11 +45,11 @@
 + There's a great minimal config here: https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
 + It looks like outline-show-all and outline-mode in general can do the code folding I've been after
 + Even the /most minimal/ configs I've seen include:
-  - use-package
-  - expand-region
-  - lsp-mode (over eglot)
+- use-package
+- expand-region
+- lsp-mode (over eglot)
 + Comments like these: https://www.reddit.com/r/emacs/comments/k4kemb/comment/gegw9ws/?utm_source=share&utm_medium=web2x&context=3 show a striking
-  difference of attitude from Vim (less so neovim)
+difference of attitude from Vim (less so neovim)
 + Company has company-tng-mode (tab 'n' go) for completion with just TAB, but didn't get it working
 + Virtual environment management looks kinda stale - maybe something like this is good? https://github.com/marcwebbie/auto-virtualenv
 + dired looks incredibly powerful, but some features are confusing
@@ -60,19 +61,19 @@
 + To get flyspell working on Windows, had to install `aspell` and `aspell-en` with pacman
 + FIDO (Fake IDO) mode is built-in, has a vertical mode, and improves on IDO since Emacs 27, so we've switched to that
 + Fuzzy finding is tougher to find
-  - =fzf= support is second class, but a couple solutions out there:
-    - https://www.youtube.com/watch?v=IDkx48JwDco
-    - https://github.com/bling/fzf.el
-    - could try writing our own
-  - =consult-find= is slow and relies on =find=
-  - =find-name-dired= is also slow, synchronous, relies on =find=
-  - `C-x p f` looks like the best built-in default, from project.el, but uses =git ls= to get the potential files we can visit
+- =fzf= support is second class, but a couple solutions out there:
+- https://www.youtube.com/watch?v=IDkx48JwDco
+- https://github.com/bling/fzf.el
+- could try writing our own
+- =consult-find= is slow and relies on =find=
+- =find-name-dired= is also slow, synchronous, relies on =find=
+- `C-x p f` looks like the best built-in default, from project.el, but uses =git ls= to get the potential files we can visit
 + try out prot's completion config: https://www.youtube.com/watch?v=43Dg5zYPHTU
-  + embark: https://github.com/oantolin/embark
-  + which-key: https://github.com/justbur/emacs-which-key
-  + vanilla minibuffer complete
-  + consult
-  + marginalia
++ embark: https://github.com/oantolin/embark
++ which-key: https://github.com/justbur/emacs-which-key
++ vanilla minibuffer complete
++ consult
++ marginalia
 + Trying out org-babel with just bare python, using :python and :session, and turning off the confirm prompt
 + Using defined functions instead of lambdas makes their name and docstring appear when doing C-c C-h, which is helpful
 + We can use =C-u C-c C-p= to add a =poetry run= prefix to the python start command
@@ -83,11 +84,14 @@
 
 * Notebooking
 + EIN:
-  - M-x causes whole screen to shift
-  - No LSP connect
++ M-x causes whole screen to shift
++ No LSP connect
   - No corfu tab-completion support
   - Interface is clunky
 + There is an alpha integration between tangled org mode and lsp-mode
++ org-babel-detangle: https://github.com/joaotavora/eglot/issues/523#issuecomment-684528616
++ Notebook document support in upcoming LSP specification: https://github.com/joaotavora/eglot/issues/523#issuecomment-1200404642
++ Reddit post of getting literate programming to work: https://www.reddit.com/r/emacs/comments/w4f4u3/using_rustic_eglot_and_orgbabel_for_literate/?utm_source=share&utm_medium=web2x&context=3
 
 * Blog
 ** The "vanilla" python workflow with pyright an poetry

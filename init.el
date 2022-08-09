@@ -122,7 +122,7 @@
 ;; Scroll the *compilation* window as text appears
 (setq compilation-scroll-output t)
 
-;; Enable colors in *compilation* buffer
+;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
 (require 'ansi-color)
 (defun colorize-compilation-buffer ()
   (let ((inhibit-read-only t))
@@ -191,6 +191,24 @@
 
 ;; Allow for custom resize of images when displaying in org mode
 (setq org-image-actual-width nil)
+
+
+;; Org Mode
+;; ============================================================================
+(use-package org
+  :bind
+  ("C-c C-v C-k" . #'org-babel-detangle))
+
+
+;; Flymake - compiler output parsing and diagnostics management
+;; ============================================================================
+(use-package flymake
+  :bind
+  (("M-n" . #'flymake-goto-next-error)
+   ("M-p" . #'flymake-goto-prev-error)
+   ("C-c d" . #'flymake-show-buffer-diagnostics))
+  :config
+  (setq flymake-wrap-around t))
 
 
 ;; Autocomplete / Intellisense
