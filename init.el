@@ -49,7 +49,16 @@
 (when (version< emacs-version "28.1")
   (package-install 'modus-themes))
 
-(load-theme 'modus-vivendi)
+(use-package emacs
+  :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
+        modus-themes-region '(bg-only no-extend))
+  :config
+  ;; Load the theme of your choice:
+  (load-theme 'modus-vivendi)
+  :bind ("<f5>" . modus-themes-toggle))
 
 ;; Highlight line that point is on
 (global-hl-line-mode)
@@ -285,7 +294,7 @@
 
 ;; Language Server (LSP) Specs
 ;; ============================================================================
-;; I would love it if eglot just worked but I just can't get it to connect easily to pyright over tramp
+;; Currently trying this out - I dislike the attitude of the new lsp-mode author: https://github.com/joaotavora/eglot/issues/180#issuecomment-446293381
 (use-package eglot
   :hook (python-mode . eglot-ensure))
 
