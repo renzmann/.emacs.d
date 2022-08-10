@@ -46,10 +46,13 @@
 
 ;; Editor Settings
 ;; ============================================================================
-(load-theme 'wombat)
+(when (version< emacs-version "28.1")
+  (package-install 'modus-themes))
+
+(load-theme 'modus-vivendi)
 
 ;; Highlight line that point is on
-;; (global-hl-line-mode)
+(global-hl-line-mode)
 
 ;; Set a pretty Nerd Font
 ;; Test char and monospace:
@@ -144,35 +147,34 @@
 
 ;; The powerful 'orderless' completion style: https://github.com/oantolin/orderless
 ;; Trying to figure out how how to get this only for M-x in icomplete
-;; (use-package orderless
-;;   :custom
-;;   (completion-styles '(flex basic partial-completion))
-;;   (completion-category-overrides '())
+(use-package orderless
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 
-;; Enable fuzzy matching in minibuffer
 ;; Built-in "fuzzy" completion style:
-(setq completion-styles '(flex basic partial-completion))
+;; (setq completion-styles '(flex basic partial-completion))
 
-(if (version< emacs-version "27.1")
-    (progn
-      (setq ido-enable-flex-matching t)
-      (setq ido-everywhere t)
-      (ido-mode 1))
-  (fido-mode)
-  ;; Have TAB complete using the first option and continue, instead of
-  ;; popping up the *Completions* buffer
-  (define-key icomplete-minibuffer-map [remap minibuffer-complete] 'icomplete-force-complete))
+;; (if (version< emacs-version "27.1")
+;;     (progn
+;;       (setq ido-enable-flex-matching t)
+;;       (setq ido-everywhere t)
+;;       (ido-mode 1))
+;;   (fido-mode)
+;;   ;; Have TAB complete using the first option and continue, instead of
+;;   ;; popping up the *Completions* buffer
+;;   (define-key icomplete-minibuffer-map [remap minibuffer-complete] 'icomplete-force-complete))
 
-(unless (version< emacs-version "28.1")
-  ;; I had to customize the icomplete-compute-delay variable to 0.0 to avoid delay on M-x popup
-  (fido-vertical-mode))
+;; (unless (version< emacs-version "28.1")
+;;   ;; I had to customize the icomplete-compute-delay variable to 0.0 to avoid delay on M-x popup
+;;   (fido-vertical-mode))
 
 ;; Before setting the built-in support above, I was using =vertico=,
 ;; but this had an occasional issue where the minibuffer would stall
 ;; after messing up some text, instead of automatically resetting
-;; (use-package vertico
-;;   :init
-;;   (vertico-mode))
+(use-package vertico
+  :init
+  (vertico-mode))
 
 ;; Diable tool bar
 (tool-bar-mode -1)
@@ -191,13 +193,6 @@
 
 ;; Allow for custom resize of images when displaying in org mode
 (setq org-image-actual-width nil)
-
-
-;; Org Mode
-;; ============================================================================
-(use-package org
-  :bind
-  ("C-c C-v C-k" . #'org-babel-detangle))
 
 
 ;; Flymake - compiler output parsing and diagnostics management
@@ -367,8 +362,9 @@
 ;; LSP tramp remotes
 ;; ============================================================================
 ;; need this to enable my user paths, like ~/go/bin
-(require 'tramp)
-(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+(use-package tramp
+  :config
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 
 
 ;; Go (golang.org)
@@ -402,19 +398,20 @@
 ;;     Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
 ;; 2 errors, 1 warning, 0 informations
 (add-to-list 'compilation-error-regexp-alist-alist
-             ;; It would be nice if we could also capture the \\(error\\|warning\\) part as "KIND", but I got messed up on it
+             ;; It would be nice if we could also capture the
+             ;; \\(error\\|warning\\) part as "KIND", but I got messed
+             ;; up on it
              '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
 (add-to-list 'compilation-error-regexp-alist 'pyright)
 
-(if (executable-find "ipython")
-    ;; Ipython is a superior REPL, and always has tab-complete, even
-    ;; on Windows, so if we can, we should use it
-    (setq python-shell-interpreter "ipython"
-          python-shell-interpreter-args "-i")
-  (when (eq system-type 'windows-nt)
-    ;; Windows redirects 'python' and 'python3' to the Microsoft
-    ;; store, sometimes...
-    (setq python-shell-interpreter "py")))
+(if (eq system-type 'windows-nt)
+    (if (executable-find "ipython")
+        ;; Ipython is *usualy* a superior REPL
+        (setq python-shell-interpreter "ipython"
+              python-shell-interpreter-args "-i")
+      ;; Windows redirects 'python' and 'python3' to the Microsoft store,
+      ;; sometimes...
+      (setq python-shell-interpreter "py")))
 
 
 ;; Keymaps
