@@ -5,23 +5,24 @@
 (global-set-key (kbd "C-M-z") 'zap-up-to-char)
 
 ;; Reserved for users: C-c <letter>
-(defun renzmann-open-init ()
+(defun renz/open-init ()
   "Go to my init.el file"
   (interactive)
   (find-file "~/.emacs.d/init.el"))
-(global-set-key (kbd "C-c i") 'renzmann-open-init)
+(global-set-key (kbd "C-c i") 'renz/open-init)
 
-(defun renzmann-open-keymaps ()
+(defun renz/open-keymaps ()
   "Go to my keymaps.el file"
   (interactive)
   (find-file "~/.emacs.d/keymaps.el"))
-(global-set-key (kbd "C-c k") 'renzmann-open-keymaps)
+(global-set-key (kbd "C-c k") 'renz/open-keymaps)
 
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c a") #'org-agenda)
 (global-set-key (kbd "C-c c") #'org-capture)
 (global-set-key (kbd "C-c r") #'recentf)
 (global-set-key (kbd "C-c t") #'org-babel-detangle)
+(define-key org-mode-map (kbd "C-c w") #'renz/org-kill-src-block)
 
 ;; Reserved for users: f5 - f8
 ;; (global-set-key (kbd "<f5>") #'modus-themes-toggle)

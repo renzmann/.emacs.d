@@ -413,6 +413,7 @@
              '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
 (add-to-list 'compilation-error-regexp-alist 'pyright)
 
+;; Set the best python interpreter (run-python) for this system
 (if (eq system-type 'windows-nt)
     (if (executable-find "ipython")
         ;; Ipython is *usualy* a superior REPL
@@ -421,6 +422,14 @@
       ;; Windows redirects 'python' and 'python3' to the Microsoft store,
       ;; sometimes...
       (setq python-shell-interpreter "py")))
+
+;; A kill-block command for working with org-mode src blocks
+(defun renz/org-kill-src-block ()
+  "Kill the src block around point, if applicable."
+  (interactive)
+  (org-babel-remove-result)
+  (org-mark-element)
+  (kill-region nil nil t))
 
 
 ;; Keymaps
