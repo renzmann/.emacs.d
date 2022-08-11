@@ -13,7 +13,7 @@
  '(org-confirm-babel-evaluate nil)
  '(org-edit-src-content-indentation 0)
  '(package-selected-packages
-   '(vertico orderless cape eglot corfu rust-mode marginalia use-package tree-sitter-langs tree-sitter go-mode exec-path-from-shell lua-mode markdown-mode magit restart-emacs))
+   '(blacken vertico orderless cape eglot corfu rust-mode marginalia use-package tree-sitter-langs tree-sitter go-mode exec-path-from-shell lua-mode markdown-mode magit restart-emacs))
  '(python-indent-guess-indent-offset-verbose nil)
  '(python-shell-completion-native-enable nil)
  '(warning-suppress-types '((org)))
