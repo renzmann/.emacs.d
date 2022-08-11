@@ -1,5 +1,7 @@
-;; Robert Enzmann's emacs configuration
-;; Either in ~/.emacs or ~/.emacs.d/init.el
+;; Robert Enzmann's Emacs configuration
+;;
+;; This will work in any canonical init file location, such as
+;;  ~/.emacs, ~/.emacs.d/init.el, or ~/.config/emacs/init.el
 (load-theme 'wombat)
 
 ;; Stop stupid bell
@@ -74,6 +76,7 @@
 (unless (version< emacs-version "28.1")
   ;; Sometimes I had to customize the icomplete-compute-delay variable
   ;; to 0.0 to avoid delay on M-x popup
+  (setq icomplete-compute-delay 0.0)
   (fido-vertical-mode))
 
 ;; Diable tool bar
