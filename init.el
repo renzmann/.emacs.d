@@ -173,7 +173,7 @@
 ;; (global-set-key (kbd "C-c f") ')
 ;; (global-set-key (kbd "C-c g") ')
 ;; (global-set-key (kbd "C-c h") ')
-;; (global-set-key (kbd "C-c i") ')
+(global-set-key (kbd "C-c i") 'switch-to-completions)
 ;; (global-set-key (kbd "C-c j") ')
 ;; (global-set-key (kbd "C-c k") ')
 (global-set-key (kbd "C-c l") #'org-store-link)
