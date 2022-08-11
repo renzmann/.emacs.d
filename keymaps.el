@@ -22,7 +22,6 @@
 (global-set-key (kbd "C-c c") #'org-capture)
 (global-set-key (kbd "C-c r") #'recentf)
 (global-set-key (kbd "C-c t") #'org-babel-detangle)
-(define-key org-mode-map (kbd "C-c w") #'renz/org-kill-src-block)
 
 ;; Reserved for users: f5 - f8
 ;; (global-set-key (kbd "<f5>") #'modus-themes-toggle)

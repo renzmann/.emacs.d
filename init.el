@@ -440,6 +440,9 @@
   (org-mark-element)
   (kill-region nil nil t))
 
+(use-package org
+  :bind ("C-c w" . #'renz/org-kill-src-block))
+
 
 ;; Keymaps
 ;; ============================================================================
