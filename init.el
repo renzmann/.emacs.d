@@ -155,16 +155,19 @@
 
 ;; Keybindings
 ;; ============================================================================
+;; Expanded defaults
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-z") 'zap-up-to-char)
 
+;; A better version of `dabbrev'
 ;; https://www.masteringemacs.org/article/text-expansion-hippie-expand
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 
 ;; Better buffer list for C-x C-b
 (global-set-key [remap list-buffers] 'ibuffer)
 
-;; User-reserved C-c bindings
+;; Reserved for users: C-c <letter> bindings and F5-F9
+;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html
 (global-set-key (kbd "C-c a") #'org-agenda)
 ;; (global-set-key (kbd "C-c b") ')
 (global-set-key (kbd "C-c c") #'org-capture)
