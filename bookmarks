@@ -1,0 +1,25 @@
+;;;; Emacs Bookmark Format Version 1;;;; -*- coding: utf-8-emacs; mode: lisp-data -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("init-org"
+ (filename . "~/.emacs.d/init.el")
+ (front-context-string . "Org mode\n;; ====")
+ (rear-context-string . "ery-mode t)\n\n;; ")
+ (position . 2635))
+("init-python"
+ (filename . "~/.emacs.d/init.el")
+ (front-context-string . "Python\n;; ======")
+ (rear-context-string . "entation 0)\n\n;; ")
+ (position . 2873))
+("Keybindings"
+ (filename . "~/.emacs.d/init.el")
+ (front-context-string . ";; Keybindings\n;")
+ (rear-context-string . "list 'pyright)\n\n")
+ (position . 3840))
+("init.el"
+ (filename . "~/.emacs.d/init.el")
+ (front-context-string . ";; My emacs conf")
+ (rear-context-string)
+ (position . 1))
+)
