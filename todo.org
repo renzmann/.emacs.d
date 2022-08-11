@@ -35,7 +35,7 @@
 + C-x p f  find file in project
 + C-x v + to update project from git
 + C-; in flyspell mode to correct last misspelling
-
++ C-d in dired rename/move to accept input literally: http://xahlee.info/emacs/emacs/emacs_icomplete_mode.html
 
 * Notes
 + `compile` is tramp-aware
