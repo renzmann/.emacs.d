@@ -1,11 +1,35 @@
-;; Robert Enzmann's Emacs configuration
+;;; Robert Enzmann's Emacs configuration
 ;;
 ;; This will work in any canonical init file location, such as
 ;;  ~/.emacs, ~/.emacs.d/init.el, or ~/.config/emacs/init.el
+
+;; Custom at the top for ensuring packages are installed
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages '(marginalia)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
+
+;; Keep packages in sync
+(package-autoremove)
+(package-install-selected-packages)
+
+;; Adds helpful information in the margin when using the minibuffer
+(marginalia-mode)
+
+;; Modus themes only included in Emacs >= 28.1
 (when (version< emacs-version "28.1")
   (package-refresh-contents)
   (package-install 'modus-themes))
 
+;; A theme that has been reliably legible in nearly every situation
 (load-theme 'modus-vivendi)
 
 ;; Stop stupid bell
@@ -38,6 +62,11 @@
 
 ;; Add a "File -> Open recent..." option to the menu
 (recentf-mode t)
+
+(defun renz/recentf-find-file ()
+  "Find a recent file using the minibuffer with completion"
+  (interactive)
+  (completing-read "Find recent file: " recentf-list))
 
 ;; Enable mouse in terminal
 (xterm-mouse-mode 1)
@@ -153,7 +182,7 @@
 ;; (global-set-key (kbd "C-c o") ')
 ;; (global-set-key (kbd "C-c p") ')
 ;; (global-set-key (kbd "C-c q") ')
-(global-set-key (kbd "C-c r") #'recentf)
+(global-set-key (kbd "C-c r") #'renz/recentf-find-file)
 ;; (global-set-key (kbd "C-c s") ')
 (global-set-key (kbd "C-c t") #'org-babel-detangle)
 ;; (global-set-key (kbd "C-c u") ')
