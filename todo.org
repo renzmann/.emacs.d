@@ -93,6 +93,7 @@ difference of attitude from Vim (less so neovim)
 + Notebook document support in upcoming LSP specification: https://github.com/joaotavora/eglot/issues/523#issuecomment-1200404642
 + Reddit post of getting literate programming to work: https://www.reddit.com/r/emacs/comments/w4f4u3/using_rustic_eglot_and_orgbabel_for_literate/?utm_source=share&utm_medium=web2x&context=3
 + Writing the =renz/org-kill-src-block= function
++ =org-babel-tangle-jump-to-org= navigates back from a tangled file block to the org file's block
 
 * Blog
 ** The "vanilla" python workflow with pyright an poetry
