@@ -2,7 +2,11 @@
 ;;
 ;; This will work in any canonical init file location, such as
 ;;  ~/.emacs, ~/.emacs.d/init.el, or ~/.config/emacs/init.el
-(load-theme 'wombat)
+(when (version< emacs-version "28.1")
+  (package-refresh-contents)
+  (package-install 'modus-themes))
+
+(load-theme 'modus-vivendi)
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
@@ -94,6 +98,14 @@
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
 
+;; A kill-block command for working with src blocks
+(defun renz/org-kill-src-block ()
+  "Kill the src block around point, if applicable."
+  (interactive)
+  (org-babel-remove-result)
+  (org-mark-element)
+  (kill-region nil nil t))
+
 ;; Python
 ;; ============================================================================
 ;; Example error from pyright
@@ -123,9 +135,30 @@
 ;; Better buffer list for C-x C-b
 (global-set-key [remap list-buffers] 'ibuffer)
 
-;; Global Org bindings
-(global-set-key (kbd "C-c l") #'org-store-link)
+;; User-reserved C-c bindings
 (global-set-key (kbd "C-c a") #'org-agenda)
+;; (global-set-key (kbd "C-c b") ')
 (global-set-key (kbd "C-c c") #'org-capture)
+;; (global-set-key (kbd "C-c d") ')
+;; (global-set-key (kbd "C-c e") ')
+;; (global-set-key (kbd "C-c f") ')
+;; (global-set-key (kbd "C-c g") ')
+;; (global-set-key (kbd "C-c h") ')
+;; (global-set-key (kbd "C-c i") ')
+;; (global-set-key (kbd "C-c j") ')
+;; (global-set-key (kbd "C-c k") ')
+(global-set-key (kbd "C-c l") #'org-store-link)
+(global-set-key (kbd "C-c m") #'modus-themes-toggle)
+;; (global-set-key (kbd "C-c n") ')
+;; (global-set-key (kbd "C-c o") ')
+;; (global-set-key (kbd "C-c p") ')
+;; (global-set-key (kbd "C-c q") ')
 (global-set-key (kbd "C-c r") #'recentf)
+;; (global-set-key (kbd "C-c s") ')
 (global-set-key (kbd "C-c t") #'org-babel-detangle)
+;; (global-set-key (kbd "C-c u") ')
+;; (global-set-key (kbd "C-c v") ')
+(global-set-key (kbd "C-c w") #'renz/org-kill-src-block)
+;; (global-set-key (kbd "C-c x") ')
+;; (global-set-key (kbd "C-c y") ')
+;; (global-set-key (kbd "C-c z") ')
