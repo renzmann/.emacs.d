@@ -1,4 +1,4 @@
-;; My emacs configuration
+;; Robert Enzmann's emacs configuration
 ;; Either in ~/.emacs or ~/.emacs.d/init.el
 (load-theme 'wombat)
 
