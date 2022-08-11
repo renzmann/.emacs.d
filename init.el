@@ -222,7 +222,7 @@
   ;; Optional customizations
   :custom
   (corfu-cycle t)                ;; Enable cycling for `corfu-next/previous'
-  (corfu-auto t)                 ;; Enable auto completion
+  ;; (corfu-auto t)                 ;; **Enabling auto-completion breaks eshell for me - it's auto inserting tabs/spaces**
   ;; (corfu-separator ?\s)          ;; Orderless field separator
   ;; (corfu-quit-at-boundary nil)   ;; Never quit at completion boundary
   ;; (corfu-quit-no-match nil)      ;; Never quit, even if there is no match
@@ -295,8 +295,8 @@
 ;; Language Server (LSP) Specs
 ;; ============================================================================
 ;; Currently trying this out - I dislike the attitude of the new lsp-mode author: https://github.com/joaotavora/eglot/issues/180#issuecomment-446293381
-(use-package eglot
-  :hook (python-mode . eglot-ensure))
+;; (use-package eglot
+;;   :hook (python-mode . eglot-ensure))
 
 ;; From a very helpful reddit comment by /u/FrozenOnPluto about geting LSP set up on remote systems:
 ;; https://www.reddit.com/r/emacs/comments/vhihjl/comment/igs6v68/?utm_source=share&utm_medium=web2x&context=3
@@ -423,6 +423,15 @@
       ;; sometimes...
       (setq python-shell-interpreter "py")))
 
+;; If we have pyright, use it as the default command for checking files
+(if (executable-find "pyright")
+    (setq python-check-command "pyright"))
+
+(add-hook 'python-mode-hook 'blacken-mode)
+
+
+;; Org-mode
+;; ============================================================================
 ;; A kill-block command for working with org-mode src blocks
 (defun renz/org-kill-src-block ()
   "Kill the src block around point, if applicable."
