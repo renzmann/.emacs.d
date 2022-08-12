@@ -66,7 +66,8 @@
 (defun renz/recentf-find-file ()
   "Find a recent file using the minibuffer with completion"
   (interactive)
-  (completing-read "Find recent file: " recentf-list))
+  (unless (find-file (completing-read "Find recent file: " recentf-list))
+    (message "Aborting...")))
 
 ;; Enable mouse in terminal
 (xterm-mouse-mode 1)
@@ -181,10 +182,10 @@
 ;; (global-set-key (kbd "C-c k") ')
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c m") #'modus-themes-toggle)
-;; (global-set-key (kbd "C-c n") ')
+(global-set-key (kbd "C-c n") 'next-completion)
 ;; (global-set-key (kbd "C-c o") ')
 ;; (global-set-key (kbd "C-c p") ')
-;; (global-set-key (kbd "C-c q") ')
+(global-set-key (kbd "C-c q") 'previous-completion)
 (global-set-key (kbd "C-c r") #'renz/recentf-find-file)
 ;; (global-set-key (kbd "C-c s") ')
 (global-set-key (kbd "C-c t") #'org-babel-detangle)
@@ -194,3 +195,6 @@
 ;; (global-set-key (kbd "C-c x") ')
 ;; (global-set-key (kbd "C-c y") ')
 ;; (global-set-key (kbd "C-c z") ')
+
+;; (define-key completion-in-region-mode-map (kbd "C-c n") 'next-completion)
+;; (define-key completion-in-region-mode-map (kbd "C-c p") 'previous-completion)
