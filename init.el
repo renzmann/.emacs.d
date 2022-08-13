@@ -32,6 +32,9 @@
 ;; A theme that has been reliably legible in nearly every situation
 (load-theme 'modus-vivendi)
 
+;; Highlight the line point is on
+(hl-line-mode)
+
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
 
@@ -125,8 +128,49 @@
 (display-battery-mode t)
 
 ;; Add ~/.local/bin to Eshell PATH when on *nix
-(unless (eq system-type 'windows-nt)
-  (eshell/addpath "~/.local/bin"))
+(defun renz/eshell-local-bin ()
+  "Ensure ~/.local/bin is on PATH when starting eshell"
+  (unless (eq system-type 'windows-nt)
+    (eshell/addpath "~/.local/bin")))
+
+;; eshell/addpath is buffer-local, so we have to run this as a hook
+(add-hook 'eshell-mode-hook 'renz/eshell-local-bin)
+
+;; Enable .dir-locals.el for remote files
+(setq enable-remote-dir-locals t)
+
+;; Autocompletion
+;; ============================================================================
+;; Display completions vertically as a single list
+(setq completions-format 'one-column)
+
+;; Hacking on the default completion system
+(defun renz/completion-accept ()
+  "Expand current text to first completion result"
+  (interactive)
+  ;; FIXME In python REPL, if we go back inside a symbol and edit it
+  ;;       to narrow the candidate list, then accept something with
+  ;;       this function, the trailing text isn't erased
+  (switch-to-completions)
+  (choose-completion))
+
+(defun renz/completion-kill-completion-buffer ()
+  "Close the *Completion* buffer without switching to it"
+  (interactive)
+  (kill-buffer "*Completions*"))
+
+;; The combination of these two allows me to slam C-j several times to
+;; quickly go down the candidate list
+(define-key completion-in-region-mode-map (kbd "C-j") 'switch-to-completions)
+(define-key completion-list-mode-map (kbd "C-j") 'next-completion)
+(define-key completion-list-mode-map (kbd "C-k") 'previous-completion)
+
+;; Accept the first result in the completion buffer without switching
+;; to it by just hitting RET
+(define-key completion-in-region-mode-map (kbd "RET") 'renz/completion-accept)
+
+;; Dismiss it with ESC
+(define-key completion-in-region-mode-map (kbd "ESC") 'renz/completion-kill-completion-buffer)
 
 ;; Org mode
 ;; ============================================================================
@@ -162,6 +206,8 @@
 
 ;; Keybindings
 ;; ============================================================================
+;; Keymap settings that don't belong under any of the previous headers
+
 ;; Expanded defaults
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-z") 'zap-up-to-char)
@@ -183,7 +229,7 @@
 ;; (global-set-key (kbd "C-c f") ')
 ;; (global-set-key (kbd "C-c g") ')
 ;; (global-set-key (kbd "C-c h") ')
-(global-set-key (kbd "C-c i") 'switch-to-completions)
+(global-set-key (kbd "C-c i") 'renz/completion-kill-completion-buffer)
 ;; (global-set-key (kbd "C-c j") ')
 ;; (global-set-key (kbd "C-c k") ')
 (global-set-key (kbd "C-c l") #'org-store-link)
