@@ -17,17 +17,17 @@
  ;; If there is more than one, they won't work right.
  )
 
+;; Modus themes only included in Emacs >= 28.1
+(when (version< emacs-version "28.1")
+  (add-to-list 'package-selected-packages 'modus-themes))
+
 ;; Keep packages in sync
 (package-autoremove)
+(package-refresh-contents)
 (package-install-selected-packages)
 
 ;; Adds helpful information in the margin when using the minibuffer
 (marginalia-mode)
-
-;; Modus themes only included in Emacs >= 28.1
-(when (version< emacs-version "28.1")
-  (package-refresh-contents)
-  (package-install 'modus-themes))
 
 ;; A theme that has been reliably legible in nearly every situation
 (load-theme 'modus-vivendi)
@@ -77,9 +77,11 @@
 
 ;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
 (require 'ansi-color)
+
 (defun colorize-compilation-buffer ()
   (let ((inhibit-read-only t))
     (ansi-color-apply-on-region (point-min) (point-max))))
+
 (add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
 
 ;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
@@ -121,6 +123,10 @@
 
 ;; Show laptop battery in the modeline
 (display-battery-mode t)
+
+;; Add ~/.local/bin to Eshell PATH when on *nix
+(unless (eq system-type 'windows-nt)
+  (eshell/addpath "~/.local/bin"))
 
 ;; Org mode
 ;; ============================================================================
