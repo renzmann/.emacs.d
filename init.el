@@ -80,12 +80,12 @@
 
 ;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
 (require 'ansi-color)
-
-(defun colorize-compilation-buffer ()
+(defun renz/colorize-compilation-buffer ()
+  "Enable colors in the *compilation* buffer."
   (let ((inhibit-read-only t))
     (ansi-color-apply-on-region (point-min) (point-max))))
 
-(add-hook 'compilation-filter-hook 'colorize-compilation-buffer)
+(add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
 
 ;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
 (defun revert-buffer-no-confirm ()
@@ -93,30 +93,6 @@
     (interactive)
     (revert-buffer :ignore-auto :noconfirm))
 
-;; Use TAB in place of C-M-i for competion-at-point
-(setq tab-always-indent 'complete)
-
-;; Built-in "fuzzy" completion style:
-(setq completion-styles '(flex basic partial-completion))
-
-;; Fuzzy, live minibuffer completion
-(if (version< emacs-version "27.1")
-    (progn
-      (setq ido-enable-flex-matching t)
-      (setq ido-everywhere t)
-      (ido-mode 1))
-  (fido-mode)
-  ;; Have TAB complete using the first option and continue, instead of
-  ;; popping up the *Completions* buffer
-  (define-key icomplete-minibuffer-map [remap minibuffer-complete] 'icomplete-force-complete))
-
-;; On newer versions of emacs, set minibuffer completion candidates to
-;; display vertically
-(unless (version< emacs-version "28.1")
-  ;; Sometimes I had to customize the icomplete-compute-delay variable
-  ;; to 0.0 to avoid delay on M-x popup
-  (setq icomplete-compute-delay 0.0)
-  (fido-vertical-mode))
 
 ;; Diable tool bar
 (tool-bar-mode -1)
@@ -141,10 +117,35 @@
 
 ;; Autocompletion
 ;; ============================================================================
-;; Display completions vertically as a single list
+;; Built-in "fuzzy" completion style:
+(setq completion-styles '(flex basic partial-completion))
+
+;; Fuzzy, live minibuffer completion
+(if (version< emacs-version "27.1")
+    (progn
+      (setq ido-enable-flex-matching t)
+      (setq ido-everywhere t)
+      (ido-mode 1))
+  (fido-mode)
+  ;; Have TAB complete using the first option and continue, instead of
+  ;; popping up the *Completions* buffer
+  (define-key icomplete-minibuffer-map [remap minibuffer-complete] 'icomplete-force-complete))
+
+;; On newer versions of emacs, set minibuffer completion candidates to
+;; display vertically
+(unless (version< emacs-version "28.1")
+  ;; Sometimes I had to customize the icomplete-compute-delay variable
+  ;; to 0.0 to avoid delay on M-x popup
+  (setq icomplete-compute-delay 0.0)
+  (fido-vertical-mode))
+
+;; Use TAB in place of C-M-i for competion-at-point
+(setq tab-always-indent 'complete)
+
+;; Display candidates in *Completion* buffer vertically as a single list
 (setq completions-format 'one-column)
 
-;; Hacking on the default completion system
+;; Shortcuts for common completion actions
 (defun renz/completion-accept ()
   "Expand current text to first completion result"
   (interactive)
