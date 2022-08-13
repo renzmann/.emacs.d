@@ -9,7 +9,12 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(marginalia)))
+ '(package-selected-packages '(marginalia))
+ '(safe-local-variable-values
+   '((eval setenv "PATH"
+	   (concat "/home/robb/repos/renzmann.github.io/content/posts/006_emacs_2_python/.venv/bin" ":"
+		   (getenv "PATH")))
+     (python-shell-exec-path . ".venv/bin/python"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -117,7 +122,7 @@
 
 ;; Autocompletion
 ;; ============================================================================
-;; Built-in "fuzzy" completion style:
+;; "flex" is the built-in "fuzzy" completion style
 (setq completion-styles '(flex basic partial-completion))
 
 ;; Fuzzy, live minibuffer completion
@@ -162,16 +167,16 @@
 
 ;; The combination of these two allows me to slam C-j several times to
 ;; quickly go down the candidate list
-(define-key completion-in-region-mode-map (kbd "C-j") 'switch-to-completions)
-(define-key completion-list-mode-map (kbd "C-j") 'next-completion)
-(define-key completion-list-mode-map (kbd "C-k") 'previous-completion)
+(define-key completion-in-region-mode-map (kbd "C-n") 'switch-to-completions)
+(define-key completion-list-mode-map (kbd "C-n") 'next-completion)
+(define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
+
+;; REMINDME Can't use RET, TAB, and similar because they will mess up
+;; required functionality in shell, minibuffer, and related modes
 
 ;; Accept the first result in the completion buffer without switching
-;; to it by just hitting RET
-(define-key completion-in-region-mode-map (kbd "RET") 'renz/completion-accept)
-
-;; Dismiss it with ESC
-(define-key completion-in-region-mode-map (kbd "ESC") 'renz/completion-kill-completion-buffer)
+(define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
+(define-key completion-in-region-mode-map (kbd "M-j") 'renz/completion-kill-completion-buffer)
 
 ;; Org mode
 ;; ============================================================================
