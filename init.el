@@ -227,6 +227,20 @@
 (if (executable-find "pyright")
     (setq python-check-command "pyright"))
 
+;; Microsoft Windows
+;; ============================================================================
+;; Set a bigger font on Windows
+(when (eq system-type 'windows-nt)
+  (set-face-attribute 'default nil :font "Hack NF-12"))
+
+;; Alternate ispell when we've got msys on Windows
+(when (eq system-type 'windows-nt)
+  (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe"))
+
+;; TODO on Windows, set default shell to pwsh
+(when (eq system-type 'windows-nt)
+  (setq explicit-shell-file-name "pwsh"))
+
 ;; Keybindings
 ;; ============================================================================
 ;; Keymap settings that don't belong under any of the previous headers
