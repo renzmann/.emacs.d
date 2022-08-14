@@ -9,12 +9,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(marginalia))
- '(safe-local-variable-values
-   '((eval setenv "PATH"
-	   (concat "/home/robb/repos/renzmann.github.io/content/posts/006_emacs_2_python/.venv/bin" ":"
-		   (getenv "PATH")))
-     (python-shell-exec-path . ".venv/bin/python"))))
+ '(package-selected-packages '(marginalia)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -120,6 +115,10 @@
 ;; Enable .dir-locals.el for remote files
 (setq enable-remote-dir-locals t)
 
+;; Disable asking about risky variables from .dir-locals.el
+;; https://emacs.stackexchange.com/a/44604
+;; (advice-add 'risky-local-variable-p :override #'ignore)
+
 ;; Autocompletion
 ;; ============================================================================
 ;; "flex" is the built-in "fuzzy" completion style
@@ -160,6 +159,12 @@
   (switch-to-completions)
   (choose-completion))
 
+(defun renz/jump-completion ()
+  "Jump to second completion."
+  (interactive)
+  (switch-to-completions)
+  (next-completion 1))
+
 (defun renz/completion-kill-completion-buffer ()
   "Close the *Completion* buffer without switching to it"
   (interactive)
@@ -167,7 +172,7 @@
 
 ;; The combination of these two allows me to slam C-j several times to
 ;; quickly go down the candidate list
-(define-key completion-in-region-mode-map (kbd "C-n") 'switch-to-completions)
+(define-key completion-in-region-mode-map (kbd "C-n") 'renz/jump-completion)
 (define-key completion-list-mode-map (kbd "C-n") 'next-completion)
 (define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
 
@@ -177,6 +182,7 @@
 ;; Accept the first result in the completion buffer without switching
 (define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
 (define-key completion-in-region-mode-map (kbd "M-j") 'renz/completion-kill-completion-buffer)
+(define-key completion-list-mode-map (kbd "M-j") 'renz/completion-kill-completion-buffer)
 
 ;; Org mode
 ;; ============================================================================
@@ -209,6 +215,12 @@
              ;; up on it
              '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
 (add-to-list 'compilation-error-regexp-alist 'pyright)
+
+;; Extra check commands for C-c C-v
+(if (executable-find "mypy")
+    (setq python-check-command "mypy"))
+(if (executable-find "pyright")
+    (setq python-check-command "pyright"))
 
 ;; Keybindings
 ;; ============================================================================
