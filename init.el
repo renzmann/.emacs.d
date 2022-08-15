@@ -122,7 +122,7 @@
 
 ;; Enable semantic mode for more intelligent code parsing
 ;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
-(semantic-mode)
+(add-hook 'python-mode-hook 'semantic-mode)
 
 ;; Autocompletion
 ;; ============================================================================
@@ -226,6 +226,23 @@
     (setq python-check-command "mypy"))
 (if (executable-find "pyright")
     (setq python-check-command "pyright"))
+
+;; I ran into something similar to this on Windows:
+;; https://github.com/jorgenschaefer/elpy/issues/733
+;;
+;; The culprit was "App Execution Aliases" with python and python3
+;; redirecting to the windows store. Using:
+;;
+;;     winkey -> Manage app execution aliases -> uncheck python and python3
+;;
+;; fixed it.
+
+;; Also on Windows - a `pip install` of `pyreadline3' is required to
+;; make tab-completion work at all. It provides the `readline' import
+;; symbol.
+
+;; Virtualenvs - require .dir-locals.el to have e.g.:
+;; ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
 
 ;; Microsoft Windows
 ;; ============================================================================
