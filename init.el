@@ -175,19 +175,19 @@
   (interactive)
   (kill-buffer "*Completions*"))
 
-;; The combination of these two allows me to slam C-j several times to
+;; The combination of these two allows me to slam C-n several times to
 ;; quickly go down the candidate list
 (define-key completion-in-region-mode-map (kbd "C-n") 'renz/jump-completion)
 (define-key completion-list-mode-map (kbd "C-n") 'next-completion)
 (define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
 
-;; REMINDME Can't use RET, TAB, and similar because they will mess up
-;; required functionality in shell, minibuffer, and related modes
+;; REMINDME Don't use RET, TAB, and similar because there's a good
+;; chance you'll mess up required functionality in shell, minibuffer,
+;; and related modes
 
 ;; Accept the first result in the completion buffer without switching
 (define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
-(define-key completion-in-region-mode-map (kbd "M-j") 'renz/completion-kill-completion-buffer)
-(define-key completion-list-mode-map (kbd "M-j") 'renz/completion-kill-completion-buffer)
+(define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
 
 ;; Org mode
 ;; ============================================================================
