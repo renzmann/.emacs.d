@@ -88,13 +88,6 @@
 
 (add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
 
-;; Source: http://www.emacswiki.org/emacs-en/download/misc-cmds.el
-(defun revert-buffer-no-confirm ()
-    "Revert buffer without confirmation."
-    (interactive)
-    (revert-buffer :ignore-auto :noconfirm))
-
-
 ;; Diable tool bar
 (tool-bar-mode -1)
 
@@ -248,14 +241,10 @@
 ;; ============================================================================
 ;; Set a bigger font on Windows
 (when (eq system-type 'windows-nt)
-  (set-face-attribute 'default nil :font "Hack NF-12"))
-
-;; Alternate ispell when we've got msys on Windows
-(when (eq system-type 'windows-nt)
-  (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe"))
-
-;; TODO on Windows, set default shell to pwsh
-(when (eq system-type 'windows-nt)
+  (set-face-attribute 'default nil :font "Hack NF-12")
+  ;; Alternate ispell when we've got msys on Windows
+  (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe")
+  ;; Set default shell to pwsh
   (setq explicit-shell-file-name "pwsh"))
 
 ;; Keybindings
