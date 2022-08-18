@@ -14,7 +14,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(marginalia))
+ '(package-selected-packages '(pyvenv marginalia))
  '(safe-local-variable-values '((python-check-command . "mypy"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -29,6 +29,7 @@
 
 ;; Keep packages in sync
 (package-autoremove)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-refresh-contents)
 (package-install-selected-packages)
 
@@ -251,6 +252,7 @@
 
 ;; Virtualenvs - require .dir-locals.el to have e.g.:
 ;; ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
+(add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
 
 
 ;; ============================================================================
