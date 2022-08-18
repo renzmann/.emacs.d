@@ -258,8 +258,8 @@
 ;; ============================================================================
 ;; 			  Microsoft Windows
 ;; ============================================================================
-;; Set a bigger font on Windows
 (when (eq system-type 'windows-nt)
+  ;; Set a better font on Windows
   (set-face-attribute 'default nil :font "Hack NF-12")
   ;; Alternate ispell when we've got msys on Windows
   (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe")
