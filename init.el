@@ -251,8 +251,15 @@
 ;; symbol.
 
 ;; Virtualenvs - require .dir-locals.el to have e.g.:
-;; ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
-(add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
+;;   ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
+;; However, this only operates on `run-python' shells.
+;;
+;; `pyvenv' solves the otherwise very annoying problem of getting
+;; external tools like `compile' and `eshell' to also use our virtual
+;; environment's python.  I may still use .dir-locals.el to set things
+;; like the python-check-command on a per-project basis, though.
+(when (package-installed-p 'pyvenv)
+  (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python))
 
 
 ;; ============================================================================
