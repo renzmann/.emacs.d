@@ -259,6 +259,7 @@
 ;; environment's python.  I may still use .dir-locals.el to set things
 ;; like the python-check-command on a per-project basis, though.
 (when (package-installed-p 'pyvenv)
+  (pyvenv-mode)
   (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python))
 
 
