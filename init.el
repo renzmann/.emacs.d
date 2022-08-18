@@ -2,7 +2,12 @@
 ;;
 ;; This will work in any canonical init file location, such as
 ;;  ~/.emacs, ~/.emacs.d/init.el, or ~/.config/emacs/init.el
+;; foo
 
+
+;; ============================================================================
+;; 			       Packages
+;; ============================================================================
 ;; Custom at the top for ensuring packages are installed
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -27,6 +32,10 @@
 (package-refresh-contents)
 (package-install-selected-packages)
 
+
+;; ============================================================================
+;; 			Misc. Editor Settings
+;; ============================================================================
 ;; Adds helpful information in the margin when using the minibuffer
 (marginalia-mode)
 
@@ -117,7 +126,9 @@
 ;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
 (add-hook 'python-mode-hook 'semantic-mode)
 
-;; Autocompletion
+
+;; ============================================================================
+;; 			    Autocompletion
 ;; ============================================================================
 ;; "flex" is the built-in "fuzzy" completion style
 (setq completion-styles '(flex basic partial-completion))
@@ -182,7 +193,9 @@
 (define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
 
-;; Org mode
+
+;; ============================================================================
+;; 			       Org mode
 ;; ============================================================================
 (setq org-babel-load-languages '((emacs-lisp . t) (python . t)))
 (setq org-confirm-babel-evaluate nil)
@@ -196,7 +209,9 @@
   (org-mark-element)
   (kill-region nil nil t))
 
-;; Python
+
+;; ============================================================================
+;; 				Python
 ;; ============================================================================
 ;; Example error from pyright
 ;; --------------------------
@@ -237,7 +252,9 @@
 ;; Virtualenvs - require .dir-locals.el to have e.g.:
 ;; ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
 
-;; Microsoft Windows
+
+;; ============================================================================
+;; 			  Microsoft Windows
 ;; ============================================================================
 ;; Set a bigger font on Windows
 (when (eq system-type 'windows-nt)
@@ -247,11 +264,14 @@
   ;; Set default shell to pwsh
   (setq explicit-shell-file-name "pwsh"))
 
-;; Keybindings
+
+;; ============================================================================
+;; 			     Keybindings
 ;; ============================================================================
 ;; Keymap settings that don't belong under any of the previous headers
-
+;; ----------------------------------------
 ;; Expanded defaults
+;; ----------------------------------------
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-z") 'zap-up-to-char)
 
@@ -262,8 +282,11 @@
 ;; Better buffer list for C-x C-b
 (global-set-key [remap list-buffers] 'ibuffer)
 
-;; Reserved for users: C-c <letter> bindings and F5-F9
+;; Reserved for users:
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html
+;; ----------------------------------------
+;; C-c <letter> bindings
+;; ----------------------------------------
 (global-set-key (kbd "C-c a") #'org-agenda)
 ;; (global-set-key (kbd "C-c b") ')
 (global-set-key (kbd "C-c c") #'org-capture)
@@ -290,3 +313,11 @@
 ;; (global-set-key (kbd "C-c x") ')
 ;; (global-set-key (kbd "C-c y") ')
 ;; (global-set-key (kbd "C-c z") ')
+;; ----------------------------------------
+;; F5 - F9
+;; ----------------------------------------
+;; (global-set-key (kbd "<f5>") ')
+;; (global-set-key (kbd "<f6>") ')
+;; (global-set-key (kbd "<f7>") ')
+;; (global-set-key (kbd "<f8>") ')
+;; (global-set-key (kbd "<f9>") ')
