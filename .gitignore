@@ -15,7 +15,6 @@
 
 recentf
 network-security.data
-elpa/
 server/
 transient/
 /.lsp-session-v1
@@ -25,3 +24,6 @@ transient/
 eshell/
 projects
 url/
+semanticdb/
+ede-projects.el
+errors.py
