@@ -15,9 +15,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("616a43bd873b09e966e837c7138e5b2561b3442b92723d21b8c80166f3ecd9f3" "e375c943dbc6cac4242684b7507ef97d30c4b4725614660c15b101cb50c66277" "a068a281383f92b622a058ec29755c6ae9f226c5e444ed126c05f71ba17570e5" "81006de2b57ea81ebf278277c61f8bdadbac4894f52f15220d932befea6e9839" "a8e9953f429517bd62a0bf136b081b436fd429ee1d445bc311d7eee83679d151" "f21756050d9a6cd931517b54356ffbce5a51e0cd15454199bf408254d6364963" "dc2790247fb4102399f17b6226bef2682ada45a9b0020661f168e4708964d3de" "126d30c137a7e345193d7f77f5b2af92d9669ebf60ed81346c897dbe16f40376" default))
- '(package-selected-packages '(eglot pyvenv ef-themes marginalia))
+ '(package-selected-packages '(eglot pyvenv marginalia))
  '(safe-local-variable-values
    '((python-shell-virtualenv-root . ".venv")
      (python-check-command . "mypy"))))
@@ -38,18 +36,32 @@
 
 
 ;; ============================================================================
+;; 			     Color Theme
+;; ============================================================================
+;; Prot's themes are been reliably legible in nearly every situation.
+;; As of writing, his ef-themes are under active development, so I'm
+;; tracking it manually.
+(add-to-list 'load-path "~/.emacs.d/manual-packages/ef-themes")
+(mapc #'disable-theme custom-enabled-themes)
+(require 'ef-themes)
+
+;; Chooses between light/dark theme, depending on time Emacs is launching
+(let ((now (cl-parse-integer (current-time-string) :start 11 :end 13)))
+  (if (and (< 6 now) (< now 19))
+      (load-theme 'ef-light :no-confirm)
+    (load-theme 'ef-night :no-confirm)))
+
+;; TODO
+(setq ef-themes-to-toggle '(ef-light ef-night))
+
+
+
+;; ============================================================================
 ;; 			Misc. Editor Settings
 ;; ============================================================================
 ;; Adds helpful information in the margin when using the minibuffer
 (when (package-installed-p 'marginalia)
   (marginalia-mode))
-
-;; Prot's themes are been reliably legible in nearly every situation.  The block below
-;; chooses between light/dark, depending on time of day I'm launching emacs
-(let ((now (cl-parse-integer (current-time-string) :start 11 :end 13)))
-  (if (and (< 6 now) (< now 19))
-    (load-theme 'ef-light)
-  (load-theme 'ef-winter)))
 
 ;; Highlight the line point is on
 (global-hl-line-mode)
@@ -343,7 +355,7 @@
 ;; (global-set-key (kbd "C-c j") ')
 ;; (global-set-key (kbd "C-c k") ')
 (global-set-key (kbd "C-c l") #'org-store-link)
-(global-set-key (kbd "C-c m") #'modus-themes-toggle)
+(global-set-key (kbd "C-c m") #'ef-themes-select)
 ;; (global-set-key (kbd "C-c n") ')
 ;; (global-set-key (kbd "C-c o") ')
 ;; (global-set-key (kbd "C-c p") ')
