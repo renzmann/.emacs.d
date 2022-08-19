@@ -2,7 +2,17 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("init.el"
+(("init-windows"
+ (filename . "~/.emacs.d/init.el")
+ (front-context-string . ";; 			  Microsof")
+ (rear-context-string . "===============\n")
+ (position . 10066))
+("init-keymaps"
+ (filename . "~/.emacs.d/init.el")
+ (front-context-string . ";; 			     Keybi")
+ (rear-context-string . "===============\n")
+ (position . 10861))
+("init.el"
  (filename . "~/.emacs.d/init.el")
  (front-context-string . ";; Robert Enzman")
  (rear-context-string)
@@ -17,9 +27,4 @@
  (front-context-string . "Python\n;; ======")
  (rear-context-string . "nil nil t))\n\n;; ")
  (position . 3348))
-("keybindings"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . ";; Keybindings\n;")
- (rear-context-string . "list 'pyright)\n\n")
- (position . 4315))
 )
