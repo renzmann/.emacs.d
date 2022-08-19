@@ -100,5 +100,6 @@ difference of attitude from Vim (less so neovim)
 *** =C-u C-c C-p= to insert =poetry run=
 *** Building a pyright regex entry
 *** using =M-x compile= for project management commands like =poetry update=
+** Discovering =cl-notevery= with =fido=, marginalia, searching source code
 
 ** Monte carlo simulation to optimize skating programs
