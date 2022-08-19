@@ -5,6 +5,7 @@
 ;; foo
 
 
+
 ;; ============================================================================
 ;; 			       Packages
 ;; ============================================================================
@@ -14,7 +15,9 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(pyvenv eglot marginalia))
+ '(custom-safe-themes
+   '("616a43bd873b09e966e837c7138e5b2561b3442b92723d21b8c80166f3ecd9f3" "e375c943dbc6cac4242684b7507ef97d30c4b4725614660c15b101cb50c66277" "a068a281383f92b622a058ec29755c6ae9f226c5e444ed126c05f71ba17570e5" "81006de2b57ea81ebf278277c61f8bdadbac4894f52f15220d932befea6e9839" "a8e9953f429517bd62a0bf136b081b436fd429ee1d445bc311d7eee83679d151" "f21756050d9a6cd931517b54356ffbce5a51e0cd15454199bf408254d6364963" "dc2790247fb4102399f17b6226bef2682ada45a9b0020661f168e4708964d3de" "126d30c137a7e345193d7f77f5b2af92d9669ebf60ed81346c897dbe16f40376" default))
+ '(package-selected-packages '(eglot pyvenv ef-themes marginalia))
  '(safe-local-variable-values
    '((python-shell-virtualenv-root . ".venv")
      (python-check-command . "mypy"))))
@@ -25,17 +28,15 @@
  ;; If there is more than one, they won't work right.
  )
 
-;; Modus themes only included in Emacs >= 28.1
-(when (version< emacs-version "28.1")
-  (add-to-list 'package-selected-packages 'modus-themes))
-
-;; Keep packages in sync
+;; Keep packages in sync - only refreshing/installing if something is missing
 (package-autoremove)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(package-refresh-contents)
-(package-install-selected-packages)
+(when (cl-notevery 'package-installed-p package-selected-packages)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+  (package-refresh-contents)
+  (package-install-selected-packages))
 
 
+
 ;; ============================================================================
 ;; 			Misc. Editor Settings
 ;; ============================================================================
@@ -43,8 +44,12 @@
 (when (package-installed-p 'marginalia)
   (marginalia-mode))
 
-;; A theme that has been reliably legible in nearly every situation
-(load-theme 'modus-vivendi)
+;; Prot's themes are been reliably legible in nearly every situation.  The block below
+;; chooses between light/dark, depending on time of day I'm launching emacs
+(let ((now (cl-parse-integer (current-time-string) :start 11 :end 13)))
+  (if (and (< 6 now) (< now 19))
+    (load-theme 'ef-light)
+  (load-theme 'ef-winter)))
 
 ;; Highlight the line point is on
 (hl-line-mode)
@@ -130,11 +135,15 @@
 (advice-add 'risky-local-variable-p :override #'ignore)
 
 
+
 ;; ============================================================================
 ;; 			    Autocompletion
 ;; ============================================================================
 ;; "flex" is the built-in "fuzzy" completion style
-(setq completion-styles '(flex basic partial-completion))
+(setq completion-styles '(basic partial-completion emacs22))
+(if (package-installed-p 'orderless)
+    (add-to-list 'completion-styles 'orderless)
+  (add-to-list 'completion-styles 'flex))
 
 ;; Fuzzy, live minibuffer completion
 (if (version< emacs-version "27.1")
@@ -197,6 +206,7 @@
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
 
 
+
 ;; ============================================================================
 ;; 			       Org mode
 ;; ============================================================================
@@ -213,6 +223,7 @@
   (kill-region nil nil t))
 
 
+
 ;; ============================================================================
 ;; 				Python
 ;; ============================================================================
@@ -271,6 +282,7 @@
 ;; (add-hook 'python-mode-hook 'semantic-mode)
 
 
+
 ;; ============================================================================
 ;; 			  Microsoft Windows
 ;; ============================================================================
@@ -296,6 +308,7 @@
   )
 
 
+
 ;; ============================================================================
 ;; 			     Keybindings
 ;; ============================================================================
