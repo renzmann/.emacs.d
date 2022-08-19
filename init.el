@@ -2,7 +2,6 @@
 ;;
 ;; This will work in any canonical init file location, such as
 ;;  ~/.emacs, ~/.emacs.d/init.el, or ~/.config/emacs/init.el
-;; foo
 
 
 
