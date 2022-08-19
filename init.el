@@ -14,8 +14,10 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(pyvenv marginalia))
- '(safe-local-variable-values '((python-check-command . "mypy"))))
+ '(package-selected-packages '(pyvenv eglot marginalia))
+ '(safe-local-variable-values
+   '((python-shell-virtualenv-root . ".venv")
+     (python-check-command . "mypy"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -260,7 +262,9 @@
 ;; like the python-check-command on a per-project basis, though.
 (when (package-installed-p 'pyvenv)
   (pyvenv-mode)
-  (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python))
+  ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
+  (pyvenv-tracking-mode)
+  )
 
 
 ;; ============================================================================
@@ -272,7 +276,20 @@
   ;; Alternate ispell when we've got msys on Windows
   (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe")
   ;; Set default shell to pwsh
-  (setq explicit-shell-file-name "pwsh"))
+  (setq explicit-shell-file-name "pwsh")
+  ;; Enable use of Winkey as super
+  (setq w32-pass-lwindow-to-system nil)
+  (setq w32-lwindow-modifier 'super) ; Left Windows key
+  (setq w32-pass-rwindow-to-system nil)
+  (setq w32-rwindow-modifier 'super) ; Right Windows key
+  ;; If we want to use a hotkey, we have to also register each
+  ;; combination specifically, like this:
+  ;;
+  ;; (w32-register-hot-key [s-p])
+  ;;
+  ;; s-l can NEVER be registered as a key combination, since Windows
+  ;; handles it at a much lower level.
+  )
 
 
 ;; ============================================================================
@@ -326,8 +343,13 @@
 ;; ----------------------------------------
 ;; F5 - F9
 ;; ----------------------------------------
-;; (global-set-key (kbd "<f5>") ')
+(global-set-key (kbd "<f5>") 'compile)
+(global-set-key (kbd "M-<f5>") 'recompile)
 ;; (global-set-key (kbd "<f6>") ')
+;; (global-set-key (kbd "M-<f6>") ')
 ;; (global-set-key (kbd "<f7>") ')
+;; (global-set-key (kbd "M-<f7>") ')
 ;; (global-set-key (kbd "<f8>") ')
+;; (global-set-key (kbd "M-<f8>") ')
 ;; (global-set-key (kbd "<f9>") ')
+;; (global-set-key (kbd "M-<f9>") ')
