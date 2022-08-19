@@ -40,7 +40,8 @@
 ;; 			Misc. Editor Settings
 ;; ============================================================================
 ;; Adds helpful information in the margin when using the minibuffer
-(marginalia-mode)
+(when (package-installed-p 'marginalia)
+  (marginalia-mode))
 
 ;; A theme that has been reliably legible in nearly every situation
 (load-theme 'modus-vivendi)
@@ -100,7 +101,7 @@
 
 (add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
 
-;; Diable tool bar
+;; Disable tool bar
 (tool-bar-mode -1)
 
 ;; Allow for custom resize of images when displaying in org mode
@@ -155,7 +156,7 @@
   (setq icomplete-compute-delay 0.0)
   (fido-vertical-mode))
 
-;; Use TAB in place of C-M-i for competion-at-point
+;; Use TAB in place of C-M-i for completion-at-point
 (setq tab-always-indent 'complete)
 
 ;; Display candidates in *Completion* buffer vertically as a single list
