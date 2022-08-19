@@ -230,6 +230,12 @@
 (define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
 
+;; FIXME how do we get rid of the double-TAB behavior on examples like this?
+;; (completioreg)
+;; This first completes out to (completion-reg), requiring another TAB
+;; for the *completion* buffer to show up Docs don't explain a way
+;; around it.
+
 
 
 ;; ============================================================================
