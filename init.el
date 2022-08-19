@@ -44,6 +44,18 @@
 (add-to-list 'load-path "~/.emacs.d/manual-packages/ef-themes")
 (mapc #'disable-theme custom-enabled-themes)
 (require 'ef-themes)
+
+(setq ef-themes-headings ; read the manual's entry of the doc string
+      '((0 . (1.9))
+        (1 . (1.8))
+        (2 . (1.7))
+        (3 . (1.6))
+        (4 . (1.5))
+        (5 . (1.4)) ; absence of weight means `bold'
+        (6 . (1.3))
+        (7 . (1.2))
+        (t . (1.1))))
+
 (setq ef-themes-to-toggle '(ef-light ef-winter))
 
 ;; FIXME without this, (load-theme) causes ef-themes-select list to
