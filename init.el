@@ -38,7 +38,7 @@
 ;; ============================================================================
 ;; 			     Color Theme
 ;; ============================================================================
-;; Prot's themes are been reliably legible in nearly every situation.
+;; Prot's themes have been reliably legible in nearly every situation.
 ;; As of writing, his ef-themes are under active development, so I'm
 ;; tracking it manually.
 (add-to-list 'load-path "~/.emacs.d/manual-packages/ef-themes")
