@@ -103,6 +103,8 @@
 
 ;; Disable tool bar
 (tool-bar-mode -1)
+;; The MENU bar, on the other hand (menu-bar-mode), is very handy, and
+;; I don't think I'll ever disable it
 
 ;; Allow for custom resize of images when displaying in org mode
 (setq org-image-actual-width nil)
