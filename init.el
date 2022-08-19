@@ -15,7 +15,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(eglot pyvenv marginalia))
+ '(package-selected-packages '(markdown-mode eglot pyvenv marginalia))
  '(safe-local-variable-values
    '((python-shell-virtualenv-root . ".venv")
      (python-check-command . "mypy"))))
@@ -44,15 +44,17 @@
 (add-to-list 'load-path "~/.emacs.d/manual-packages/ef-themes")
 (mapc #'disable-theme custom-enabled-themes)
 (require 'ef-themes)
+(setq ef-themes-to-toggle '(ef-light ef-winter))
+
+;; FIXME without this, (load-theme) causes ef-themes-select list to
+;; shrink down to only the loaded theme - probably a bug to file
+;; (ef-themes--enable-themes)
 
 ;; Chooses between light/dark theme, depending on time Emacs is launching
 (let ((now (cl-parse-integer (current-time-string) :start 11 :end 13)))
   (if (and (< 6 now) (< now 19))
       (load-theme 'ef-light :no-confirm)
-    (load-theme 'ef-night :no-confirm)))
-
-;; TODO
-(setq ef-themes-to-toggle '(ef-light ef-night))
+    (load-theme 'ef-winter :no-confirm)))
 
 
 
@@ -355,7 +357,7 @@
 ;; (global-set-key (kbd "C-c j") ')
 ;; (global-set-key (kbd "C-c k") ')
 (global-set-key (kbd "C-c l") #'org-store-link)
-(global-set-key (kbd "C-c m") #'ef-themes-select)
+(global-set-key (kbd "C-c m") #'ef-themes-toggle)
 ;; (global-set-key (kbd "C-c n") ')
 ;; (global-set-key (kbd "C-c o") ')
 ;; (global-set-key (kbd "C-c p") ')
