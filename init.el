@@ -52,7 +52,7 @@
   (load-theme 'ef-winter)))
 
 ;; Highlight the line point is on
-(hl-line-mode)
+(global-hl-line-mode)
 
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
