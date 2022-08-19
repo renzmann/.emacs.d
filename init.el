@@ -113,6 +113,7 @@
 (display-battery-mode t)
 
 ;; Add ~/.local/bin to Eshell PATH when on *nix
+;; FIXME is this really necessary?
 (defun renz/eshell-local-bin ()
   "Ensure ~/.local/bin is on PATH when starting eshell"
   (unless (eq system-type 'windows-nt)
@@ -127,10 +128,6 @@
 ;; Disable asking about risky variables from .dir-locals.el
 ;; https://emacs.stackexchange.com/a/44604
 (advice-add 'risky-local-variable-p :override #'ignore)
-
-;; Enable semantic mode for more intelligent code parsing
-;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
-(add-hook 'python-mode-hook 'semantic-mode)
 
 
 ;; ============================================================================
@@ -268,6 +265,10 @@
   ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
   (pyvenv-tracking-mode)
   )
+
+;; Enable semantic mode for more intelligent code parsing
+;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
+;; (add-hook 'python-mode-hook 'semantic-mode)
 
 
 ;; ============================================================================
