@@ -2,5 +2,5 @@
 My emacs configuration. Want to use it? Go ahead!
 
 ```sh
-cd ~ && git clone https://github.com/renzmann/.emacs.d
+cd ~ && git clone --recursive https://github.com/renzmann/.emacs.d
 ```
