@@ -28,14 +28,15 @@
 + M-m "go to first non-whitespace character"
 + C-M-<SPC> and C-M-@ "mark next s-expression"
 + M-r to move cursor between top, bottom, middle
-- M-r reposition center
-- M-0 M-r top
-- M-- M-r bottom
++ M-r reposition center
++ M-0 M-r top
++ M-- M-r bottom
 + M-; to comment stuff
 + C-x p f  find file in project
 + C-x v + to update project from git
 + C-; in flyspell mode to correct last misspelling
 + C-d in dired rename/move to accept input literally: http://xahlee.info/emacs/emacs/emacs_icomplete_mode.html
++ C-x x g to revert buffer with fewer confirm messages
 
 * Notes
 + `compile` is tramp-aware
