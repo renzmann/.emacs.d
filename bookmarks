@@ -27,11 +27,6 @@
  (front-context-string . ";; 			     Keybi")
  (rear-context-string . "===============\n")
  (position . 10861))
-("init.el"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . ";; Robert Enzman")
- (rear-context-string)
- (position . 1))
 ("init-org"
  (filename . "~/.emacs.d/init.el")
  (front-context-string . "Org mode\n;; ====")
