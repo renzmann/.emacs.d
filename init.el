@@ -55,16 +55,16 @@
         (7 . (1.2))
         (t . (1.1))))
 
-(setq ef-themes-to-toggle '(ef-light ef-winter))
+(setq ef-themes-to-toggle '(ef-day ef-winter))
 
 ;; FIXME without this, (load-theme) causes ef-themes-select list to
 ;; shrink down to only the loaded theme - probably a bug to file
 ;; (ef-themes--enable-themes)
 
-;; Chooses between light/dark theme, depending on time Emacs is launching
+;; Chooses between day/dark theme, depending on time Emacs is launching
 (let ((now (cl-parse-integer (current-time-string) :start 11 :end 13)))
   (if (and (< 6 now) (< now 19))
-      (load-theme 'ef-light :no-confirm)
+      (load-theme 'ef-day :no-confirm)
     (load-theme 'ef-winter :no-confirm)))
 
 
@@ -252,6 +252,11 @@
   (org-babel-remove-result)
   (org-mark-element)
   (kill-region nil nil t))
+
+;; https://willschenk.com/articles/2019/using_org_mode_in_hugo/
+(with-eval-after-load 'org
+  (setq org-startup-indented t) ; Enable `org-indent-mode' by default
+  (add-hook 'org-mode-hook #'visual-line-mode))
 
 
 
