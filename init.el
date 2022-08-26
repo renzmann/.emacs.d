@@ -6,7 +6,7 @@
 
 
 ;; ============================================================================
-;; 			       Packages
+;;                             Packages
 ;; ============================================================================
 ;; Custom at the top for ensuring packages are installed
 (custom-set-variables
@@ -16,7 +16,8 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages '(markdown-mode eglot pyvenv marginalia))
  '(safe-local-variable-values
-   '((python-shell-virtualenv-root . ".venv")
+   '((python-check-command . "poetry run pyright")
+     (python-shell-virtualenv-root . ".venv")
      (python-check-command . "mypy"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -35,7 +36,7 @@
 
 
 ;; ============================================================================
-;; 			     Color Theme
+;;                           Color Theme
 ;; ============================================================================
 ;; Prot's themes have been reliably legible in nearly every situation.
 ;; As of writing, his ef-themes are under active development, so I'm
@@ -70,7 +71,7 @@
 
 
 ;; ============================================================================
-;; 			Misc. Editor Settings
+;;                      Misc. Editor Settings
 ;; ============================================================================
 ;; Adds helpful information in the margin when using the minibuffer
 (when (package-installed-p 'marginalia)
@@ -162,7 +163,7 @@
 
 
 ;; ============================================================================
-;; 			    Autocompletion
+;;                          Autocompletion
 ;; ============================================================================
 ;; "flex" is the built-in "fuzzy" completion style
 (setq completion-styles '(basic partial-completion emacs22))
@@ -239,7 +240,7 @@
 
 
 ;; ============================================================================
-;; 			       Org mode
+;;                             Org mode
 ;; ============================================================================
 (setq org-babel-load-languages '((emacs-lisp . t) (python . t)))
 (setq org-confirm-babel-evaluate nil)
@@ -261,7 +262,7 @@
 
 
 ;; ============================================================================
-;; 				Python
+;;                              Python
 ;; ============================================================================
 ;; Example error from pyright
 ;; --------------------------
@@ -320,7 +321,7 @@
 
 
 ;; ============================================================================
-;; 			  Microsoft Windows
+;;                        Microsoft Windows
 ;; ============================================================================
 (when (eq system-type 'windows-nt)
   ;; Set a better font on Windows
@@ -346,7 +347,7 @@
 
 
 ;; ============================================================================
-;; 			     Keybindings
+;;                           Keybindings
 ;; ============================================================================
 ;; Keymap settings that don't belong under any of the previous headers
 ;; ----------------------------------------
