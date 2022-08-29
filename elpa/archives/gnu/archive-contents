@@ -96,7 +96,7 @@
 		   ("Matthew Carter" . "m@ahungry.com"))
 		  (:keywords "ahungry" "palette" "color" "theme" "emacs" "color-theme" "deftheme"))])
  (aircon-theme .
-	       [(0 0 5)
+	       [(0 0 6)
 		((emacs
 		  (24 4)))
 		"Cool and legible light theme" tar
@@ -105,7 +105,7 @@
 		 (:maintainer "Gregory Chamberlain" . "~chambln/public-inbox@lists.sr.ht")
 		 (:authors
 		  ("Gregory Chamberlain" . "greg@cosine.blue"))
-		 (:commit . "4741bd16f539ec8800dadc69f885b73b9fc2b106"))])
+		 (:commit . "0cecd81e7f6631c91ed0437d801517677e018c1d"))])
  (all .
       [(1 0)
        nil "Edit all lines matching a given regexp" single
@@ -151,14 +151,14 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:commit . "370ead445f5d0fc21b7338e05a64830c410368a3"))])
  (auctex .
-	 [(13 1 3)
+	 [(13 1 4)
 	  ((emacs
 	    (25 1)))
 	  "Integrated environment for *TeX*" tar
 	  ((:url . "https://www.gnu.org/software/auctex/")
 	   (:keywords "tex" "latex" "texinfo" "context" "doctex" "preview-latex")
 	   (:maintainer nil . "auctex-devel@gnu.org")
-	   (:commit . "b91f15b3a375445985143ed1d6e41490ea62780a"))])
+	   (:commit . "0029ca410fdce5a6d04199a5508e636dc6bef86a"))])
  (aumix-mode .
 	     [(7)
 	      nil "run the aumix program in a buffer" single
@@ -494,7 +494,7 @@
 			("Ingo Lohmar" . "i.lohmar@gmail.com"))
 		       (:keywords "abbrev" "convenience" "matching"))])
  (compat .
-	 [(28 1 2 0)
+	 [(28 1 2 2)
 	  ((emacs
 	    (24 3))
 	   (nadvice
@@ -505,7 +505,7 @@
 	   (:maintainer "Compat Development" . "~pkal/compat-devel@lists.sr.ht")
 	   (:authors
 	    ("Philip Kaludercic" . "philipk@posteo.net"))
-	   (:commit . "6b70229adf1ad7c2227789061dd1b2fc00d36ad8"))])
+	   (:commit . "d533692182c084bad623977b69f9dc298255eaab"))])
  (consult .
 	  [(0 18)
 	   ((emacs
@@ -519,7 +519,7 @@
 	     ("Daniel Mendler and Consult contributors"))
 	    (:commit . "0f55ad146b327d82a4a6dfa674349bfbbf3820e4"))])
  (consult-recoll .
-		 [(0 6 2)
+		 [(0 7)
 		  ((emacs
 		    (26 1))
 		   (consult
@@ -530,7 +530,7 @@
 		   (:maintainer "Jose A Ortega Ruiz" . "jao@gnu.org")
 		   (:authors
 		    ("Jose A Ortega Ruiz" . "jao@gnu.org"))
-		   (:commit . "8299efb610178a73ea809de74f87d724ee6183d6"))])
+		   (:commit . "714810486a13bb6adba5be0eaaca7eabe3298927"))])
  (context-coloring .
 		   [(8 1 0)
 		    ((emacs
@@ -596,14 +596,14 @@
 	      ("Stephen Meister" . "pallagun@gmail.com"))
 	     (:commit . "fa979dfafa1beb374bf42e937f0b5b99ed06222e"))])
  (crdt .
-       [(0 3 2)
+       [(0 3 3)
 	nil "Collaborative editing using Conflict-free Replicated Data Types" tar
 	((:url . "https://code.librehq.com/qhong/crdt.el")
 	 (:keywords "collaboration" "crdt")
 	 (:maintainer "Qiantan Hong" . "qhong@alum.mit.edu")
 	 (:authors
 	  ("Qiantan Hong" . "qhong@alum.mit.edu"))
-	 (:commit . "2feb88ea9a2589946014878790af585cad9f28fc"))])
+	 (:commit . "480f60fdda9e40848920fa460b59dfba23fa06e5"))])
  (crisp .
 	[(1 3 6)
 	 nil "CRiSP/Brief Emacs emulator" single
@@ -756,17 +756,18 @@
 	       ("Toby Cubitt" . "toby-predictive@dr-qubit.org"))
 	      (:keywords "extensions" "matching" "data structures trie" "tree" "dictionary" "completion" "regexp"))])
  (diff-hl .
-	  [(1 8 8)
+	  [(1 9 0)
 	   ((cl-lib
 	     (0 2))
 	    (emacs
-	     (24 3)))
+	     (25 1)))
 	   "Highlight uncommitted changes using VC" tar
 	   ((:url . "https://github.com/dgutov/diff-hl")
+	    (:keywords "vc" "diff")
 	    (:maintainer "Dmitry Gutov" . "dgutov@yandex.ru")
 	    (:authors
 	     ("Dmitry Gutov" . "dgutov@yandex.ru"))
-	    (:keywords "vc" "diff"))])
+	    (:commit . "37b00f3bad841e131d69442a89cbebc3041d996b"))])
  (diffview .
 	   [(1 0)
 	    nil "View diffs in side-by-side format" single
@@ -936,7 +937,7 @@
 	      (:maintainer "Markus Triska" . "triska@metalevel.at")
 	      (:url . "https://www.metalevel.at/ediprolog/"))])
  (eev .
-      [(20220814)
+      [(20220828)
        ((emacs
 	 (24 4)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -945,18 +946,18 @@
 	(:maintainer "Eduardo Ochs" . "eduardoochs@gmail.com")
 	(:authors
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
-	(:commit . "cf29c278e874f0147c8fcd9d0513a0d59972f91d"))])
+	(:commit . "db182293dbbef6f6611be4d8930da37481b6857a"))])
  (ef-themes .
-	    [(0 2 1)
+	    [(0 3 4)
 	     ((emacs
-	       (28 1)))
+	       (27 1)))
 	     "Colorful and legible themes" tar
 	     ((:url . "https://git.sr.ht/~protesilaos/ef-themes")
 	      (:keywords "faces" "theme" "accessibility")
 	      (:maintainer "Ef-Themes Development" . "~protesilaos/ef-themes@lists.sr.ht")
 	      (:authors
 	       ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	      (:commit . "c124ee310c5baa1789e8c4a8d9a597729593b703"))])
+	      (:commit . "dc35c4fdbdce3a3656177024e9be708def0122ea"))])
  (eglot .
 	[(1 8)
 	 ((emacs
@@ -1489,7 +1490,7 @@
 	   ("Durand" . "mmemmew@gmail.com"))
 	  (:url . "https://elpa.gnu.org/packages/ilist.html"))])
  (inspector .
-	    [(0 5)
+	    [(0 7)
 	     ((emacs
 	       (27)))
 	     "Tool for inspection of Emacs Lisp objects." tar
@@ -1498,7 +1499,7 @@
 	      (:maintainer "Mariano Montone" . "marianomontone@gmail.com")
 	      (:authors
 	       ("Mariano Montone" . "marianomontone@gmail.com"))
-	      (:commit . "69df4a49f3e8260c9a43c227960ead4d821341bc"))])
+	      (:commit . "44b3a9aec819b583d76bbbde1421b76c29fe2596"))])
  (ioccur .
 	 [(2 6)
 	  ((emacs
@@ -1824,13 +1825,14 @@
 	       ("Lennart Borgman" . "lennart.borgman@gmail.com"))
 	      (:maintainer "Lennart Borgman" . "lennart.borgman@gmail.com"))])
  (math-symbol-lists .
-		    [(1 2 1)
-		     nil "Lists of Unicode math symbols and latex commands" single
-		     ((:keywords "unicode" "symbols" "mathematics")
+		    [(1 3)
+		     nil "Lists of Unicode math symbols and latex commands" tar
+		     ((:url . "https://github.com/vspinu/math-symbol-lists")
+		      (:keywords "unicode" "symbols" "mathematics")
+		      (:maintainer "Vitalie Spinu" . "spinuvit@gmail.com")
 		      (:authors
 		       ("Vitalie Spinu" . "spinuvit@gmail.com"))
-		      (:maintainer "Vitalie Spinu" . "spinuvit@gmail.com")
-		      (:url . "https://github.com/vspinu/math-symbol-lists"))])
+		      (:commit . "590d9f09f8ad9aab747b97f077396a2035dcf50f"))])
  (mct .
       [(0 5 0)
        ((emacs
@@ -2090,14 +2092,14 @@
 	  ("Taro Kawagishi" . "tarok@transpulse.org"))
 	 (:maintainer "Thomas Fitzsimmons" . "fitzsim@fitzsim.org"))])
  (num3-mode .
-	    [(1 4)
+	    [(1 5)
 	     nil "highlight groups of digits in long numbers" tar
 	     ((:keywords "faces" "minor-mode")
 	      (:maintainer "Michal Nazarewicz" . "mina86@mina86.com")
 	      (:authors
 	       ("Felix Lee <felix8a@gmail.com>, Michal Nazarewicz" . "mina86@mina86.com"))
 	      (:url . "https://elpa.gnu.org/packages/num3-mode.html")
-	      (:commit . "cfd02039760b28ba5af8b12d8613afe26f32d560"))])
+	      (:commit . "fdf4d633e541875a6f765f5c3c8e0d4911122ed3"))])
  (oauth2 .
 	 [(0 16)
 	  ((cl-lib
@@ -3188,6 +3190,17 @@
 	   (:authors
 	    ("Kaushal Modi" . "kaushal.modi@gmail.com"))
 	   (:commit . "670e0a08f625175fd80137cf69e799619bf8a381"))])
+ (topspace .
+	   [(0 3 1)
+	    ((emacs
+	      (25 1)))
+	    "Recenter line 1 with scrollable upper margin/padding" tar
+	    ((:url . "https://github.com/trevorpogue/topspace")
+	     (:keywords "convenience" "scrolling" "center" "cursor" "margin" "padding")
+	     (:maintainer "Trevor Edwin Pogue" . "trevor.pogue@gmail.com")
+	     (:authors
+	      ("Trevor Edwin Pogue" . "trevor.pogue@gmail.com"))
+	     (:commit . "33c2a6f0a11d1d88cdb2065c5a897e33507f4c86"))])
  (tramp .
 	[(2 5 3 1)
 	 ((emacs
