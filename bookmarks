@@ -2,39 +2,4 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-(("init-packages"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . ";; 			       Pac")
- (rear-context-string . "===============\n")
- (position . 253))
-("init-theme"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . ";; 			     Color")
- (rear-context-string . "===============\n")
- (position . 1475))
-("init-autocomplete"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . ";; 			    Autoco")
- (rear-context-string . "===============\n")
- (position . 4443))
-("init-windows"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . ";; 			  Microsof")
- (rear-context-string . "===============\n")
- (position . 10066))
-("init-keymaps"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . ";; 			     Keybi")
- (rear-context-string . "===============\n")
- (position . 10861))
-("init-org"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . "Org mode\n;; ====")
- (rear-context-string . "ery-mode t)\n\n;; ")
- (position . 2879))
-("init-python"
- (filename . "~/.emacs.d/init.el")
- (front-context-string . "Python\n;; ======")
- (rear-context-string . "nil nil t))\n\n;; ")
- (position . 3348))
-)
+()
