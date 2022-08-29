@@ -27,6 +27,7 @@
  )
 
 ;; Keep packages in sync - only refreshing/installing if something is missing
+(package-initialize)
 (package-autoremove)
 (when (cl-notevery 'package-installed-p package-selected-packages)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
@@ -71,6 +72,18 @@
 ;; ============================================================================
 ;;                      Misc. Editor Settings
 ;; ============================================================================
+;; Initial frame size for GUI
+(setq renz/frame-default-alist
+      '(
+        (tool-bar-lines . 0)
+        (width . 180) ; chars
+        (height . 60) ; lines
+        (left . 150)
+        (top . 150)))
+(when (display-graphic-p)
+  (setq initial-frame-alist renz/frame-default-alist)
+  (setq default-frame-alist renz/frame-default-alist))
+
 ;; Adds helpful information in the margin when using the minibuffer
 (when (package-installed-p 'marginalia)
   (marginalia-mode))
