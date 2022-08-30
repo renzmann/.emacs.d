@@ -78,7 +78,7 @@
 		 (:maintainer "stardiviner" . "numbchild@gmail.com")
 		 (:keywords "languages" "arduino"))])
  (autothemer .
-	     [(0 2 9)
+	     [(0 2 10)
 	      ((dash
 		(2 10 0))
 	       (emacs
@@ -86,9 +86,7 @@
 	      "Conveniently define themes" tar
 	      ((:url . "https://github.com/jasonm23/autothemer")
 	       (:maintainer "Jason Milkins" . "jasonm23@gmail.com")
-	       (:authors
-		("Sebastian Sturm"))
-	       (:commit . "378f8707bdd944f19b6fd4544359e993c9113752"))])
+	       (:commit . "a528436677a54572849e404882f51a65ad166549"))])
  (better-jumper .
 		[(1 0 1)
 		 ((emacs
@@ -1863,7 +1861,7 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(17 20 20220819141933)
+	       [(17 21 20220829140316)
 		((emacs
 		  (24 1)))
 		"ergonomic modal keybinding minor mode." tar
@@ -1872,7 +1870,7 @@
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
 		 (:authors
 		  ("Xah Lee ( http://xahlee.info/ )"))
-		 (:commit . "6ed5cd15d6b63a967a5d10c3cdfafbe8bdf3e9c6"))])
+		 (:commit . "d3d11ab8224bc1472f848c04ce6b024d04762571"))])
  (xml-rpc .
 	  [(1 6 15)
 	   nil "An elisp implementation of clientside XML-RPC" tar
