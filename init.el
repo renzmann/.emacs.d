@@ -14,7 +14,8 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages '(ef-themes markdown-mode eglot pyvenv marginalia))
+ '(package-selected-packages
+   '(csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia))
  '(safe-local-variable-values
    '((python-check-command . "poetry run pyright")
      (python-shell-virtualenv-root . ".venv")
