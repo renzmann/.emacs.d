@@ -1,0 +1,23 @@
+language: nix
+
+env:
+  - EMACS_CI=emacs-26-3 TARGET=deploy-manual
+
+install: |
+    sh <(curl https://get.haskellstack.org/)
+    bash <(curl https://raw.githubusercontent.com/purcell/nix-emacs-ci/master/travis-install)
+    if  [ "$TARGET" = "deploy-manual" ]; then
+      nix-env -iA texinfo -f '<nixpkgs>'
+    fi
+
+script: |
+    make $TARGET
+
+notifications:
+  email: false
+  irc: "irc.freenode.org#haskell-emacs"
+
+# Local Variables:
+# indent-tabs-mode: nil
+# coding: utf-8
+# End:
