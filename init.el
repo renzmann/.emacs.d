@@ -117,6 +117,12 @@
 (setq-default truncate-lines t)
 (add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
 
+;; Relative line numbers in programming and writing modes
+(defun renz/display-line-numbers ()
+  (setq display-line-numbers 'relative))
+(add-hook 'prog-mode-hook 'renz/display-line-numbers)
+(add-hook 'text-mode-hook 'renz/display-line-numbers)
+
 ;; Delete the region when we yank on top of it
 (delete-selection-mode t)
 
