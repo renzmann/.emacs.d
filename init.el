@@ -85,12 +85,6 @@
   (setq initial-frame-alist renz/frame-default-alist)
   (setq default-frame-alist renz/frame-default-alist))
 
-;; Default font
-(when (eq system-type 'darwin)
-  ;; Uncomment this if we can't install Hack Nerd font
-  ;; (set-face-attribute 'default nil :font "Menlo-14")
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13"))
-
 ;; Adds helpful information in the margin when using the minibuffer
 (when (package-installed-p 'marginalia)
   (marginalia-mode))
@@ -361,6 +355,17 @@
   ;; s-l can NEVER be registered as a key combination, since Windows
   ;; handles it at a much lower level.
   )
+
+
+
+;; ============================================================================
+;; 				macOS
+;; ============================================================================
+;; Default font
+(when (eq system-type 'darwin)
+  ;; Uncomment this if we can't install Hack Nerd font
+  ;; (set-face-attribute 'default nil :font "Menlo-14")
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13"))
 
 
 
