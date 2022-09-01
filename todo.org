@@ -1,19 +1,15 @@
 * Figure these out (eventually)
 + Set indentation/tabbing behavior for SQL
-+ Figure out why I can't double-tab inside triple strings in Python
-+ Learn how to use pyright as compiler (also remote version)
 + Figure out the regex for this and publish it as a package
 + What's the proper way to install and use fonts? Sometimes we don't get italics, etc.
 + Figure out pyright LSP integration (also remote version)
 + Learn etags set up for definition jumps
 + How to run debugger protocol for interactive python sessions
-+ The (package-refresh-contents) and (package-install-selected-packages) should be run only when we're missing an installation
 + add git-gutter integration
 + add EIN (Jupyter) (https://github.com/millejoh/emacs-ipython-notebook/tree/master) -- this requires `elpy`, its official python module, which is unmaintained
 - other options include this: https://github.com/nnicandro/emacs-jupyter
 - and this: https://github.com/gregsexton/ob-ipython (it looks like org-mode can actually do a lot of what jupyter does)
 + Buttons and what not look terrible in most color themes - finding a good theme is really hard
-+ There is probably some way to get =flx= working with company-mode
 + configure pyvenv-auto to work with poetry: https://github.com/nryotaro/pyvenv-auto
 + Bookmarks and .notes file
 + Copy doom-vibrant theme or whichever other one we want directly to avoid bloat

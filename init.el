@@ -15,7 +15,7 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia))
+   '(vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia))
  '(safe-local-variable-values
    '((python-check-command . "poetry run pyright")
      (python-shell-virtualenv-root . ".venv")
@@ -30,8 +30,8 @@
 ;; Keep packages in sync - only refreshing/installing if something is missing
 (package-initialize)
 (package-autoremove)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (when (cl-notevery 'package-installed-p package-selected-packages)
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (package-refresh-contents)
   (package-install-selected-packages))
 
@@ -84,6 +84,10 @@
 (when (display-graphic-p)
   (setq initial-frame-alist renz/frame-default-alist)
   (setq default-frame-alist renz/frame-default-alist))
+
+;; Default font
+(when (eq system-type 'darwin)
+  (set-face-attribute 'default nil :font "Menlo-14"))
 
 ;; Adds helpful information in the margin when using the minibuffer
 (when (package-installed-p 'marginalia)
@@ -388,8 +392,8 @@
 ;; (global-set-key (kbd "C-c f") ')
 ;; (global-set-key (kbd "C-c g") ')
 ;; (global-set-key (kbd "C-c h") ')
-(global-set-key (kbd "C-c i") 'renz/completion-kill-completion-buffer)
-;; (global-set-key (kbd "C-c j") ')
+(global-set-key (kbd "C-c i") #'imenu)
+(global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
 ;; (global-set-key (kbd "C-c k") ')
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
@@ -419,3 +423,9 @@
 ;; (global-set-key (kbd "M-<f8>") ')
 ;; (global-set-key (kbd "<f9>") ')
 ;; (global-set-key (kbd "M-<f9>") ')
+
+
+;; ============================================================================
+;; 				Daemon
+;; ============================================================================
+(server-start)

@@ -2,4 +2,9 @@
 ;;; This format is meant to be slightly human-readable;
 ;;; nevertheless, you probably don't want to edit it.
 ;;; -*- End Of Bookmark File Format Version Stamp -*-
-()
+(("rand.org"
+ (filename . "~/rand.org")
+ (front-context-string . "* Keyboard short")
+ (rear-context-string)
+ (position . 1))
+)

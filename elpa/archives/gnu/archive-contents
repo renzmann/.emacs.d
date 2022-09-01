@@ -219,13 +219,14 @@
 	    ("Artur Malabarba" . "emacs@endlessparentheses.com"))
 	   (:commit . "0cf8b60f62876f3e75653a5fb30d5d5cdd74c586"))])
  (blist .
-	[(0 1)
+	[(0 2)
 	 nil "Display bookmarks in an ibuffer way" tar
 	 ((:keywords "convenience")
 	  (:maintainer "Durand" . "mmemmew@gmail.com")
 	  (:authors
 	   ("Durand" . "mmemmew@gmail.com"))
-	  (:url . "https://elpa.gnu.org/packages/blist.html"))])
+	  (:url . "https://elpa.gnu.org/packages/blist.html")
+	  (:commit . "c5aadbce3b713a2a9e7dba8c3c0881c43ebb2b4d"))])
  (bluetooth .
 	    [(0 3 1)
 	     ((emacs
@@ -711,7 +712,7 @@
 	    (:maintainer "Phil Sainty" . "psainty@orcon.net.nz")
 	    (:url . "https://savannah.nongnu.org/projects/delight"))])
  (denote .
-	 [(0 5 1)
+	 [(0 6 0)
 	  ((emacs
 	    (27 2)))
 	  "Simple notes with an efficient file-naming scheme" tar
@@ -719,7 +720,7 @@
 	   (:maintainer "Denote Development" . "~protesilaos/denote@lists.sr.ht")
 	   (:authors
 	    ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	   (:commit . "1d714e8fb260470ada1f48dce731f6849905b78f"))])
+	   (:commit . "4d67ff82a01a02b993370bf730bc2520e8cbb88a"))])
  (detached .
 	   [(0 7)
 	    ((emacs
@@ -949,7 +950,7 @@
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
 	(:commit . "db182293dbbef6f6611be4d8930da37481b6857a"))])
  (ef-themes .
-	    [(0 4 0)
+	    [(0 4 2)
 	     ((emacs
 	       (27 1)))
 	     "Colorful and legible themes" tar
@@ -958,7 +959,7 @@
 	      (:maintainer "Ef-Themes Development" . "~protesilaos/ef-themes@lists.sr.ht")
 	      (:authors
 	       ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	      (:commit . "24cf2c89dd3a083ec8c072366098d8bf34f413d5"))])
+	      (:commit . "feecafad1ffde54c913f6dbe03671a8a07156f26"))])
  (eglot .
 	[(1 8)
 	 ((emacs
@@ -1787,16 +1788,16 @@
 	   (:maintainer "Alexey Veretennikov" . "alexey.veretennikov@gmail.com")
 	   (:url . "https://github.com/fourier/loccur"))])
  (logos .
-	[(0 4 0)
+	[(0 5 0)
 	 ((emacs
 	   (27 1)))
 	 "Simple focus mode and extras" tar
 	 ((:url . "https://git.sr.ht/~protesilaos/logos")
 	  (:keywords "convenience" "focus" "writing" "presentation" "narrowing")
-	  (:maintainer "Protesilaos Stavrou" . "info@protesilaos.com")
+	  (:maintainer "Logos Development" . "~protesilaos/logos@lists.sr.ht")
 	  (:authors
 	   ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	  (:commit . "388bfbd9d8c880898d1832e888d5b41582dd1a85"))])
+	  (:commit . "83a2739a34e5dada28bf3679996d2cc2cce15984"))])
  (map .
       [(3 2 1)
        ((emacs
@@ -3675,4 +3676,15 @@
 	  (:maintainer "Alexey Veretennikov" . "alexey.veretennikov@gmail.com")
 	  (:authors
 	   ("Alexey Veretennikov" . "alexey.veretennikov@gmail.com"))
-	  (:keywords "files" "tools"))]))
+	  (:keywords "files" "tools"))])
+ (zuul .
+       [(0 3)
+	((emacs
+	  (28 1)))
+	"Interface to Zuul" tar
+	((:url . "https://git.sr.ht/~niklaseklund/zuul.el")
+	 (:keywords "convenience" "tools")
+	 (:maintainer "Niklas Eklund" . "niklas.eklund@posteo.net")
+	 (:authors
+	  ("Niklas Eklund" . "niklas.eklund@posteo.net"))
+	 (:commit . "c515b22c32f1306e920489868920957e3ebd1e2f"))]))
