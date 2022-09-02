@@ -7,20 +7,21 @@
 + How to run debugger protocol for interactive python sessions
 + add git-gutter integration
 + add EIN (Jupyter) (https://github.com/millejoh/emacs-ipython-notebook/tree/master) -- this requires `elpy`, its official python module, which is unmaintained
-- other options include this: https://github.com/nnicandro/emacs-jupyter
-- and this: https://github.com/gregsexton/ob-ipython (it looks like org-mode can actually do a lot of what jupyter does)
++ other options include this: https://github.com/nnicandro/emacs-jupyter
++ and this: https://github.com/gregsexton/ob-ipython (it looks like org-mode can actually do a lot of what jupyter does)
 + Buttons and what not look terrible in most color themes - finding a good theme is really hard
 + configure pyvenv-auto to work with poetry: https://github.com/nryotaro/pyvenv-auto
 + Bookmarks and .notes file
 + Copy doom-vibrant theme or whichever other one we want directly to avoid bloat
 + Compiling emacs - use Cairo and Harfbuzz for graphics
++ org-roam
 
 * Cheatsheet
 + M-z "zap-to-char"
 + M-% "Query replace"
 + C-x C-v "revert buffer/reload file"
 + C-u C-SPC "Jump back to mark in current buffer"
-+ M-@ "Expand region forward by a word"
++ M-@ (same as C-M-SPC) "Expand region forward by a word"
 + M-m "go to first non-whitespace character"
 + C-M-<SPC> and C-M-@ "mark next s-expression"
 + M-r to move cursor between top, bottom, middle
