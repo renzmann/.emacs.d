@@ -54,12 +54,8 @@
         (t . (1.1))))
 
 (setq ef-themes-to-toggle '(ef-day ef-night))
+(load-theme 'ef-night :no-confirm)
 
-;; Chooses between day/dark theme, depending on time Emacs is launching
-(let ((now (cl-parse-integer (current-time-string) :start 11 :end 13)))
-  (if (and (< 6 now) (< now 19))
-      (load-theme 'ef-day :no-confirm)
-    (load-theme 'ef-night :no-confirm)))
 
 
 
