@@ -41,10 +41,6 @@
 ;;                           Color Theme
 ;; ============================================================================
 ;; Prot's themes have been reliably legible in nearly every situation.
-;; As of writing, his ef-themes are under active development, so I'm
-;; tracking it manually.
-(require 'ef-themes)
-
 (setq ef-themes-headings ; read the manual's entry of the doc string
       '((0 . (1.9))
         (1 . (1.8))
@@ -57,10 +53,6 @@
         (t . (1.1))))
 
 (setq ef-themes-to-toggle '(ef-day ef-winter))
-
-;; FIXME without this, (load-theme) causes ef-themes-select list to
-;; shrink down to only the loaded theme - probably a bug to file
-;; (ef-themes--enable-themes)
 
 ;; Chooses between day/dark theme, depending on time Emacs is launching
 (let ((now (cl-parse-integer (current-time-string) :start 11 :end 13)))
