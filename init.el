@@ -16,7 +16,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes '(default))
  '(package-selected-packages
-   '(vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia))
+   '(exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia))
  '(safe-local-variable-values
    '((python-check-command . "poetry run pyright")
      (python-shell-virtualenv-root . ".venv")
@@ -53,13 +53,13 @@
         (7 . (1.2))
         (t . (1.1))))
 
-(setq ef-themes-to-toggle '(ef-day ef-winter))
+(setq ef-themes-to-toggle '(ef-day ef-night))
 
 ;; Chooses between day/dark theme, depending on time Emacs is launching
 (let ((now (cl-parse-integer (current-time-string) :start 11 :end 13)))
   (if (and (< 6 now) (< now 19))
       (load-theme 'ef-day :no-confirm)
-    (load-theme 'ef-winter :no-confirm)))
+    (load-theme 'ef-night :no-confirm)))
 
 
 
@@ -363,7 +363,16 @@
 (when (eq system-type 'darwin)
   ;; Uncomment this if we can't install Hack Nerd font
   ;; (set-face-attribute 'default nil :font "Menlo-14")
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13"))
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
+  (exec-path-from-shell-initialize))
+
+
+
+;; ============================================================================
+;; 				Linux
+;; ============================================================================
+(when (eq system-type 'gnu/linux)
+  (exec-path-from-shell-initialize))
 
 
 
