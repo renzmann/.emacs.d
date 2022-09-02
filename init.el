@@ -14,6 +14,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes '(default))
  '(package-selected-packages
    '(vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia))
  '(safe-local-variable-values
@@ -176,10 +177,9 @@
 ;;                          Autocompletion
 ;; ============================================================================
 ;; "flex" is the built-in "fuzzy" completion style
-(setq completion-styles '(basic partial-completion emacs22))
+(setq completion-styles '(flex basic partial-completion emacs22))
 (if (package-installed-p 'orderless)
-    (add-to-list 'completion-styles 'orderless)
-  (add-to-list 'completion-styles 'flex))
+    (add-to-list 'completion-styles 'orderless))
 
 ;; Fuzzy, live minibuffer completion
 (if (version< emacs-version "27.1")
