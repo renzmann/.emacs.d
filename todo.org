@@ -93,10 +93,23 @@ difference of attitude from Vim (less so neovim)
 + =org-babel-tangle-jump-to-org= navigates back from a tangled file block to the org file's block
 
 * Blog
-** The "vanilla" python workflow with pyright an poetry
-*** =C-u C-c C-p= to insert =poetry run=
-*** Building a pyright regex entry
-*** using =M-x compile= for project management commands like =poetry update=
-** Discovering =cl-notevery= with =fido=, marginalia, searching source code
-
 ** Monte carlo simulation to optimize skating programs
+** Org mode, babel, tangling, and untangling
+*** Demo using this document?
+
+*** TODO literate programming (ala Jupyter) with Org - builtin, but needs a couple lines of config
+
+** A note on ~semantic-mode~
+  This looks like an aborted first attempt at what would eventually
+  become the language server protocol.  It flat out doesn't work on
+  Windows, even after extensive searches for how to fix it.
+** Getting .dir-locals.el to evaluate correct .venv location
+#+begin_src elisp
+;; .dir-locals.el
+((python-mode . ((eval . (let* ((dir-local-found (dir-locals-find-file ".dir-locals.el"))
+                                (dir-local-path (if (stringp dir-local-found)
+                                                    dir-local-found
+                                                  (car dir-local-found)))
+                                (dynamic-venv-root (expand-file-name ".venv" dir-local-path)))
+                           (setq-local python-shell-virtualenv-root dynamic-venv-root))))))
+#+end_src
