@@ -318,7 +318,7 @@
   (pyvenv-mode)
   ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
   (pyvenv-tracking-mode)
-  )
+  (setenv "WORKON_HOME" "~/.cache/venvs"))
 
 ;; Enable semantic mode for more intelligent code parsing
 ;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
@@ -353,7 +353,7 @@
 
 
 ;; ============================================================================
-;; 				macOS
+;;                              macOS
 ;; ============================================================================
 ;; Default font
 (when (eq system-type 'darwin)
@@ -365,7 +365,7 @@
 
 
 ;; ============================================================================
-;; 				Linux
+;;                              Linux
 ;; ============================================================================
 (when (eq system-type 'gnu/linux)
   (exec-path-from-shell-initialize))
@@ -436,6 +436,6 @@
 
 
 ;; ============================================================================
-;; 				Daemon
+;;                              Daemon
 ;; ============================================================================
 (server-start)
