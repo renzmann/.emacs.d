@@ -318,7 +318,8 @@
   (pyvenv-mode)
   ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
   (pyvenv-tracking-mode)
-  (setenv "WORKON_HOME" "~/.cache/venvs"))
+  ;; (setenv "WORKON_HOME" "~/.conda/envs")
+  )
 
 ;; Enable semantic mode for more intelligent code parsing
 ;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
