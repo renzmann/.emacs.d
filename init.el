@@ -54,12 +54,8 @@
         (t . (1.1))))
 
 (setq ef-themes-to-toggle '(ef-day ef-night))
+(load-theme 'ef-night :no-confirm)
 
-;; Chooses between day/dark theme, depending on time Emacs is launching
-(let ((now (cl-parse-integer (current-time-string) :start 11 :end 13)))
-  (if (and (< 6 now) (< now 19))
-      (load-theme 'ef-day :no-confirm)
-    (load-theme 'ef-night :no-confirm)))
 
 
 
@@ -322,7 +318,7 @@
   (pyvenv-mode)
   ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
   (pyvenv-tracking-mode)
-  )
+  (setenv "WORKON_HOME" "~/.cache/venvs"))
 
 ;; Enable semantic mode for more intelligent code parsing
 ;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
@@ -357,7 +353,7 @@
 
 
 ;; ============================================================================
-;; 				macOS
+;;                              macOS
 ;; ============================================================================
 ;; Default font
 (when (eq system-type 'darwin)
@@ -369,7 +365,7 @@
 
 
 ;; ============================================================================
-;; 				Linux
+;;                              Linux
 ;; ============================================================================
 (when (eq system-type 'gnu/linux)
   (exec-path-from-shell-initialize))
@@ -440,6 +436,6 @@
 
 
 ;; ============================================================================
-;; 				Daemon
+;;                              Daemon
 ;; ============================================================================
 (server-start)
