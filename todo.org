@@ -15,6 +15,10 @@
 + Copy doom-vibrant theme or whichever other one we want directly to avoid bloat
 + Compiling emacs - use Cairo and Harfbuzz for graphics
 + org-roam
++ github.com/jacktasia/dumb-jump
++ There may be some way to [[http://xahlee.info/emacs/emacs/elisp_keyword_completion.html][adapt this]] to get FIDO completion for completion-at-point
+  - Maybe we just need something like =(setq completion-in-region-function 'completing-read)=?
++ See [[github.com/minad/corfu][corfu]] for how completion-in-region functions can be patched
 
 * Cheatsheet
 + M-z "zap-to-char"
@@ -34,6 +38,7 @@
 + C-; in flyspell mode to correct last misspelling
 + C-d in dired rename/move to accept input literally: http://xahlee.info/emacs/emacs/emacs_icomplete_mode.html
 + C-x x g to revert buffer with fewer confirm messages
++ =M-! find . -name "*.py" -print | etags -= to re-generate project tags
 
 * Notes
 + `compile` is tramp-aware
