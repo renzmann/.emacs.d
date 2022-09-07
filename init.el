@@ -17,10 +17,7 @@
  '(custom-safe-themes '(default))
  '(package-selected-packages
    '(yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia))
- '(safe-local-variable-values
-   '((python-check-command . "poetry run pyright")
-     (python-shell-virtualenv-root . ".venv")
-     (python-check-command . "mypy"))))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -35,6 +32,8 @@
 (when (cl-notevery 'package-installed-p package-selected-packages)
   (package-refresh-contents)
   (package-install-selected-packages))
+
+(add-to-list 'load-path "~/.emacs.d/packages")
 
 
 
@@ -265,6 +264,11 @@
   (setq org-startup-indented t) ; Enable `org-indent-mode' by default
   (add-hook 'org-mode-hook #'visual-line-mode))
 
+;; ============================================================================
+;;                                SQL
+;; ============================================================================
+(require 'hive)
+
 
 
 ;; ============================================================================
@@ -325,6 +329,10 @@
 ;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
 ;; (add-hook 'python-mode-hook 'semantic-mode)
 
+;; Don't mark the check command and virtualenv variables as unsafe
+(put 'python-check-command 'safe-local-variable #'stringp)
+(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+
 
 
 ;; ============================================================================
@@ -370,6 +378,13 @@
 ;; ============================================================================
 (when (eq system-type 'gnu/linux)
   (exec-path-from-shell-initialize))
+
+
+
+;; ============================================================================
+;;                              TRAMP
+;; ============================================================================
+(add-to-list 'tramp-remote-path "~/.conda/envs/robbe/bin")
 
 
 
