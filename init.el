@@ -16,8 +16,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes '(default))
  '(package-selected-packages
-   '(yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia))
- )
+   '(ob-async ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -264,10 +263,18 @@
   (setq org-startup-indented t) ; Enable `org-indent-mode' by default
   (add-hook 'org-mode-hook #'visual-line-mode))
 
+;; Enable asynchronous execution of src blocks
+(require 'ob-async)
+(add-hook 'ob-async-pre-execute-src-block-hook
+          '(lambda ()
+	     (require 'ob-sql-mode)
+	     (require 'hive2)))
+
 ;; ============================================================================
 ;;                                SQL
 ;; ============================================================================
-(require 'hive)
+(require 'hive2)
+(require 'ob-sql-mode)
 
 
 
@@ -384,7 +391,7 @@
 ;; ============================================================================
 ;;                              TRAMP
 ;; ============================================================================
-(add-to-list 'tramp-remote-path "~/.conda/envs/robbe/bin")
+;; (add-to-list 'tramp-remote-path "~/.conda/envs/robbe/bin")
 
 
 
