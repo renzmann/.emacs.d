@@ -39,6 +39,7 @@
 + C-d in dired rename/move to accept input literally: http://xahlee.info/emacs/emacs/emacs_icomplete_mode.html
 + C-x x g to revert buffer with fewer confirm messages
 + =M-! find . -name "*.py" -print | etags -= to re-generate project tags
++ When eglot appears to freeze on TRAMP, just hit C-g a bunch of times and it comes back
 
 * Notes
 + `compile` is tramp-aware
