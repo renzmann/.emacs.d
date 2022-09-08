@@ -16,7 +16,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes '(default))
  '(package-selected-packages
-   '(ob-async ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
+   '(orderless ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -172,27 +172,30 @@
 ;; ============================================================================
 ;; "flex" is the built-in "fuzzy" completion style
 (setq completion-styles '(flex basic partial-completion emacs22))
-(if (package-installed-p 'orderless)
-    (add-to-list 'completion-styles 'orderless))
+(if (not (package-installed-p 'orderless))
+    (add-to-list 'completion-styles 'flex)
+  (require 'orderless)
+  (add-to-list 'completion-styles 'orderless)
+  (setq completion-category-overrides '((file (styles basic partial-completion)))))
 
 ;; Fuzzy, live minibuffer completion
-(if (version< emacs-version "27.1")
-    (progn
-      (setq ido-enable-flex-matching t)
-      (setq ido-everywhere t)
-      (ido-mode 1))
-  (fido-mode)
-  ;; Have TAB complete using the first option and continue, instead of
-  ;; popping up the *Completions* buffer
-  (define-key icomplete-minibuffer-map [remap minibuffer-complete] 'icomplete-force-complete))
+;; (if (version< emacs-version "27.1")
+;;     (progn
+;;       (setq ido-enable-flex-matching t)
+;;       (setq ido-everywhere t)
+;;       (ido-mode 1))
+;;   (fido-mode)
+;;   ;; Have TAB complete using the first option and continue, instead of
+;;   ;; popping up the *Completions* buffer
+;;   (define-key icomplete-minibuffer-map [remap minibuffer-complete] 'icomplete-force-complete))
 
 ;; On newer versions of emacs, set minibuffer completion candidates to
 ;; display vertically
-(unless (version< emacs-version "28.1")
-  ;; Sometimes I had to customize the icomplete-compute-delay variable
-  ;; to 0.0 to avoid delay on M-x popup
-  (setq icomplete-compute-delay 0.0)
-  (fido-vertical-mode))
+;; (unless (version< emacs-version "28.1")
+;;   ;; Sometimes I had to customize the icomplete-compute-delay variable
+;;   ;; to 0.0 to avoid delay on M-x popup
+;;   (setq icomplete-compute-delay 0.0)
+;;   (fido-vertical-mode))
 
 ;; Use TAB in place of C-M-i for completion-at-point
 (setq tab-always-indent 'complete)
@@ -246,7 +249,10 @@
 ;; ============================================================================
 ;;                             Org mode
 ;; ============================================================================
-(setq org-babel-load-languages '((emacs-lisp . t) (python . t)))
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp .t )
+   (python . t)))
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
 
@@ -264,17 +270,21 @@
   (add-hook 'org-mode-hook #'visual-line-mode))
 
 ;; Enable asynchronous execution of src blocks
-(require 'ob-async)
-(add-hook 'ob-async-pre-execute-src-block-hook
-          '(lambda ()
-	     (require 'ob-sql-mode)
-	     (require 'hive2)))
+(when (package-installed-p 'ob-async)
+  (require 'ob-async)
+  (add-hook 'ob-async-pre-execute-src-block-hook
+            '(lambda ()
+	       (require 'ob-sql-mode)
+	       (require 'hive2))))
+
+(setq ob-async-no-async-languages-alist '("python"))
 
 ;; ============================================================================
 ;;                                SQL
 ;; ============================================================================
 (require 'hive2)
 (require 'ob-sql-mode)
+(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
 
 
 
@@ -391,7 +401,7 @@
 ;; ============================================================================
 ;;                              TRAMP
 ;; ============================================================================
-;; (add-to-list 'tramp-remote-path "~/.conda/envs/robbe/bin")
+(add-to-list 'tramp-remote-path "~/.conda/envs/hands_on/bin")
 
 
 
