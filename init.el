@@ -401,7 +401,7 @@
 ;; ============================================================================
 ;;                              TRAMP
 ;; ============================================================================
-;; (add-to-list 'tramp-remote-path "~/.conda/envs/hands_on/bin")
+(add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
 
 
 
@@ -423,8 +423,9 @@
 (global-set-key [remap list-buffers] 'ibuffer)
 
 ;; When flycheck is running (usually from a language server), bind next/previous
-(define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
-(define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error)
+(with-eval-after-load 'flymake
+  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
 
 ;; Reserved for users:
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html
