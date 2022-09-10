@@ -786,7 +786,7 @@
 		  ("David Vazquez Pua" . "davazp@gmail.com"))
 		 (:commit . "fe8d7e2db5581cd0cb7a69563bc44f0669f76322"))])
  (gruvbox-theme .
-		[(1 30 0)
+		[(1 30 1)
 		 ((autothemer
 		   (0 2)))
 		 "A retro-groove colour theme for Emacs" tar
@@ -794,7 +794,7 @@
 		  (:maintainer "Jason Milkins" . "jasonm23@gmail.com")
 		  (:authors
 		   ("Jason Milkins" . "jasonm23@gmail.com"))
-		  (:commit . "e9f8e6ee52727f6008c125b71a26c80cfa59c0af"))])
+		  (:commit . "3177b458dcbd5db6135a8d57fd5b765131e4da6a"))])
  (guru-mode .
 	    [(1 0)
 	     nil "Become an Emacs guru" tar
@@ -1364,15 +1364,16 @@
 	      (:authors
 	       ("Andreas Politz" . "politza@fh-trier.de")))])
  (php-mode .
-	   [(1 24 0)
+	   [(1 24 1)
 	    ((emacs
 	      (25 2)))
 	    "Major mode for editing PHP code" tar
 	    ((:url . "https://github.com/emacs-php/php-mode")
+	     (:keywords "languages" "php")
 	     (:maintainer "USAMI Kenta" . "tadsan@zonu.me")
 	     (:authors
 	      ("Eric James Michael Ritz"))
-	     (:keywords "languages" "php"))])
+	     (:commit . "ae3b0b184e096b8bd916516ae7db908dbb27ec1e"))])
  (popon .
 	[(0 9)
 	 ((emacs
@@ -1616,7 +1617,7 @@
 		     ("John Olsson" . "john@cryon.se"))
 		    (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed .
-	[(1 0 7)
+	[(1 0 8)
 	 ((emacs
 	   (25 1)))
 	 "A major mode for editing subtitles" tar
@@ -1625,7 +1626,7 @@
 	  (:maintainer "Sacha Chua" . "sacha@sachachua.com")
 	  (:authors
 	   ("Random User"))
-	  (:commit . "eefe94f308d7006a498b17fc9acf01790b793bcd"))])
+	  (:commit . "6591e1d49126dde225ae14b6dffefa905c98cc8d"))])
  (swift-mode .
 	     [(8 6 0)
 	      ((emacs
