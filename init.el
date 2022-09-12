@@ -16,7 +16,7 @@
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes '(default))
  '(package-selected-packages
-   '(vertico tree-sitter-langs tree-sitter orderless ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
+   '(vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -164,6 +164,14 @@
 ;; Disable asking about risky variables from .dir-locals.el
 ;; https://emacs.stackexchange.com/a/44604
 (advice-add 'risky-local-variable-p :override #'ignore)
+
+;; Vim keybindings
+(require 'evil)
+(evil-mode 1)
+
+;; Better terminal emulation
+(require 'vterm)
+(add-hook 'vterm-mode-hook 'turn-off-evil-mode)
 
 
 
@@ -404,7 +412,8 @@
 ;; ============================================================================
 ;;                              TRAMP
 ;; ============================================================================
-(add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
+(add-to-list 'tramp-remote-path "~/.local/bin")
+(add-to-list 'tramp-remote-path "~/.conda/envs/rae/bin")
 
 
 
