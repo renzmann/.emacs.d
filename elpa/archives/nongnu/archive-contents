@@ -1728,6 +1728,17 @@
 	    (:maintainer "Sergei Nosov <sergei.nosov [at] gmail.com>")
 	    (:authors
 	     ("Sergei Nosov <sergei.nosov [at] gmail.com>")))])
+ (treeview .
+	   [(1 1 0)
+	    ((emacs
+	      (24 4)))
+	    "A generic tree navigation library" tar
+	    ((:url . "https://github.com/tilmanrassy/emacs-treeview")
+	     (:keywords "lisp" "tools" "internal" "convenience")
+	     (:maintainer "Tilman Rassy" . "tilman.rassy@googlemail.com")
+	     (:authors
+	      ("Tilman Rassy" . "tilman.rassy@googlemail.com"))
+	     (:commit . "ad9c094d89feae3300ac6c9fa49a62f08d0ff0ef"))])
  (tuareg .
 	 [(2 3 0)
 	  ((caml
@@ -1874,7 +1885,7 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(17 21 20220829140316)
+	       [(18 0 20220911124616)
 		((emacs
 		  (24 1)))
 		"ergonomic modal keybinding minor mode." tar
@@ -1883,7 +1894,7 @@
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
 		 (:authors
 		  ("Xah Lee ( http://xahlee.info/ )"))
-		 (:commit . "d3d11ab8224bc1472f848c04ce6b024d04762571"))])
+		 (:commit . "845dd0636ef52bc76cf5fe2b7a238558d45f2849"))])
  (xml-rpc .
 	  [(1 6 15)
 	   nil "An elisp implementation of clientside XML-RPC" tar

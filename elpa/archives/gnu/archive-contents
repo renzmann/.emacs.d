@@ -325,7 +325,7 @@
 		("Artur Malabarba" . "emacs@endlessparentheses.com"))
 	       (:keywords "lisp"))])
  (cape .
-       [(0 8)
+       [(0 9)
 	((emacs
 	  (27 1)))
 	"Completion At Point Extensions" tar
@@ -333,7 +333,7 @@
 	 (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	 (:authors
 	  ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	 (:commit . "7042b048c8820223551d75c643b958befe7411d2"))])
+	 (:commit . "5cd6b861b7fb88c7a0a3d5062b36631b561fea8c"))])
  (capf-autosuggest .
 		   [(0 3)
 		    ((emacs
@@ -509,7 +509,7 @@
 	    ("Philip Kaludercic" . "philipk@posteo.net"))
 	   (:commit . "d533692182c084bad623977b69f9dc298255eaab"))])
  (consult .
-	  [(0 18)
+	  [(0 19)
 	   ((emacs
 	     (27 1))
 	    (compat
@@ -519,7 +519,7 @@
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	    (:authors
 	     ("Daniel Mendler and Consult contributors"))
-	    (:commit . "0f55ad146b327d82a4a6dfa674349bfbbf3820e4"))])
+	    (:commit . "ef3aad65e41e425fbcc80c4a9a1f6fc4cafff383"))])
  (consult-recoll .
 		 [(0 7)
 		  ((emacs
@@ -952,7 +952,7 @@
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
 	(:commit . "db182293dbbef6f6611be4d8930da37481b6857a"))])
  (ef-themes .
-	    [(0 4 2)
+	    [(0 5 0)
 	     ((emacs
 	       (27 1)))
 	     "Colorful and legible themes" tar
@@ -961,7 +961,7 @@
 	      (:maintainer "Ef-Themes Development" . "~protesilaos/ef-themes@lists.sr.ht")
 	      (:authors
 	       ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	      (:commit . "feecafad1ffde54c913f6dbe03671a8a07156f26"))])
+	      (:commit . "cf4ae83a54ca87457f5d24701ccacfe7c6309930"))])
  (eglot .
 	[(1 8)
 	 ((emacs
@@ -1058,6 +1058,29 @@
 		   (:authors
 		    ("Omar Antolín Camarena" . "omar@matem.unam.mx"))
 		   (:commit . "bd603d8f3b1bcff34aee2dc4b7b36dc7912b9b26"))])
+ (ement .
+	[(0 1 3)
+	 ((emacs
+	   (27 1))
+	  (map
+	   (2 1))
+	  (plz
+	   (0 2))
+	  (taxy
+	   (0 9))
+	  (taxy-magit-section
+	   (0 9))
+	  (svg-lib
+	   (0 2 5))
+	  (transient
+	   (0 3 7)))
+	 "Matrix client" tar
+	 ((:url . "https://github.com/alphapapa/ement.el")
+	  (:keywords "comm")
+	  (:maintainer "Adam Porter" . "adam@alphapapa.net")
+	  (:authors
+	   ("Adam Porter" . "adam@alphapapa.net"))
+	  (:commit . "9e3c7fe07d396a68fa78617465c2cdb9781e8e80"))])
  (emms .
        [(11)
 	((cl-lib
@@ -1494,16 +1517,16 @@
 	   ("Durand" . "mmemmew@gmail.com"))
 	  (:url . "https://elpa.gnu.org/packages/ilist.html"))])
  (inspector .
-	    [(0 7)
+	    [(0 8)
 	     ((emacs
-	       (27)))
-	     "Tool for inspection of Emacs Lisp objects." tar
+	       (27 1)))
+	     "Tool for inspection of Emacs Lisp objects" tar
 	     ((:url . "https://github.com/mmontone/emacs-inspector")
-	      (:keywords "debugging" "tool" "emacs-lisp" "development")
+	      (:keywords "debugging" "tool" "lisp" "development")
 	      (:maintainer "Mariano Montone" . "marianomontone@gmail.com")
 	      (:authors
 	       ("Mariano Montone" . "marianomontone@gmail.com"))
-	      (:commit . "44b3a9aec819b583d76bbbde1421b76c29fe2596"))])
+	      (:commit . "155794ebd620f4c7319f6013d671dcd519f43d33"))])
  (ioccur .
 	 [(2 6)
 	  ((emacs
@@ -1812,15 +1835,15 @@
 	(:url . "https://elpa.gnu.org/packages/map.html")
 	(:commit . "fa92b040c6738de7278605cadeace0c5380a0814"))])
  (marginalia .
-	     [(0 13)
+	     [(0 14)
 	      ((emacs
-		(26 1)))
+		(27 1)))
 	      "Enrich existing commands with completion annotations" tar
 	      ((:url . "https://github.com/minad/marginalia")
 	       (:maintainer "Omar Antolín Camarena <omar@matem.unam.mx>, Daniel Mendler" . "mail@daniel-mendler.de")
 	       (:authors
 		("Omar Antolín Camarena <omar@matem.unam.mx>, Daniel Mendler" . "mail@daniel-mendler.de"))
-	       (:commit . "bd98c02720bc59a5c185c293f60595d06dfd7637"))])
+	       (:commit . "b6d9a7e663847d5b539adf46ecb68d25d18f68a3"))])
  (markchars .
 	    [(0 2 2)
 	     nil "Mark chars fitting certain characteristics" single
@@ -2175,6 +2198,19 @@
 	(:authors
 	 ("Carsten Dominik" . "carsten.dominik@gmail.com"))
 	(:commit . "8ef6205a560cd3a92f8c5f8fe34953b80121c2cb"))])
+ (org-contacts .
+	       [(1 1)
+		((emacs
+		  (27 1))
+		 (org
+		  (9 3 4)))
+		"Contacts management system for Org Mode" tar
+		((:url . "https://repo.or.cz/org-contacts.git")
+		 (:keywords "contacts" "org-mode" "outlines" "hypermedia" "calendar")
+		 (:maintainer "stardiviner" . "numbchild@gmail.com")
+		 (:authors
+		  ("Julien Danjou" . "julien@danjou.info"))
+		 (:commit . "217ba04c9d638067a6ccb0829cf1885f54c1d568"))])
  (org-edna .
 	   [(1 1 2)
 	    ((emacs
@@ -3416,7 +3452,7 @@
 		  ("Wilson Snyder" . "wsnyder@wsnyder.org"))
 		 (:commit . "86f08fb377e2b8f2df0614c48783bdce347f3758"))])
  (vertico .
-	  [(0 26)
+	  [(0 27)
 	   ((emacs
 	     (27 1)))
 	   "VERTical Interactive COmpletion" tar
@@ -3424,7 +3460,7 @@
 	    (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	    (:authors
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	    (:commit . "ae6603c351eb075b7fca0cb31c029817a57b1973"))])
+	    (:commit . "64b57b04521db4616ac77fa151d3225082ce44ed"))])
  (vertico-posframe .
 		   [(0 5 4)
 		    ((emacs
