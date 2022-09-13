@@ -15,6 +15,8 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes '(default))
+ '(eldoc-echo-area-use-multiline-p nil)
+ '(evil-undo-system 'undo-redo)
  '(package-selected-packages
    '(vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
 (custom-set-faces
@@ -167,7 +169,13 @@
 
 ;; Vim keybindings
 (require 'evil)
-(evil-mode 1)
+;; (evil-mode 1)
+(add-hook 'prog-mode-hook 'turn-on-evil-mode)
+(add-hook 'text-mode-hook 'turn-on-evil-mode)
+
+;; Faster grep
+(when (executable-find "rg")
+  (setq grep-program "rg"))
 
 
 
@@ -285,6 +293,9 @@
 	       (require 'hive2))))
 
 (setq ob-async-no-async-languages-alist '("python"))
+(setq org-html-htmlize-output-type 'css)
+
+
 
 ;; ============================================================================
 ;;                                SQL
