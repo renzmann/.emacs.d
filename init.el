@@ -18,7 +18,7 @@
  '(eldoc-echo-area-use-multiline-p nil)
  '(evil-undo-system 'undo-redo)
  '(package-selected-packages
-   '(vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
+   '(corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -213,7 +213,7 @@
 ;;   (fido-vertical-mode))
 
 ;; Use TAB in place of C-M-i for completion-at-point
-(setq tab-always-indent 'complete)
+;; (setq tab-always-indent 'complete)
 
 ;; Display candidates in *Completion* buffer vertically as a single list
 (setq completions-format 'one-column)
@@ -259,6 +259,10 @@
 ;; for the *completion* buffer to show up Docs don't explain a way
 ;; around it.
 
+;; Enable auto completion and configure quitting
+(global-corfu-mode)
+(setq corfu-auto t
+      corfu-quit-no-match 'separator)
 
 
 ;; ============================================================================
