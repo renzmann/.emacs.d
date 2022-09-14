@@ -431,6 +431,7 @@
 ;; ============================================================================
 (add-to-list 'tramp-remote-path "~/.local/bin")
 (add-to-list 'tramp-remote-path "~/.conda/envs/rae/bin")
+
 ;; TODO look into these - https://github.com/doomemacs/doomemacs/issues/3909
 ;; (setq tramp-inline-compress-start-size 1000)
 ;; (setq tramp-copy-size-limit 10000)
