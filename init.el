@@ -124,6 +124,11 @@
   (unless (find-file (completing-read "Find recent file: " recentf-list))
     (message "Aborting...")))
 
+(defun renz/find-tag ()
+  "Use completing-read to navigate to a tag"
+  (interactive)
+  (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
+
 ;; Enable mouse in terminal
 (xterm-mouse-mode 1)
 
@@ -170,12 +175,17 @@
 ;; Vim keybindings
 (require 'evil)
 ;; (evil-mode 1)
-(add-hook 'prog-mode-hook 'turn-on-evil-mode)
-(add-hook 'text-mode-hook 'turn-on-evil-mode)
+;; (add-hook 'prog-mode-hook 'turn-on-evil-mode)
+;; (add-hook 'text-mode-hook 'turn-on-evil-mode)
 
 ;; Faster grep
 (when (executable-find "rg")
   (setq grep-program "rg"))
+
+;; Like vim's `ci'
+(add-to-list 'load-path "~/.emacs.d/packages/expand-region.el/")
+(require 'expand-region)
+(require 'change-inner)
 
 
 
@@ -486,16 +496,16 @@
 (global-set-key (kbd "C-c c") #'org-capture)
 ;; (global-set-key (kbd "C-c d") ')
 ;; (global-set-key (kbd "C-c e") ')
-;; (global-set-key (kbd "C-c f") ')
+(global-set-key (kbd "C-c f") #'renz/find-tag)
 ;; (global-set-key (kbd "C-c g") ')
 ;; (global-set-key (kbd "C-c h") ')
-(global-set-key (kbd "C-c i") #'imenu)
+(global-set-key (kbd "C-c i") #'change-inner)
 (global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
 ;; (global-set-key (kbd "C-c k") ')
 (global-set-key (kbd "C-c l") #'org-store-link)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
 ;; (global-set-key (kbd "C-c n") ')
-;; (global-set-key (kbd "C-c o") ')
+(global-set-key (kbd "C-c o") #'change-outer)
 ;; (global-set-key (kbd "C-c p") ')
 ;; (global-set-key (kbd "C-c q") ')
 (global-set-key (kbd "C-c r") #'renz/recentf-find-file)
@@ -520,9 +530,13 @@
 ;; (global-set-key (kbd "M-<f8>") ')
 ;; (global-set-key (kbd "<f9>") ')
 ;; (global-set-key (kbd "M-<f9>") ')
-
+;; ----------------------------------------
+;; Nonstandard bindings
+;; ----------------------------------------
+(global-set-key (kbd "C-=") #'er/expand-region)
 
 ;; ============================================================================
 ;;                              Daemon
 ;; ============================================================================
 (server-start)
+(put 'upcase-region 'disabled nil)
