@@ -452,6 +452,8 @@
 ;; (setq projectile--mode-line "Projectile")
 ;; (setq tramp-verbose 1)
 
+;; TODO copy over common ~/.ssh/config settings to make TRAMP faster
+
 
 
 ;; ============================================================================
