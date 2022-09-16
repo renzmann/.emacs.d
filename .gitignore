@@ -31,3 +31,5 @@ errors.py
 elpa/tsc-20220212.1632/tsc-dyn.dll
 elpa/vterm-*
 bookmarks
+packages/conda.el.org
+packages/conda.el.md
