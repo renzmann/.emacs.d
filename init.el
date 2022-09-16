@@ -1,7 +1,4 @@
 ;;; Robert Enzmann's Emacs configuration
-;;
-;; This will work in any canonical init file location, such as
-;;  ~/.emacs, ~/.emacs.d/init.el, or ~/.config/emacs/init.el
 
 
 
@@ -18,7 +15,7 @@
  '(eldoc-echo-area-use-multiline-p nil)
  '(evil-undo-system 'undo-redo)
  '(package-selected-packages
-   '(expand-region corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
+   '(sqlformat pythonic f s reformatter change-inner expand-region corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -183,7 +180,6 @@
   (setq grep-program "rg"))
 
 ;; Like vim's `ci'
-(add-to-list 'load-path "~/.emacs.d/packages/expand-region.el/")
 (require 'expand-region)
 (require 'change-inner)
 
@@ -317,6 +313,8 @@
 (require 'hive2)
 (require 'ob-sql-mode)
 (add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
+(require 'sqlformat)
+(setq sqlformat-command 'sqlfluff)
 
 
 
@@ -440,7 +438,7 @@
 ;;                              TRAMP
 ;; ============================================================================
 (add-to-list 'tramp-remote-path "~/.local/bin")
-(add-to-list 'tramp-remote-path "~/.conda/envs/rae/bin")
+;; (add-to-list 'tramp-remote-path "~/.conda/envs/rae/bin")
 
 ;; TODO look into these - https://github.com/doomemacs/doomemacs/issues/3909
 ;; (setq tramp-inline-compress-start-size 1000)
@@ -452,7 +450,19 @@
 ;; (setq projectile--mode-line "Projectile")
 ;; (setq tramp-verbose 1)
 
-;; TODO copy over common ~/.ssh/config settings to make TRAMP faster
+;; I often need to set these in ~/.ssh/config for TRAMP to speed up
+;; Host *
+;;      ControlMaster auto
+;;      ControlPath ~/.ssh/master-%h:%p
+;;      ControlPersist 10m
+;;      ForwardAgent yes
+;;      ServerAliveInterval 60
+
+(require 'conda)
+;; (setq conda-env-current-dir "/ssh:edgenode:~/.conda/envs/rae")
+;; (setq conda-tramp-path (replace-regexp-in-string ".*:" ""
+;;                                            (format "%s/bin" conda-env-current-dir)))
+;; (add-to-list 'tramp-remote-path conda-tramp-path)
 
 
 
@@ -530,7 +540,7 @@
 ;; (global-set-key (kbd "M-<f7>") ')
 ;; (global-set-key (kbd "<f8>") ')
 ;; (global-set-key (kbd "M-<f8>") ')
-;; (global-set-key (kbd "<f9>") ')
+(global-set-key (kbd "<f9>") 'vterm)
 ;; (global-set-key (kbd "M-<f9>") ')
 ;; ----------------------------------------
 ;; Nonstandard bindings
