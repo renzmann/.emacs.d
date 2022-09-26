@@ -15,7 +15,7 @@
  '(eldoc-echo-area-use-multiline-p nil)
  '(evil-undo-system 'undo-redo)
  '(package-selected-packages
-   '(sqlformat pythonic f s reformatter change-inner expand-region corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode sql-indent yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
+   '(blacken sql-indent lsp-mode sqlformat pythonic f s reformatter change-inner expand-region corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -59,6 +59,12 @@
 ;; ============================================================================
 ;;                      Misc. Editor Settings
 ;; ============================================================================
+;; Enable upcase-region
+(put 'upcase-region 'disabled nil)
+
+;; Automatically update buffers when contents change on disk
+(global-auto-revert-mode)
+
 ;; Initial frame size for GUI
 (setq renz/frame-default-alist
       '(
@@ -438,7 +444,7 @@
 ;;                              TRAMP
 ;; ============================================================================
 (add-to-list 'tramp-remote-path "~/.local/bin")
-;; (add-to-list 'tramp-remote-path "~/.conda/envs/rae/bin")
+(add-to-list 'tramp-remote-path "~/.conda/envs/rae/bin")
 
 ;; TODO look into these - https://github.com/doomemacs/doomemacs/issues/3909
 ;; (setq tramp-inline-compress-start-size 1000)
@@ -467,6 +473,69 @@
 
 
 ;; ============================================================================
+;; 			 LSP (Eglot lsp-mode)
+;; ============================================================================
+(require 'lsp-mode)
+
+(setq lsp-keymap-prefix "s-p")
+(lsp-register-client
+    (make-lsp-client :new-connection (lsp-tramp-connection "pylsp")
+                     :major-modes '(python-mode)
+                     :remote? t
+                     :server-id 'pylsp-remote))
+
+;; (lsp-register-client
+;;     (make-lsp-client :new-connection (lsp-tramp-connection "pyright-langserver --stdio")
+;;                      :major-modes '(python-mode)
+;;                      :remote? t
+;;                      :server-id 'pyright-remote))
+
+;; (defun lsp-tramp-connection (local-command &optional generate-error-file-fn)
+;;     "Create LSP stdio connection named name.
+;; LOCAL-COMMAND is either list of strings, string or function which
+;; returns the command to execute."
+;;     (defvar tramp-connection-properties)
+;;     ;; Force a direct asynchronous process.
+;;     (when (file-remote-p default-directory)
+;;       (add-to-list 'tramp-connection-properties
+;;                    (list (regexp-quote (file-remote-p default-directory))
+;;                          "direct-async-process" t)))
+;;     (list :connect (lambda (filter sentinel name environment-fn)
+;;                      (let* ((final-command (lsp-resolve-final-function
+;;                                             local-command))
+;;                             (_stderr (or (when generate-error-file-fn
+;;                                            (funcall generate-error-file-fn name))
+;;                                          (format "/tmp/%s-%s-stderr" name
+;;                                                  (cl-incf lsp--stderr-index))))
+;;                             (process-name (generate-new-buffer-name name))
+;;                             (process-environment
+;;                              (lsp--compute-process-environment environment-fn))
+;;                             (proc (make-process
+;;                                    :name process-name
+;;                                    :buffer (format "*%s*" process-name)
+;;                                    :command final-command
+;;                                    :connection-type 'pipe
+;;                                    :coding 'no-conversion
+;;                                    :noquery t
+;;                                    :filter filter
+;;                                    :sentinel sentinel
+;;                                    :file-handler t)))
+;;                        (cons proc proc)))
+;;           :test? (lambda () (-> local-command lsp-resolve-final-function
+;;                            lsp-server-present?))))
+
+(setq lsp-completion-provider :none)
+
+(defun renz/corfu-lsp-setup ()
+  (setq-local completion-styles '(flex basic partial-completion emacs22)
+              completion-category-defaults nil))
+
+(add-hook 'lsp-mode-hook #'renz/corfu-lsp-setup)
+
+
+
+
+;; ============================================================================
 ;; 			      TreeSitter
 ;; ============================================================================
 (require 'tree-sitter)
@@ -488,7 +557,7 @@
 
 ;; A better version of `dabbrev'
 ;; https://www.masteringemacs.org/article/text-expansion-hippie-expand
-(global-set-key [remap dabbrev-expand] 'hippie-expand)
+;; (global-set-key [remap dabbrev-expand] 'hippie-expand)
 
 ;; Better buffer list for C-x C-b
 (global-set-key [remap list-buffers] 'ibuffer)
@@ -506,9 +575,9 @@
 (global-set-key (kbd "C-c a") #'org-agenda)
 ;; (global-set-key (kbd "C-c b") ')
 (global-set-key (kbd "C-c c") #'org-capture)
-;; (global-set-key (kbd "C-c d") ')
+(global-set-key (kbd "C-c d") #'renz/find-tag)
 ;; (global-set-key (kbd "C-c e") ')
-(global-set-key (kbd "C-c f") #'renz/find-tag)
+(global-set-key (kbd "C-c f") #'hippie-expand)
 ;; (global-set-key (kbd "C-c g") ')
 ;; (global-set-key (kbd "C-c h") ')
 (global-set-key (kbd "C-c i") #'change-inner)
@@ -521,7 +590,7 @@
 ;; (global-set-key (kbd "C-c p") ')
 ;; (global-set-key (kbd "C-c q") ')
 (global-set-key (kbd "C-c r") #'renz/recentf-find-file)
-;; (global-set-key (kbd "C-c s") ')
+(global-set-key (kbd "C-c s") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
 (global-set-key (kbd "C-c t") #'org-babel-detangle)
 ;; (global-set-key (kbd "C-c u") ')
 ;; (global-set-key (kbd "C-c v") ')
@@ -551,4 +620,3 @@
 ;;                              Daemon
 ;; ============================================================================
 (server-start)
-(put 'upcase-region 'disabled nil)
