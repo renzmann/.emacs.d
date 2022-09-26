@@ -45,27 +45,6 @@ This function is deprecated, consider using the function
 
 ;;;***
 
-;;;### (autoloads nil "sql-indent-left" "sql-indent-left.el" (0 0
-;;;;;;  0 0))
-;;; Generated autoloads from sql-indent-left.el
-
-(autoload 'sqlind-setup-style-left "sql-indent-left" "\
-Define an sql-indentation style where keywords are left aligned." t nil)
-
-(autoload 'sqlind-setup-style-right "sql-indent-left" "\
-Define an sql-indentation style where keywords are right aligned." t nil)
-
-(autoload 'sqlind-setup-style-default "sql-indent-left" "\
-Define an sql-indentation style where keywords are right aligned." t nil)
-
-(register-definition-prefixes "sql-indent-left" '("indent-case-statement-items" "sqlind-indent"))
-
-;;;***
-
-;;;### (autoloads nil nil ("sql-indent-pkg.el") (0 0 0 0))
-
-;;;***
-
 ;; Local Variables:
 ;; version-control: never
 ;; no-byte-compile: t

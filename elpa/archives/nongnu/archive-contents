@@ -28,13 +28,13 @@
 		(:authors
 		 ("Jordon Biondo" . "jordonbiondo@gmail.com")))])
  (annotate .
-	   [(1 7 1)
+	   [(1 7 2)
 	    nil "annotate files without changing them" tar
 	    ((:url . "https://github.com/bastibe/annotate.el")
 	     (:maintainer "Bastian Bechtold <bastibe.dev@mailbox.org>, cage" . "cage-dev@twistfold.it")
 	     (:authors
 	      ("Bastian Bechtold"))
-	     (:commit . "7aadf4b9838ad83da9f4e6128aa9a450c66220ad"))])
+	     (:commit . "145719fe7b31ede66d656261103d829a0ed695af"))])
  (anti-zenburn-theme .
 		     [(2 5 1)
 		      nil "Low-contrast Zenburn-inverted theme" tar
@@ -116,7 +116,7 @@
 	       (:keywords "bison-mode" "yacc-mode")
 	       (:url . "https://elpa.nongnu.org/nongnu/bison-mode.html"))])
  (boxquote .
-	   [(2 2)
+	   [(2 3)
 	    ((cl-lib
 	      (0 5)))
 	    "Quote text with a semi-box." tar
@@ -124,7 +124,8 @@
 	     (:keywords "quoting")
 	     (:maintainer "Dave Pearson" . "davep@davep.org")
 	     (:authors
-	      ("Dave Pearson" . "davep@davep.org")))])
+	      ("Dave Pearson" . "davep@davep.org"))
+	     (:commit . "fe676396fa7e4372e01bf2c3d9a62e8d53615d46"))])
  (buttercup .
 	    [(1 26)
 	     ((emacs
@@ -1092,23 +1093,22 @@
 		   (:authors
 		    ("Christoph Paulik" . "cpaulik@gmail.com")))])
  (mentor .
-	 [(0 3 5)
+	 [(0 4)
 	  ((emacs
 	    (25 1))
 	   (xml-rpc
 	    (1 6 15))
 	   (seq
 	    (1 11))
-	   (cl-lib
-	    (0 5))
 	   (async
 	    (1 9 3)))
 	  "Frontend for the rTorrent bittorrent client" tar
-	  ((:keywords "comm" "processes" "bittorrent")
+	  ((:url . "https://github.com/skangas/mentor")
+	   (:keywords "comm" "processes" "bittorrent")
 	   (:maintainer "Stefan Kangas" . "stefankangas@gmail.com")
 	   (:authors
 	    ("Stefan Kangas" . "stefankangas@gmail.com"))
-	   (:url . "https://elpa.nongnu.org/nongnu/mentor.html"))])
+	   (:commit . "4ce024e17bf8ae079b2cd67af475b3e636c82be1"))])
  (moe-theme .
 	    [(1 0 2)
 	     nil "A colorful eye-candy theme. Moe, moe, kyun!" tar
@@ -1617,7 +1617,7 @@
 		     ("John Olsson" . "john@cryon.se"))
 		    (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed .
-	[(1 0 9)
+	[(1 0 10)
 	 ((emacs
 	   (25 1)))
 	 "A major mode for editing subtitles" tar
@@ -1626,7 +1626,7 @@
 	  (:maintainer "Sacha Chua" . "sacha@sachachua.com")
 	  (:authors
 	   ("Random User"))
-	  (:commit . "82e3f57f954091ef3d23e0072da9f70819ab3dec"))])
+	  (:commit . "b10ab60a4e567a1fb7d7702d146ed7055b203113"))])
  (swift-mode .
 	     [(8 6 0)
 	      ((emacs
@@ -1885,7 +1885,7 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(18 0 20220911124616)
+	       [(18 1 20220921110635)
 		((emacs
 		  (24 1)))
 		"ergonomic modal keybinding minor mode." tar
@@ -1894,7 +1894,7 @@
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
 		 (:authors
 		  ("Xah Lee ( http://xahlee.info/ )"))
-		 (:commit . "845dd0636ef52bc76cf5fe2b7a238558d45f2849"))])
+		 (:commit . "65d98bf9987648be7c99d638c2530245120ca92a"))])
  (xml-rpc .
 	  [(1 6 15)
 	   nil "An elisp implementation of clientside XML-RPC" tar
