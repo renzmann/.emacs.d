@@ -113,8 +113,12 @@ ANACONDA_HOME environment variable."
 
 ;; internal utility functions
 
-(defvar conda--executable-path nil
-  "Cached copy of full path to Conda binary. Set for the lifetime of the process.")
+;; TODO -- each of these caches could be made to a buffer/connection
+;; alist for lookup
+;;
+;; (defvar conda--executable-path nil
+;;   "Cached copy of full path to Conda binary. Set for the lifetime of the process.")
+(setq conda--executable-path nil)
 
 ;; (defun conda--get-executable-path ()
 ;;   "Return full path to Conda binary, or throw an error if it can't be found. Cached for the lifetime of the process."
@@ -141,8 +145,9 @@ ANACONDA_HOME environment variable."
    ((executable-find "mamba" 'remote))))
 
 
-(defvar conda--installed-version nil
-  "Cached copy of installed Conda version. Set for the lifetime of the process.")
+;; (defvar conda--installed-version nil
+;;   "Cached copy of installed Conda version. Set for the lifetime of the process.")
+(setq conda--installed-version nil)
 
 (defun conda--get-installed-version()
   "Return currently installed Conda version. Cached for the lifetime of the process."
@@ -181,9 +186,10 @@ ANACONDA_HOME environment variable."
       (error "Could not parse %s as JSON: %s" output err))))
 
 
-(defvar conda--config nil
-  "Cached copy of configuration that Conda sees (including `condarc', etc).
-Set for the lifetime of the process.")
+;; (defvar conda--config nil
+;;   "Cached copy of configuration that Conda sees (including `condarc', etc).
+;; Set for the lifetime of the process.")
+(setq conda--config nil)
 
 (defun conda--get-config ()
   "Return current Conda configuration. Cached for the lifetime of the process."
