@@ -59,8 +59,22 @@
 ;; ============================================================================
 ;;                      Misc. Editor Settings
 ;; ============================================================================
-;; Enable upcase-region
+(require 'ansi-color)
+(defun renz/display-ansi-colors ()
+  (interactive)
+  (ansi-color-apply-on-region (point-min) (point-max)))
+
+;; Enable horizontal scrolling with mouse
+;; https://stackoverflow.com/a/67758169
+(setq mouse-wheel-tilt-scroll t)
+
+;; https://www.masteringemacs.org/article/demystifying-emacs-window-manager
+(unless (version< emacs-version "27.1")
+  (setq switch-to-buffer-obey-display-actions t))
+
+;; Enable up/downcase-region
 (put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 
 ;; Automatically update buffers when contents change on disk
 (global-auto-revert-mode)
@@ -316,11 +330,15 @@
 ;; ============================================================================
 ;;                                SQL
 ;; ============================================================================
+(setq-default indent-tabs-mode nil)
 (require 'hive2)
 (require 'ob-sql-mode)
 (add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
 (require 'sqlformat)
 (setq sqlformat-command 'sqlfluff)
+(require 'sqlup-mode)
+(add-hook 'sql-mode-hook 'sqlup-mode)
+(add-hook 'sql-interactive-mode-hook 'sqlup-mode)
 
 
 
@@ -444,7 +462,7 @@
 ;;                              TRAMP
 ;; ============================================================================
 (add-to-list 'tramp-remote-path "~/.local/bin")
-(add-to-list 'tramp-remote-path "~/.conda/envs/rae/bin")
+;; (add-to-list 'tramp-remote-path "~/.conda/envs/rae/bin")
 
 ;; TODO look into these - https://github.com/doomemacs/doomemacs/issues/3909
 ;; (setq tramp-inline-compress-start-size 1000)
@@ -583,7 +601,7 @@
 (global-set-key (kbd "C-c i") #'change-inner)
 (global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
 ;; (global-set-key (kbd "C-c k") ')
-(global-set-key (kbd "C-c l") #'org-store-link)
+(global-set-key (kbd "C-c l") #'lsp)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
 ;; (global-set-key (kbd "C-c n") ')
 (global-set-key (kbd "C-c o") #'change-outer)
