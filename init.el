@@ -15,7 +15,7 @@
  '(eldoc-echo-area-use-multiline-p nil)
  '(evil-undo-system 'undo-redo)
  '(package-selected-packages
-   '(blacken sql-indent lsp-mode sqlformat pythonic f s reformatter change-inner expand-region corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
+   '(ripgrep company projectile blacken lsp-mode sqlformat pythonic f s reformatter change-inner expand-region corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -39,16 +39,16 @@
 ;;                           Color Theme
 ;; ============================================================================
 ;; Prot's themes have been reliably legible in nearly every situation.
-(setq ef-themes-headings ; read the manual's entry of the doc string
-      '((0 . (1.9))
-        (1 . (1.8))
-        (2 . (1.7))
-        (3 . (1.6))
-        (4 . (1.5))
-        (5 . (1.4)) ; absence of weight means `bold'
-        (6 . (1.3))
-        (7 . (1.2))
-        (t . (1.1))))
+;; (setq ef-themes-headings ; read the manual's entry of the doc string
+;;       '((0 . (1.9))
+;;         (1 . (1.8))
+;;         (2 . (1.7))
+;;         (3 . (1.6))
+;;         (4 . (1.5))
+;;         (5 . (1.4)) ; absence of weight means `bold'
+;;         (6 . (1.3))
+;;         (7 . (1.2))
+;;         (t . (1.1))))
 
 (setq ef-themes-to-toggle '(ef-day ef-night))
 (load-theme 'ef-night :no-confirm)
@@ -360,7 +360,7 @@
 (require 'ob-sql-mode)
 (add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
 (require 'sqlformat)
-(setq sqlformat-command 'sqlfluff)
+(setq sqlformat-command 'sql-formatter)
 (require 'sqlup-mode)
 (add-hook 'sql-mode-hook 'sqlup-mode)
 (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
@@ -487,7 +487,15 @@
 ;;                              TRAMP
 ;; ============================================================================
 (add-to-list 'tramp-remote-path "~/.local/bin")
-;; (add-to-list 'tramp-remote-path "~/.conda/envs/rae/bin")
+(setq vc-handled-backends '(git))
+(setq tramp-verbose 1)
+
+;; Disabling vc seems to get a little speed up
+;; https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
 
 ;; TODO look into these - https://github.com/doomemacs/doomemacs/issues/3909
 ;; (setq tramp-inline-compress-start-size 1000)
@@ -507,7 +515,7 @@
 ;;      ForwardAgent yes
 ;;      ServerAliveInterval 60
 
-(require 'conda)
+;; (require 'conda)
 ;; (setq conda-env-current-dir "/ssh:edgenode:~/.conda/envs/rae")
 ;; (setq conda-tramp-path (replace-regexp-in-string ".*:" ""
 ;;                                            (format "%s/bin" conda-env-current-dir)))
@@ -518,14 +526,14 @@
 ;; ============================================================================
 ;; 			 LSP (Eglot lsp-mode)
 ;; ============================================================================
-(require 'lsp-mode)
+;; (require 'lsp-mode)
 
-(setq lsp-keymap-prefix "s-p")
-(lsp-register-client
-    (make-lsp-client :new-connection (lsp-tramp-connection "pylsp")
-                     :major-modes '(python-mode)
-                     :remote? t
-                     :server-id 'pylsp-remote))
+;; (setq lsp-keymap-prefix "s-p")
+;; (lsp-register-client
+;;     (make-lsp-client :new-connection (lsp-tramp-connection "pylsp")
+;;                      :major-modes '(python-mode)
+;;                      :remote? t
+;;                      :server-id 'pylsp-remote))
 
 ;; (lsp-register-client
 ;;     (make-lsp-client :new-connection (lsp-tramp-connection "pyright-langserver --stdio")
@@ -567,7 +575,7 @@
 ;;           :test? (lambda () (-> local-command lsp-resolve-final-function
 ;;                            lsp-server-present?))))
 
-(setq lsp-completion-provider :none)
+;; (setq lsp-completion-provider :none)
 
 (defun renz/corfu-lsp-setup ()
   (setq-local completion-styles '(flex basic partial-completion emacs22)
@@ -585,6 +593,13 @@
 (require 'tree-sitter-langs)
 (global-tree-sitter-mode)
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+
+
+
+;; ============================================================================
+;; 			      Projectile
+;; ============================================================================
+(projectile-mode +1)
 
 
 
@@ -658,6 +673,10 @@
 ;; Nonstandard bindings
 ;; ----------------------------------------
 (global-set-key (kbd "C-=") #'er/expand-region)
+(if (eq system-type 'darwin)
+    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
+  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
 
 ;; ============================================================================
 ;;                              Daemon
