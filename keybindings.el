@@ -4,6 +4,23 @@
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html
 
 ;; ----------------------------------------
+;; Keybound functions
+;; ----------------------------------------
+(defun renz/jump-configuration ()
+  (interactive)
+  (find-file
+   (completing-read "Elisp config files: "
+                    (directory-files "~/.emacs.d/" nil ".*\.el$"))))
+
+(defun renz/jump-init ()
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+
+(defun renz/jump-keybindings ()
+  (interactive)
+  (find-file "~/.emacs.d/keybindings.el"))
+
+;; ----------------------------------------
 ;; Expanded defaults
 ;; ----------------------------------------
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
@@ -32,6 +49,7 @@
 (global-set-key (kbd "C-c f") #'hippie-expand)
 ;; (global-set-key (kbd "C-c g") ')
 ;; (global-set-key (kbd "C-c h") ')
+(require 'change-inner)
 (global-set-key (kbd "C-c i") #'change-inner)
 (global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
 ;; (global-set-key (kbd "C-c k") ')
@@ -42,9 +60,9 @@
 ;; (global-set-key (kbd "C-c p") ')
 ;; (global-set-key (kbd "C-c q") ')
 (global-set-key (kbd "C-c r") #'renz/recentf-find-file)
-(global-set-key (kbd "C-c s s") (lambda () (find-file "")))
-(global-set-key (kbd "C-c s i") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
-(global-set-key (kbd "C-c s k") (lambda () (interactive) (find-file "~/.emacs.d/keybindings.el")))
+(global-set-key (kbd "C-c s s") #'renz/jump-configuration)
+(global-set-key (kbd "C-c s i") #'renz/jump-init)
+(global-set-key (kbd "C-c s k") #'renz/jump-keybindings)
 (global-set-key (kbd "C-c t d") #'org-babel-detangle)
 (global-set-key (kbd "C-c t o") #'org-babel-tangle-jump-to-org)
 (global-set-key (kbd "C-c t s") #'renz/org-babel-tangle-jump-to-src)
@@ -67,11 +85,14 @@
 ;; (global-set-key (kbd "<f8>") ')
 ;; (global-set-key (kbd "M-<f8>") ')
 (global-set-key (kbd "<f9>") 'vterm)
-;; (global-set-key (kbd "M-<f9>") ')
+(global-set-key (kbd "M-<f9>") 'eshell)
+(global-set-key (kbd "S-<f9>") 'ansi-term)
+(global-set-key (kbd "s-<f9>") 'shell)
 
 ;; ----------------------------------------
 ;; Nonstandard bindings
 ;; ----------------------------------------
+(require 'expand-region)
 (global-set-key (kbd "C-=") #'er/expand-region)
 (if (eq system-type 'darwin)
     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
