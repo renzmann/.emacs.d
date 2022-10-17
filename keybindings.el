@@ -9,8 +9,9 @@
 (defun renz/jump-configuration ()
   (interactive)
   (find-file
-   (completing-read "Elisp config files: "
-                    (directory-files "~/.emacs.d/" nil ".*\.el$"))))
+   (concat "~/.emacs.d/"
+           (completing-read "Elisp config files: "
+                            (directory-files "~/.emacs.d/" nil ".*\.el$")))))
 
 (defun renz/jump-init ()
   (interactive)
