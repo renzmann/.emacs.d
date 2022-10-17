@@ -15,7 +15,8 @@
  '(eldoc-echo-area-use-multiline-p nil)
  '(evil-undo-system 'undo-redo)
  '(package-selected-packages
-   '(ripgrep company projectile blacken lsp-mode sqlformat pythonic f s reformatter change-inner expand-region corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
+   '(ripgrep company projectile blacken lsp-mode sqlformat pythonic f s reformatter change-inner expand-region corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia))
+ )
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -190,7 +191,7 @@
 (advice-add 'risky-local-variable-p :override #'ignore)
 
 ;; Vim keybindings
-(require 'evil)
+;; (require 'evil)
 ;; (evil-mode 1)
 ;; (add-hook 'prog-mode-hook 'turn-on-evil-mode)
 ;; (add-hook 'text-mode-hook 'turn-on-evil-mode)
@@ -218,7 +219,7 @@
 
 ;; Fuzzy, live minibuffer completion
 (vertico-mode)
-;; Vertico works better for C-x C-f /ssh:<thing>
+;; Vertico works better for C-x C-f /ssh:<thing> than the built-in icomplete
 
 ;; (if (version< emacs-version "27.1")
 ;;     (progn
@@ -296,8 +297,9 @@
 ;; ============================================================================
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((emacs-lisp .t )
-   (python . t)))
+ '((emacs-lisp . t)
+   (python . t)
+   (sql . t)))
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
 
@@ -324,6 +326,30 @@
 
 (setq ob-async-no-async-languages-alist '("python"))
 (setq org-html-htmlize-output-type 'css)
+
+;; For navigating to tangled src blocks
+;; https://emacs.stackexchange.com/a/69591
+(defun renz/org-babel-tangle-jump-to-src ()
+  "The opposite of `org-babel-tangle-jump-to-org'. Jumps at tangled code from org src block."
+  (interactive)
+  (if (org-in-src-block-p)
+      (let* ((header (car (org-babel-tangle-single-block 1 'only-this-block)))
+             (tangle (car header))
+             (lang (caadr header))
+             (buffer (nth 2 (cadr header)))
+             (org-id (nth 3 (cadr header)))
+             (source-name (nth 4 (cadr header)))
+             (search-comment (org-fill-template
+                              org-babel-tangle-comment-format-beg
+                              `(("link" . ,org-id) ("source-name" . ,source-name))))
+             (file (expand-file-name
+                    (org-babel-effective-tangled-filename buffer lang tangle))))
+        (if (not (file-exists-p file))
+            (message "File does not exist. 'org-babel-tangle' first to create file.")
+          (find-file file)
+          (beginning-of-buffer)
+          (search-forward search-comment)))
+    (message "Cannot jump to tangled file because point is not at org src block.")))
 
 
 
@@ -492,10 +518,10 @@
 
 ;; Disabling vc seems to get a little speed up
 ;; https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html
-(setq vc-ignore-dir-regexp
-      (format "\\(%s\\)\\|\\(%s\\)"
-              vc-ignore-dir-regexp
-              tramp-file-name-regexp))
+;; (setq vc-ignore-dir-regexp
+;;       (format "\\(%s\\)\\|\\(%s\\)"
+;;               vc-ignore-dir-regexp
+;;               tramp-file-name-regexp))
 
 ;; TODO look into these - https://github.com/doomemacs/doomemacs/issues/3909
 ;; (setq tramp-inline-compress-start-size 1000)
@@ -601,82 +627,7 @@
 ;; ============================================================================
 (projectile-mode +1)
 
-
-
-;; ============================================================================
-;;                           Keybindings
-;; ============================================================================
-;; Keymap settings that don't belong under any of the previous headers
-;; ----------------------------------------
-;; Expanded defaults
-;; ----------------------------------------
-(global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
-(global-set-key (kbd "C-M-z") 'zap-up-to-char)
-
-;; A better version of `dabbrev'
-;; https://www.masteringemacs.org/article/text-expansion-hippie-expand
-;; (global-set-key [remap dabbrev-expand] 'hippie-expand)
-
-;; Better buffer list for C-x C-b
-(global-set-key [remap list-buffers] 'ibuffer)
-
-;; When flycheck is running (usually from a language server), bind next/previous
-(with-eval-after-load 'flymake
-  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
-  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
-
-;; Reserved for users:
-;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html
-;; ----------------------------------------
-;; C-c <letter> bindings
-;; ----------------------------------------
-(global-set-key (kbd "C-c a") #'org-agenda)
-;; (global-set-key (kbd "C-c b") ')
-(global-set-key (kbd "C-c c") #'org-capture)
-(global-set-key (kbd "C-c d") #'renz/find-tag)
-;; (global-set-key (kbd "C-c e") ')
-(global-set-key (kbd "C-c f") #'hippie-expand)
-;; (global-set-key (kbd "C-c g") ')
-;; (global-set-key (kbd "C-c h") ')
-(global-set-key (kbd "C-c i") #'change-inner)
-(global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
-;; (global-set-key (kbd "C-c k") ')
-(global-set-key (kbd "C-c l") #'lsp)
-(global-set-key (kbd "C-c m") #'ef-themes-toggle)
-;; (global-set-key (kbd "C-c n") ')
-(global-set-key (kbd "C-c o") #'change-outer)
-;; (global-set-key (kbd "C-c p") ')
-;; (global-set-key (kbd "C-c q") ')
-(global-set-key (kbd "C-c r") #'renz/recentf-find-file)
-(global-set-key (kbd "C-c s") (lambda () (interactive) (find-file "~/.emacs.d/init.el")))
-(global-set-key (kbd "C-c t") #'org-babel-detangle)
-;; (global-set-key (kbd "C-c u") ')
-;; (global-set-key (kbd "C-c v") ')
-(global-set-key (kbd "C-c w") #'renz/org-kill-src-block)
-;; (global-set-key (kbd "C-c x") ')
-;; (global-set-key (kbd "C-c y") ')
-;; (global-set-key (kbd "C-c z") ')
-;; ----------------------------------------
-;; F5 - F9
-;; ----------------------------------------
-(global-set-key (kbd "<f5>") 'compile)
-(global-set-key (kbd "M-<f5>") 'recompile)
-;; (global-set-key (kbd "<f6>") ')
-;; (global-set-key (kbd "M-<f6>") ')
-;; (global-set-key (kbd "<f7>") ')
-;; (global-set-key (kbd "M-<f7>") ')
-;; (global-set-key (kbd "<f8>") ')
-;; (global-set-key (kbd "M-<f8>") ')
-(global-set-key (kbd "<f9>") 'vterm)
-;; (global-set-key (kbd "M-<f9>") ')
-;; ----------------------------------------
-;; Nonstandard bindings
-;; ----------------------------------------
-(global-set-key (kbd "C-=") #'er/expand-region)
-(if (eq system-type 'darwin)
-    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
-
+(load-file "~/.emacs.d/keybindings.el")
 
 ;; ============================================================================
 ;;                              Daemon

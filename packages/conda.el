@@ -113,41 +113,29 @@ ANACONDA_HOME environment variable."
 
 ;; internal utility functions
 
-;; TODO -- each of these caches could be made to a buffer/connection
-;; alist for lookup
-;;
-;; (defvar conda--executable-path nil
-;;   "Cached copy of full path to Conda binary. Set for the lifetime of the process.")
-(setq conda--executable-path nil)
-
-;; (defun conda--get-executable-path ()
-;;   "Return full path to Conda binary, or throw an error if it can't be found. Cached for the lifetime of the process."
-;;   (if (not (eq conda--executable-path nil))
-;;       conda--executable-path
-;;     (setq conda--executable-path
-;;           (cond
-;;            ((file-executable-p (f-join conda-anaconda-home conda-env-executables-dir "conda"))
-;;             (f-join conda-anaconda-home conda-env-executables-dir "conda"))
-;;            ((file-executable-p (f-join conda-anaconda-home conda-env-executables-dir "mamba"))
-;;             (f-join conda-anaconda-home conda-env-executables-dir "mamba"))
-;;            ((executable-find "conda"))
-;;            ((executable-find "mamba"))
-;;            (t (error
-;;                "There doesn't appear to be a conda or mamba executable on your exec path. A common
-;;  cause of problems like this is GUI Emacs not having environment variables set up like the
-;;  shell.  Check out https://github.com/purcell/exec-path-from-shell for a robust solution to
-;;  this problem"))))))
+(defvar conda--executable-path nil
+  "Cached copy of full path to Conda binary. Set for the lifetime of the process.")
 
 (defun conda--get-executable-path ()
   "Return full path to Conda binary, or throw an error if it can't be found. Cached for the lifetime of the process."
-  (cond
-   ((executable-find "conda" 'remote))
-   ((executable-find "mamba" 'remote))))
+  (if (not (eq conda--executable-path nil))
+      conda--executable-path
+    (setq conda--executable-path
+          (cond
+           ((file-executable-p (f-join conda-anaconda-home conda-env-executables-dir "conda"))
+            (f-join conda-anaconda-home conda-env-executables-dir "conda"))
+           ((file-executable-p (f-join conda-anaconda-home conda-env-executables-dir "mamba"))
+            (f-join conda-anaconda-home conda-env-executables-dir "mamba"))
+           ((executable-find "conda"))
+           ((executable-find "mamba"))
+           (t (error
+               "There doesn't appear to be a conda or mamba executable on your exec path. A common
+ cause of problems like this is GUI Emacs not having environment variables set up like the
+ shell.  Check out https://github.com/purcell/exec-path-from-shell for a robust solution to
+ this problem"))))))
 
-
-;; (defvar conda--installed-version nil
-;;   "Cached copy of installed Conda version. Set for the lifetime of the process.")
-(setq conda--installed-version nil)
+(defvar conda--installed-version nil
+  "Cached copy of installed Conda version. Set for the lifetime of the process.")
 
 (defun conda--get-installed-version()
   "Return currently installed Conda version. Cached for the lifetime of the process."
@@ -186,14 +174,16 @@ ANACONDA_HOME environment variable."
       (error "Could not parse %s as JSON: %s" output err))))
 
 
-;; (defvar conda--config nil
-;;   "Cached copy of configuration that Conda sees (including `condarc', etc).
-;; Set for the lifetime of the process.")
-(setq conda--config nil)
+(defvar conda--config nil
+  "Cached copy of configuration that Conda sees (including `condarc', etc).
+Set for the lifetime of the process.")
 
-(defun conda--get-config ()
+(defun conda--get-config()
   "Return current Conda configuration. Cached for the lifetime of the process."
-  (conda--call-json "config" "--show" "--json"))
+  (if (not (eq conda--config nil))
+      conda--config
+    (let ((cfg (conda--call-json "config" "--show" "--json")))
+      (setq conda--config cfg))))
 
 ;; (conda--get-config)
 ;; keys envs-dirs and root-prefix seem immediately relevant
@@ -663,4 +653,5 @@ buffer."
     (advice-remove 'switch-to-buffer #'conda--switch-buffer-auto-activate)))
 
 (provide 'conda)
+
 ;;; conda.el ends here
