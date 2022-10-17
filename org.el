@@ -1,11 +1,14 @@
 ;; ============================================================================
 ;;                             Org mode
 ;; ============================================================================
+(require 'org-tempo)
+
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((emacs-lisp . t)
    (python . t)
    (sql . t)))
+
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
 
