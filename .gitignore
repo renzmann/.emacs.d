@@ -33,3 +33,5 @@ elpa/vterm-*
 bookmarks
 packages/conda.el.org
 packages/conda.el.md
+.org-id-locations
+projectile-bookmarks.eld
