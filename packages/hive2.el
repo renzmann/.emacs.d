@@ -51,16 +51,15 @@
   (interactive "P")
   (sql-product-interactive 'hive buffer))
 
-(eval-after-load "sql"
-  '(sql-add-product
-    'hive2 "Hive"
-    :sqli-program 'sql-hive-program
-    :sqli-options 'sql-hive-options
-    :sqli-login 'sql-hive-login-params
-    :sqli-comint-func 'sql-comint
-    :prompt-regexp "^[0-9]+:[[:blank:]]+jdbc:hive2://[a-zA-Z0-9.]+:[0-9]+,[a-zA-Z0-9]+>[[:blank:]]+"
-    :prompt-cont-regexp "^[0-9]+:[[:blank:]]+jdbc:hive2://[a-zA-Z0-9.]+:[0-9]+,[a-zA-Z0-9]+>[[:blank:]]+"
-    ))
+(sql-add-product
+ 'hive2 "Hive"
+ :sqli-program 'sql-hive-program
+ :sqli-options 'sql-hive-options
+ :sqli-login 'sql-hive-login-params
+ :sqli-comint-func 'sql-comint
+ :prompt-regexp "^[0-9]+:[[:blank:]]+jdbc:hive2://[a-zA-Z0-9.]+:[0-9]+,[a-zA-Z0-9]+>[[:blank:]]+"
+ :prompt-cont-regexp "^[0-9]+:[[:blank:]]+jdbc:hive2://[a-zA-Z0-9.]+:[0-9]+,[a-zA-Z0-9]+>[[:blank:]]+"
+ )
 
 (provide 'hive2)
 

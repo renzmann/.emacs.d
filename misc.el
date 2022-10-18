@@ -1,6 +1,11 @@
 ;; ============================================================================
 ;;                      Misc. Editor Settings
 ;; ============================================================================
+;; Indent with spaces, not tabs by default
+(setq-default indent-tabs-mode nil)
+
+;; For files containing color escape codes, this provides a way to
+;; render the colors in-buffer
 (require 'ansi-color)
 (defun renz/display-ansi-colors ()
   (interactive)

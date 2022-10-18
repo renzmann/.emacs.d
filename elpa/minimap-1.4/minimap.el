@@ -4,7 +4,7 @@
 
 ;; Author: David Engster <deng@randomsample.de>
 ;; Keywords:
-;; Version: 1.3
+;; Version: 1.4
 
 ;; This file is part of GNU Emacs.
 
@@ -531,7 +531,8 @@ Re-use already existing minimap window if possible."
   (interactive)
   (when (minimap-get-window)
     (delete-window (minimap-get-window)))
-  (cancel-timer minimap-timer-object))
+  (when minimap-timer-object
+    (cancel-timer minimap-timer-object)))
 
 ;;; Minimap update
 
@@ -930,6 +931,90 @@ TAGS is the list of tags.  If it is t, fetch tags from buffer."
 
 		)))
 	  (setq tags (cdr tags)))))))
+
+;;;; ChangeLog:
+
+;; 2020-09-13  Adam Spiers	 <emacs@adamspiers.org>
+;; 
+;; 	Check whether timer exists before killing it in minimap
+;; 
+;; 	* packages/minimap/minimap.el (minimap-kill): Check whether the timer
+;; 	exists before killing it.  This avoids signalling an error.
+;; 
+;; 2020-05-09  David Engster  <deng@randomsample.de>
+;; 
+;; 	[minimap] Upgrade to version 1.3
+;; 
+;; 	- New option: minimap-hide-cursor (active by default)
+;; 	- New option: minimap-disable-mode-line (active by default)
+;; 	- Make current line highlighting face configurable, change to dark gray.
+;; 	- New default behavior for minimap-automatically-delete-window:
+;; 	  keep minimap window as long as buffer is visible. Change variable
+;; 	  to 't' to get old behavior.
+;; 	- Bug fixes
+;; 
+;; 2019-07-15  Lars Ingebrigtsen  <larsi@gnus.org>
+;; 
+;; 	Fix problem with overlay extending to the end of the buffer
+;; 
+;; 	* packages/minimap/minimap.el (minimap-enlarge-faces): The overlay may
+;; 	extend to the end of the buffer (bug#28634).
+;; 
+;; 2016-07-11  Paul Eggert	 <eggert@cs.ucla.edu>
+;; 
+;; 	Fix some quoting problems in doc strings
+;; 
+;; 	Most of these are minor issues involving, e.g., quoting `like this' 
+;; 	instead of 'like this'.	 A few involve escaping ` and ' with a preceding
+;; 	\= when the characters should not be turned into curved single quotes.
+;; 
+;; 2014-03-11  David Engster  <deng@randomsample.de>
+;; 
+;; 	Update Minimap to version 1.2.
+;; 
+;; 	- Change some defaults: better colors, reduced update delay.
+;; 	- `minimap-tag-only': New experimental feature to only display an
+;; 	 'abstract view' of the buffer with overlays generated from
+;; 	 Semantic information.	Works only for buffers parsed by Semantic.
+;; 	- `minimap-highlight-line': Highlight current line in Minimap.
+;; 	- Fix autoloads.
+;; 	- Display lines denoting beginning/end of functions in Semantic
+;; 	 overlays.
+;; 
+;; 2014-02-24  David Engster  <deng@randomsample.de>
+;; 
+;; 	Minimap: Set `truncate-lines' directly.
+;; 
+;; 	(minimap-new-minimap, minimap-create-window): Directly set
+;; 	`truncate-lines' to avoid message.
+;; 
+;; 2014-02-24  David Engster  <deng@randomsample.de>
+;; 
+;; 	Minimap: Update to version 1.1.
+;; 
+;; 	- Largely rewritten as a minor mode; use M-x minimap-mode to
+;; 	 enable/disable.
+;; 	- Minimap will now remain active for all buffers which derive from
+;; 	 `prog-mode' (can be changed through `minimap-major-modes').  The
+;; 	 minimap window will be automatically created or deleted (see new
+;; 	 variables `minimap-recreate-window' and
+;; 	 `minimap-automatically-delete-window').
+;; 	- Possibility to set a minimum width of the minimap window
+;; 	 (`minimap-minimum-width').
+;; 	- Minimap window will be marked so that you should not be able to
+;; 	 enter it.
+;; 	- Semantic overlays will be automatically updated during editing.
+;; 	- Lots of bug fixes.
+;; 
+;; 2011-07-12  Chong Yidong  <cyd@stupidchicken.com>
+;; 
+;; 	Tweak minimap.el description to fit the *Packages* buffer better.
+;; 
+;; 2011-07-12  David Engster  <dengste@eml.cc>
+;; 
+;; 	New package `minimap'.
+;; 
+
 
 (provide 'minimap)
 
