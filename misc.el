@@ -27,8 +27,9 @@
         (tool-bar-lines . 0)
         (width . 180) ; chars
         (height . 60) ; lines
-        (left . 150)
-        (top . 150)))
+        (left . 125)
+        (top . 125)))
+
 (when (display-graphic-p)
   (setq initial-frame-alist renz/frame-default-alist)
   (setq default-frame-alist renz/frame-default-alist))
