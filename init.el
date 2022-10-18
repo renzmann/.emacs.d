@@ -12,6 +12,10 @@
  '(custom-safe-themes '(default))
  '(eldoc-echo-area-use-multiline-p nil)
  '(evil-undo-system 'undo-redo)
+ '(minimap-minimum-width 20)
+ '(minimap-mode t)
+ '(minimap-width-fraction 0.1)
+ '(minimap-window-location 'right)
  '(package-selected-packages
    '(ripgrep projectile blacken lsp-mode sqlformat pythonic f s reformatter change-inner expand-region corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
 (custom-set-faces
@@ -19,7 +23,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(minimap-active-region-background ((t (:extend t :background "gray22")))))
 
 ;; Keep packages in sync - only refreshing/installing if something is missing
 (package-initialize)
