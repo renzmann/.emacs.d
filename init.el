@@ -29,7 +29,8 @@
 (package-initialize)
 (package-autoremove)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-(when (cl-notevery 'package-installed-p package-selected-packages)
+
+(when (and (cl-notevery 'package-installed-p package-selected-packages) (y-or-n-p "Update packages? "))
   (package-refresh-contents)
   (package-install-selected-packages))
 
