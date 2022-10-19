@@ -14,4 +14,7 @@
 ;;         (t . (1.1))))
 
 (setq ef-themes-to-toggle '(ef-day ef-night))
-(load-theme 'ef-night :no-confirm)
+
+(if (display-graphic-p)
+    (load-theme 'ef-night :no-confirm)
+  (load-theme 'leuven))
