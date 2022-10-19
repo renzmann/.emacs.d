@@ -12,10 +12,6 @@
  '(custom-safe-themes '(default))
  '(eldoc-echo-area-use-multiline-p nil)
  '(evil-undo-system 'undo-redo)
- '(minimap-minimum-width 20)
- '(minimap-mode t)
- '(minimap-width-fraction 0.1)
- '(minimap-window-location 'right)
  '(package-selected-packages
    '(sqlup-mode minimap sql-indent ripgrep projectile blacken lsp-mode sqlformat pythonic f s reformatter change-inner expand-region corfu vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot pyvenv marginalia)))
 (custom-set-faces
@@ -55,6 +51,7 @@
 (load-file "~/.emacs.d/lsp.el")
 (load-file "~/.emacs.d/treesitter.el")
 (load-file "~/.emacs.d/projects.el")
+(load-file "~/.emacs.d/minimap.el")
 (load-file "~/.emacs.d/keybindings.el")
 
 
