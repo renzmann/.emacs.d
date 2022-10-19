@@ -3,8 +3,10 @@
 ;; Copyright (C) 2016-2022 Rami Chowdhury
 ;; Author: Rami Chowdhury <rami.chowdhury@gmail.com>
 ;; URL: http://github.com/necaris/conda.el
+;; Package-Commit: cb9544e8f7d6c642b7fd8c1ecc2cf4fc7370c352
 ;; Version: 0.4
-;; Package-Version: 0.4
+;; Package-Version: 20220830.1547
+;; Package-X-Original-Version: 0.4
 ;; Keywords: languages, local, tools, python, environment, conda
 ;; Package-Requires: ((emacs "25.1") (pythonic "0.1.0") (dash "2.13.0") (s "1.11.0") (f "0.18.2"))
 
