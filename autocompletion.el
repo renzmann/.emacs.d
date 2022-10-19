@@ -79,6 +79,8 @@
 ;; around it.
 
 ;; Enable auto completion and configure quitting
-(global-corfu-mode)
-(setq corfu-auto t
-      corfu-quit-no-match 'separator)
+;; (global-corfu-mode)
+;; (setq corfu-auto t
+;;       corfu-quit-no-match 'separator)
+
+(add-hook 'after-init-hook 'global-company-mode)
