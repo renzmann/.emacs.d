@@ -39,7 +39,8 @@
 ;; ============================================================================
 ;;                         My configuration files
 ;; ============================================================================
-;; Jump to any of these (with completion) using `M-x renz/jump-configuration`
+;; Jump to any of these (with completion) using `M-x renz/jump-configuration`,
+;; bound by default to `C-c s s`
 (load-file "~/.emacs.d/theme.el")
 (load-file "~/.emacs.d/misc.el")
 (load-file "~/.emacs.d/autocompletion.el")
