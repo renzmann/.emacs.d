@@ -44,6 +44,15 @@
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
 
+;; When using isearch to jump to things, use C-RET to put point on the
+;; opposite side of where it would normally end up
+(define-key isearch-mode-map (kbd "<C-return>")
+  (defun isearch-done-opposite (&optional nopush edit)
+    "End current search in the opposite side of the match."
+    (interactive)
+    (funcall #'isearch-done nopush edit)
+    (when isearch-other-end (goto-char isearch-other-end))))
+
 ;; ----------------------------------------
 ;; C-c <letter> bindings
 ;; ----------------------------------------
@@ -61,7 +70,7 @@
 ;; (global-set-key (kbd "C-c k") #')
 (global-set-key (kbd "C-c l") #'eglot)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
-;; (global-set-key (kbd "C-c n") #')
+(global-set-key (kbd "C-c n") #'minimap-mode)
 (global-set-key (kbd "C-c o") #'change-outer)
 (global-set-key (kbd "C-c p") #'projectile-command-map)
 ;; (global-set-key (kbd "C-c q") #')
