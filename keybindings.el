@@ -3,6 +3,7 @@
 ;; ============================================================================
 ;; https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html
 
+
 ;; ----------------------------------------
 ;; Keybound functions
 ;; ----------------------------------------
@@ -21,6 +22,7 @@
   (interactive)
   (find-file "~/.emacs.d/keybindings.el"))
 
+
 ;; ----------------------------------------
 ;; Expanded defaults
 ;; ----------------------------------------
@@ -54,6 +56,7 @@
     (funcall #'isearch-done nopush edit)
     (when isearch-other-end (goto-char isearch-other-end))))
 
+
 ;; ----------------------------------------
 ;; C-c <letter> bindings
 ;; ----------------------------------------
@@ -61,7 +64,7 @@
 ;; (global-set-key (kbd "C-c b") #')
 (global-set-key (kbd "C-c c") #'org-capture)
 (global-set-key (kbd "C-c d") #'renz/find-tag)
-;; (global-set-key (kbd "C-c e") #')
+(global-set-key (kbd "C-c e") #'shell)
 (global-set-key (kbd "C-c f") #'hippie-expand)
 ;; (global-set-key (kbd "C-c g") #')
 ;; (global-set-key (kbd "C-c h") #')
