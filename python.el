@@ -61,7 +61,5 @@
 (put 'python-check-command 'safe-local-variable #'stringp)
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
 
-
-(add-hook 'python-mode-hook 'anaconda-mode)
 (eval-after-load "company"
  '(add-to-list 'company-backends 'company-anaconda))
