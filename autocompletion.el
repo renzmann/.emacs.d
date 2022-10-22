@@ -84,3 +84,9 @@
 ;;       corfu-quit-no-match 'separator)
 
 (add-hook 'after-init-hook 'global-company-mode)
+(setq company-minimum-prefix-length 2)
+(setq company-idle-delay
+      (lambda () (if (company-in-string-or-comment) nil 0.0)))
+(setq company-tooltip-align-annotations t)
+(setq company-tooltip-flip-when-above t)
+(setq company-tooltip-margin 2)
