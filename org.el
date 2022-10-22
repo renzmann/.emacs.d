@@ -2,7 +2,7 @@
 ;;                             Org mode
 ;; ============================================================================
 (require 'org-tempo)
-(require 'org-roam)
+;; (require 'org-roam)
 
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -62,13 +62,17 @@
           (search-forward search-comment)))
     (message "Cannot jump to tangled file because point is not at org src block.")))
 
+
 ;; ============================================================================
 ;;                             Org-roam
 ;; ============================================================================
-(setq org-roam-directory (file-truename "~/org-roam"))
-(org-roam-db-autosync-mode)
+;; (setq org-roam-directory (file-truename "~/org-roam"))
+;; (org-roam-db-autosync-mode)
 
+
+;; ============================================================================
 ;; Displaying inline images from a remote source
+;; ============================================================================
 ;; http://kychoi.org/blog/2014/11/02/Org-Display-Inline-Remote-Images
 ;; (defun org-display-inline-images (&optional include-linked refresh beg end)
 ;;   "Display inline images.
