@@ -7,8 +7,14 @@
 (setq tramp-inline-compress-start-size 1000)
 (setq tramp-copy-size-limit 10000)
 (setq tramp-verbose 1)
-(add-to-list 'tramp-remote-path "~/.conda/envs/boa/bin")
-(remove-hook 'find-file-hook 'vc-find-file-hook)
+
+(add-to-list 'tramp-remote-path "~/.conda/envs/make-my-day/bin")
+;; (add-to-list 'tramp-remote-path "~/.conda/envs/boa/bin")
+;; (remove-hook 'find-file-hook 'vc-find-file-hook)
+
+(add-to-list 'tramp-connection-properties
+             (list (regexp-quote "/ssh:7p")
+                   "remote-shell" "/usr/bin/ksh"))
 
 ;; Disabling vc seems to get a little speed up
 ;; https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html
@@ -34,9 +40,3 @@
 ;;      ControlPersist 10m
 ;;      ForwardAgent yes
 ;;      ServerAliveInterval 60
-
-;; (require 'conda)
-;; (setq conda-env-current-dir "/ssh:edgenode:~/.conda/envs/rae")
-;; (setq conda-tramp-path (replace-regexp-in-string ".*:" ""
-;;                                            (format "%s/bin" conda-env-current-dir)))
-;; (add-to-list 'tramp-remote-path conda-tramp-path)
