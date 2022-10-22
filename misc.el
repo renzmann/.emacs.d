@@ -1,8 +1,7 @@
 ;; ============================================================================
 ;;                      Misc. Editor Settings
 ;; ============================================================================
-;; Minimalistic splash screen
-(require 'splash-screen)
+;; Don't really need the splash screen
 (setq inhibit-splash-screen t)
 
 ;; Automatically visit symlink sources
