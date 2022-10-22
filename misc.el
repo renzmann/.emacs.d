@@ -1,6 +1,13 @@
 ;; ============================================================================
 ;;                      Misc. Editor Settings
 ;; ============================================================================
+;; Minimalistic splash screen
+(require 'splash-screen)
+(setq inhibit-splash-screen t)
+
+;; Automatically visit symlink sources
+(setq find-file-visit-truename t)
+
 ;; Indent with spaces, not tabs by default
 (setq-default indent-tabs-mode nil)
 
