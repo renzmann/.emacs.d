@@ -13,9 +13,9 @@
 ;;         (7 . (1.2))
 ;;         (t . (1.1))))
 
-;; (setq ef-themes-to-toggle '(ef-day ef-night))
+(setq ef-themes-to-toggle '(ef-day ef-night))
 
 (if (display-graphic-p)
     ;; (load-theme 'ef-night :no-confirm)
     (load-theme 'doom-one :no-confirm)
-  (load-theme 'leuven))
+  (load-theme 'ef-night :no-confirm))
