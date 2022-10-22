@@ -89,6 +89,7 @@
 ;; (global-set-key (kbd "C-c y") #')
 ;; (global-set-key (kbd "C-c z") #')
 (global-set-key (kbd "C-c ;") #'comment-line)
+(global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)
 
 ;; ----------------------------------------
 ;; F5 - F9
