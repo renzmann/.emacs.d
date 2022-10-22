@@ -112,6 +112,7 @@
 ;; ----------------------------------------
 (require 'expand-region)
 (global-set-key (kbd "C-=") #'er/expand-region)
+(global-set-key (kbd "C-c =") #'er/expand-region)
 
 (when (eq system-type 'darwin)
   (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
