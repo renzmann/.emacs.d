@@ -38,6 +38,7 @@
 
 ;; Better buffer list for C-x C-b
 (global-set-key [remap list-buffers] 'ibuffer)
+(global-set-key [remap switch-to-buffer] 'consult-buffer)
 
 ;; When flycheck is running (usually from a language server), bind next/previous
 (with-eval-after-load 'flymake
@@ -87,6 +88,7 @@
 ;; (global-set-key (kbd "C-c x") #')
 ;; (global-set-key (kbd "C-c y") #')
 ;; (global-set-key (kbd "C-c z") #')
+(global-set-key (kbd "C-c ;") #'comment-line)
 
 ;; ----------------------------------------
 ;; F5 - F9
