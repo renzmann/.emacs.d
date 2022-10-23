@@ -22,6 +22,18 @@
   (interactive)
   (find-file "~/.emacs.d/keybindings.el"))
 
+(defun renz/recentf-find-file ()
+  "Find a recent file using the minibuffer with completion"
+  (interactive)
+  (recentf-mode t)
+  (unless (find-file (completing-read "Find recent file: " recentf-list))
+    (message "Aborting...")))
+
+(defun renz/find-tag ()
+  "Use completing-read to navigate to a tag"
+  (interactive)
+  (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
+
 
 ;; ----------------------------------------
 ;; Expanded defaults

@@ -12,9 +12,9 @@
 
 ;; For files containing color escape codes, this provides a way to
 ;; render the colors in-buffer
-(require 'ansi-color)
 (defun renz/display-ansi-colors ()
   (interactive)
+  (require 'ansi-color)
   (ansi-color-apply-on-region (point-min) (point-max)))
 
 ;; Enable horizontal scrolling with mouse
@@ -86,20 +86,6 @@
 ;; Delete the region when we yank on top of it
 (delete-selection-mode t)
 
-;; Add a "File -> Open recent..." option to the menu
-(recentf-mode t)
-
-(defun renz/recentf-find-file ()
-  "Find a recent file using the minibuffer with completion"
-  (interactive)
-  (unless (find-file (completing-read "Find recent file: " recentf-list))
-    (message "Aborting...")))
-
-(defun renz/find-tag ()
-  "Use completing-read to navigate to a tag"
-  (interactive)
-  (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
-
 ;; Enable mouse in terminal
 (xterm-mouse-mode 1)
 
@@ -107,9 +93,9 @@
 (setq compilation-scroll-output t)
 
 ;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
-(require 'ansi-color)
 (defun renz/colorize-compilation-buffer ()
   "Enable colors in the *compilation* buffer."
+  (require 'ansi-color)
   (let ((inhibit-read-only t))
     (ansi-color-apply-on-region (point-min) (point-max))))
 
@@ -126,28 +112,12 @@
 ;; Show laptop battery in the modeline
 (display-battery-mode t)
 
-;; Add ~/.local/bin to Eshell PATH when on *nix
-;; FIXME is this really necessary?
-;; (defun renz/eshell-local-bin ()
-;;   "Ensure ~/.local/bin is on PATH when starting eshell"
-;;   (unless (eq system-type 'windows-nt)
-;;     (eshell/addpath "~/.local/bin")))
-
-;; eshell/addpath is buffer-local, so we have to run this as a hook
-;; (add-hook 'eshell-mode-hook 'renz/eshell-local-bin)
-
 ;; Enable .dir-locals.el for remote files
 (setq enable-remote-dir-locals t)
 
 ;; Disable asking about risky variables from .dir-locals.el
 ;; https://emacs.stackexchange.com/a/44604
 (advice-add 'risky-local-variable-p :override #'ignore)
-
-;; Vim keybindings
-;; (require 'evil)
-;; (evil-mode 1)
-;; (add-hook 'prog-mode-hook 'turn-on-evil-mode)
-;; (add-hook 'text-mode-hook 'turn-on-evil-mode)
 
 ;; Faster grep
 (when (executable-find "rg")

@@ -1,12 +1,6 @@
 ;; ============================================================================
 ;;                                SQL
 ;; ============================================================================
-(require 'hive2)
-(require 'ob-sql-mode)
-(require 'sqlformat)
-(require 'sqlup-mode)
-(require 'sql-indent)
-
 ;; https://emacs.stackexchange.com/a/16513
 (defun renz/sql-indent ()
   (let ((last-indent (if (> (line-number-at-pos) 1)
@@ -51,3 +45,10 @@
 (add-hook 'sql-mode-hook 'sqlup-mode)
 (add-hook 'sql-mode-hook 'sqlind-minor-mode)
 (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+
+(with-eval-after-load 'sql
+  (require 'hive2)
+  (require 'ob-sql-mode)
+  (require 'sqlformat)
+  (require 'sqlup-mode)
+  (require 'sql-indent))

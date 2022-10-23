@@ -1,15 +1,9 @@
 ;; ============================================================================
 ;;                             Org mode
 ;; ============================================================================
-(require 'org-tempo)
-;; (require 'org-roam)
-
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (python . t)
-   (sql . t)
-   (ipython . t)))
+;; Beefy startup hit from requiring this eagerly, and not sure if I even use
+;; any of its features...
+;; (require 'org-tempo)
 
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
@@ -25,15 +19,23 @@
 ;; https://willschenk.com/articles/2019/using_org_mode_in_hugo/
 (with-eval-after-load 'org
   (setq org-startup-indented t) ; Enable `org-indent-mode' by default
-  (add-hook 'org-mode-hook #'visual-line-mode))
+  (add-hook 'org-mode-hook #'visual-line-mode)
 
-;; Enable asynchronous execution of src blocks
-(when (package-installed-p 'ob-async)
-  (require 'ob-async)
-  (add-hook 'ob-async-pre-execute-src-block-hook
-            #'(lambda ()
-	       (require 'ob-sql-mode)
-	       (require 'hive2))))
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (sql . t)
+     (ipython . t)))
+
+  ;; Enable asynchronous execution of src blocks
+  (when (package-installed-p 'ob-async)
+    (require 'ob-async)
+    (add-hook 'ob-async-pre-execute-src-block-hook
+              #'(lambda ()
+	          (require 'ob-sql-mode)
+	          (require 'hive2))))
+  )
 
 (setq ob-async-no-async-languages-alist '("python"))
 (setq org-html-htmlize-output-type 'css)
