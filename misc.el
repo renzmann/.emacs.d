@@ -122,3 +122,8 @@
 ;; Faster grep
 (when (executable-find "rg")
   (setq grep-program "rg"))
+
+;; Work around a bug where esup tries to step into the byte-compiled
+;; version of `cl-lib', and fails horribly:
+;; https://github.com/jschaf/esup/issues/85
+(setq esup-depth 0)
