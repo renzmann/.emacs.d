@@ -28,18 +28,6 @@
   ;; (setq electric-indent-inhibit t)
   )
 
-(defvar renz/sql-indentation-offsets-alist
-  `((select-clause 0)
-    (insert-clause 0)
-    (delete-clause 0)
-    (update-clause 0)
-    ,@sqlind-default-indentation-offsets-alist))
-
-(add-hook 'sqlind-minor-mode-hook
-    (lambda ()
-       (setq sqlind-indentation-offsets-alist
-             renz/sql-indentation-offsets-alist)))
-
 (add-hook 'sql-mode-hook #'renz/sql-mode-hook)
 (add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
 (add-hook 'sql-mode-hook 'sqlup-mode)
@@ -51,4 +39,17 @@
   (require 'ob-sql-mode)
   (require 'sqlformat)
   (require 'sqlup-mode)
-  (require 'sql-indent))
+  (require 'sql-indent)
+
+  (defvar renz/sql-indentation-offsets-alist
+    `((select-clause 0)
+      (insert-clause 0)
+      (delete-clause 0)
+      (update-clause 0)
+      ,@sqlind-default-indentation-offsets-alist))
+
+  (add-hook 'sqlind-minor-mode-hook
+            (lambda ()
+              (setq sqlind-indentation-offsets-alist
+                    renz/sql-indentation-offsets-alist)))
+)

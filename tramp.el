@@ -1,20 +1,21 @@
 ;; ============================================================================
 ;;                              TRAMP
 ;; ============================================================================
-(add-to-list 'tramp-remote-path "~/.local/bin")
 (setq vc-handled-backends '(Git))
 (setq remote-file-name-inhibit-locks t)
 (setq tramp-inline-compress-start-size 1000)
 (setq tramp-copy-size-limit 10000)
 (setq tramp-verbose 1)
 
-(add-to-list 'tramp-remote-path "~/.conda/envs/make-my-day/bin")
-;; (add-to-list 'tramp-remote-path "~/.conda/envs/boa/bin")
-;; (remove-hook 'find-file-hook 'vc-find-file-hook)
-
-(add-to-list 'tramp-connection-properties
-             (list (regexp-quote "/ssh:7p")
-                   "remote-shell" "/usr/bin/ksh"))
+(with-eval-after-load 'tramp
+  (add-to-list 'tramp-remote-path "~/.local/bin")
+  (add-to-list 'tramp-remote-path "~/.conda/envs/make-my-day/bin")
+  ;; (add-to-list 'tramp-remote-path "~/.conda/envs/boa/bin")
+  ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
+  (add-to-list 'tramp-connection-properties
+               (list (regexp-quote "/ssh:7p")
+                     "remote-shell" "/usr/bin/ksh"))
+  )
 
 ;; Disabling vc seems to get a little speed up
 ;; https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html
