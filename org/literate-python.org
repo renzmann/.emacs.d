@@ -1,11 +1,24 @@
 #+TITLE: Trying out org as a jupyter replacement
 #+AUTHOR: Robb Enzmann
 
-* Sessions need only be specified once
+* Directory structure and runtime setup
+
+The "current directory" when running org babel is the parent of the current file
+
+#+begin_src sh
+pwd
+#+end_src
+
+#+RESULTS:
+: /home/robb/.emacs.d/org
 
 #+begin_src sh
 python3 -m venv .venv
 #+end_src
+
+#+RESULTS:
+
+* Sessions need only be specified once
 
 Starting a session with =:session= keeps a long-running python for all
 blocks.  From a shell, I set up a virtual environment with =python -m
@@ -27,16 +40,30 @@ All of the interpreting happens in the =*Python*= buffer.
 #+end_src
 
 #+RESULTS:
-: /home/robb/.emacs.d/.venv/bin/python
+: /home/robb/.emacs.d/org/.venv/bin/python
 
-The variable we set near the top is still available:
+The variable we set near the top is still available.  We can also get the results as a =drawer=
+instead of the typical =:= style with a =:results drawer= header
 
-#+begin_src python :session
+#+begin_src python :session :results drawer
   hello
 #+end_src
 
 #+RESULTS:
-: Hello, world!
+:results:
+Hello, world!
+:end:
+
+The =cwd= for python is the same as =pwd= above:
+
+#+begin_src python :session
+import os
+
+os.getcwd()
+#+end_src
+
+#+RESULTS:
+: /home/robb/.emacs.d/org
 
 * Errors are silent /here/, but not in the =*Python*= running process
 

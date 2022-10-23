@@ -26,7 +26,8 @@
    '((emacs-lisp . t)
      (python . t)
      (sql . t)
-     (ipython . t)))
+     (ipython . t)
+     (shell . t)))
 
   ;; Enable asynchronous execution of src blocks
   (when (package-installed-p 'ob-async)
