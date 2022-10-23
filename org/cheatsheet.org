@@ -1,1 +1,5 @@
-* =C-h R= for ~info-display-manual~
+* Keys
+** =C-h R= for ~info-display-manual~
+
+* Functions
+** Check if a file is remote using =(file-remote-p default-directory)=

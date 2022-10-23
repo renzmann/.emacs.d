@@ -83,7 +83,14 @@
 ;; (setq corfu-auto t
 ;;       corfu-quit-no-match 'separator)
 
+;; Company causes TRAMP to hang if we look for commands too fast
+(defun renz/disable-company-remote-shell ()
+  (when (and (fboundp 'company-mode)
+             (file-remote-p default-directory))
+    (company-mode -1)))
+
 (add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'shell-mode-hook 'renz/disable-company-remote-shell)
 (setq company-minimum-prefix-length 2)
 (setq company-idle-delay
       (lambda () (if (company-in-string-or-comment) nil 0.0)))
