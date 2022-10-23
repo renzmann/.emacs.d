@@ -83,17 +83,30 @@
 ;; (setq corfu-auto t
 ;;       corfu-quit-no-match 'separator)
 
-;; Company causes TRAMP to hang if we look for commands too fast
-(defun renz/disable-company-remote-shell ()
-  (when (and (fboundp 'company-mode)
-             (file-remote-p default-directory))
-    (company-mode -1)))
+;; Company - mode
+;; ;; Company causes TRAMP to hang if we look for commands too fast
+;; (defun renz/disable-company-remote-shell ()
+;;   (when (and (fboundp 'company-mode)
+;;              (file-remote-p default-directory))
+;;     (company-mode -1)))
 
-(add-hook 'after-init-hook 'global-company-mode)
-(add-hook 'shell-mode-hook 'renz/disable-company-remote-shell)
-(setq company-minimum-prefix-length 2)
-(setq company-idle-delay
-      (lambda () (if (company-in-string-or-comment) nil 0.0)))
-(setq company-tooltip-align-annotations t)
-(setq company-tooltip-flip-when-above t)
-(setq company-tooltip-margin 2)
+;; (add-hook 'after-init-hook 'global-company-mode)
+;; (add-hook 'shell-mode-hook 'renz/disable-company-remote-shell)
+;; (setq company-minimum-prefix-length 2)
+;; (setq company-idle-delay
+;;       (lambda () (if (company-in-string-or-comment) nil 0.0)))
+;; (setq company-tooltip-align-annotations t)
+;; (setq company-tooltip-flip-when-above t)
+;; (setq company-tooltip-margin 2)
+
+;; Corfu
+(unless (display-graphic-p)
+  (corfu-terminal-mode +1))
+
+(defun renz/disable-corfu-remote-shell ()
+  (when (and (fboundp 'corfu-mode)
+             (file-remote-p default-directory))
+    (corfu-mode -1)))
+
+(setq corfu-auto t)
+(global-corfu-mode)
