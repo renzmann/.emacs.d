@@ -66,7 +66,7 @@
 (global-set-key (kbd "C-c d") #'renz/find-tag)
 (global-set-key (kbd "C-c e") #'shell)
 (global-set-key (kbd "C-c f") #'hippie-expand)
-;; (global-set-key (kbd "C-c g") #')
+(global-set-key (kbd "C-c g") #'ffap)  ; TODO my own func that takes universal args
 ;; (global-set-key (kbd "C-c h") #')
 (require 'change-inner)
 (global-set-key (kbd "C-c i") #'change-inner)
