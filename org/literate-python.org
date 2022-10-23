@@ -2,6 +2,11 @@
 #+AUTHOR: Robb Enzmann
 
 * Sessions need only be specified once
+
+#+begin_src sh
+python3 -m venv .venv
+#+end_src
+
 Starting a session with =:session= keeps a long-running python for all
 blocks.  From a shell, I set up a virtual environment with =python -m
 venv .venv= in the same directory as this org file.
@@ -50,18 +55,19 @@ running =*Python*= buffer, instead of appearing below
 
 #+RESULTS:
 
+* Inline images
+
 The fact we /have/ to save to a file and then have the cell return the
 same filename is a bit Byzantine. Any way to make a QoL improvement
 there?
 
-#+BEGIN_SRC python :session :results file
+#+BEGIN_SRC python :session :results file :var filename="img.png"
   import math
 
   import numpy
   import matplotlib.pyplot as plt
 
 
-  filename = "img.png"
   x = numpy.linspace(0, 2 * math.pi)
   fig = plt.figure()
   plt.plot(x, numpy.sin(x))

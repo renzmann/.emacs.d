@@ -35,7 +35,7 @@
 + M-; to comment stuff
 + C-x p f  find file in project
 + C-x v + to update project from git
-+ C-; in flyspell mode to correct last misspelling
++
 + C-d in dired rename/move to accept input literally: http://xahlee.info/emacs/emacs/emacs_icomplete_mode.html
 + C-x x g to revert buffer with fewer confirm messages
 + =M-! find . -name "*.py" -print | etags -= to re-generate project tags
@@ -84,6 +84,7 @@ difference of attitude from Vim (less so neovim)
   #+begin_example
   mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
   #+end_example
+
 + We can use =C-u C-c C-p= to add a =poetry run= prefix to the python start command
 
 * Some good example configs
