@@ -1,5 +1,18 @@
 * Keys
 ** =C-h R= for ~info-display-manual~
+** =C-x C-0= to interactively change text size of a buffer
+** Reposition cursor
+*** =M-r= cycle
+*** =M-0 M-r= top
+*** =M-- M-r= bottom
+** =C-;= in flyspell mode to correct last misspelling
 
 * Functions
 ** Check if a file is remote using =(file-remote-p default-directory)=
+
+* External
+** =find . -name "*.py" -print | etags -= to re-generate project tags
+** Getting homebrew without sudo: https://superuser.com/a/1603383
+  #+begin_example
+  mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
+  #+end_example
