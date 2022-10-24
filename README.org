@@ -2,7 +2,9 @@
 
 My emacs configuration. Want to use it? Go ahead!
 
-: cd ~ && git clone --recursive https://github.com/renzmann/.emacs.d
+#+begin_src sh
+cd ~ && git clone --recursive https://github.com/renzmann/.emacs.d
+#+end_src
 
 ** Goals
 
