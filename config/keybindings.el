@@ -143,4 +143,5 @@
 (global-set-key (kbd "C-c =") #'er/expand-region)
 
 (when (eq system-type 'darwin)
-  (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map))
+  (with-eval-after-load 'projectile
+    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)))
