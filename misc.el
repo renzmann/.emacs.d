@@ -1,6 +1,9 @@
 ;; ============================================================================
 ;;                      Misc. Editor Settings
 ;; ============================================================================
+;; Emojis inline 👍
+(add-hook 'after-init-hook #'global-emojify-mode)
+
 ;; Don't really need the splash screen
 (setq inhibit-splash-screen t)
 
