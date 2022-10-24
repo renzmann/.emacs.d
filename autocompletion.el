@@ -109,4 +109,5 @@
     (corfu-mode -1)))
 
 (setq corfu-auto t)
+(setq corfu-auto-delay 0.0)
 (global-corfu-mode)
