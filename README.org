@@ -1,0 +1,22 @@
+* .emacs.d
+My emacs configuration. Want to use it? Go ahead!
+
+```sh
+cd ~ && git clone --recursive https://github.com/renzmann/.emacs.d
+```
+
+** Goals
+
+I use all three of the major platforms, in both GUI and TTY mode.  So
+this config is designed to work equally well for:
+
+| platform | terminal | GUI | ssh + TTY | Tramp |
+|----------+----------+-----+-----------+-------|
+| Linux    | ✔       | ✔  | ✔        | ✔    |
+| macOS    | ✔       | ✔  | ✔        | ✔    |
+| Windows  | :no-entry:       | ✔  | :no-entry:        | ✔    |
+
+Once I figure out how to get colors working in Windows terminal, I'll
+update this table.  For now though, the 16 bit colors don't react to
+my color theme, and so on Windows I rely singularly on GUI mode,
+rather than WSL or emacs inside Alacritty.
