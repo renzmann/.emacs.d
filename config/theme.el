@@ -14,8 +14,9 @@
 ;;         (t . (1.1))))
 
 (setq ef-themes-to-toggle '(ef-day ef-night))
+(load-theme 'ef-night :no-confirm)
 
-(if (display-graphic-p)
-    (load-theme 'ef-night :no-confirm)
-    ;; (load-theme 'doom-one :no-confirm)
-  (load-theme 'ef-night :no-confirm))
+;; (if ...
+;;     (load-theme 'wombat :no-confirm)
+;;     ;; (load-theme 'doom-one :no-confirm)
+;;   (load-theme 'ef-night :no-confirm))
