@@ -40,21 +40,21 @@
 ;; ============================================================================
 ;; Jump to any of these (with completion) using `M-x renz/jump-configuration`,
 ;; bound by default to `C-c s s`
-(load-file "~/.emacs.d/keybindings.el")
-(load-file "~/.emacs.d/theme.el")
-(load-file "~/.emacs.d/misc.el")
-(load-file "~/.emacs.d/autocompletion.el")
-(load-file "~/.emacs.d/org.el")
-(load-file "~/.emacs.d/sql.el")
-(load-file "~/.emacs.d/python.el")
-(load-file "~/.emacs.d/windows.el")
-(load-file "~/.emacs.d/macos.el")
-(load-file "~/.emacs.d/linux.el")
-(load-file "~/.emacs.d/tramp.el")
-(load-file "~/.emacs.d/lsp.el")
-(load-file "~/.emacs.d/treesitter.el")
-(load-file "~/.emacs.d/projects.el")
-(load-file "~/.emacs.d/minimap.el")
+(load-file "~/.emacs.d/config/keybindings.el")
+(load-file "~/.emacs.d/config/theme.el")
+(load-file "~/.emacs.d/config/misc.el")
+(load-file "~/.emacs.d/config/autocompletion.el")
+(load-file "~/.emacs.d/config/org.el")
+(load-file "~/.emacs.d/config/sql.el")
+(load-file "~/.emacs.d/config/python.el")
+(load-file "~/.emacs.d/config/windows.el")
+(load-file "~/.emacs.d/config/macos.el")
+(load-file "~/.emacs.d/config/linux.el")
+(load-file "~/.emacs.d/config/tramp.el")
+(load-file "~/.emacs.d/config/lsp.el")
+(load-file "~/.emacs.d/config/treesitter.el")
+(load-file "~/.emacs.d/config/projects.el")
+(load-file "~/.emacs.d/config/minimap.el")
 
 
 (server-start)
