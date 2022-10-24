@@ -47,11 +47,19 @@
   (interactive)
   (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
 
+(defun renz/consult-grep ()
+  "Live grep using `rg' if found, otherwise `grep'"
+  (interactive)
+  (if (executable-find "rg")
+      (consult-ripgrep)
+    (consult-grep)))
+
 
 ;; ----------------------------------------
 ;; Expanded defaults
 ;; ----------------------------------------
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
+(global-set-key (kbd "C-M-h") 'backward-kill-sexp)
 
 ;; UNBINDS the suspend-frame keybinding, which is annoying on GUI.
 ;; Use C-x C-z if you really want to suspend the frame.
@@ -110,7 +118,7 @@
 (global-set-key (kbd "C-c t d") #'org-babel-detangle)
 (global-set-key (kbd "C-c t o") #'org-babel-tangle-jump-to-org)
 (global-set-key (kbd "C-c t s") #'renz/org-babel-tangle-jump-to-src)
-;; (global-set-key (kbd "C-c u") #')
+(global-set-key (kbd "C-c u") #'renz/consult-grep)
 ;; (global-set-key (kbd "C-c v") #')
 (global-set-key (kbd "C-c w") #'renz/org-kill-src-block)
 ;; (global-set-key (kbd "C-c x") #')
