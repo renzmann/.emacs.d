@@ -69,9 +69,12 @@
 ;; ============================================================================
 ;;                             Org-roam
 ;; ============================================================================
-;; (setq org-roam-directory (file-truename "~/org-roam"))
-;; (org-roam-db-autosync-mode)
+;; (setq org-roam-directory (file-truename "~/.emacs.d/org/org-roam")
 
+;; Consider the below for Windows only
+;; (setq org-roam-database-connector 'sqlite3)
+
+;; (org-roam-db-autosync-mode)
 
 ;; ============================================================================
 ;; Displaying inline images from a remote source
