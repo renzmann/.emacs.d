@@ -11,9 +11,9 @@
   "Prompt for a .el file in my configuration folder, then go there."
   (interactive)
   (find-file
-   (concat "~/.emacs.d/"
+   (concat "~/.emacs.d/config/"
            (completing-read "Elisp config files: "
-                            (directory-files "~/.emacs.d/" nil ".*\.el$")))))
+                            (directory-files "~/.emacs.d/config/" nil ".*\.el$")))))
 
 ;; REMINDME: if we do this one more time, we make a new function that
 ;; we close into a file-jumper like below.
@@ -33,7 +33,7 @@
 
 (defun renz/jump-keybindings ()
   (interactive)
-  (find-file "~/.emacs.d/keybindings.el"))
+  (find-file "~/.emacs.d/config/keybindings.el"))
 
 (defun renz/recentf-find-file ()
   "Find a recent file using the minibuffer with completion"
