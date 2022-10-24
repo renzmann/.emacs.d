@@ -1,6 +1,9 @@
 ;; ============================================================================
 ;; 			 LSP (Eglot lsp-mode)
 ;; ============================================================================
+;; Mostly obsolete, since I use eglot now, which needs basically no
+;; configuration.
+
 ;; (require 'lsp-mode)
 
 ;; (setq lsp-keymap-prefix "s-p")
@@ -52,8 +55,8 @@
 
 ;; (setq lsp-completion-provider :none)
 
-(defun renz/corfu-lsp-setup ()
-  (setq-local completion-styles '(flex basic partial-completion emacs22)
-              completion-category-defaults nil))
+;; (defun renz/corfu-lsp-setup ()
+;;   (setq-local completion-styles '(flex basic partial-completion emacs22)
+;;               completion-category-defaults nil))
 
-(add-hook 'lsp-mode-hook #'renz/corfu-lsp-setup)
+;; (add-hook 'lsp-mode-hook #'renz/corfu-lsp-setup)
