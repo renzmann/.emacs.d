@@ -3,7 +3,7 @@
 My emacs configuration. Want to use it? Go ahead!
 
 #+begin_src sh
-cd ~ && git clone --recursive https://github.com/renzmann/.emacs.d
+git clone https://github.com/renzmann/.emacs.d
 #+end_src
 
 ** Goals
