@@ -13,25 +13,9 @@
 (vertico-mode)
 ;; Vertico works better for C-x C-f /ssh:<thing> than the built-in icomplete
 
-;; (if (version< emacs-version "27.1")
-;;     (progn
-;;       (setq ido-enable-flex-matching t)
-;;       (setq ido-everywhere t)
-;;       (ido-mode 1))
-;;   (fido-mode)
-;;   ;; Have TAB complete using the first option and continue, instead of
-;;   ;; popping up the *Completions* buffer
-;;   (define-key icomplete-minibuffer-map [remap minibuffer-complete] 'icomplete-force-complete))
-
-;; On newer versions of emacs, set minibuffer completion candidates to
-;; display vertically
-;; (unless (version< emacs-version "28.1")
-;;   ;; Sometimes I had to customize the icomplete-compute-delay variable
-;;   ;; to 0.0 to avoid delay on M-x popup
-;;   (setq icomplete-compute-delay 0.0)
-;;   (fido-vertical-mode))
-
 ;; Use TAB in place of C-M-i for completion-at-point
+;; REMINDME: I think this causes some issues in shell-mode and the
+;; like?  Can't remember...
 ;; (setq tab-always-indent 'complete)
 
 ;; Display candidates in *Completion* buffer vertically as a single list
@@ -72,18 +56,12 @@
 (define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
 
-;; FIXME how do we get rid of the double-TAB behavior on examples like this?
-;; (completioreg)
-;; This first completes out to (completion-reg), requiring another TAB
-;; for the *completion* buffer to show up Docs don't explain a way
-;; around it.
+;; ----------------------------------------------------------------------------
+;;                              company-mode
+;; ----------------------------------------------------------------------------
+;; Mostly obsolete, since I don't use company anymore, but kept for
+;; historical reasons.
 
-;; Enable auto completion and configure quitting
-;; (global-corfu-mode)
-;; (setq corfu-auto t
-;;       corfu-quit-no-match 'separator)
-
-;; Company - mode
 ;; ;; Company causes TRAMP to hang if we look for commands too fast
 ;; (defun renz/disable-company-remote-shell ()
 ;;   (when (and (fboundp 'company-mode)
@@ -99,7 +77,9 @@
 ;; (setq company-tooltip-flip-when-above t)
 ;; (setq company-tooltip-margin 2)
 
-;; Corfu
+;; ----------------------------------------------------------------------------
+;;                                 corfu
+;; ----------------------------------------------------------------------------
 (unless (display-graphic-p)
   (corfu-terminal-mode +1))
 
@@ -108,6 +88,8 @@
              (file-remote-p default-directory))
     (corfu-mode -1)))
 
-(setq corfu-auto t)
-(setq corfu-auto-delay 0.0)
+(setq corfu-auto t
+      corfu-auto-delay 0.0
+      corfu-quit-no-match 'separator)
+
 (global-corfu-mode)
