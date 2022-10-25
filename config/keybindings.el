@@ -105,7 +105,10 @@
 (global-set-key (kbd "C-c i") #'change-inner)
 (global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
 ;; (global-set-key (kbd "C-c k") #')
-(global-set-key (kbd "C-c l") #'eglot)
+(global-set-key (kbd "C-c l l") #'eglot)
+(global-set-key (kbd "C-c l f f") #'eglot-format)
+(global-set-key (kbd "C-c l f b") #'eglot-format-buffer)
+(global-set-key (kbd "C-c l r n") #'eglot-rename)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
 (global-set-key (kbd "C-c n") #'minimap-mode)
 (global-set-key (kbd "C-c o") #'change-outer)
