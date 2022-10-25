@@ -1,0 +1,18 @@
+#+TITLE: Trying to use a remote LSP in a virtual environment with Tramp
+
+* Use an absolute file Tramp file name for the server executable
+Something like ssh:machine:/path/to/venv/bin/pylsp. This can be done
+by setting eglot-server-programs (you probably want to do this
+dir-locally).
+* Activate the venv in .profile.
+If typing M-! which pylsp RET prints the right thing, then Eglot
+should find the language server too.
+* Customize tramp-remote-path
+Include the bin directory of your venv (you probably want to use
+connection-local variables for this).
+* Connect to LSP over TCP
+** =ssh -L XXXX:localhost:XXXX <user>@<ip>=
+** Activate virtual environment on server
+** =pylsp --tcp --host localhost --port XXXX=
+** Start eglot on local emacs, and will ask for host and port number, then just input localhost:XXXX
+* Read the Flymake manual for diagnostic viewing
