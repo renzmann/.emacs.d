@@ -9,7 +9,8 @@
 
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path "~/.local/bin")
-  (add-to-list 'tramp-remote-path "~/.conda/envs/make-my-day/bin")
+  ;; (add-to-list 'tramp-remote-path "~/.conda/envs/make-my-day/bin")
+  (add-to-list 'tramp-remote-path "~/.conda/envs/boa/bin")
   ;; (add-to-list 'tramp-remote-path "~/.conda/envs/boa/bin")
   ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
   (add-to-list 'tramp-connection-properties

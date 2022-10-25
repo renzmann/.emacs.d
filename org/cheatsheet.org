@@ -6,6 +6,9 @@
 *** =M-0 M-r= top
 *** =M-- M-r= bottom
 ** =C-;= in flyspell mode to correct last misspelling
+** =M-?= to use ~xref-find-references~
+** =M-.= to use ~xref-find-definitions~
+** =C-h-.= to use ~eldoc-doc-buffer~ for viewing documentation
 
 * Functions
 ** Check if a file is remote using =(file-remote-p default-directory)=
