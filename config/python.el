@@ -10,13 +10,13 @@
 ;;   /home/robb/tmp/errors.py:4:12 - error: Operator "+" not supported for types "str" and "Literal[1]"
 ;;     Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
 ;; 2 errors, 1 warning, 0 informations
-(require 'compile)
-(add-to-list 'compilation-error-regexp-alist-alist
-             ;; It would be nice if we could also capture the
-             ;; \\(error\\|warning\\) part as "KIND", but I got messed
-             ;; up on it
-             '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
-(add-to-list 'compilation-error-regexp-alist 'pyright)
+(with-eval-after-load 'compile
+  (add-to-list 'compilation-error-regexp-alist-alist
+               ;; It would be nice if we could also capture the
+               ;; \\(error\\|warning\\) part as "KIND", but I got messed
+               ;; up on it
+               '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
+  (add-to-list 'compilation-error-regexp-alist 'pyright))
 
 ;; Extra check commands for C-c C-v
 (if (executable-find "mypy")
@@ -49,7 +49,7 @@
 (when (package-installed-p 'pyvenv)
   (pyvenv-mode)
   ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
-  (pyvenv-tracking-mode)
+  ;; (pyvenv-tracking-mode)
   ;; (setenv "WORKON_HOME" "~/.conda/envs")
   )
 
@@ -60,3 +60,5 @@
 ;; Don't mark the check command and virtualenv variables as unsafe
 (put 'python-check-command 'safe-local-variable #'stringp)
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+
+(add-hook 'python-mode-hook 'eglot-ensure)
