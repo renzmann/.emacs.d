@@ -136,3 +136,23 @@ difference of attitude from Vim (less so neovim)
 | Sao Paolo |     71.00 |   11.50 |
 | Stockholm |    134.19 |   14.33 |
 | Morelia   |    257.56 |   17.67 |
+
+#+PLOT: title:"An evaluation of plaintext document formats" transpose:yes type:radar min:0 max:4
+| Format            | Fine-grained-control | Initial Effort | Syntax simplicity | Editor Support | Integrations | Ease-of-referencing | Versatility |
+|-------------------+----------------------+----------------+-------------------+----------------+--------------+---------------------+-------------|
+| Word              |                    2 |              4 |                 4 |              2 |            3 |                   2 |           2 |
+| LaTeX             |                    4 |              1 |                 1 |              3 |            2 |                   4 |           3 |
+| Org Mode          |                    4 |              2 |               3.5 |              1 |            4 |                   4 |           4 |
+| Markdown          |                    1 |              3 |                 3 |              4 |            3 |                   3 |           1 |
+| Markdown + Pandoc |                  2.5 |            2.5 |               2.5 |              3 |            3 |                   3 |           2 |
+
+
+| Sede          | Max cites |              |
+|---------------+-----------+--------------|
+| Chile         |    257.72 | WWWWWWWWWWWW |
+| Leeds         |    165.77 | WWWWWWWh     |
+| Sao Paolo     |     71.00 | WWW;         |
+| Stockholm     |    134.19 | WWWWWW:      |
+| Morelia       |    257.56 | WWWWWWWWWWWW |
+| Rochefourchat |      0.00 |              |
+#+TBLFM: $3='(orgtbl-ascii-draw $2 0.0 257.72 12)
