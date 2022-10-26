@@ -65,6 +65,9 @@
           (search-forward search-comment)))
     (message "Cannot jump to tangled file because point is not at org src block.")))
 
+;; TODO states
+(setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
+
 
 ;; ============================================================================
 ;;                             Org-roam
