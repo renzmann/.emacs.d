@@ -26,7 +26,6 @@
    '((emacs-lisp . t)
      (python . t)
      (sql . t)
-     (ipython . t)
      (shell . t)))
 
   ;; Enable asynchronous execution of src blocks
