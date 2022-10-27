@@ -10,6 +10,5 @@
 
   ;; Better terminal emulation
   (require 'vterm)
-  (add-hook 'vterm-mode-hook 'turn-off-evil-mode)
   (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
   )
