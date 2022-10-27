@@ -110,6 +110,8 @@ difference of attitude from Vim (less so neovim)
 *** Demo using this document?
 
 *** TODO literate programming (ala Jupyter) with Org - builtin, but needs a couple lines of config
+We've got a few good examples of python now, and the =Plotting= header
+below.  Talk about remote interpreters, inline imaging, and so forth.
 
 ** A note on ~semantic-mode~
   This looks like an aborted first attempt at what would eventually
