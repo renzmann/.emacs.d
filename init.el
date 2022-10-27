@@ -58,7 +58,6 @@
 (load-file "~/.emacs.d/config/lsp.el")
 (load-file "~/.emacs.d/config/treesitter.el")
 (load-file "~/.emacs.d/config/projects.el")
-(load-file "~/.emacs.d/config/minimap.el")
 
 
 (server-start)
