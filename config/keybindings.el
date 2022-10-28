@@ -133,6 +133,13 @@
 (global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)
 
 ;; ----------------------------------------
+;; Meta/Alt modifications
+;; ----------------------------------------
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "M-S-j") 'dired-goto-file))
+
+
+;; ----------------------------------------
 ;; F5 - F9
 ;; ----------------------------------------
 (global-set-key (kbd "<f5>") #'compile)

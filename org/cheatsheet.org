@@ -9,9 +9,19 @@
 ** =M-?= to use ~xref-find-references~
 ** =M-.= to use ~xref-find-definitions~
 ** =C-h-.= to use ~eldoc-doc-buffer~ for viewing documentation
+** =C-x C-j= to open dired to the folder current buffer is referencing
+** =C-x C-q= to make dired editable for easy renaming of filesq
+** =M-s o= new occur buffer with search term and press e to edit directly within the occur buffer
+*** =C-u N M-s o= to show N lines above/below search results
+** =M-s w= search for word
+** =M-e= in isearch switch to minibuffer
+** =M-@= ~mark-word~
+** =C-x C-o= deletes all but one consecutive blank lines
+** =M-$= check spelling
 
 * Functions
 ** Check if a file is remote using =(file-remote-p default-directory)=
+** ~studlify-region~ to add sarcasm
 
 * External
 ** =find . -name "*.py" -print | etags -= to re-generate project tags

@@ -109,9 +109,6 @@
 ;; The MENU bar, on the other hand (menu-bar-mode), is very handy, and
 ;; I don't think I'll ever disable it
 
-;; Allow for custom resize of images when displaying in org mode
-(setq org-image-actual-width nil)
-
 ;; Show laptop battery in the modeline
 (display-battery-mode t)
 
@@ -130,3 +127,13 @@
 ;; version of `cl-lib', and fails horribly:
 ;; https://github.com/jschaf/esup/issues/85
 (setq esup-depth 0)
+
+;; Make dired human-readable
+(setq dired-listing-switches "-alFh")
+
+;; Don't quit emacs by accident
+(setq confirm-kill-emacs 'yes-or-no-p)
+
+;; If aspell is installed, use it instead of ispell
+(when (executable-find "aspell")
+  (setq ispell-program-name "aspell"))

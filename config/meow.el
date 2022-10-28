@@ -84,6 +84,6 @@
    '("'" . repeat)
    '("<escape>" . ignore)))
 
-(require 'meow)
-(meow-setup)
-(meow-global-mode 1)
+;; (require 'meow)
+;; (meow-setup)
+;; (meow-global-mode 1)

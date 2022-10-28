@@ -8,6 +8,9 @@
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
 
+;; Allow for custom resize of images when displaying in org mode
+(setq org-image-actual-width nil)
+
 ;; A kill-block command for working with src blocks
 (defun renz/org-kill-src-block ()
   "Kill the src block around point, if applicable."
@@ -43,7 +46,8 @@
 ;; For navigating to tangled src blocks
 ;; https://emacs.stackexchange.com/a/69591
 (defun renz/org-babel-tangle-jump-to-src ()
-  "The opposite of `org-babel-tangle-jump-to-org'. Jumps at tangled code from org src block."
+  "The opposite of `org-babel-tangle-jump-to-org'.
+Jumps at tangled code from org src block."
   (interactive)
   (if (org-in-src-block-p)
       (let* ((header (car (org-babel-tangle-single-block 1 'only-this-block)))
