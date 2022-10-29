@@ -7,10 +7,14 @@
 (setq tramp-copy-size-limit 10000)
 (setq tramp-verbose 1)
 
+;; Enable .dir-locals.el for remote files
+;; REMINDME: This can case a HUGE slowdown when doing things like `project-find-file'
+;; (setq enable-remote-dir-locals t)
+
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path "~/.local/bin")
   ;; (add-to-list 'tramp-remote-path "~/.conda/envs/make-my-day/bin")
-  (add-to-list 'tramp-remote-path "~/.conda/envs/boa/bin")
+  ;; (add-to-list 'tramp-remote-path "~/.conda/envs/boa/bin")
   ;; (add-to-list 'tramp-remote-path "~/.conda/envs/boa/bin")
   ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
   (add-to-list 'tramp-connection-properties
