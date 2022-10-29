@@ -112,9 +112,6 @@
 ;; Show laptop battery in the modeline
 (display-battery-mode t)
 
-;; Enable .dir-locals.el for remote files
-(setq enable-remote-dir-locals t)
-
 ;; Disable asking about risky variables from .dir-locals.el
 ;; https://emacs.stackexchange.com/a/44604
 (advice-add 'risky-local-variable-p :override #'ignore)
