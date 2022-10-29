@@ -11,4 +11,7 @@
   ;; Better terminal emulation
   (require 'vterm)
   (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+
+  (unless (version< emacs-version "29.0"))
+    (setq pixel-scroll-precision-use-momentum t)
   )

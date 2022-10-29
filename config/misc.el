@@ -134,3 +134,13 @@
 ;; If aspell is installed, use it instead of ispell
 (when (executable-find "aspell")
   (setq ispell-program-name "aspell"))
+
+;; Smooth as butter scrolling
+(if (version< emacs-version "29.0")
+    (pixel-scroll-mode)
+  (pixel-scroll-precision-mode 1)
+  (setq pixel-scroll-precision-large-scroll-height 35.0))
+
+;; Enable minimap if on graphical display
+(when (display-graphic-p)
+  (minimap-mode t))
