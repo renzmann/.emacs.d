@@ -1,4 +1,3 @@
-
 ;; ============================================================================
 ;;                              Python
 ;; ============================================================================
@@ -19,10 +18,11 @@
   (add-to-list 'compilation-error-regexp-alist 'pyright))
 
 ;; Extra check commands for C-c C-v
-(if (executable-find "mypy")
-    (setq python-check-command "mypy"))
-(if (executable-find "pyright")
-    (setq python-check-command "pyright"))
+(with-eval-after-load 'python
+  (if (executable-find "mypy")
+      (setq python-check-command "mypy"))
+  (if (executable-find "pyright")
+      (setq python-check-command "pyright")))
 
 ;; I ran into something similar to this on Windows:
 ;; https://github.com/jorgenschaefer/elpy/issues/733
@@ -61,4 +61,4 @@
 (put 'python-check-command 'safe-local-variable #'stringp)
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
 
-(add-hook 'python-mode-hook 'eglot-ensure)
+;; (add-hook 'python-mode-hook 'eglot-ensure)
