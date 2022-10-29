@@ -13,17 +13,20 @@
  '(eldoc-echo-area-use-multiline-p nil)
  '(evil-undo-system 'undo-redo)
  '(minimap-highlight-line nil)
+ '(minimap-minimum-width 18)
  '(minimap-mode t)
+ '(minimap-width-fraction 0.0)
  '(minimap-window-location 'right)
  '(org-agenda-files '("~/.emacs.d/org/work.org"))
  '(package-selected-packages
-   '(tramp restart-emacs gnuplot corfu-terminal corfu esup consult org-roam ob-async sqlup-mode sql-indent ripgrep blacken lsp-mode sqlformat pythonic f s reformatter change-inner expand-region vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot marginalia)))
+   '(minimap tramp restart-emacs gnuplot corfu-terminal corfu esup consult org-roam ob-async sqlup-mode sql-indent ripgrep blacken lsp-mode sqlformat pythonic f s reformatter change-inner expand-region vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot marginalia)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(minimap-active-region-background ((t (:extend t :background "gray22")))))
+ '(minimap-active-region-background ((t (:extend t :background "gray22"))))
+ '(minimap-font-face ((t (:height 17 :family "DejaVu Sans Mono")))))
 
 ;; REMINDME: is this necessary? We get a slight startup time hit by including it.
 ;; (package-initialize)
