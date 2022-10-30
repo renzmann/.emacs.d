@@ -22,6 +22,7 @@
 * Functions
 ** Check if a file is remote using =(file-remote-p default-directory)=
 ** ~studlify-region~ to add sarcasm
+** ~just-one-space~ to kill all whitespace around point, use with prefix to kill newlines too
 
 * External
 ** =find . -name "*.py" -print | etags -= to re-generate project tags
