@@ -144,3 +144,7 @@
 ;; Enable minimap if on graphical display
 (when (display-graphic-p)
   (minimap-mode t))
+
+;; Keep all backup files in one place
+(make-directory "~/.emacs.d/backups" t)
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
