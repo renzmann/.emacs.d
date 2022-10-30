@@ -7,25 +7,26 @@
 ;; ----------------------------------------
 ;; Keybound functions
 ;; ----------------------------------------
+(defun renz/--jump-section (dirname prompt extension)
+  "For internal use: prompt for a file under `dirname' in the user
+emacs config site with matching `extension' regexp"
+  (let ((complete-dir (concat user-emacs-directory dirname "/")))
+    (find-file
+     (concat complete-dir
+             (completing-read prompt
+                              (directory-files complete-dir nil extension))))))
+
 (defun renz/jump-configuration ()
   "Prompt for a .el file in my configuration folder, then go there."
   (interactive)
-  (find-file
-   (concat "~/.emacs.d/config/"
-           (completing-read "Elisp config files: "
-                            (directory-files "~/.emacs.d/config/" nil ".*\.el$")))))
+  (renz/--jump-section "config" "Elisp config files: " ".*\.el$"))
 
-;; REMINDME: if we do this one more time, we make a new function that
-;; we close into a file-jumper like below.
 ;; FIXME: should set an org-home or something like that.  Probably a common variable
 ;; described somewhere in the org manual
 (defun renz/jump-org ()
   "Prompt for an org file in my emacs directory, then go there."
   (interactive)
-  (find-file
-   (concat "~/.emacs.d/org/"
-           (completing-read "Org files: "
-                            (directory-files "~/.emacs.d/org/" nil ".*\.org$")))))
+  (renz/--jump-section "org" "Org files: " ".*\.org$"))
 
 (defun renz/jump-init ()
   (interactive)
