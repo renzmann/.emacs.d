@@ -19,6 +19,8 @@
 + There may be some way to [[http://xahlee.info/emacs/emacs/elisp_keyword_completion.html][adapt this]] to get FIDO completion for completion-at-point
   - Maybe we just need something like =(setq completion-in-region-function 'completing-read)=?
 + See [[github.com/minad/corfu][corfu]] for how completion-in-region functions can be patched
+** TODO is there a way to create imenu headers in a .el file? Good for jumping to a specific config section
+
 
 * Cheatsheet
 + M-z "zap-to-char"
