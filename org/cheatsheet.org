@@ -60,3 +60,21 @@ project root that points to the virtual environment:
 
 The path can be either relative or absolute, but the former is easier
 to port to other users.
+
+Note that we can't use ~~~:
+#+begin_src js
+    "venvPath": "~/miniconda3/envs",  # illegal!
+#+end_src
+
+Also, when =pyrightconfig.json= is not at the top level of the
+project, it wasn't detected.  That is:
+
+#+begin_example
+.emacs.d/
+|- pyrightconfig.json
+`-python/
+  `myguy.py
+#+end_example
+
+is the only acceptable setup.  Trying to set it up as
+=.emacs.d/python/pyrightconfig.json= instead left it undetected.
