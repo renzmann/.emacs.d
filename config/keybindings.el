@@ -93,16 +93,16 @@
 ;; ----------------------------------------
 ;; C-c <letter> bindings
 ;; ----------------------------------------
-(global-set-key (kbd "C-c a") #'org-agenda)
+;; (global-set-key (kbd "C-c a") #')
 ;; (global-set-key (kbd "C-c b") #')
-(global-set-key (kbd "C-c c") #'org-capture)
+(global-set-key (kbd "C-c c i") #'change-inner)
+(global-set-key (kbd "C-c c o") #'change-outer)
 (global-set-key (kbd "C-c d") #'renz/find-tag)
 (global-set-key (kbd "C-c e") #'shell)
 (global-set-key (kbd "C-c f") #'hippie-expand)
 (global-set-key (kbd "C-c g") #'ffap)  ; TODO my own func that takes universal args
 ;; (global-set-key (kbd "C-c h") #')
-(require 'change-inner)
-(global-set-key (kbd "C-c i") #'change-inner)
+;; (global-set-key (kbd "C-c i") #')
 (global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
 ;; (global-set-key (kbd "C-c k") #')
 (global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
@@ -112,26 +112,30 @@
 (global-set-key (kbd "C-c l r n") #'eglot-rename)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
 (global-set-key (kbd "C-c n") #'minimap-mode)
-(global-set-key (kbd "C-c o") #'change-outer)
-(global-set-key (kbd "C-c p") #'projectile-command-map)
+(global-set-key (kbd "C-c o a") #'org-agenda)
+(global-set-key (kbd "C-c o b d") #'org-babel-detangle)
+(global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
+(global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
+(global-set-key (kbd "C-c o o") #'renz/jump-org)
+(global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
+;; (global-set-key (kbd "C-c p") #')
 ;; (global-set-key (kbd "C-c q") #')
 (global-set-key (kbd "C-c r") #'renz/recentf-find-file)
 (global-set-key (kbd "C-c s i") #'renz/jump-init)
 (global-set-key (kbd "C-c s k") #'renz/jump-keybindings)
-(global-set-key (kbd "C-c s o") #'renz/jump-org)
 (global-set-key (kbd "C-c s s") #'renz/jump-configuration)
-(global-set-key (kbd "C-c t d") #'org-babel-detangle)
-(global-set-key (kbd "C-c t o") #'org-babel-tangle-jump-to-org)
-(global-set-key (kbd "C-c t s") #'renz/org-babel-tangle-jump-to-src)
+;; (global-set-key (kbd "C-c t") #')
 (global-set-key (kbd "C-c u") #'renz/consult-grep)
 ;; (global-set-key (kbd "C-c v") #')
-(global-set-key (kbd "C-c w") #'renz/org-kill-src-block)
+;; (global-set-key (kbd "C-c w") #')
 ;; (global-set-key (kbd "C-c x") #')
-;; (global-set-key (kbd "C-c y") #')
+(global-set-key (kbd "C-c y i") #'copy-inner)
+(global-set-key (kbd "C-c y o") #'copy-outer)
 ;; (global-set-key (kbd "C-c z") #')
-(global-set-key (kbd "C-c ;") #'comment-line)
-(global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)
+(global-set-key (kbd "C-c ;") #'comment-line)  ; TTY-friendly
+(global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
 
+
 ;; ----------------------------------------
 ;; Meta/Alt modifications
 ;; ----------------------------------------
