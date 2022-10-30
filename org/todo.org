@@ -131,7 +131,9 @@ below.  Talk about remote interpreters, inline imaging, and so forth.
                                 (dynamic-venv-root (expand-file-name ".venv" dir-local-path)))
                            (setq-local python-shell-virtualenv-root dynamic-venv-root))))))
 #+end_src
-
+** Setting up full-time remote development with Python
+*** How to get eglot/pyright to play nice over TRAMP
+*** The recent remote dir-locals debacle
 * Plotting
 
 #+PLOT: title:"Citas" ind:1 deps:(3) type:2d with:histograms set:"yrange [0:]"
