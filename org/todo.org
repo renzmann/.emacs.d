@@ -20,6 +20,8 @@
   - Maybe we just need something like =(setq completion-in-region-function 'completing-read)=?
 + See [[github.com/minad/corfu][corfu]] for how completion-in-region functions can be patched
 ** TODO is there a way to create imenu headers in a .el file? Good for jumping to a specific config section
+** TODO put temporary buffers near the bottom, including *completions*, and not too big
+In Info/Help, see Emacs > Windows > Displaying Buffers > Temporary Displays
 
 
 * Cheatsheet
