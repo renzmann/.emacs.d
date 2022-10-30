@@ -30,3 +30,33 @@
   #+begin_example
   mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
   #+end_example
+
+* Python
+** Install language servers to their own venv, then /use/ them from venv
+*** =python-lsp-server=
+pipx is best:
+
+#+begin_src sh
+python3 -m pip install --user pipx
+pipx install python-lsp-server
+pipx runpip python-lsp-server[flake8] install pylsp-mypy python-lsp-black types-requests pandas-stubs sqlalchemy-stubs
+#+end_src
+
+It's unclear whether the types are better installed to the venv or to
+the lsp-server venv.  It also seems likely that we'll get version
+clashes between the stubs and the actually installed library.  If
+that's the case, this seems ... difficult to manage.
+
+*** =pyright-langserver=
+Here, the easiest solution I've found is to also use =npm install -g=
+or =pipx install pyright=, but then use a =pyrightconfig.json= in the
+project root that points to the virtual environment:
+
+#+begin_src javascript
+{
+    "venv": ".venv"
+}
+#+end_src
+
+The path can be either relative or absolute, but the former is easier
+to port to other users.
