@@ -39,7 +39,7 @@
   (package-refresh-contents)
   (package-install-selected-packages))
 
-(add-to-list 'load-path "~/.emacs.d/packages")
+(add-to-list 'load-path (concat user-emacs-directory "packages"))
 
 
 ;; ============================================================================
@@ -47,21 +47,21 @@
 ;; ============================================================================
 ;; Jump to any of these (with completion) using `M-x renz/jump-configuration`,
 ;; bound by default to `C-c s s`
-(load-file "~/.emacs.d/config/keybindings.el")
-(load-file "~/.emacs.d/config/theme.el")
-(load-file "~/.emacs.d/config/misc.el")
-(load-file "~/.emacs.d/config/autocompletion.el")
-(load-file "~/.emacs.d/config/org.el")
-(load-file "~/.emacs.d/config/sql.el")
-(load-file "~/.emacs.d/config/python.el")
-(load-file "~/.emacs.d/config/windows.el")
-(load-file "~/.emacs.d/config/macos.el")
-(load-file "~/.emacs.d/config/linux.el")
-(load-file "~/.emacs.d/config/tramp.el")
-(load-file "~/.emacs.d/config/lsp.el")
-(load-file "~/.emacs.d/config/treesitter.el")
-(load-file "~/.emacs.d/config/projects.el")
-(load-file "~/.emacs.d/config/meow.el")
+(load-file (concat user-emacs-directory "config/keybindings.el"))
+(load-file (concat user-emacs-directory "config/theme.el"))
+(load-file (concat user-emacs-directory "config/misc.el"))
+(load-file (concat user-emacs-directory "config/autocompletion.el"))
+(load-file (concat user-emacs-directory "config/org.el"))
+(load-file (concat user-emacs-directory "config/sql.el"))
+(load-file (concat user-emacs-directory "config/python.el"))
+(load-file (concat user-emacs-directory "config/windows.el"))
+(load-file (concat user-emacs-directory "config/macos.el"))
+(load-file (concat user-emacs-directory "config/linux.el"))
+(load-file (concat user-emacs-directory "config/tramp.el"))
+(load-file (concat user-emacs-directory "config/lsp.el"))
+(load-file (concat user-emacs-directory "config/treesitter.el"))
+(load-file (concat user-emacs-directory "config/projects.el"))
+(load-file (concat user-emacs-directory "config/meow.el"))
 
 
 (server-start)
