@@ -146,5 +146,6 @@
   (minimap-mode t))
 
 ;; Keep all backup files in one place
-(make-directory "~/.emacs.d/backups" t)
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups")))
+(let ((backup-dir (concat user-emacs-directory "backups")))
+  (make-directory backup-dir t)
+  (setq backup-directory-alist '(("." . backup-dir))))
