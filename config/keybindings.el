@@ -105,7 +105,7 @@ emacs config site with matching `extension' regexp"
 ;; (global-set-key (kbd "C-c h") #')
 ;; (global-set-key (kbd "C-c i") #')
 (global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
-;; (global-set-key (kbd "C-c k") #')
+(global-set-key (kbd "C-c k") #'just-one-space)
 (global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
 (global-set-key (kbd "C-c l f f") #'eglot-format)
 (global-set-key (kbd "C-c l f b") #'eglot-format-buffer)
@@ -170,3 +170,8 @@ emacs config site with matching `extension' regexp"
 (when (eq system-type 'darwin)
   (with-eval-after-load 'projectile
     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)))
+
+;; ----------------------------------------
+;; Super bindings
+;; ----------------------------------------
+(global-set-key (kbd "s-s") #'save-buffer)

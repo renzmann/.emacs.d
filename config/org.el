@@ -19,6 +19,9 @@
   (org-mark-element)
   (kill-region nil nil t))
 
+(with-eval-after-load 'ox
+  (require 'ox-hugo))
+
 ;; https://willschenk.com/articles/2019/using_org_mode_in_hugo/
 (with-eval-after-load 'org
   (setq org-startup-indented t) ; Enable `org-indent-mode' by default
