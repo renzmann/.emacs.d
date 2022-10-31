@@ -18,8 +18,9 @@
  '(minimap-width-fraction 0.0)
  '(minimap-window-location 'right)
  '(org-agenda-files '("~/.emacs.d/org/work.org"))
+ '(org-hugo-front-matter-format "yaml")
  '(package-selected-packages
-   '(minimap tramp restart-emacs gnuplot corfu-terminal corfu esup consult org-roam ob-async sqlup-mode sql-indent ripgrep blacken lsp-mode sqlformat pythonic f s reformatter change-inner expand-region vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot marginalia)))
+   '(diff-hl ox-hugo minimap tramp restart-emacs gnuplot corfu-terminal corfu esup consult org-roam ob-async sqlup-mode sql-indent ripgrep blacken lsp-mode sqlformat pythonic f s reformatter change-inner expand-region vterm evil magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode ef-themes markdown-mode eglot marginalia)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
