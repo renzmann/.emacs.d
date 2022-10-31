@@ -83,10 +83,12 @@
 (unless (display-graphic-p)
   (corfu-terminal-mode +1))
 
-(defun renz/disable-corfu-remote-shell ()
+(defun renz/disable-corfu-remote ()
   (when (and (fboundp 'corfu-mode)
              (file-remote-p default-directory))
     (corfu-mode -1)))
+
+(add-hook 'python-mode-hook 'renz/disable-corfu-remote)
 
 (setq corfu-auto t
       corfu-auto-delay 0.0
