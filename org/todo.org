@@ -24,46 +24,45 @@ use).
 #+end_quote
 
 * Notes
-+ `compile` is tramp-aware
-+ https://xenodium.com/speeding-up-emacs-tramp-via-controlmaster/
-+ The info mode index is very handy
-+ In info mode, to find elisp stuff, use =d m elisp RET=; followed by =I= and then type the thing to "list" or search for
-+ There's a great minimal config here: https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
-+ It looks like outline-show-all and outline-mode in general can do the code folding I've been after
-+ Comments like these: https://www.reddit.com/r/emacs/comments/k4kemb/comment/gegw9ws/?utm_source=share&utm_medium=web2x&context=3 show a striking
+** https://xenodium.com/speeding-up-emacs-tramp-via-controlmaster/
+** The info mode index is very handy
+** In info mode, to find elisp stuff, use =d m elisp RET=; followed by =I= and then type the thing to "list" or search for
+** There's a great minimal config here: https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
+** It looks like outline-show-all and outline-mode in general can do the code folding I've been after
+** Comments like these: https://www.reddit.com/r/emacs/comments/k4kemb/comment/gegw9ws/?utm_source=share&utm_medium=web2x&context=3 show a striking
 difference of attitude from Vim (less so neovim)
-+ Company has company-tng-mode (tab 'n' go) for completion with just TAB, but didn't get it working
-+ Virtual environment management looks kinda stale - maybe something like this is good? https://github.com/marcwebbie/auto-virtualenv
-+ dired looks incredibly powerful, but some features are confusing
-+ I have no idea whether we should foray into the `flx` world: https://github.com/lewang/flx and company-flx too
-+ `vertico` https://github.com/minad/vertico also looks like a compelling completion framework
-+ The "flickering" sensation on Windows is likely because of a lack of "double buffering" support: https://news.ycombinator.com/item?id=12830409
-+ Someone is working on dark-mode toolbars for emacs on windows: https://github.com/vsalvino/emacs
-+ `term` doesn't work on Windows native Emacs build, but the Cygwin builds do support it: https://itecnote.com/tecnote/bash-m-x-term-with-emacs-on-ms-windows-error-spawning-child-process-invalid-argument/
-+ To get flyspell working on Windows, had to install `aspell` and `aspell-en` with pacman
-+ FIDO (Fake IDO) mode is built-in, has a vertical mode, and improves on IDO since Emacs 27, so we've switched to that
-+ Fuzzy finding is tougher to find
-+ =fzf= support is second class, but a couple solutions out there:
-+ https://www.youtube.com/watch?v=IDkx48JwDco
-+ https://github.com/bling/fzf.el
-+ could try writing our own
-+ =consult-find= is slow and relies on =find=
-+ =find-name-dired= is also slow, synchronous, relies on =find=
-+ `C-x p f` looks like the best built-in default, from project.el, but uses =git ls= to get the potential files we can visit
-+ try out prot's completion config: https://www.youtube.com/watch?v=43Dg5zYPHTU
-+ embark: https://github.com/oantolin/embark
-+ which-key: https://github.com/justbur/emacs-which-key
-+ vanilla minibuffer complete
-+ consult
-+ marginalia
-+ Trying out org-babel with just bare python, using :python and :session, and turning off the confirm prompt
-+ Using defined functions instead of lambdas makes their name and docstring appear when doing C-c C-h, which is helpful
-+ Getting homebrew without sudo: https://superuser.com/a/1603383
+** Company has company-tng-mode (tab 'n' go) for completion with just TAB, but didn't get it working
+** Virtual environment management looks kinda stale - maybe something like this is good? https://github.com/marcwebbie/auto-virtualenv
+** dired looks incredibly powerful, but some features are confusing
+** I have no idea whether we should foray into the `flx` world: https://github.com/lewang/flx and company-flx too
+** `vertico` https://github.com/minad/vertico also looks like a compelling completion framework
+** The "flickering" sensation on Windows is likely because of a lack of "double buffering" support: https://news.ycombinator.com/item?id=12830409
+** Someone is working on dark-mode toolbars for emacs on windows: https://github.com/vsalvino/emacs
+** `term` doesn't work on Windows native Emacs build, but the Cygwin builds do support it: https://itecnote.com/tecnote/bash-m-x-term-with-emacs-on-ms-windows-error-spawning-child-process-invalid-argument/
+** To get flyspell working on Windows, had to install `aspell` and `aspell-en` with pacman
+** FIDO (Fake IDO) mode is built-in, has a vertical mode, and improves on IDO since Emacs 27, so we've switched to that
+** Fuzzy finding is tougher to find
+** =fzf= support is second class, but a couple solutions out there:
+** https://www.youtube.com/watch?v=IDkx48JwDco
+** https://github.com/bling/fzf.el
+** could try writing our own
+** =consult-find= is slow and relies on =find=
+** =find-name-dired= is also slow, synchronous, relies on =find=
+** `C-x p f` looks like the best built-in default, from project.el, but uses =git ls= to get the potential files we can visit
+** try out prot's completion config: https://www.youtube.com/watch?v=43Dg5zYPHTU
+** embark: https://github.com/oantolin/embark
+** which-key: https://github.com/justbur/emacs-which-key
+** vanilla minibuffer complete
+** consult
+** marginalia
+** Trying out org-babel with just bare python, using :python and :session, and turning off the confirm prompt
+** Using defined functions instead of lambdas makes their name and docstring appear when doing C-c C-h, which is helpful
+** Getting homebrew without sudo: https://superuser.com/a/1603383
   #+begin_example
   mkdir homebrew && curl -L https://github.com/Homebrew/brew/tarball/master | tar xz --strip 1 -C homebrew
   #+end_example
 
-+ We can use =C-u C-c C-p= to add a =poetry run= prefix to the python start command
+** We can use =C-u C-c C-p= to add a =poetry run= prefix to the python start command
 
 * Some good example configs
 + https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
