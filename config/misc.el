@@ -142,11 +142,14 @@
   (setq pixel-scroll-precision-large-scroll-height 35.0))
 
 ;; Enable minimap if on graphical display
-(when (display-graphic-p)
-  (minimap-mode t))
+;; (when (display-graphic-p)
+;;   (minimap-mode t))
 
 ;; Keep all backup files in one place
 ;; (let ((backup-dir (concat user-emacs-directory "backups")))
 ;;   (make-directory backup-dir t)
 ;;   (setq backup-directory-alist '(("." . backup-dir))))
 (setq backup-directory-alist nil)
+
+;; Enable syntax highlighting within code fences for markdown
+(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
