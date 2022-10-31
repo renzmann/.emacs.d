@@ -1,4 +1,5 @@
 * Keys
+** =C-x C-v= for killing an existing buffer and re-reading it from disk
 ** =C-h R= for ~info-display-manual~
 ** =C-x C-0= to interactively change text size of a buffer
 ** Reposition cursor
@@ -18,6 +19,10 @@
 ** =M-@= ~mark-word~
 ** =C-x C-o= deletes all but one consecutive blank lines
 ** =M-$= check spelling
+** =M-;= to add a comment at the end of the line
+** =C-d= in dired rename/move to accept input literally: http://xahlee.info/emacs/emacs/emacs_icomplete_mode.html
+** =C-x x g= to revert buffer with fewer confirm messages
+
 
 * Functions
 ** Check if a file is remote using =(file-remote-p default-directory)=
