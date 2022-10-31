@@ -7,6 +7,9 @@
 (setq tramp-copy-size-limit 10000)
 (setq tramp-verbose 1)
 
+;; Without this line, we get the "Forbidden reentrant call of Tramp" bug: https://github.com/joaotavora/eglot/issues/859
+(setq tramp-use-ssh-controlmaster-options nil)
+
 ;; Enable .dir-locals.el for remote files
 ;; REMINDME: This can case a HUGE slowdown when doing things like `project-find-file'
 ;; (setq enable-remote-dir-locals t)
@@ -15,9 +18,9 @@
   (add-to-list 'tramp-remote-path "~/.local/bin")
   (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
   ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
-  (add-to-list 'tramp-connection-properties
-               (list (regexp-quote "/ssh:7p")
-                     "remote-shell" "/usr/bin/ksh"))
+  ;; (add-to-list 'tramp-connection-properties
+  ;;              (list (regexp-quote "/ssh:7p")
+  ;;                    "remote-shell" "/usr/bin/ksh"))
   )
 
 ;; Disabling vc seems to get a little speed up
