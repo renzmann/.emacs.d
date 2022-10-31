@@ -111,6 +111,7 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c l f b") #'eglot-format-buffer)
 (global-set-key (kbd "C-c l l") #'eglot)
 (global-set-key (kbd "C-c l r n") #'eglot-rename)
+(global-set-key (kbd "C-c l s") #'eglot-shutdown)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
 (global-set-key (kbd "C-c n") #'minimap-mode)
 (global-set-key (kbd "C-c o a") #'org-agenda)
