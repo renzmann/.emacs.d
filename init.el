@@ -31,9 +31,6 @@
  '(minimap-active-region-background ((t (:extend t :background "gray22"))))
  '(minimap-font-face ((t (:height 17 :family "DejaVu Sans Mono")))))
 
-;; REMINDME: is this necessary? We get a slight startup time hit by including it.
-;; (package-initialize)
-
 ;; Keep packages in sync - only refreshing/installing if something is missing
 (package-autoremove)
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
