@@ -13,6 +13,15 @@ This requires `elpy`, its official python module, which is unmaintained
 In Info/Help, see Emacs > Windows > Displaying Buffers > Temporary Displays
 ** Should we move config to literate?
 ** TODO For =diff-hl-mode=, we need to profile performance over Tramp
+Per the [[https://github.com/dgutov/diff-hl#tramp][README's]] instructions:
+#+begin_quote
+diff-hl should just work with
+Tramp. But slow or high latency connections can cause performance
+problems. If you experience such issues, customize
+diff-hl-disable-on-remote to t. This will change the behavior of both
+turn-on-diff-hl-mode and global-diff-hl-mode (whichever you prefer to
+use).
+#+end_quote
 
 * Notes
 + `compile` is tramp-aware
