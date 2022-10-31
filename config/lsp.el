@@ -14,7 +14,7 @@
 ;;                      :server-id 'pylsp-remote))
 
 ;; (lsp-register-client
-;;     (make-lsp-client :new-connection (lsp-tramp-connection "pyright-langserver --stdio")
+;;     (make-lsp-client :new-connection (lsp-tramp-connection '("pyright-langserver" "--stdio"))
 ;;                      :major-modes '(python-mode)
 ;;                      :remote? t
 ;;                      :server-id 'pyright-remote))
