@@ -1,49 +1,18 @@
 * Figure these out (eventually)
-+ Set indentation/tabbing behavior for SQL
-+ Figure out the regex for this and publish it as a package
-+ What's the proper way to install and use fonts? Sometimes we don't get italics, etc.
-+ Figure out pyright LSP integration (also remote version)
-+ Learn etags set up for definition jumps
-+ How to run debugger protocol for interactive python sessions
-+ add git-gutter integration
-+ add EIN (Jupyter) (https://github.com/millejoh/emacs-ipython-notebook/tree/master) -- this requires `elpy`, its official python module, which is unmaintained
-+ other options include this: https://github.com/nnicandro/emacs-jupyter
-+ and this: https://github.com/gregsexton/ob-ipython (it looks like org-mode can actually do a lot of what jupyter does)
-+ Buttons and what not look terrible in most color themes - finding a good theme is really hard
-+ configure pyvenv-auto to work with poetry: https://github.com/nryotaro/pyvenv-auto
-+ Bookmarks and .notes file
-+ Copy doom-vibrant theme or whichever other one we want directly to avoid bloat
-+ Compiling emacs - use Cairo and Harfbuzz for graphics
-+ org-roam
-+ github.com/jacktasia/dumb-jump
-+ There may be some way to [[http://xahlee.info/emacs/emacs/elisp_keyword_completion.html][adapt this]] to get FIDO completion for completion-at-point
-  - Maybe we just need something like =(setq completion-in-region-function 'completing-read)=?
-+ See [[github.com/minad/corfu][corfu]] for how completion-in-region functions can be patched
+** What's the proper way to install and use fonts? Sometimes we don't get italics, etc.
+** add EIN (Jupyter) (https://github.com/millejoh/emacs-ipython-notebook/tree/master)
+This requires `elpy`, its official python module, which is unmaintained
+*** other options include this: https://github.com/nnicandro/emacs-jupyter
+*** and this: https://github.com/gregsexton/ob-ipython (it looks like org-mode can actually do a lot of what jupyter does)
+** TODO Compiling emacs - use Cairo and Harfbuzz for graphics
+** org-roam
+** github.com/jacktasia/dumb-jump
+** See [[github.com/minad/corfu][corfu]] for how completion-in-region functions can be patched
 ** TODO is there a way to create imenu headers in a .el file? Good for jumping to a specific config section
 ** TODO put temporary buffers near the bottom, including *completions*, and not too big
 In Info/Help, see Emacs > Windows > Displaying Buffers > Temporary Displays
-
-
-* Cheatsheet
-+ M-z "zap-to-char"
-+ M-% "Query replace"
-+ C-x C-v "revert buffer/reload file"
-+ C-u C-SPC "Jump back to mark in current buffer"
-+ M-@ (same as C-M-SPC) "Expand region forward by a word"
-+ M-m "go to first non-whitespace character"
-+ C-M-<SPC> and C-M-@ "mark next s-expression"
-+ M-r to move cursor between top, bottom, middle
-+ M-r reposition center
-+ M-0 M-r top
-+ M-- M-r bottom
-+ M-; to comment stuff
-+ C-x p f  find file in project
-+ C-x v + to update project from git
-+
-+ C-d in dired rename/move to accept input literally: http://xahlee.info/emacs/emacs/emacs_icomplete_mode.html
-+ C-x x g to revert buffer with fewer confirm messages
-+ =M-! find . -name "*.py" -print | etags -= to re-generate project tags
-+ When eglot appears to freeze on TRAMP, just hit C-g a bunch of times and it comes back
+** Should we move config to literate?
+** TODO For =diff-hl-mode=, we need to profile performance over Tramp
 
 * Notes
 + `compile` is tramp-aware
@@ -52,10 +21,6 @@ In Info/Help, see Emacs > Windows > Displaying Buffers > Temporary Displays
 + In info mode, to find elisp stuff, use =d m elisp RET=; followed by =I= and then type the thing to "list" or search for
 + There's a great minimal config here: https://gitlab.com/wef/dotfiles/-/blob/master/.emacs.d.minimal/config.el
 + It looks like outline-show-all and outline-mode in general can do the code folding I've been after
-+ Even the /most minimal/ configs I've seen include:
-- use-package
-- expand-region
-- lsp-mode (over eglot)
 + Comments like these: https://www.reddit.com/r/emacs/comments/k4kemb/comment/gegw9ws/?utm_source=share&utm_medium=web2x&context=3 show a striking
 difference of attitude from Vim (less so neovim)
 + Company has company-tng-mode (tab 'n' go) for completion with just TAB, but didn't get it working
@@ -96,17 +61,16 @@ difference of attitude from Vim (less so neovim)
 + https://gist.github.com/Nathan-Furnal/b327f14e861f009c014af36c1790ec49  <-- python specific
 
 * Notebooking
-+ EIN:
-+ M-x causes whole screen to shift
-+ No LSP connect
-  - No corfu tab-completion support
-  - Interface is clunky
-+ There is an alpha integration between tangled org mode and lsp-mode
-+ org-babel-detangle: https://github.com/joaotavora/eglot/issues/523#issuecomment-684528616
-+ Notebook document support in upcoming LSP specification: https://github.com/joaotavora/eglot/issues/523#issuecomment-1200404642
-+ Reddit post of getting literate programming to work: https://www.reddit.com/r/emacs/comments/w4f4u3/using_rustic_eglot_and_orgbabel_for_literate/?utm_source=share&utm_medium=web2x&context=3
-+ Writing the =renz/org-kill-src-block= function
-+ =org-babel-tangle-jump-to-org= navigates back from a tangled file block to the org file's block
+** EIN:
+*** No LSP connect
+**** No corfu tab-completion support
+**** Interface is clunky
+** There is an alpha integration between tangled org mode and lsp-mode
+** org-babel-detangle: https://github.com/joaotavora/eglot/issues/523#issuecomment-684528616
+** Notebook document support in upcoming LSP specification: https://github.com/joaotavora/eglot/issues/523#issuecomment-1200404642
+** Reddit post of getting literate programming to work: https://www.reddit.com/r/emacs/comments/w4f4u3/using_rustic_eglot_and_orgbabel_for_literate/?utm_source=share&utm_medium=web2x&context=3
+** Writing the =renz/org-kill-src-block= function
+** =org-babel-tangle-jump-to-org= navigates back from a tangled file block to the org file's block
 
 * Blog
 ** Monte carlo simulation to optimize skating programs
