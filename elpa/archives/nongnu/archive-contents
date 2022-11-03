@@ -205,16 +205,6 @@
 		(:authors
 		 ("Chris Wanstrath" . "chris@ozmm.org"))
 		(:commit . "adfb7ae73d6ee2ef790c780dd3c967e62930e94a"))])
- (color-theme-tangotango .
-			 [(0 0 6)
-			  ((color-theme
-			    (6 6 1)))
-			  "Tango Palette color theme for Emacs." tar
-			  ((:url . "https://github.com/juba/color-theme-tangotango")
-			   (:keywords "tango" "palette" "color" "theme" "emacs")
-			   (:maintainer "Julien Barnier")
-			   (:authors
-			    ("Julien Barnier")))])
  (corfu-terminal .
 		 [(0 5)
 		  ((emacs
@@ -818,9 +808,10 @@
 	      (:authors
 	       ("Natalie Weizenbaum")))])
  (haskell-mode .
-	       [(4 7 1)
+	       [(17 2)
 		nil "A Haskell editing mode" tar
 		((:url . "https://github.com/haskell/haskell-mode")
+		 (:keywords "faces" "files" "haskell")
 		 (:maintainer "1992      Simon Marlow")
 		 (:authors
 		  ("1992      Simon Marlow")
@@ -829,7 +820,7 @@
 		  ("2001-2002 Reuben Thomas (>=v1.4)")
 		  ("2003      Dave Love" . "fx@gnu.org")
 		  ("2016      Arthur Fayzrakhmanov"))
-		 (:keywords "faces" "files" "haskell"))])
+		 (:commit . "e72677668f5fc7cc148008e885a0f256e245dd43"))])
  (haskell-tng-mode .
 		   [(0 0 1)
 		    ((emacs
@@ -1583,13 +1574,14 @@
        ((:url . "https://github.com/joaotavora/sly")
 	(:keywords "languages" "lisp" "sly"))])
  (smartparens .
-	      [(4 7 1)
+	      [(1 11 0)
 	       nil "Automatic insertion, wrapping and paredit-like navigation with user defined pairs." tar
 	       ((:url . "https://github.com/Fuco1/smartparens")
+		(:keywords "abbrev" "convenience" "editing")
 		(:maintainer "Matus Goljer" . "matus.goljer@gmail.com")
 		(:authors
 		 ("Matus Goljer" . "matus.goljer@gmail.com"))
-		(:keywords "abbrev" "convenience" "editing"))])
+		(:commit . "4873352b5d0a1c5142658122de1b6950b8fe7e4d"))])
  (solarized-theme .
 		  [(1 3 0)
 		   ((emacs
@@ -1921,7 +1913,7 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(21 1 20221030165154)
+	       [(22 0 20221031102959)
 		((emacs
 		  (24 1)))
 		"ergonomic modal keybinding minor mode." tar
@@ -1930,7 +1922,7 @@
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
 		 (:authors
 		  ("Xah Lee ( http://xahlee.info/ )"))
-		 (:commit . "4810b0ecb6be7f87c55d1f5ddd6e22ca1bb3efc6"))])
+		 (:commit . "644dc9a4e254264560019578f8b84bc4523de8de"))])
  (xml-rpc .
 	  [(1 6 16)
 	   nil "An elisp implementation of clientside XML-RPC" tar
