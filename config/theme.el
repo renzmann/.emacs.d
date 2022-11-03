@@ -16,8 +16,11 @@
 (setq ef-themes-to-toggle '(ef-light ef-night))
 
 ;; TODO: load based on time of day
-;; (load-theme 'ef-light :no-confirm)
-(load-theme 'nord-theme :no-confirm)
+(load-theme 'ef-light :no-confirm)
+
+;; Nord doesn't look super great in org-mode.  Especially with source blocks
+;; (require 'nord-theme)
+;; (load-theme 'nord :no-confirm)
 
 ;; (if ...
 ;;     (load-theme 'wombat :no-confirm)
