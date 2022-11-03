@@ -18,16 +18,17 @@ python3 -m venv .venv
 
 #+RESULTS:
 
+** Foo
+
+*** bar
+
 * Sessions need only be specified once
+Starting a session with =:session= keeps a long-running python for all blocks.  From a shell, I set up a virtual environment with =python -m venv .venv= in the same directory as this org file.
 
-Starting a session with =:session= keeps a long-running python for all
-blocks.  From a shell, I set up a virtual environment with =python -m
-venv .venv= in the same directory as this org file.
-
-#+BEGIN_SRC python :python .venv/bin/python :session
+#+BEGIN_src python :python .venv/bin/python :session
   hello = "Hello, world!"
   hello
-#+END_SRC
+#+END_src
 
 #+RESULTS:
 : Hello, world!
@@ -65,8 +66,8 @@ os.getcwd()
 #+RESULTS:
 : /home/robb/.emacs.d/org
 
-* Errors are silent /here/, but not in the =*Python*= running process
-
+* Errors are silent
+At least in this buffer, but not in the running python process.
 Below, we try a couple examples of raising an error. They occur in the
 running =*Python*= buffer, instead of appearing below
 
