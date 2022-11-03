@@ -1,12 +1,12 @@
-* .emacs.d
+#+title: My Literate =.emacs.d=
 
-My emacs configuration. Want to use it? Go ahead!
+Want to use it? Go ahead!
 
 #+begin_src sh
 git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 #+end_src
 
-** Goals
+* Goals
 
 I use all three of the major platforms, in both GUI and TTY mode.  So
 this config is designed to work equally well for:
@@ -21,3 +21,7 @@ Once I figure out how to get colors working in Windows terminal, I'll
 update this table.  For now though, the 16 bit colors don't react to
 my color theme, and so on Windows I rely singularly on GUI mode,
 rather than WSL or emacs inside Alacritty.
+
+* Tangling
+
+My configuration is a single literate programming document, which is tangled into the standard =init.el= and supporting files.
