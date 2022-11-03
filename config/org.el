@@ -6,7 +6,7 @@
 ;; (require 'org-tempo)
 
 (setq org-confirm-babel-evaluate nil)
-(setq org-edit-src-content-indentation 0)
+(setq org-edit-src-content-indentation 2)
 
 ;; Allow for custom resize of images when displaying in org mode
 (setq org-image-actual-width nil)
@@ -212,3 +212,43 @@ Jumps at tangled code from org src block."
 ;; 			    ov 'modification-hooks
 ;; 			    (list 'org-display-inline-remove-overlay))
 ;; 			   (push ov org-inline-image-overlays)))))))))))))))
+
+;; ============================================================================
+;;                          Modern Org Style
+;; ============================================================================
+;; https://github.com/minad/org-modern
+;; Add frame borders and window dividers
+;; (modify-all-frames-parameters
+;;  '((right-divider-width . 40)
+;;    (internal-border-width . 40)))
+;; (dolist (face '(window-divider
+;;                 window-divider-first-pixel
+;;                 window-divider-last-pixel))
+;;   (face-spec-reset-face face)
+;;   (set-face-foreground face (face-attribute 'default :background)))
+;; (set-face-background 'fringe (face-attribute 'default :background))
+
+(setq
+ ;; Edit settings
+ org-auto-align-tags nil
+ org-tags-column 0
+ org-catch-invisible-edits 'show-and-error
+ org-special-ctrl-a/e t
+ org-insert-heading-respect-content t
+
+ ;; Org styling, hide markup etc.
+ org-hide-emphasis-markers t
+ org-pretty-entities t
+ org-ellipsis "…"
+
+ ;; Agenda styling
+ org-agenda-tags-column 0
+ org-agenda-block-separator ?─
+ org-agenda-time-grid
+ '((daily today require-timed)
+   (800 1000 1200 1400 1600 1800 2000)
+   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+ org-agenda-current-time-string
+ "⭠ now ─────────────────────────────────────────────────")
+
+(global-org-modern-mode)
