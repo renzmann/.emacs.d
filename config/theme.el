@@ -26,15 +26,11 @@
 ;; Dark:
 ;; - ef-cherie
 ;; - ef-trio-dark
+;; - ef-winter
 
 ;; Nord doesn't look super great in org-mode.  Especially with source blocks
 ;; (require 'nord-theme)
 ;; (load-theme 'nord :no-confirm)
-
-;; (if ...
-;;     (load-theme 'wombat :no-confirm)
-;;     ;; (load-theme 'doom-one :no-confirm)
-;;   (load-theme 'ef-night :no-confirm))
 
 (set-face-attribute 'default nil :family "Iosevka")
 (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
