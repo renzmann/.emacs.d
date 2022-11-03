@@ -4,6 +4,7 @@ DEADLINE: <2022-11-01 Tue 17:00>
 ** TODO check we are on the latest version of eglot
 DEADLINE: <2022-11-03 Thu 10:00>
 In relation to: https://github.com/joaotavora/eglot/issues/859
+** TODO Something in my config is breaking the fringe for src blocks
 
 * Figure these out (eventually)
 ** What's the proper way to install and use fonts? Sometimes we don't get italics, etc.
