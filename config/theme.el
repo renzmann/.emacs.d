@@ -13,10 +13,18 @@
 ;;         (7 . (1.2))
 ;;         (t . (1.1))))
 
-(setq ef-themes-to-toggle '(ef-day ef-night))
-(load-theme 'ef-night :no-confirm)
+(setq ef-themes-to-toggle '(ef-light ef-night))
+
+;; TODO: load based on time of day
+(load-theme 'ef-light :no-confirm)
 
 ;; (if ...
 ;;     (load-theme 'wombat :no-confirm)
 ;;     ;; (load-theme 'doom-one :no-confirm)
 ;;   (load-theme 'ef-night :no-confirm))
+
+(set-face-attribute 'default nil :family "Iosevka")
+(set-face-attribute 'variable-pitch nil :family "Iosevka Aile")
+
+(with-eval-after-load 'org-modern
+  (set-face-attribute 'org-modern-symbol nil :family "Iosevka"))
