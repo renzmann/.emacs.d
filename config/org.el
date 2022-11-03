@@ -6,7 +6,7 @@
 ;; (require 'org-tempo)
 
 (setq org-confirm-babel-evaluate nil)
-(setq org-edit-src-content-indentation 2)
+(setq org-edit-src-content-indentation 0)
 
 ;; Allow for custom resize of images when displaying in org mode
 (setq org-image-actual-width nil)
