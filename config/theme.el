@@ -13,10 +13,19 @@
 ;;         (7 . (1.2))
 ;;         (t . (1.1))))
 
-(setq ef-themes-to-toggle '(ef-light ef-night))
+(setq ef-themes-to-toggle '(ef-light ef-trio-dark))
 
 ;; TODO: load based on time of day
-(load-theme 'ef-light :no-confirm)
+(load-theme 'ef-trio-dark :no-confirm)
+
+;; LOVE these:
+;; Light:
+;; - ef-frost
+;; - ef-light
+;;
+;; Dark:
+;; - ef-cherie
+;; - ef-trio-dark
 
 ;; Nord doesn't look super great in org-mode.  Especially with source blocks
 ;; (require 'nord-theme)
