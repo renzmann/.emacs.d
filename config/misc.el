@@ -1,6 +1,13 @@
 ;; ============================================================================
 ;;                      Misc. Editor Settings
 ;; ============================================================================
+;; Fill-column for visual lines
+(add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
+(setq fill-column 95)
+
+;; Scroll bar
+(scroll-bar-mode -1)
+
 ;; Emojis inline 👍
 ;; (add-hook 'after-init-hook #'global-emojify-mode)
 
@@ -83,8 +90,11 @@
 ;; Relative line numbers in programming and writing modes
 (defun renz/display-line-numbers ()
   (setq display-line-numbers 'relative))
+
+;; TODO line numbers mess up fringe for org-modern.  Any way to
+;; combine both?
 (add-hook 'prog-mode-hook 'renz/display-line-numbers)
-(add-hook 'text-mode-hook 'renz/display-line-numbers)
+;; (add-hook 'text-mode-hook 'renz/display-line-numbers)
 
 ;; Delete the region when we yank on top of it
 (delete-selection-mode t)
