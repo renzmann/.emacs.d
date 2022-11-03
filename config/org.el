@@ -7,6 +7,7 @@
 
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
+(setq org-goto-interface 'outline-path-completion)
 
 ;; Allow for custom resize of images when displaying in org mode
 (setq org-image-actual-width nil)
@@ -24,7 +25,7 @@
 
 ;; https://willschenk.com/articles/2019/using_org_mode_in_hugo/
 (with-eval-after-load 'org
-  (setq org-startup-indented t) ; Enable `org-indent-mode' by default
+  ;; (setq org-startup-indented t) ; Enable `org-indent-mode' by default
   (add-hook 'org-mode-hook #'visual-line-mode)
 
   (org-babel-do-load-languages
@@ -218,15 +219,15 @@ Jumps at tangled code from org src block."
 ;; ============================================================================
 ;; https://github.com/minad/org-modern
 ;; Add frame borders and window dividers
-;; (modify-all-frames-parameters
-;;  '((right-divider-width . 40)
-;;    (internal-border-width . 40)))
-;; (dolist (face '(window-divider
-;;                 window-divider-first-pixel
-;;                 window-divider-last-pixel))
-;;   (face-spec-reset-face face)
-;;   (set-face-foreground face (face-attribute 'default :background)))
-;; (set-face-background 'fringe (face-attribute 'default :background))
+(modify-all-frames-parameters
+ '((right-divider-width . 40)
+   (internal-border-width . 40)))
+(dolist (face '(window-divider
+                window-divider-first-pixel
+                window-divider-last-pixel))
+  (face-spec-reset-face face)
+  (set-face-foreground face (face-attribute 'default :background)))
+(set-face-background 'fringe (face-attribute 'default :background))
 
 (setq
  ;; Edit settings
