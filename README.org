@@ -1,4 +1,6 @@
 #+title: My Literate =.emacs.d=
+#+author: Robb Enzmann
+#+properties: header-args:elisp :tangle init.el
 
 Want to use it? Go ahead!
 
@@ -24,4 +26,40 @@ rather than WSL or emacs inside Alacritty.
 
 * Tangling
 
-My configuration is a single literate programming document, which is tangled into the standard =init.el= and supporting files.
+My configuration is a single literate programming document, which is tangled into the standard =init.el= and supporting files.  This is so I can keep track of all the crazy things I try and explain them inline with the final code I decide to include.  Some platforms like GitHub can render this document in a limited way, but to see all the final configuration values I use you will likely have to view this document in Emacs itself.
+
+* Packages
+
+To solve the "bootstrapping" problem of getting =use-package= into the repository, it's maintained as a subtree in its own directory.
+
+#+begin_src shell
+[ ! -d use-package ] && git subtree add https://github.com/jwiegley/use-package --prefix=use-package
+#+end_src
+
+#+RESULTS:
+
+#+begin_src elisp
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
+
+(require 'use-package)
+#+end_src
+
+* Mode line
+#+begin_src elisp
+(setq column-number-mode t
+      mode-line-in-non-selected-windows t)
+#+end_src
+
+* =eldoc=
+#+begin_src elisp
+(setq eldoc-echo-area-use-multiline-p nil)
+#+end_src
+
+* Org-mode
+#+begin_src elisp
+(setq org-agenda-files '("~/.emacs.d/org/work.org")
+      org-hugo-front-matter-format "yaml")
+#+end_src
+
+*
