@@ -30,7 +30,9 @@ My configuration is a single literate programming document, which is tangled int
 
 * Packages
 
-To solve the "bootstrapping" problem of getting =use-package= into the repository, it's maintained as a subtree in its own directory.
+The initial cornerstone of every Emacs configuration is a decision on package management and configuration.  Since =use-package= will have built-in support in a future Emacs version, I'm going to use that along with the built-in =package.el=.  I don't have much reason other than the stability of them being built-in for choosing them.
+
+On earlier Emacs (<29.1), to solve the "bootstrapping" problem of getting =use-package= into the repository, it's maintained as a subtree:
 
 #+begin_src shell :results output drawer
 subtree-use-package() {
@@ -43,7 +45,7 @@ subtree-use-package() {
 subtree-use-package add || subtree-use-package pull
 #+end_src
 
-
+Since this is a custom installation (i.e. not done through =package-install=), we need to make sure Emacs can see =use-package= and load it.
 
 #+begin_src elisp
 (eval-when-compile
@@ -53,6 +55,12 @@ subtree-use-package add || subtree-use-package pull
 
 #+RESULTS:
 : use-package
+
+
+* Keybindings
+In the unlikely event that something below is loaded incorrectly and causes initialization to stop, I like to have my basic key command loaded early, especially so that navigating to the error can happen more quickly.
+
+
 
 * Mode line
 #+begin_src elisp
