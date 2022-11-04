@@ -1,10 +1,10 @@
 #+title: My Literate =.emacs.d=
 #+author: Robb Enzmann
-#+properties: header-args:elisp :tangle init.el
+#+properties: header-args:elisp :tangle init-test.el
 
 Want to use it? Go ahead!
 
-#+begin_src sh
+#+begin_src shell
 git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 #+end_src
 
@@ -43,16 +43,16 @@ subtree-use-package() {
 subtree-use-package add || subtree-use-package pull
 #+end_src
 
-#+RESULTS:
-:results:
-:end:
+
 
 #+begin_src elisp
-(unless (package-installed-p 'use-package)
-  (package-install 'use-package))
-
-(require 'use-package)
+(eval-when-compile
+  (add-to-list 'load-path (concat user-emacs-directory "use-package"))
+  (require 'use-package))
 #+end_src
+
+#+RESULTS:
+: use-package
 
 * Mode line
 #+begin_src elisp
@@ -60,10 +60,18 @@ subtree-use-package add || subtree-use-package pull
       mode-line-in-non-selected-windows t)
 #+end_src
 
+#+RESULTS:
+: t
+
 * =eldoc=
+I find it very distracting when =eldoc= suddenly pops up and consumes a large part of the screen for docstrings in python.
+
 #+begin_src elisp
 (setq eldoc-echo-area-use-multiline-p nil)
 #+end_src
+
+#+RESULTS:
+: t
 
 * Org-mode
 #+begin_src elisp
