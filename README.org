@@ -33,19 +33,14 @@ My configuration is a single literate programming document, which is tangled int
 To solve the "bootstrapping" problem of getting =use-package= into the repository, it's maintained as a subtree in its own directory.
 
 #+begin_src shell :results output drawer
-add-use-package() {
-    git subtree add https://github.com/jwiegley/use-package master \
+subtree-use-package() {
+    git subtree $1 \
+        https://github.com/jwiegley/use-package master \
         --prefix=use-package \
         --squash
 }
 
-update-use-package() {
-    git subtree pull \
-        --prefix=use-package \
-        --squash
-}
-
-add-use-package || update-use-package
+subtree-use-package add || subtree-use-package pull
 #+end_src
 
 #+RESULTS:
