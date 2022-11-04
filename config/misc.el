@@ -3,7 +3,7 @@
 ;; ============================================================================
 ;; Fill-column for visual lines
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
-(setq fill-column 95)
+(setq fill-column 120)
 
 ;; Scroll bar
 (scroll-bar-mode -1)
