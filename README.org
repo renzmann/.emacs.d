@@ -28,39 +28,99 @@ rather than WSL or emacs inside Alacritty.
 
 My configuration is a single literate programming document, which is tangled into the standard =init.el= and supporting files.  This is so I can keep track of all the crazy things I try and explain them inline with the final code I decide to include.  Some platforms like GitHub can render this document in a limited way, but to see all the final configuration values I use you will likely have to view this document in Emacs itself.
 
+* Header
+
+To comply with the Emacs conventions for libraries, the tangled init.el must have the following [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][header]] and [[Footer][footer:]]
+
+#+begin_src elisp
+;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
+
+;; Copyright (C) 2020-2022 Robert Enzmann
+
+;; Author: Robb Enzmann <robbenzmann@gmail.com>
+;; Keywords: internal
+;; URL: https://robbmann.io/
+
+;;; Commentary:
+;; A fully fledged, reproducible Emacs configuration
+
+;;; Code:
+#+end_src
+
 * Packages
 
 The initial cornerstone of every Emacs configuration is a decision on package management and configuration.  Since =use-package= will have built-in support in a future Emacs version, I'm going to use that along with the built-in =package.el=.  I don't have much reason other than the stability of them being built-in for choosing them.
 
-On earlier Emacs (<29.1), to solve the "bootstrapping" problem of getting =use-package= into the repository, it's maintained as a subtree:
-
-#+begin_src shell :results output drawer
-subtree-use-package() {
-    git subtree $1 \
-        https://github.com/jwiegley/use-package master \
-        --prefix=use-package \
-        --squash
-}
-
-subtree-use-package add || subtree-use-package pull
-#+end_src
-
-Since this is a custom installation (i.e. not done through =package-install=), we need to make sure Emacs can see =use-package= and load it.
-
 #+begin_src elisp
 (eval-when-compile
-  (add-to-list 'load-path (concat user-emacs-directory "use-package"))
+  (package-autoremove)
+  (unless (package-installed-p 'use-package)
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+    (package-refresh-contents)
+    (package-install 'use-package))
   (require 'use-package))
 #+end_src
 
 #+RESULTS:
 : use-package
 
+I prefer having custom modify its own file.  This next snippet ensures any =package-install= or =custom= edits go to =custom.el=.
+
+#+begin_src elisp
+(let ((renz/custom-file (expand-file-name "custom.el" user-emacs-directory)))
+  (setq custom-file renz/custom-file)
+  (when (file-exists-p renz/custom-file)
+    (load custom-file 'noerror)))
+#+end_src
+
+* Theme
+[[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will set creates larger, bolder headings when in =org-mode=.
+
+#+begin_src emacs-lisp
+(setq ef-themes-headings
+      '((0 . (1.9))
+        (1 . (1.8))
+        (2 . (1.7))
+        (3 . (1.6))
+        (4 . (1.5))
+        (5 . (1.4)) ; absence of weight means `bold'
+        (6 . (1.3))
+        (7 . (1.2))
+        (t . (1.1))))
+#+end_src
+
+I LOVE these themes from =ef-themes=:
+
+- *Light*
+  - =ef-frost=
+  - =ef-light=
+- *Dark*
+  - =ef-cherie=
+  - =ef-trio-dark=
+  - =ef-winter=
+
+I switch between them regularly, based on my mood of the day.
+
+#+begin_src emacs-lisp
+(load-theme 'ef-cherie :no-confirm)
+#+end_src
+
+=ef-themes= also provides an option for toggling between two themes, bound to the =ef-themes-toggle= function.
+
+#+begin_src emacs-lisp
+(setq ef-themes-to-toggle '(ef-cherie ef-light))
+#+end_src
+
+I consider the font to also be a component of "theme".  If it's installed, load the lovely Hack font.
+
+#+begin_src emacs-lisp
+(set-face-attribute 'default nil :family "Hack")
+#+end_src
+
+It's worth mentioning that I've tried [[https://www.nordtheme.com/ports/emacs/][nord-theme]] a couple times and found that the legibility or contrast wasn't quite good enough in some modes.  Though I still employ Nord for my terminal config in Alacritty or Kitty, where it looks /excellent/.
 
 * Keybindings
 In the unlikely event that something below is loaded incorrectly and causes initialization to stop, I like to have my basic key command loaded early, especially so that navigating to the error can happen more quickly.
-
-
 
 * Mode line
 #+begin_src elisp
@@ -87,4 +147,10 @@ I find it very distracting when =eldoc= suddenly pops up and consumes a large pa
       org-hugo-front-matter-format "yaml")
 #+end_src
 
-*
+* Footer
+Thank you for reading 'till the end or for being interested on how to end an Emacs package. If you would like to try my configuration, feel free to fork it on GitHub. So that's it, let's gracefully finish tangling everything:
+
+#+begin_src elisp
+(provide 'init.el)
+;;; init.el ends here
+#+end_src
