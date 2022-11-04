@@ -38,3 +38,5 @@ packages/conda.el.md
 .org-id-locations
 projectile-bookmarks.eld
 backups/
+*.png
+*.svg
