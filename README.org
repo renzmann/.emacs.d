@@ -440,6 +440,7 @@ Haven't found a home header for any of these yet.
 
 ;; Make dired human-readable
 (setq dired-listing-switches "-alFh")
+(setq-default dired-hide-details-mode t)
 
 ;; Don't quit emacs by accident
 (setq confirm-kill-emacs 'yes-or-no-p)
