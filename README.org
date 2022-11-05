@@ -160,7 +160,7 @@ emacs config site with matching `extension' regexp"
 (defun renz/jump-init ()
   (interactive)
   (find-file (expand-file-name "README.org" user-emacs-directory))
-  (org-goto))
+  (consult-org-heading))
 
 (defun renz/recentf-find-file ()
   "Find a recent file using the minibuffer with completion"
@@ -241,26 +241,78 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c l s") #'eglot-shutdown)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
 (global-set-key (kbd "C-c n") #'minimap-mode)
+
+#+end_src
+
+*** =C-c o= Org bindings
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o b d") #'org-babel-detangle)
 (global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
 (global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
 (global-set-key (kbd "C-c o o") #'renz/jump-org)
 (global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
+#+end_src
+
+
+#+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c p") #')
 ;; (global-set-key (kbd "C-c q") #')
+#+end_src
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c r") #'renz/recentf-find-file)
+#+end_src
+
+*** =C-c s= Settings
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c s i") #'renz/jump-init)
 ;; (global-set-key (kbd "C-c s k") #'renz/jump-keybindings)
 ;; (global-set-key (kbd "C-c s s") #'renz/jump-configuration)
+#+end_src
+
+
+#+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c t") #')
+#+end_src
+
+*** =C-c u= Consult grep/rg
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c u") #'renz/consult-grep)
+#+end_src
+
+*** =C-c v=
+
+#+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c v") #')
+#+end_src
+
+#+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c w") #')
+#+end_src
+
+#+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c x") #')
+#+end_src
+
+*** =C-c y= Yank inner/outer
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c y i") #'copy-inner)
 (global-set-key (kbd "C-c y o") #'copy-outer)
+#+end_src
+
+*** =C-c z=
+
+#+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c z") #')
+#+end_src
+
+*** =C-c= Other bindings
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c ;") #'comment-line)  ; TTY-friendly
 (global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
 #+end_src
@@ -308,49 +360,89 @@ See the [[Windows][Microsoft Windows]] section for some hackery required to get 
 * Misc. Settings
 Haven't found a home header for any of these yet.
 
+** Fill-column
+For visual lines, this adds line breaks at the fill-column value.  Especially useful for prose that is meant to be copied to other mediums, such as email or word.
 #+begin_src emacs-lisp
-;; Fill-column for visual lines
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
-(setq fill-column 120)
+(setq-default fill-column 120)
+#+end_src
 
+** Scroll bar
+I toggle this one on/off sometimes depending on how I feel lately.
+
+#+begin_src emacs-lisp
 ;; Scroll bar
 (scroll-bar-mode -1)
+#+end_src
 
+** Inline emojis
+I tried this for a while but boy did it consume a lot of space in the =elpa/= directory!  If I go back to it I might re-install it but have to ensure I ignore the source files.
+
+#+begin_src emacs-lisp
 ;; Emojis inline 👍
 ;; (add-hook 'after-init-hook #'global-emojify-mode)
+#+end_src
 
-;; Don't really need the splash screen
+** Inihibit splash screen
+I can always get back to the OG GNU Spash with =C-h C-a=
+
+#+begin_src emacs-lisp
 (setq inhibit-splash-screen t)
+#+end_src
 
-;; Automatically visit symlink sources
+** Automatically visit symlink sources
+
+#+begin_src emacs-lisp
 (setq find-file-visit-truename t)
+(setq vc-follow-symlinks t)
+#+end_src
 
-;; Indent with spaces, not tabs by default
+** Indent with spaces
+
+#+begin_src emacs-lisp
 (setq-default indent-tabs-mode nil)
+#+end_src
 
-;; For files containing color escape codes, this provides a way to
-;; render the colors in-buffer
+** Render ASCII color escape codes
+For files containing color escape codes, this provides a way to render the colors in-buffer.
+
+#+begin_src emacs-lisp
 (defun renz/display-ansi-colors ()
   (interactive)
   (require 'ansi-color)
   (ansi-color-apply-on-region (point-min) (point-max)))
+#+end_src
 
-;; Enable horizontal scrolling with mouse
-;; https://stackoverflow.com/a/67758169
+** Enable horizontal scrolling with mouse
+From a helpful [[https://stackoverflow.com/a/67758169][stackoverflow answer.]]
+#+begin_src emacs-lisp
 (setq mouse-wheel-tilt-scroll t)
+#+end_src
 
-;; https://www.masteringemacs.org/article/demystifying-emacs-window-manager
+** Window management
+I need to give the [[https://www.masteringemacs.org/article/demystifying-emacs-window-manager][article]] another read about what's going on, but it seems helpful.
+
+#+begin_src emacs-lisp
 (unless (version< emacs-version "27.1")
   (setq switch-to-buffer-obey-display-actions t))
+#+end_src
 
-;; Enable up/downcase-region
+** Enable up/downcase-region
+
+#+begin_src emacs-lisp
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+#+end_src
 
-;; Automatically update buffers when contents change on disk
+** Automatically update buffers when contents change on disk
+
+#+begin_src emacs-lisp
 (global-auto-revert-mode)
+#+end_src
 
-;; Initial frame size for GUI
+** Initial frame size for GUI
+
+#+begin_src emacs-lisp
 (setq renz/frame-default-alist
       '(
         (tool-bar-lines . 0)
@@ -362,57 +454,103 @@ Haven't found a home header for any of these yet.
 (when (display-graphic-p)
   (setq initial-frame-alist renz/frame-default-alist)
   (setq default-frame-alist renz/frame-default-alist))
+#+end_src
 
-;; Adds helpful information in the margin when using the minibuffer
-(when (package-installed-p 'marginalia)
-  (marginalia-mode))
+** Marginalia
+Adds helpful information in the margin when using the minibuffer
 
-;; Highlight the line point is on
+#+begin_src emacs-lisp
+(use-package marginalia
+  :ensure t
+  :config (marginalia-mode))
+#+end_src
+
+** Highlight the line point is on
+
+#+begin_src emacs-lisp
 (global-hl-line-mode)
+#+end_src
 
+** Stop stupid bell
+This snippet has a special place in my heart, because it was the first two lines of elisp I wrote when first learning Emacs.
+
+#+begin_src emacs-lisp
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
+#+end_src
 
-;; Clock in statusline
+** TODO Clock in mode line
+Move this to the [[Mode line][mode line]] section
+
+#+begin_src emacs-lisp
 (setq display-time-day-and-date t)
 (display-time)
+#+end_src
 
-;; Enable split-window dired copying
+** Enable split-window dired copying
+
+#+begin_src emacs-lisp
 (setq dired-dwim-target t)
+#+end_src
 
-;; Automatically create matching parens in programming modes
+** Automatically create matching parens in programming modes
+
+#+begin_src emacs-lisp
 (add-hook 'prog-mode-hook (electric-pair-mode t))
 (add-hook 'prog-mode-hook (show-paren-mode t))
+#+end_src
 
-;; Follow symlinks to the real file
-(setq vc-follow-symlinks t)
-
-;; Show markers for trailing whitespace and delete on save
+** TODO Delete whitespace on save
+I would also like to have a good-looking display for trailing whitespace and leading tabs like in my Neovim setup, but its proven challenging to just narrow down to those two faces.
+#+begin_src emacs-lisp
 ;; (add-hook 'prog-mode-hook 'whitespace-mode)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
 
-;; Don't wrap lines
+** Don't wrap lines
+
+#+begin_src emacs-lisp
 (setq-default truncate-lines t)
 (add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
+#+end_src
 
-;; Relative line numbers in programming and writing modes
+** Relative line numbers
+For programming and prose/writing modes.
+
+#+begin_src emacs-lisp
 (defun renz/display-line-numbers ()
   (setq display-line-numbers 'relative))
+#+end_src
 
-;; TODO line numbers mess up fringe for org-modern.  Any way to
-;; combine both?
+Unfortunately, line numbers are displayed in the text area of the buffer, but org-modern uses the fringe to display source blocks.  [[https://www.reddit.com/r/emacs/comments/ymprwi/comment/iv5iafb/?utm_source=share&utm_medium=web2x&context=3][There's no way to display them to the left]] of the fringe, so I'm careful about only turning on line numbers in modes that I think I'll benefit from it.  It's been working pretty well in org-mode without the line numbers so far, since for each of the code blocks I can always use =C-c '= to edit in ~prog-mode~, where I /do/ get line numbers.
+
+#+begin_src emacs-lisp
 (add-hook 'prog-mode-hook 'renz/display-line-numbers)
-;; (add-hook 'text-mode-hook 'renz/display-line-numbers)
+#+end_src
 
-;; Delete the region when we yank on top of it
+** Delete region when we yank on top of it
+I just think that's a funny sentence, whatever we may think of it.
+
+#+begin_src emacs-lisp
 (delete-selection-mode t)
+#+end_src
 
-;; Enable mouse in terminal
+** Enable mouse in terminal/TTY
+
+#+begin_src emacs-lisp
 (xterm-mouse-mode 1)
+#+end_src
 
-;; Scroll the *compilation* window as text appears
+** Compilation
+As new text appears, the default behavior is for it to spill off the bottom where we can't see it.  This causes the window to follow new text as it is printed.
+
+#+begin_src emacs-lisp
 (setq compilation-scroll-output t)
+#+end_src
 
+Enable colors in the =*compilation*= buffer.  Provided by a [[https://stackoverflow.com/a/3072831/13215205][helpful stackoverflow answer]].
+
+#+begin_src emacs-lisp
 ;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
 (defun renz/colorize-compilation-buffer ()
   "Enable colors in the *compilation* buffer."
@@ -421,53 +559,81 @@ Haven't found a home header for any of these yet.
     (ansi-color-apply-on-region (point-min) (point-max))))
 
 (add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
+#+end_src
 
-;; Disable tool bar
+** Tool bar
+I usually leave the tool bar disabled
+#+begin_src emacs-lisp
 (tool-bar-mode -1)
-;; The MENU bar, on the other hand (menu-bar-mode), is very handy, and
-;; I don't think I'll ever disable it
 
-;; Show laptop battery in the modeline
+#+end_src
+
+The MENU bar, on the other hand =(menu-bar-mode)=, is very handy, and I don't think I'll ever disable it.
+
+** TODO Show laptop battery
+Move this to mode-line configuration
+
+#+begin_src emacs-lisp
 (display-battery-mode t)
+#+end_src
 
-;; Disable asking about risky variables from .dir-locals.el
-;; https://emacs.stackexchange.com/a/44604
+** Ignore risky .dir-locals.el
+From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
+
+#+begin_src emacs-lisp
 (advice-add 'risky-local-variable-p :override #'ignore)
+#+end_src
 
-;; Faster grep
+** Prefer =rg= over =grep=
+
+#+begin_src emacs-lisp
 (when (executable-find "rg")
   (setq grep-program "rg"))
+#+end_src
 
-;; Make dired human-readable
+** Make ~dired~ human-readable
+
+#+begin_src emacs-lisp
 (setq dired-listing-switches "-alFh")
 (setq-default dired-hide-details-mode t)
+#+end_src
 
-;; Don't quit emacs by accident
+** Confirm when exiting Emacs
+
+#+begin_src emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p)
+#+end_src
 
-;; If aspell is installed, use it instead of ispell
+** Prefer ~aspell~ over ~ispell~
+
+#+begin_src emacs-lisp
 (when (executable-find "aspell")
   (setq ispell-program-name "aspell"))
+#+end_src
 
-;; Smooth as butter scrolling
+** Smooth scrolling
+
+#+begin_src emacs-lisp
 (if (version< emacs-version "29.0")
     (pixel-scroll-mode)
   (pixel-scroll-precision-mode 1)
   (setq pixel-scroll-precision-large-scroll-height 35.0))
+#+end_src
 
-;; Enable minimap if on graphical display
-;; (when (display-graphic-p)
-;;   (minimap-mode t))
+** Backup files
+Keep all backup and auto-save files in a temporary folder.
+#+begin_src emacs-lisp
+(setq backup-directory-alist
+      `((".*" . temporary-file-directory,))
+      auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+#+end_src
 
-;; Keep all backup files in one place
-;; (let ((backup-dir (concat user-emacs-directory "backups")))
-;;   (make-directory backup-dir t)
-;;   (setq backup-directory-alist '(("." . backup-dir))))
-(setq backup-directory-alist nil)
+** Code syntax in Markdown
+Enable syntax highlighting within code fences for markdown
 
-;; Enable syntax highlighting within code fences for markdown
+#+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
-
 #+end_src
 
 ** Esup
@@ -478,7 +644,18 @@ Haven't found a home header for any of these yet.
 #+end_src
 
 
+* Minimap
+I have a love-hate relationship with the minimap.  Sometimes it feels great, especially when I'm doing a mouse-heavy demo for navigation.  Other times it blocks the echo area when the window is too small and it drives me crazy.
+
+#+begin_src emacs-lisp
+(use-package minimap
+  :config
+  (when (display-graphic-p)
+    (minimap-mode t)))
+#+end_src
+
 * Mode line
+
 #+begin_src emacs-lisp
 (setq column-number-mode t
       mode-line-in-non-selected-windows t)
@@ -500,28 +677,32 @@ I find it very distracting when =eldoc= suddenly pops up and consumes a large pa
 
 
 * Autocompletion
+Emacs offers incredible depth and freedom when configuring methods that automatically complete text.  First, we set the "completion style", which is the method of assigning completion candidates to a given input string.  "flex" is the built-in "fuzzy" completion style, familiar to us from command prompts in IDEs and VSCode's command palette.
+
 #+begin_src emacs-lisp
-;; "flex" is the built-in "fuzzy" completion style
 (setq completion-styles '(flex basic partial-completion emacs22))
-(if (not (package-installed-p 'orderless))
-    (add-to-list 'completion-styles 'flex)
-  (require 'orderless)
+#+end_src
+
+I've found the [[https://github.com/oantolin/orderless][orderless]] completion style especially well-suited to Emacs.
+
+#+begin_src emacs-lisp
+(use-package orderless
+  :ensure t
+  :config
   (add-to-list 'completion-styles 'orderless)
-  (setq completion-category-overrides '((file (styles basic partial-completion)))))
+  :custom
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
 
-;; Fuzzy, live minibuffer completion
-(vertico-mode)
-;; Vertico works better for C-x C-f /ssh:<thing> than the built-in icomplete
+With the /completion style/ set, we have to now configure the interfaces for /displaying/ candidates as we type.  The natural place to start would be the built-in ~*Completions*~ buffer.  First, I want candidates displayed as a single, vertical list.
 
-;; Use TAB in place of C-M-i for completion-at-point
-;; REMINDME: I think this causes some issues in shell-mode and the
-;; like?  Can't remember...
-;; (setq tab-always-indent 'complete)
-
-;; Display candidates in *Completion* buffer vertically as a single list
+#+begin_src emacs-lisp
 (setq completions-format 'one-column)
+#+end_src
 
-;; Shortcuts for common completion actions
+If there is a convenient way to interact with this buffer from default key bindings, I am not aware of it.  Because of this, I set a few convenience functions for navigating to, selecting, and closing the ~*Completions*~ buffer in the case I do need to use it.
+
+#+begin_src emacs-lisp
 (defun renz/completion-accept ()
   "Expand current text to first completion result"
   (interactive)
@@ -538,7 +719,7 @@ I find it very distracting when =eldoc= suddenly pops up and consumes a large pa
   (next-completion 1))
 
 (defun renz/completion-kill-completion-buffer ()
-  "Close the *Completion* buffer without switching to it"
+  "Close the *Completions* buffer without switching to it"
   (interactive)
   (kill-buffer "*Completions*"))
 
@@ -555,6 +736,19 @@ I find it very distracting when =eldoc= suddenly pops up and consumes a large pa
 ;; Accept the first result in the completion buffer without switching
 (define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
+#+end_src
+
+#+begin_src emacs-lisp
+;; Fuzzy, live minibuffer completion
+(vertico-mode)
+;; Vertico works better for C-x C-f /ssh:<thing> than the built-in icomplete
+
+;; Use TAB in place of C-M-i for completion-at-point
+;; REMINDME: I think this causes some issues in shell-mode and the
+;; like?  Can't remember...
+;; (setq tab-always-indent 'complete)
+
+
 #+end_src
 
 ** =company-mode=
