@@ -1,6 +1,7 @@
 #+title: My Literate =.emacs.d=
 #+author: Robb Enzmann
-#+properties: header-args:elisp :tangle init-test.el
+#+property: header-args:emacs-lisp :tangle init-test.el
+#+OPTIONS: toc:2 num:nil
 
 Want to use it? Go ahead!
 
@@ -121,6 +122,354 @@ It's worth mentioning that I've tried [[https://www.nordtheme.com/ports/emacs/][
 
 * Keybindings
 In the unlikely event that something below is loaded incorrectly and causes initialization to stop, I like to have my basic key command loaded early, especially so that navigating to the error can happen more quickly.
+
+Emacs has [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html][some standards]] about where user-configured keys should go.  Other non-standard modifications are marked as such.
+
+** Keybound functions
+Special utility functions that we'll bind to user keys.
+
+#+begin_src emacs-lisp
+(defun renz/--jump-section (dirname prompt extension)
+  "For internal use: prompt for a file under `dirname' in the user
+emacs config site with matching `extension' regexp"
+  (let ((complete-dir (concat user-emacs-directory dirname "/")))
+    (find-file
+     (concat complete-dir
+             (completing-read prompt
+                              (directory-files complete-dir nil extension))))))
+
+(defun renz/jump-configuration ()
+  "Prompt for a .el file in my configuration folder, then go there."
+  (interactive)
+  (renz/--jump-section "config" "Elisp config files: " ".*\.el$"))
+
+;; FIXME: should set an org-home or something like that.  Probably a common variable
+;; described somewhere in the org manual
+(defun renz/jump-org ()
+  "Prompt for an org file in my emacs directory, then go there."
+  (interactive)
+  (renz/--jump-section "org" "Org files: " ".*\.org$"))
+
+(defun renz/jump-init ()
+  (interactive)
+  (find-file "~/.emacs.d/init.el"))
+
+(defun renz/jump-keybindings ()
+  (interactive)
+  (find-file "~/.emacs.d/config/keybindings.el"))
+
+(defun renz/recentf-find-file ()
+  "Find a recent file using the minibuffer with completion"
+  (interactive)
+  (recentf-mode t)
+  (unless (find-file (completing-read "Find recent file: " recentf-list))
+    (message "Aborting...")))
+
+(defun renz/find-tag ()
+  "Use completing-read to navigate to a tag"
+  (interactive)
+  (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
+
+(defun renz/consult-grep ()
+  "Live grep using `rg' if found, otherwise `grep'"
+  (interactive)
+  (if (executable-find "rg")
+      (consult-ripgrep)
+    (consult-grep)))
+#+end_src
+
+** Expanded defaults
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
+(global-set-key (kbd "C-M-h") 'backward-kill-sexp)
+
+;; UNBINDS the suspend-frame keybinding, which is annoying on GUI.
+;; Use C-x C-z if you really want to suspend the frame.
+(global-set-key (kbd "C-z") #'zap-up-to-char)
+
+;; A better version of `dabbrev'
+;; https://www.masteringemacs.org/article/text-expansion-hippie-expand
+;; I tend to prefer this on its own key, since I like a lot of the
+;; default dabbrev behavior.
+;; (global-set-key [remap dabbrev-expand] 'hippie-expand)
+
+;; Better buffer list for C-x C-b
+(global-set-key [remap list-buffers] 'ibuffer)
+(global-set-key [remap switch-to-buffer] 'consult-buffer)
+
+;; When flycheck is running (usually from a language server), bind next/previous
+(with-eval-after-load 'flymake
+  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+
+;; When using isearch to jump to things, use C-RET to put point on the
+;; opposite side of where it would normally end up
+(define-key isearch-mode-map (kbd "<C-return>")
+  (defun isearch-done-opposite (&optional nopush edit)
+    "End current search in the opposite side of the match."
+    (interactive)
+    (funcall #'isearch-done nopush edit)
+    (when isearch-other-end (goto-char isearch-other-end))))
+#+end_src
+
+** C-c bindings
+=C-c= <letter> is always free for users.
+
+#+begin_src emacs-lisp
+;; (global-set-key (kbd "C-c a") #')
+;; (global-set-key (kbd "C-c b") #')
+(global-set-key (kbd "C-c c i") #'change-inner)
+(global-set-key (kbd "C-c c o") #'change-outer)
+(global-set-key (kbd "C-c d") #'renz/find-tag)
+(global-set-key (kbd "C-c e") #'shell)
+(global-set-key (kbd "C-c f") #'hippie-expand)
+(global-set-key (kbd "C-c g") #'ffap)  ; TODO my own func that takes universal args
+;; (global-set-key (kbd "C-c h") #')
+;; (global-set-key (kbd "C-c i") #')
+(global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
+(global-set-key (kbd "C-c k") #'just-one-space)
+(global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
+(global-set-key (kbd "C-c l f f") #'eglot-format)
+(global-set-key (kbd "C-c l f b") #'eglot-format-buffer)
+(global-set-key (kbd "C-c l l") #'eglot)
+(global-set-key (kbd "C-c l r n") #'eglot-rename)
+(global-set-key (kbd "C-c l s") #'eglot-shutdown)
+(global-set-key (kbd "C-c m") #'ef-themes-toggle)
+(global-set-key (kbd "C-c n") #'minimap-mode)
+(global-set-key (kbd "C-c o a") #'org-agenda)
+(global-set-key (kbd "C-c o b d") #'org-babel-detangle)
+(global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
+(global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
+(global-set-key (kbd "C-c o o") #'renz/jump-org)
+(global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
+;; (global-set-key (kbd "C-c p") #')
+;; (global-set-key (kbd "C-c q") #')
+(global-set-key (kbd "C-c r") #'renz/recentf-find-file)
+(global-set-key (kbd "C-c s i") #'renz/jump-init)
+(global-set-key (kbd "C-c s k") #'renz/jump-keybindings)
+(global-set-key (kbd "C-c s s") #'renz/jump-configuration)
+;; (global-set-key (kbd "C-c t") #')
+(global-set-key (kbd "C-c u") #'renz/consult-grep)
+;; (global-set-key (kbd "C-c v") #')
+;; (global-set-key (kbd "C-c w") #')
+;; (global-set-key (kbd "C-c x") #')
+(global-set-key (kbd "C-c y i") #'copy-inner)
+(global-set-key (kbd "C-c y o") #'copy-outer)
+;; (global-set-key (kbd "C-c z") #')
+(global-set-key (kbd "C-c ;") #'comment-line)  ; TTY-friendly
+(global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
+#+end_src
+
+** Meta/Alt Modifications
+#+begin_src emacs-lisp
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "M-S-j") 'dired-goto-file))
+#+end_src
+
+** F5-F9
+Like the =C-c <letter>= bindings, these are reserved for users.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "<f5>") #'compile)
+(global-set-key (kbd "M-<f5>") #'recompile)
+;; (global-set-key (kbd "<f6>") #')
+;; (global-set-key (kbd "M-<f6>") #')
+;; (global-set-key (kbd "<f7>") #')
+;; (global-set-key (kbd "M-<f7>") #')
+;; (global-set-key (kbd "<f8>") #')
+;; (global-set-key (kbd "M-<f8>") #')
+(global-set-key (kbd "<f9>") #'vterm)
+(global-set-key (kbd "M-<f9>") #'eshell)
+(global-set-key (kbd "S-<f9>") #'ansi-term)
+(global-set-key (kbd "s-<f9>") #'shell)
+#+end_src
+
+** Nonstandard bindings
+
+#+begin_src emacs-lisp
+(when (eq system-type 'darwin)
+  (with-eval-after-load 'projectile
+    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)))
+#+end_src
+
+** Super bindings
+See the [[Windows][Microsoft Windows]] section for some hackery required to get these working on more platforms.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "s-s") #'save-buffer)
+#+end_src
+
+* Misc. Settings
+Haven't found a home header for any of these yet.
+
+#+begin_src emacs-lisp
+;; Fill-column for visual lines
+(add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
+(setq fill-column 120)
+
+;; Scroll bar
+(scroll-bar-mode -1)
+
+;; Emojis inline 👍
+;; (add-hook 'after-init-hook #'global-emojify-mode)
+
+;; Don't really need the splash screen
+(setq inhibit-splash-screen t)
+
+;; Automatically visit symlink sources
+(setq find-file-visit-truename t)
+
+;; Indent with spaces, not tabs by default
+(setq-default indent-tabs-mode nil)
+
+;; For files containing color escape codes, this provides a way to
+;; render the colors in-buffer
+(defun renz/display-ansi-colors ()
+  (interactive)
+  (require 'ansi-color)
+  (ansi-color-apply-on-region (point-min) (point-max)))
+
+;; Enable horizontal scrolling with mouse
+;; https://stackoverflow.com/a/67758169
+(setq mouse-wheel-tilt-scroll t)
+
+;; https://www.masteringemacs.org/article/demystifying-emacs-window-manager
+(unless (version< emacs-version "27.1")
+  (setq switch-to-buffer-obey-display-actions t))
+
+;; Enable up/downcase-region
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
+;; Automatically update buffers when contents change on disk
+(global-auto-revert-mode)
+
+;; Initial frame size for GUI
+(setq renz/frame-default-alist
+      '(
+        (tool-bar-lines . 0)
+        (width . 180) ; chars
+        (height . 60) ; lines
+        (left . 125)
+        (top . 125)))
+
+(when (display-graphic-p)
+  (setq initial-frame-alist renz/frame-default-alist)
+  (setq default-frame-alist renz/frame-default-alist))
+
+;; Adds helpful information in the margin when using the minibuffer
+(when (package-installed-p 'marginalia)
+  (marginalia-mode))
+
+;; Highlight the line point is on
+(global-hl-line-mode)
+
+;; Stop stupid bell
+(setq ring-bell-function 'ignore)
+
+;; Clock in statusline
+(setq display-time-day-and-date t)
+(display-time)
+
+;; Enable split-window dired copying
+(setq dired-dwim-target t)
+
+;; Automatically create matching parens in programming modes
+(add-hook 'prog-mode-hook (electric-pair-mode t))
+(add-hook 'prog-mode-hook (show-paren-mode t))
+
+;; Follow symlinks to the real file
+(setq vc-follow-symlinks t)
+
+;; Show markers for trailing whitespace and delete on save
+;; (add-hook 'prog-mode-hook 'whitespace-mode)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; Don't wrap lines
+(setq-default truncate-lines t)
+(add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
+
+;; Relative line numbers in programming and writing modes
+(defun renz/display-line-numbers ()
+  (setq display-line-numbers 'relative))
+
+;; TODO line numbers mess up fringe for org-modern.  Any way to
+;; combine both?
+(add-hook 'prog-mode-hook 'renz/display-line-numbers)
+;; (add-hook 'text-mode-hook 'renz/display-line-numbers)
+
+;; Delete the region when we yank on top of it
+(delete-selection-mode t)
+
+;; Enable mouse in terminal
+(xterm-mouse-mode 1)
+
+;; Scroll the *compilation* window as text appears
+(setq compilation-scroll-output t)
+
+;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
+(defun renz/colorize-compilation-buffer ()
+  "Enable colors in the *compilation* buffer."
+  (require 'ansi-color)
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+(add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
+
+;; Disable tool bar
+(tool-bar-mode -1)
+;; The MENU bar, on the other hand (menu-bar-mode), is very handy, and
+;; I don't think I'll ever disable it
+
+;; Show laptop battery in the modeline
+(display-battery-mode t)
+
+;; Disable asking about risky variables from .dir-locals.el
+;; https://emacs.stackexchange.com/a/44604
+(advice-add 'risky-local-variable-p :override #'ignore)
+
+;; Faster grep
+(when (executable-find "rg")
+  (setq grep-program "rg"))
+
+;; Make dired human-readable
+(setq dired-listing-switches "-alFh")
+
+;; Don't quit emacs by accident
+(setq confirm-kill-emacs 'yes-or-no-p)
+
+;; If aspell is installed, use it instead of ispell
+(when (executable-find "aspell")
+  (setq ispell-program-name "aspell"))
+
+;; Smooth as butter scrolling
+(if (version< emacs-version "29.0")
+    (pixel-scroll-mode)
+  (pixel-scroll-precision-mode 1)
+  (setq pixel-scroll-precision-large-scroll-height 35.0))
+
+;; Enable minimap if on graphical display
+;; (when (display-graphic-p)
+;;   (minimap-mode t))
+
+;; Keep all backup files in one place
+;; (let ((backup-dir (concat user-emacs-directory "backups")))
+;;   (make-directory backup-dir t)
+;;   (setq backup-directory-alist '(("." . backup-dir))))
+(setq backup-directory-alist nil)
+
+;; Enable syntax highlighting within code fences for markdown
+(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+
+#+end_src
+
+** Esup
+[[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work around of a bug where esup tries to step into the byte-compiled version of `cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
+
+#+begin_src emacs-lisp
+(setq esup-depth 0)
+#+end_src
 
 * Mode line
 #+begin_src elisp
