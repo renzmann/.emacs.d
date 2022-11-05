@@ -1,6 +1,6 @@
 #+title: My Literate =.emacs.d=
 #+author: Robb Enzmann
-#+property: header-args:emacs-lisp :tangle init-test.el
+#+property: header-args:emacs-lisp :tangle init.el
 #+OPTIONS: toc:2 num:nil
 
 Want to use it? Go ahead!
@@ -25,9 +25,11 @@ update this table.  For now though, the 16 bit colors don't react to
 my color theme, and so on Windows I rely singularly on GUI mode,
 rather than WSL or emacs inside Alacritty.
 
+
 * Tangling
 
 My configuration is a single literate programming document, which is tangled into the standard =init.el= and supporting files.  This is so I can keep track of all the crazy things I try and explain them inline with the final code I decide to include.  Some platforms like GitHub can render this document in a limited way, but to see all the final configuration values I use you will likely have to view this document in Emacs itself.
+
 
 * Header
 
@@ -48,6 +50,18 @@ To comply with the Emacs conventions for libraries, the tangled init.el must hav
 ;;; Code:
 #+end_src
 
+
+* Custom
+
+I prefer having custom modify its own file.  This next snippet ensures any =package-install= or =custom= edits go to =custom.el=.
+
+#+begin_src emacs-lisp
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file 'noerror))
+#+end_src
+
+
 * Packages
 
 The initial cornerstone of every Emacs configuration is a decision on package management and configuration.  Since =use-package= will have built-in support in a future Emacs version, I'm going to use that along with the built-in =package.el=.  I don't have much reason other than the stability of them being built-in for choosing them.
@@ -65,14 +79,6 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
 #+RESULTS:
 : use-package
 
-I prefer having custom modify its own file.  This next snippet ensures any =package-install= or =custom= edits go to =custom.el=.
-
-#+begin_src emacs-lisp
-(let ((renz/custom-file (expand-file-name "custom.el" user-emacs-directory)))
-  (setq custom-file renz/custom-file)
-  (when (file-exists-p renz/custom-file)
-    (load custom-file 'noerror)))
-#+end_src
 
 * Theme
 [[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will set creates larger, bolder headings when in =org-mode=.
@@ -120,6 +126,7 @@ I consider the font to also be a component of "theme".  If it's installed, load 
 
 It's worth mentioning that I've tried [[https://www.nordtheme.com/ports/emacs/][nord-theme]] a couple times and found that the legibility or contrast wasn't quite good enough in some modes.  Though I still employ Nord for my terminal config in Alacritty or Kitty, where it looks /excellent/.
 
+
 * Keybindings
 In the unlikely event that something below is loaded incorrectly and causes initialization to stop, I like to have my basic key command loaded early, especially so that navigating to the error can happen more quickly.
 
@@ -152,11 +159,8 @@ emacs config site with matching `extension' regexp"
 
 (defun renz/jump-init ()
   (interactive)
-  (find-file "~/.emacs.d/init.el"))
-
-(defun renz/jump-keybindings ()
-  (interactive)
-  (find-file "~/.emacs.d/config/keybindings.el"))
+  (find-file (expand-file-name "README.org" user-emacs-directory))
+  (org-goto))
 
 (defun renz/recentf-find-file ()
   "Find a recent file using the minibuffer with completion"
@@ -247,8 +251,8 @@ emacs config site with matching `extension' regexp"
 ;; (global-set-key (kbd "C-c q") #')
 (global-set-key (kbd "C-c r") #'renz/recentf-find-file)
 (global-set-key (kbd "C-c s i") #'renz/jump-init)
-(global-set-key (kbd "C-c s k") #'renz/jump-keybindings)
-(global-set-key (kbd "C-c s s") #'renz/jump-configuration)
+;; (global-set-key (kbd "C-c s k") #'renz/jump-keybindings)
+;; (global-set-key (kbd "C-c s s") #'renz/jump-configuration)
 ;; (global-set-key (kbd "C-c t") #')
 (global-set-key (kbd "C-c u") #'renz/consult-grep)
 ;; (global-set-key (kbd "C-c v") #')
@@ -299,6 +303,7 @@ See the [[Windows][Microsoft Windows]] section for some hackery required to get 
 #+begin_src emacs-lisp
 (global-set-key (kbd "s-s") #'save-buffer)
 #+end_src
+
 
 * Misc. Settings
 Haven't found a home header for any of these yet.
@@ -471,6 +476,7 @@ Haven't found a home header for any of these yet.
 (setq esup-depth 0)
 #+end_src
 
+
 * Mode line
 #+begin_src emacs-lisp
 (setq column-number-mode t
@@ -479,6 +485,7 @@ Haven't found a home header for any of these yet.
 
 #+RESULTS:
 : t
+
 
 * =eldoc=
 I find it very distracting when =eldoc= suddenly pops up and consumes a large part of the screen for docstrings in python.
@@ -489,6 +496,7 @@ I find it very distracting when =eldoc= suddenly pops up and consumes a large pa
 
 #+RESULTS:
 : t
+
 
 * Autocompletion
 #+begin_src emacs-lisp
@@ -587,6 +595,7 @@ Provides popup, suggest-as-you type like we would expect from any modern IDE.  I
 (global-corfu-mode)
 #+end_src
 
+
 * Org-mode
 There is a beefy startup hit from eagerly loading org-tempo, so eventually we'll have to come around and get this lazy-loaded correctly.
 
@@ -597,7 +606,7 @@ There is a beefy startup hit from eagerly loading org-tempo, so eventually we'll
 #+begin_src emacs-lisp
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
-(setq org-goto-interface 'outline-path-completion)
+;; (setq org-goto-interface 'outline-path-completion)
 
 ;; Allow for custom resize of images when displaying in org mode
 (setq org-image-actual-width nil)
@@ -665,6 +674,9 @@ Jumps at tangled code from org src block."
 ;; TODO states
 (setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
 #+end_src
+
+#+RESULTS:
+| sequence | TODO | DEAD | DONE |
 
 #+begin_src emacs-lisp
 (setq org-agenda-files '("~/.emacs.d/org/work.org")
@@ -853,8 +865,320 @@ From the lovely minad: https://github.com/minad/org-modern
 (global-org-modern-mode)
 #+end_src
 
+
+* SQL
+
+#+begin_src emacs-lisp
+(defun renz/sql-mode-hook ()
+  ;; (setq indent-line-function 'renz/sql-indent)
+  (setq tab-width 4)
+  (setq sqlformat-command 'sql-formatter)
+  (setq sqlind-basic-offset 4)
+  ;; (setq electric-indent-inhibit t)
+  )
+
+(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
+(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
+(add-hook 'sql-mode-hook 'sqlup-mode)
+(add-hook 'sql-mode-hook 'sqlind-minor-mode)
+(add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+
+(with-eval-after-load 'sql
+  (require 'hive2)
+  (require 'ob-sql-mode)
+  (require 'sqlformat)
+  (require 'sqlup-mode)
+  (require 'sql-indent)
+
+  (defvar renz/sql-indentation-offsets-alist
+    `((select-clause 0)
+      (insert-clause 0)
+      (delete-clause 0)
+      (update-clause 0)
+      ,@sqlind-default-indentation-offsets-alist))
+
+  (add-hook 'sqlind-minor-mode-hook
+            (lambda ()
+              (setq sqlind-indentation-offsets-alist
+                    renz/sql-indentation-offsets-alist)))
+  )
+#+end_src
+
+
+* Python
+#+begin_src emacs-lisp
+;; Example error from pyright
+;; --------------------------
+;; /home/robb/tmp/errors.py/
+;;   /home/robb/tmp/errors.py:1:1 - error: "foo" is not defined (reportUndefinedVariable)
+;;   /home/robb/tmp/errors.py:1:1 - warning: Expression value is unused (reportUnusedExpression)
+;;   /home/robb/tmp/errors.py:4:12 - error: Operator "+" not supported for types "str" and "Literal[1]"
+;;     Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
+;; 2 errors, 1 warning, 0 informations
+(with-eval-after-load 'compile
+  (add-to-list 'compilation-error-regexp-alist-alist
+               ;; It would be nice if we could also capture the
+               ;; \\(error\\|warning\\) part as "KIND", but I got messed
+               ;; up on it
+               '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
+  (add-to-list 'compilation-error-regexp-alist 'pyright))
+
+;; Extra check commands for C-c C-v
+(with-eval-after-load 'python
+  (if (executable-find "mypy")
+      (setq python-check-command "mypy"))
+  (if (executable-find "pyright")
+      (setq python-check-command "pyright")))
+
+;; I ran into something similar to this on Windows:
+;; https://github.com/jorgenschaefer/elpy/issues/733
+;;
+;; The culprit was "App Execution Aliases" with python and python3
+;; redirecting to the windows store. Using:
+;;
+;;     winkey -> Manage app execution aliases -> uncheck python and python3
+;;
+;; fixed it.
+
+;; Also on Windows - a `pip install` of `pyreadline3' is required to
+;; make tab-completion work at all. It provides the `readline' import
+;; symbol.
+
+;; Virtualenvs - require .dir-locals.el to have e.g.:
+;;   ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
+;; However, this only operates on `run-python' shells.
+;;
+;; `pyvenv' solves the otherwise very annoying problem of getting
+;; external tools like `compile' and `eshell' to also use our virtual
+;; environment's python.  I may still use .dir-locals.el to set things
+;; like the python-check-command on a per-project basis, though.
+(when (package-installed-p 'pyvenv)
+  (pyvenv-mode)
+  ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
+  ;; (pyvenv-tracking-mode)
+  ;; (setenv "WORKON_HOME" "~/.conda/envs")
+  )
+
+;; Enable semantic mode for more intelligent code parsing
+;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
+;; (add-hook 'python-mode-hook 'semantic-mode)
+
+;; Don't mark the check command and virtualenv variables as unsafe
+(put 'python-check-command 'safe-local-variable #'stringp)
+(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+
+;; (add-hook 'python-mode-hook 'eglot-ensure)
+#+end_src
+
+
+* Microsoft Windows
+
+#+begin_src emacs-lisp
+(when (eq system-type 'windows-nt)
+  ;; Set a better font on Windows
+  (set-face-attribute 'default nil :font "Hack NF-12")
+  ;; Alternate ispell when we've got msys on Windows
+  (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe")
+  ;; Set default shell to pwsh
+  (setq explicit-shell-file-name "pwsh")
+  ;; Enable use of Winkey as super
+  (setq w32-pass-lwindow-to-system nil)
+  (setq w32-lwindow-modifier 'super) ; Left Windows key
+  (setq w32-pass-rwindow-to-system nil)
+  (setq w32-rwindow-modifier 'super) ; Right Windows key
+  ;; If we want to use a hotkey, we have to also register each
+  ;; combination specifically, like this:
+  (w32-register-hot-key [s-a])
+  (w32-register-hot-key [s-b])
+  (w32-register-hot-key [s-c])
+  (w32-register-hot-key [s-d])
+  (w32-register-hot-key [s-e])
+  (w32-register-hot-key [s-f])
+  (w32-register-hot-key [s-g])
+  (w32-register-hot-key [s-h])
+  (w32-register-hot-key [s-i])
+  (w32-register-hot-key [s-j])
+  (w32-register-hot-key [s-k])
+  ;; s-l can NEVER be registered as a key combination, since Windows
+  ;; handles it at a much lower level.
+  ;; (w32-register-hot-key [s-l])
+  (w32-register-hot-key [s-m])
+  (w32-register-hot-key [s-n])
+  (w32-register-hot-key [s-o])
+  (w32-register-hot-key [s-p])
+  (w32-register-hot-key [s-q])
+  (w32-register-hot-key [s-r])
+  (w32-register-hot-key [s-s])
+  (w32-register-hot-key [s-t])
+  (w32-register-hot-key [s-u])
+  (w32-register-hot-key [s-v])
+  (w32-register-hot-key [s-w])
+  (w32-register-hot-key [s-x])
+  (w32-register-hot-key [s-y])
+  (w32-register-hot-key [s-z]))
+#+end_src
+
+
+* macOS
+
+#+begin_src emacs-lisp
+(when (eq system-type 'darwin)
+  ;; Uncomment this if we can't install Hack Nerd font
+  ;; (set-face-attribute 'default nil :font "Menlo-14")
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
+  (exec-path-from-shell-initialize)
+
+  ;; Better terminal emulation
+  (require 'vterm)
+  (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+
+  (unless (version< emacs-version "29.0"))
+    (setq pixel-scroll-precision-use-momentum t)
+  )
+#+end_src
+
+
+* Linux
+#+begin_src emacs-lisp
+(when (eq system-type 'gnu/linux)
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
+  ;; (exec-path-from-shell-initialize)
+  )
+#+end_src
+
+* Tramp
+#+begin_src emacs-lisp
+(setq vc-handled-backends '(Git))
+(setq remote-file-name-inhibit-locks t)
+(setq tramp-inline-compress-start-size 1000)
+(setq tramp-copy-size-limit 10000)
+(setq tramp-verbose 1)
+
+;; Without this line, we get the "Forbidden reentrant call of Tramp" bug: https://github.com/joaotavora/eglot/issues/859
+(setq tramp-use-ssh-controlmaster-options nil)
+
+;; Enable .dir-locals.el for remote files
+;; REMINDME: This can case a HUGE slowdown when doing things like `project-find-file'
+;; (setq enable-remote-dir-locals t)
+
+(with-eval-after-load 'tramp
+  (add-to-list 'tramp-remote-path "~/.local/bin")
+  (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
+  ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
+  ;; (add-to-list 'tramp-connection-properties
+  ;;              (list (regexp-quote "/ssh:7p")
+  ;;                    "remote-shell" "/usr/bin/ksh"))
+  )
+#+end_src
+
+[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable thing to put in, since I so frequently use VC over tramp.
+
+#+begin_src emacs-lisp :tangle no
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+#+end_src
+
+Additionally, these came up as potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs issues]].
+#+begin_src emacs-lisp :tangle no
+(setq tramp-inline-compress-start-size 1000)
+(setq tramp-copy-size-limit 10000)
+(setq vc-handled-backends '(Git))
+(setq tramp-verbose 1)
+(setq tramp-default-method "scp")
+(setq tramp-use-ssh-controlmaster-options nil)
+(setq projectile--mode-line "Projectile")
+(setq tramp-verbose 1)
+#+end_src
+
+I often need to set these in ~/.ssh/config for TRAMP to speed up
+
+#+begin_example
+Host *
+     ControlMaster auto
+     ControlPath ~/.ssh/master-%h:%p
+     ControlPersist 10m
+     ForwardAgent yes
+     ServerAliveInterval 60
+#+end_example
+
+
+* LSP
+Another section that's almost totally obsolete, but kept in case I need references to it.  Since =eglot= will be a built-in package for future emacs, I'm going to stick to it.
+
+#+begin_src emacs-lisp :tangle no
+(require 'lsp-mode)
+
+(setq lsp-keymap-prefix "s-p")
+(lsp-register-client
+    (make-lsp-client :new-connection (lsp-tramp-connection "pylsp")
+                     :major-modes '(python-mode)
+                     :remote? t
+                     :server-id 'pylsp-remote))
+
+(lsp-register-client
+    (make-lsp-client :new-connection (lsp-tramp-connection '("pyright-langserver" "--stdio"))
+                     :major-modes '(python-mode)
+                     :remote? t
+                     :server-id 'pyright-remote))
+
+(defun lsp-tramp-connection (local-command &optional generate-error-file-fn)
+    "Create LSP stdio connection named name.
+LOCAL-COMMAND is either list of strings, string or function which
+returns the command to execute."
+    (defvar tramp-connection-properties)
+    ;; Force a direct asynchronous process.
+    (when (file-remote-p default-directory)
+      (add-to-list 'tramp-connection-properties
+                   (list (regexp-quote (file-remote-p default-directory))
+                         "direct-async-process" t)))
+    (list :connect (lambda (filter sentinel name environment-fn)
+                     (let* ((final-command (lsp-resolve-final-function
+                                            local-command))
+                            (_stderr (or (when generate-error-file-fn
+                                           (funcall generate-error-file-fn name))
+                                         (format "/tmp/%s-%s-stderr" name
+                                                 (cl-incf lsp--stderr-index))))
+                            (process-name (generate-new-buffer-name name))
+                            (process-environment
+                             (lsp--compute-process-environment environment-fn))
+                            (proc (make-process
+                                   :name process-name
+                                   :buffer (format "*%s*" process-name)
+                                   :command final-command
+                                   :connection-type 'pipe
+                                   :coding 'no-conversion
+                                   :noquery t
+                                   :filter filter
+                                   :sentinel sentinel
+                                   :file-handler t)))
+                       (cons proc proc)))
+          :test? (lambda () (-> local-command lsp-resolve-final-function
+                           lsp-server-present?))))
+
+(setq lsp-completion-provider :none)
+
+(defun renz/corfu-lsp-setup ()
+  (setq-local completion-styles '(flex basic partial-completion emacs22)
+              completion-category-defaults nil))
+
+(add-hook 'lsp-mode-hook #'renz/corfu-lsp-setup)
+
+#+end_src
+
+
+* TreeSitter
+#+begin_src emacs-lisp
+;; TODO: Convert this to use-package
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
+(global-tree-sitter-mode)
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+#+end_src
+
 * Footer
-Thank you for reading 'till the end or for being interested on how to end an Emacs package. If you would like to try my configuration, feel free to fork it on GitHub. So that's it, let's gracefully finish tangling everything:
+Thank you for reading 'till the end or for being interested on how to end an Emacs package.  So that's it, let's gracefully finish tangling everything:
 
 #+begin_src emacs-lisp
 (provide 'init.el)
