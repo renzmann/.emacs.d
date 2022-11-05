@@ -1,67 +1,716 @@
-;;; Robert Enzmann's Emacs configuration
+;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
 
-;; ============================================================================
-;;                             Packages
-;; ============================================================================
-;; Custom at the top for ensuring packages are installed
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(column-number-mode t)
- '(custom-safe-themes '(default))
- '(eldoc-echo-area-use-multiline-p nil)
- '(evil-undo-system 'undo-redo)
- '(minimap-highlight-line nil)
- '(minimap-minimum-width 18)
- '(minimap-mode t)
- '(minimap-width-fraction 0.0)
- '(minimap-window-location 'right)
- '(mode-line-in-non-selected-windows t)
- '(org-agenda-files '("~/.emacs.d/org/work.org"))
- '(org-hugo-front-matter-format "yaml")
- '(package-selected-packages
-   '(visual-fill-column ef-themes org-modern poly-markdown diff-hl ox-hugo tramp restart-emacs gnuplot corfu-terminal corfu esup consult org-roam ob-async sqlup-mode sql-indent ripgrep blacken sqlformat pythonic f s reformatter change-inner vterm magit vertico tree-sitter-langs tree-sitter orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode markdown-mode eglot marginalia)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(minimap-active-region-background ((t (:extend t :background "gray22"))))
- '(minimap-font-face ((t (:height 17 :family "DejaVu Sans Mono")))))
+;; Copyright (C) 2020-2022 Robert Enzmann
 
-;; Keep packages in sync - only refreshing/installing if something is missing
-(package-autoremove)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+;; Author: Robb Enzmann <robbenzmann@gmail.com>
+;; Keywords: internal
+;; URL: https://robbmann.io/
 
-(when (and (cl-notevery 'package-installed-p package-selected-packages) (y-or-n-p "Update packages? "))
-  (package-refresh-contents)
-  (package-install-selected-packages))
+;;; Commentary:
+;; A fully fledged, reproducible Emacs configuration
 
-(add-to-list 'load-path (concat user-emacs-directory "packages"))
+;;; Code:
 
-
-;; ============================================================================
-;;                         My configuration files
-;; ============================================================================
-;; Jump to any of these (with completion) using `M-x renz/jump-configuration`,
-;; bound by default to `C-c s s`
-(load-file (concat user-emacs-directory "config/keybindings.el"))
-(load-file (concat user-emacs-directory "config/theme.el"))
-(load-file (concat user-emacs-directory "config/misc.el"))
-(load-file (concat user-emacs-directory "config/autocompletion.el"))
-(load-file (concat user-emacs-directory "config/org.el"))
-(load-file (concat user-emacs-directory "config/sql.el"))
-(load-file (concat user-emacs-directory "config/python.el"))
-(load-file (concat user-emacs-directory "config/windows.el"))
-(load-file (concat user-emacs-directory "config/macos.el"))
-(load-file (concat user-emacs-directory "config/linux.el"))
-(load-file (concat user-emacs-directory "config/tramp.el"))
-(load-file (concat user-emacs-directory "config/lsp.el"))
-(load-file (concat user-emacs-directory "config/treesitter.el"))
-(load-file (concat user-emacs-directory "config/projects.el"))
-(load-file (concat user-emacs-directory "config/meow.el"))
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+(when (file-exists-p custom-file)
+  (load custom-file 'noerror))
 
-
-(server-start)
+(eval-when-compile
+  (package-autoremove)
+  (unless (package-installed-p 'use-package)
+    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+    (package-refresh-contents)
+    (package-install 'use-package))
+  (require 'use-package))
+
+(setq ef-themes-headings
+      '((0 . (1.9))
+        (1 . (1.8))
+        (2 . (1.7))
+        (3 . (1.6))
+        (4 . (1.5))
+        (5 . (1.4)) ; absence of weight means `bold'
+        (6 . (1.3))
+        (7 . (1.2))
+        (t . (1.1))))
+
+(load-theme 'ef-cherie :no-confirm)
+
+(setq ef-themes-to-toggle '(ef-cherie ef-light))
+
+(set-face-attribute 'default nil :family "Hack")
+
+(defun renz/--jump-section (dirname prompt extension)
+  "For internal use: prompt for a file under `dirname' in the user
+emacs config site with matching `extension' regexp"
+  (let ((complete-dir (concat user-emacs-directory dirname "/")))
+    (find-file
+     (concat complete-dir
+             (completing-read prompt
+                              (directory-files complete-dir nil extension))))))
+
+(defun renz/jump-configuration ()
+  "Prompt for a .el file in my configuration folder, then go there."
+  (interactive)
+  (renz/--jump-section "config" "Elisp config files: " ".*\.el$"))
+
+;; FIXME: should set an org-home or something like that.  Probably a common variable
+;; described somewhere in the org manual
+(defun renz/jump-org ()
+  "Prompt for an org file in my emacs directory, then go there."
+  (interactive)
+  (renz/--jump-section "org" "Org files: " ".*\.org$"))
+
+(defun renz/jump-init ()
+  (interactive)
+  (find-file (expand-file-name "README.org" user-emacs-directory))
+  (org-goto))
+
+(defun renz/recentf-find-file ()
+  "Find a recent file using the minibuffer with completion"
+  (interactive)
+  (recentf-mode t)
+  (unless (find-file (completing-read "Find recent file: " recentf-list))
+    (message "Aborting...")))
+
+(defun renz/find-tag ()
+  "Use completing-read to navigate to a tag"
+  (interactive)
+  (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
+
+(defun renz/consult-grep ()
+  "Live grep using `rg' if found, otherwise `grep'"
+  (interactive)
+  (if (executable-find "rg")
+      (consult-ripgrep)
+    (consult-grep)))
+
+(global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
+(global-set-key (kbd "C-M-h") 'backward-kill-sexp)
+
+;; UNBINDS the suspend-frame keybinding, which is annoying on GUI.
+;; Use C-x C-z if you really want to suspend the frame.
+(global-set-key (kbd "C-z") #'zap-up-to-char)
+
+;; A better version of `dabbrev'
+;; https://www.masteringemacs.org/article/text-expansion-hippie-expand
+;; I tend to prefer this on its own key, since I like a lot of the
+;; default dabbrev behavior.
+;; (global-set-key [remap dabbrev-expand] 'hippie-expand)
+
+;; Better buffer list for C-x C-b
+(global-set-key [remap list-buffers] 'ibuffer)
+(global-set-key [remap switch-to-buffer] 'consult-buffer)
+
+;; When flycheck is running (usually from a language server), bind next/previous
+(with-eval-after-load 'flymake
+  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+
+;; When using isearch to jump to things, use C-RET to put point on the
+;; opposite side of where it would normally end up
+(define-key isearch-mode-map (kbd "<C-return>")
+  (defun isearch-done-opposite (&optional nopush edit)
+    "End current search in the opposite side of the match."
+    (interactive)
+    (funcall #'isearch-done nopush edit)
+    (when isearch-other-end (goto-char isearch-other-end))))
+
+;; (global-set-key (kbd "C-c a") #')
+;; (global-set-key (kbd "C-c b") #')
+(global-set-key (kbd "C-c c i") #'change-inner)
+(global-set-key (kbd "C-c c o") #'change-outer)
+(global-set-key (kbd "C-c d") #'renz/find-tag)
+(global-set-key (kbd "C-c e") #'shell)
+(global-set-key (kbd "C-c f") #'hippie-expand)
+(global-set-key (kbd "C-c g") #'ffap)  ; TODO my own func that takes universal args
+;; (global-set-key (kbd "C-c h") #')
+;; (global-set-key (kbd "C-c i") #')
+(global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
+(global-set-key (kbd "C-c k") #'just-one-space)
+(global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
+(global-set-key (kbd "C-c l f f") #'eglot-format)
+(global-set-key (kbd "C-c l f b") #'eglot-format-buffer)
+(global-set-key (kbd "C-c l l") #'eglot)
+(global-set-key (kbd "C-c l r n") #'eglot-rename)
+(global-set-key (kbd "C-c l s") #'eglot-shutdown)
+(global-set-key (kbd "C-c m") #'ef-themes-toggle)
+(global-set-key (kbd "C-c n") #'minimap-mode)
+(global-set-key (kbd "C-c o a") #'org-agenda)
+(global-set-key (kbd "C-c o b d") #'org-babel-detangle)
+(global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
+(global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
+(global-set-key (kbd "C-c o o") #'renz/jump-org)
+(global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
+;; (global-set-key (kbd "C-c p") #')
+;; (global-set-key (kbd "C-c q") #')
+(global-set-key (kbd "C-c r") #'renz/recentf-find-file)
+(global-set-key (kbd "C-c s i") #'renz/jump-init)
+;; (global-set-key (kbd "C-c s k") #'renz/jump-keybindings)
+;; (global-set-key (kbd "C-c s s") #'renz/jump-configuration)
+;; (global-set-key (kbd "C-c t") #')
+(global-set-key (kbd "C-c u") #'renz/consult-grep)
+;; (global-set-key (kbd "C-c v") #')
+;; (global-set-key (kbd "C-c w") #')
+;; (global-set-key (kbd "C-c x") #')
+(global-set-key (kbd "C-c y i") #'copy-inner)
+(global-set-key (kbd "C-c y o") #'copy-outer)
+;; (global-set-key (kbd "C-c z") #')
+(global-set-key (kbd "C-c ;") #'comment-line)  ; TTY-friendly
+(global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
+
+(with-eval-after-load 'dired
+  (define-key dired-mode-map (kbd "M-S-j") 'dired-goto-file))
+
+(global-set-key (kbd "<f5>") #'compile)
+(global-set-key (kbd "M-<f5>") #'recompile)
+;; (global-set-key (kbd "<f6>") #')
+;; (global-set-key (kbd "M-<f6>") #')
+;; (global-set-key (kbd "<f7>") #')
+;; (global-set-key (kbd "M-<f7>") #')
+;; (global-set-key (kbd "<f8>") #')
+;; (global-set-key (kbd "M-<f8>") #')
+(global-set-key (kbd "<f9>") #'vterm)
+(global-set-key (kbd "M-<f9>") #'eshell)
+(global-set-key (kbd "S-<f9>") #'ansi-term)
+(global-set-key (kbd "s-<f9>") #'shell)
+
+(when (eq system-type 'darwin)
+  (with-eval-after-load 'projectile
+    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)))
+
+(global-set-key (kbd "s-s") #'save-buffer)
+
+;; Fill-column for visual lines
+(add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
+(setq fill-column 120)
+
+;; Scroll bar
+(scroll-bar-mode -1)
+
+;; Emojis inline 👍
+;; (add-hook 'after-init-hook #'global-emojify-mode)
+
+;; Don't really need the splash screen
+(setq inhibit-splash-screen t)
+
+;; Automatically visit symlink sources
+(setq find-file-visit-truename t)
+
+;; Indent with spaces, not tabs by default
+(setq-default indent-tabs-mode nil)
+
+;; For files containing color escape codes, this provides a way to
+;; render the colors in-buffer
+(defun renz/display-ansi-colors ()
+  (interactive)
+  (require 'ansi-color)
+  (ansi-color-apply-on-region (point-min) (point-max)))
+
+;; Enable horizontal scrolling with mouse
+;; https://stackoverflow.com/a/67758169
+(setq mouse-wheel-tilt-scroll t)
+
+;; https://www.masteringemacs.org/article/demystifying-emacs-window-manager
+(unless (version< emacs-version "27.1")
+  (setq switch-to-buffer-obey-display-actions t))
+
+;; Enable up/downcase-region
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+
+;; Automatically update buffers when contents change on disk
+(global-auto-revert-mode)
+
+;; Initial frame size for GUI
+(setq renz/frame-default-alist
+      '(
+        (tool-bar-lines . 0)
+        (width . 180) ; chars
+        (height . 60) ; lines
+        (left . 125)
+        (top . 125)))
+
+(when (display-graphic-p)
+  (setq initial-frame-alist renz/frame-default-alist)
+  (setq default-frame-alist renz/frame-default-alist))
+
+;; Adds helpful information in the margin when using the minibuffer
+(when (package-installed-p 'marginalia)
+  (marginalia-mode))
+
+;; Highlight the line point is on
+(global-hl-line-mode)
+
+;; Stop stupid bell
+(setq ring-bell-function 'ignore)
+
+;; Clock in statusline
+(setq display-time-day-and-date t)
+(display-time)
+
+;; Enable split-window dired copying
+(setq dired-dwim-target t)
+
+;; Automatically create matching parens in programming modes
+(add-hook 'prog-mode-hook (electric-pair-mode t))
+(add-hook 'prog-mode-hook (show-paren-mode t))
+
+;; Follow symlinks to the real file
+(setq vc-follow-symlinks t)
+
+;; Show markers for trailing whitespace and delete on save
+;; (add-hook 'prog-mode-hook 'whitespace-mode)
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+
+;; Don't wrap lines
+(setq-default truncate-lines t)
+(add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
+
+;; Relative line numbers in programming and writing modes
+(defun renz/display-line-numbers ()
+  (setq display-line-numbers 'relative))
+
+;; TODO line numbers mess up fringe for org-modern.  Any way to
+;; combine both?
+(add-hook 'prog-mode-hook 'renz/display-line-numbers)
+;; (add-hook 'text-mode-hook 'renz/display-line-numbers)
+
+;; Delete the region when we yank on top of it
+(delete-selection-mode t)
+
+;; Enable mouse in terminal
+(xterm-mouse-mode 1)
+
+;; Scroll the *compilation* window as text appears
+(setq compilation-scroll-output t)
+
+;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
+(defun renz/colorize-compilation-buffer ()
+  "Enable colors in the *compilation* buffer."
+  (require 'ansi-color)
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+(add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
+
+;; Disable tool bar
+(tool-bar-mode -1)
+;; The MENU bar, on the other hand (menu-bar-mode), is very handy, and
+;; I don't think I'll ever disable it
+
+;; Show laptop battery in the modeline
+(display-battery-mode t)
+
+;; Disable asking about risky variables from .dir-locals.el
+;; https://emacs.stackexchange.com/a/44604
+(advice-add 'risky-local-variable-p :override #'ignore)
+
+;; Faster grep
+(when (executable-find "rg")
+  (setq grep-program "rg"))
+
+;; Make dired human-readable
+(setq dired-listing-switches "-alFh")
+(setq-default dired-hide-details-mode t)
+
+;; Don't quit emacs by accident
+(setq confirm-kill-emacs 'yes-or-no-p)
+
+;; If aspell is installed, use it instead of ispell
+(when (executable-find "aspell")
+  (setq ispell-program-name "aspell"))
+
+;; Smooth as butter scrolling
+(if (version< emacs-version "29.0")
+    (pixel-scroll-mode)
+  (pixel-scroll-precision-mode 1)
+  (setq pixel-scroll-precision-large-scroll-height 35.0))
+
+;; Enable minimap if on graphical display
+;; (when (display-graphic-p)
+;;   (minimap-mode t))
+
+;; Keep all backup files in one place
+;; (let ((backup-dir (concat user-emacs-directory "backups")))
+;;   (make-directory backup-dir t)
+;;   (setq backup-directory-alist '(("." . backup-dir))))
+(setq backup-directory-alist nil)
+
+;; Enable syntax highlighting within code fences for markdown
+(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+
+(setq esup-depth 0)
+
+(setq column-number-mode t
+      mode-line-in-non-selected-windows t)
+
+(setq eldoc-echo-area-use-multiline-p nil)
+
+;; "flex" is the built-in "fuzzy" completion style
+(setq completion-styles '(flex basic partial-completion emacs22))
+(if (not (package-installed-p 'orderless))
+    (add-to-list 'completion-styles 'flex)
+  (require 'orderless)
+  (add-to-list 'completion-styles 'orderless)
+  (setq completion-category-overrides '((file (styles basic partial-completion)))))
+
+;; Fuzzy, live minibuffer completion
+(vertico-mode)
+;; Vertico works better for C-x C-f /ssh:<thing> than the built-in icomplete
+
+;; Use TAB in place of C-M-i for completion-at-point
+;; REMINDME: I think this causes some issues in shell-mode and the
+;; like?  Can't remember...
+;; (setq tab-always-indent 'complete)
+
+;; Display candidates in *Completion* buffer vertically as a single list
+(setq completions-format 'one-column)
+
+;; Shortcuts for common completion actions
+(defun renz/completion-accept ()
+  "Expand current text to first completion result"
+  (interactive)
+  ;; FIXME In python REPL, if we go back inside a symbol and edit it
+  ;;       to narrow the candidate list, then accept something with
+  ;;       this function, the trailing text isn't erased
+  (switch-to-completions)
+  (choose-completion))
+
+(defun renz/jump-completion ()
+  "Jump to second completion."
+  (interactive)
+  (switch-to-completions)
+  (next-completion 1))
+
+(defun renz/completion-kill-completion-buffer ()
+  "Close the *Completion* buffer without switching to it"
+  (interactive)
+  (kill-buffer "*Completions*"))
+
+;; The combination of these two allows me to slam C-n several times to
+;; quickly go down the candidate list
+(define-key completion-in-region-mode-map (kbd "C-n") 'renz/jump-completion)
+(define-key completion-list-mode-map (kbd "C-n") 'next-completion)
+(define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
+
+;; REMINDME Don't use RET, TAB, and similar because there's a good
+;; chance you'll mess up required functionality in shell, minibuffer,
+;; and related modes
+
+;; Accept the first result in the completion buffer without switching
+(define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
+(define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
+
+(unless (display-graphic-p)
+  (corfu-terminal-mode +1))
+
+(defun renz/disable-corfu-remote ()
+  (when (and (fboundp 'corfu-mode)
+             (file-remote-p default-directory))
+    (corfu-mode -1)))
+
+(setq corfu-auto t
+      corfu-auto-delay 0.0
+      corfu-quit-no-match 'separator)
+
+(global-corfu-mode)
+
+(setq org-confirm-babel-evaluate nil)
+(setq org-edit-src-content-indentation 0)
+;; (setq org-goto-interface 'outline-path-completion)
+
+;; Allow for custom resize of images when displaying in org mode
+(setq org-image-actual-width nil)
+
+;; A kill-block command for working with src blocks
+(defun renz/org-kill-src-block ()
+  "Kill the src block around point, if applicable."
+  (interactive)
+  (org-babel-remove-result)
+  (org-mark-element)
+  (kill-region nil nil t))
+
+(with-eval-after-load 'ox
+  (require 'ox-hugo))
+
+;; https://willschenk.com/articles/2019/using_org_mode_in_hugo/
+(with-eval-after-load 'org
+  ;; (setq org-startup-indented t) ; Enable `org-indent-mode' by default
+  (add-hook 'org-mode-hook #'visual-line-mode)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (sql . t)
+     (shell . t)))
+
+  ;; Enable asynchronous execution of src blocks
+  (when (package-installed-p 'ob-async)
+    (require 'ob-async)
+    (add-hook 'ob-async-pre-execute-src-block-hook
+              #'(lambda ()
+	          (require 'ob-sql-mode)
+	          (require 'hive2))))
+  )
+
+(setq ob-async-no-async-languages-alist '("python"))
+(setq org-html-htmlize-output-type 'css)
+
+;; For navigating to tangled src blocks
+;; https://emacs.stackexchange.com/a/69591
+(defun renz/org-babel-tangle-jump-to-src ()
+  "The opposite of `org-babel-tangle-jump-to-org'.
+Jumps at tangled code from org src block."
+  (interactive)
+  (if (org-in-src-block-p)
+      (let* ((header (car (org-babel-tangle-single-block 1 'only-this-block)))
+             (tangle (car header))
+             (lang (caadr header))
+             (buffer (nth 2 (cadr header)))
+             (org-id (nth 3 (cadr header)))
+             (source-name (nth 4 (cadr header)))
+             (search-comment (org-fill-template
+                              org-babel-tangle-comment-format-beg
+                              `(("link" . ,org-id) ("source-name" . ,source-name))))
+             (file (expand-file-name
+                    (org-babel-effective-tangled-filename buffer lang tangle))))
+        (if (not (file-exists-p file))
+            (message "File does not exist. 'org-babel-tangle' first to create file.")
+          (find-file file)
+          (beginning-of-buffer)
+          (search-forward search-comment)))
+    (message "Cannot jump to tangled file because point is not at org src block.")))
+
+;; TODO states
+(setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
+
+(setq org-agenda-files '("~/.emacs.d/org/work.org")
+      org-hugo-front-matter-format "yaml")
+
+;; TODO: move this to the misc./ window settings
+;; add frame borders and window dividers
+(modify-all-frames-parameters
+ '((right-divider-width . 40)
+   (internal-border-width . 40)))
+(dolist (face '(window-divider
+                window-divider-first-pixel
+                window-divider-last-pixel))
+  (face-spec-reset-face face)
+  (set-face-foreground face (face-attribute 'default :background)))
+(set-face-background 'fringe (face-attribute 'default :background))
+
+(setq
+ ;; edit settings
+ org-auto-align-tags nil
+ org-tags-column 0
+ org-catch-invisible-edits 'show-and-error
+ org-special-ctrl-a/e t
+ org-insert-heading-respect-content t
+
+ ;; Org styling, hide markup etc.
+ org-hide-emphasis-markers t
+ org-pretty-entities t
+ org-ellipsis "…"
+
+ ;; Agenda styling
+ org-agenda-tags-column 0
+ org-agenda-block-separator ?─
+ org-agenda-time-grid
+ '((daily today require-timed)
+   (800 1000 1200 1400 1600 1800 2000)
+   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+ org-agenda-current-time-string
+ "⭠ now ─────────────────────────────────────────────────")
+
+(global-org-modern-mode)
+
+(defun renz/sql-mode-hook ()
+  ;; (setq indent-line-function 'renz/sql-indent)
+  (setq tab-width 4)
+  (setq sqlformat-command 'sql-formatter)
+  (setq sqlind-basic-offset 4)
+  ;; (setq electric-indent-inhibit t)
+  )
+
+(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
+(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
+(add-hook 'sql-mode-hook 'sqlup-mode)
+(add-hook 'sql-mode-hook 'sqlind-minor-mode)
+(add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+
+(with-eval-after-load 'sql
+  (require 'hive2)
+  (require 'ob-sql-mode)
+  (require 'sqlformat)
+  (require 'sqlup-mode)
+  (require 'sql-indent)
+
+  (defvar renz/sql-indentation-offsets-alist
+    `((select-clause 0)
+      (insert-clause 0)
+      (delete-clause 0)
+      (update-clause 0)
+      ,@sqlind-default-indentation-offsets-alist))
+
+  (add-hook 'sqlind-minor-mode-hook
+            (lambda ()
+              (setq sqlind-indentation-offsets-alist
+                    renz/sql-indentation-offsets-alist)))
+  )
+
+;; Example error from pyright
+;; --------------------------
+;; /home/robb/tmp/errors.py/
+;;   /home/robb/tmp/errors.py:1:1 - error: "foo" is not defined (reportUndefinedVariable)
+;;   /home/robb/tmp/errors.py:1:1 - warning: Expression value is unused (reportUnusedExpression)
+;;   /home/robb/tmp/errors.py:4:12 - error: Operator "+" not supported for types "str" and "Literal[1]"
+;;     Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
+;; 2 errors, 1 warning, 0 informations
+(with-eval-after-load 'compile
+  (add-to-list 'compilation-error-regexp-alist-alist
+               ;; It would be nice if we could also capture the
+               ;; \\(error\\|warning\\) part as "KIND", but I got messed
+               ;; up on it
+               '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
+  (add-to-list 'compilation-error-regexp-alist 'pyright))
+
+;; Extra check commands for C-c C-v
+(with-eval-after-load 'python
+  (if (executable-find "mypy")
+      (setq python-check-command "mypy"))
+  (if (executable-find "pyright")
+      (setq python-check-command "pyright")))
+
+;; I ran into something similar to this on Windows:
+;; https://github.com/jorgenschaefer/elpy/issues/733
+;;
+;; The culprit was "App Execution Aliases" with python and python3
+;; redirecting to the windows store. Using:
+;;
+;;     winkey -> Manage app execution aliases -> uncheck python and python3
+;;
+;; fixed it.
+
+;; Also on Windows - a `pip install` of `pyreadline3' is required to
+;; make tab-completion work at all. It provides the `readline' import
+;; symbol.
+
+;; Virtualenvs - require .dir-locals.el to have e.g.:
+;;   ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
+;; However, this only operates on `run-python' shells.
+;;
+;; `pyvenv' solves the otherwise very annoying problem of getting
+;; external tools like `compile' and `eshell' to also use our virtual
+;; environment's python.  I may still use .dir-locals.el to set things
+;; like the python-check-command on a per-project basis, though.
+(when (package-installed-p 'pyvenv)
+  (pyvenv-mode)
+  ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
+  ;; (pyvenv-tracking-mode)
+  ;; (setenv "WORKON_HOME" "~/.conda/envs")
+  )
+
+;; Enable semantic mode for more intelligent code parsing
+;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
+;; (add-hook 'python-mode-hook 'semantic-mode)
+
+;; Don't mark the check command and virtualenv variables as unsafe
+(put 'python-check-command 'safe-local-variable #'stringp)
+(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+
+;; (add-hook 'python-mode-hook 'eglot-ensure)
+
+(when (eq system-type 'windows-nt)
+  ;; Set a better font on Windows
+  (set-face-attribute 'default nil :font "Hack NF-12")
+  ;; Alternate ispell when we've got msys on Windows
+  (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe")
+  ;; Set default shell to pwsh
+  (setq explicit-shell-file-name "pwsh")
+  ;; Enable use of Winkey as super
+  (setq w32-pass-lwindow-to-system nil)
+  (setq w32-lwindow-modifier 'super) ; Left Windows key
+  (setq w32-pass-rwindow-to-system nil)
+  (setq w32-rwindow-modifier 'super) ; Right Windows key
+  ;; If we want to use a hotkey, we have to also register each
+  ;; combination specifically, like this:
+  (w32-register-hot-key [s-a])
+  (w32-register-hot-key [s-b])
+  (w32-register-hot-key [s-c])
+  (w32-register-hot-key [s-d])
+  (w32-register-hot-key [s-e])
+  (w32-register-hot-key [s-f])
+  (w32-register-hot-key [s-g])
+  (w32-register-hot-key [s-h])
+  (w32-register-hot-key [s-i])
+  (w32-register-hot-key [s-j])
+  (w32-register-hot-key [s-k])
+  ;; s-l can NEVER be registered as a key combination, since Windows
+  ;; handles it at a much lower level.
+  ;; (w32-register-hot-key [s-l])
+  (w32-register-hot-key [s-m])
+  (w32-register-hot-key [s-n])
+  (w32-register-hot-key [s-o])
+  (w32-register-hot-key [s-p])
+  (w32-register-hot-key [s-q])
+  (w32-register-hot-key [s-r])
+  (w32-register-hot-key [s-s])
+  (w32-register-hot-key [s-t])
+  (w32-register-hot-key [s-u])
+  (w32-register-hot-key [s-v])
+  (w32-register-hot-key [s-w])
+  (w32-register-hot-key [s-x])
+  (w32-register-hot-key [s-y])
+  (w32-register-hot-key [s-z]))
+
+(when (eq system-type 'darwin)
+  ;; Uncomment this if we can't install Hack Nerd font
+  ;; (set-face-attribute 'default nil :font "Menlo-14")
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
+  (exec-path-from-shell-initialize)
+
+  ;; Better terminal emulation
+  (require 'vterm)
+  (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
+
+  (unless (version< emacs-version "29.0"))
+    (setq pixel-scroll-precision-use-momentum t)
+  )
+
+(when (eq system-type 'gnu/linux)
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
+  ;; (exec-path-from-shell-initialize)
+  )
+
+(setq vc-handled-backends '(Git))
+(setq remote-file-name-inhibit-locks t)
+(setq tramp-inline-compress-start-size 1000)
+(setq tramp-copy-size-limit 10000)
+(setq tramp-verbose 1)
+
+;; Without this line, we get the "Forbidden reentrant call of Tramp" bug: https://github.com/joaotavora/eglot/issues/859
+(setq tramp-use-ssh-controlmaster-options nil)
+
+;; Enable .dir-locals.el for remote files
+;; REMINDME: This can case a HUGE slowdown when doing things like `project-find-file'
+;; (setq enable-remote-dir-locals t)
+
+(with-eval-after-load 'tramp
+  (add-to-list 'tramp-remote-path "~/.local/bin")
+  (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
+  ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
+  ;; (add-to-list 'tramp-connection-properties
+  ;;              (list (regexp-quote "/ssh:7p")
+  ;;                    "remote-shell" "/usr/bin/ksh"))
+  )
+
+;; TODO: Convert this to use-package
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
+(global-tree-sitter-mode)
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+
+(provide 'init.el)
+;;; init.el ends here
