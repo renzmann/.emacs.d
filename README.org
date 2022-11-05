@@ -33,7 +33,7 @@ My configuration is a single literate programming document, which is tangled int
 
 To comply with the Emacs conventions for libraries, the tangled init.el must have the following [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][header]] and [[Footer][footer:]]
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 ;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022 Robert Enzmann
@@ -52,7 +52,7 @@ To comply with the Emacs conventions for libraries, the tangled init.el must hav
 
 The initial cornerstone of every Emacs configuration is a decision on package management and configuration.  Since =use-package= will have built-in support in a future Emacs version, I'm going to use that along with the built-in =package.el=.  I don't have much reason other than the stability of them being built-in for choosing them.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (eval-when-compile
   (package-autoremove)
   (unless (package-installed-p 'use-package)
@@ -67,7 +67,7 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
 
 I prefer having custom modify its own file.  This next snippet ensures any =package-install= or =custom= edits go to =custom.el=.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (let ((renz/custom-file (expand-file-name "custom.el" user-emacs-directory)))
   (setq custom-file renz/custom-file)
   (when (file-exists-p renz/custom-file)
@@ -472,7 +472,7 @@ Haven't found a home header for any of these yet.
 #+end_src
 
 * Mode line
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq column-number-mode t
       mode-line-in-non-selected-windows t)
 #+end_src
@@ -483,23 +483,380 @@ Haven't found a home header for any of these yet.
 * =eldoc=
 I find it very distracting when =eldoc= suddenly pops up and consumes a large part of the screen for docstrings in python.
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (setq eldoc-echo-area-use-multiline-p nil)
 #+end_src
 
 #+RESULTS:
 : t
 
+* Autocompletion
+#+begin_src emacs-lisp
+;; "flex" is the built-in "fuzzy" completion style
+(setq completion-styles '(flex basic partial-completion emacs22))
+(if (not (package-installed-p 'orderless))
+    (add-to-list 'completion-styles 'flex)
+  (require 'orderless)
+  (add-to-list 'completion-styles 'orderless)
+  (setq completion-category-overrides '((file (styles basic partial-completion)))))
+
+;; Fuzzy, live minibuffer completion
+(vertico-mode)
+;; Vertico works better for C-x C-f /ssh:<thing> than the built-in icomplete
+
+;; Use TAB in place of C-M-i for completion-at-point
+;; REMINDME: I think this causes some issues in shell-mode and the
+;; like?  Can't remember...
+;; (setq tab-always-indent 'complete)
+
+;; Display candidates in *Completion* buffer vertically as a single list
+(setq completions-format 'one-column)
+
+;; Shortcuts for common completion actions
+(defun renz/completion-accept ()
+  "Expand current text to first completion result"
+  (interactive)
+  ;; FIXME In python REPL, if we go back inside a symbol and edit it
+  ;;       to narrow the candidate list, then accept something with
+  ;;       this function, the trailing text isn't erased
+  (switch-to-completions)
+  (choose-completion))
+
+(defun renz/jump-completion ()
+  "Jump to second completion."
+  (interactive)
+  (switch-to-completions)
+  (next-completion 1))
+
+(defun renz/completion-kill-completion-buffer ()
+  "Close the *Completion* buffer without switching to it"
+  (interactive)
+  (kill-buffer "*Completions*"))
+
+;; The combination of these two allows me to slam C-n several times to
+;; quickly go down the candidate list
+(define-key completion-in-region-mode-map (kbd "C-n") 'renz/jump-completion)
+(define-key completion-list-mode-map (kbd "C-n") 'next-completion)
+(define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
+
+;; REMINDME Don't use RET, TAB, and similar because there's a good
+;; chance you'll mess up required functionality in shell, minibuffer,
+;; and related modes
+
+;; Accept the first result in the completion buffer without switching
+(define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
+(define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
+#+end_src
+
+** =company-mode=
+Mostly obsolete, since I don't use company anymore, but kept for historical reasons, especially if I ever decide to go back.
+
+#+begin_src emacs-lisp :tangle no
+;; Company causes TRAMP to hang if we look for commands too fast
+(defun renz/disable-company-remote-shell ()
+  (when (and (fboundp 'company-mode)
+             (file-remote-p default-directory))
+    (company-mode -1)))
+
+(add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'shell-mode-hook 'renz/disable-company-remote-shell)
+(setq company-minimum-prefix-length 2)
+(setq company-idle-delay
+      (lambda () (if (company-in-string-or-comment) nil 0.0)))
+(setq company-tooltip-align-annotations t)
+(setq company-tooltip-flip-when-above t)
+(setq company-tooltip-margin 2)
+#+end_src
+
+** =corfu=
+Provides popup, suggest-as-you type like we would expect from any modern IDE.  I like =corfu= a lot, since it's philosophy is to stick as close as possible to the native Emacs internal API as possible, without inventing the whell.  In my experience, this has meant far fewer integration troubles with other packages that follow the same ideology.
+
+#+begin_src emacs-lisp
+(unless (display-graphic-p)
+  (corfu-terminal-mode +1))
+
+(defun renz/disable-corfu-remote ()
+  (when (and (fboundp 'corfu-mode)
+             (file-remote-p default-directory))
+    (corfu-mode -1)))
+
+(setq corfu-auto t
+      corfu-auto-delay 0.0
+      corfu-quit-no-match 'separator)
+
+(global-corfu-mode)
+#+end_src
+
 * Org-mode
-#+begin_src elisp
+There is a beefy startup hit from eagerly loading org-tempo, so eventually we'll have to come around and get this lazy-loaded correctly.
+
+#+begin_src emacs-lisp :tangle no
+(require 'org-tempo)
+#+end_src
+
+#+begin_src emacs-lisp
+(setq org-confirm-babel-evaluate nil)
+(setq org-edit-src-content-indentation 0)
+(setq org-goto-interface 'outline-path-completion)
+
+;; Allow for custom resize of images when displaying in org mode
+(setq org-image-actual-width nil)
+
+;; A kill-block command for working with src blocks
+(defun renz/org-kill-src-block ()
+  "Kill the src block around point, if applicable."
+  (interactive)
+  (org-babel-remove-result)
+  (org-mark-element)
+  (kill-region nil nil t))
+
+(with-eval-after-load 'ox
+  (require 'ox-hugo))
+
+;; https://willschenk.com/articles/2019/using_org_mode_in_hugo/
+(with-eval-after-load 'org
+  ;; (setq org-startup-indented t) ; Enable `org-indent-mode' by default
+  (add-hook 'org-mode-hook #'visual-line-mode)
+
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (sql . t)
+     (shell . t)))
+
+  ;; Enable asynchronous execution of src blocks
+  (when (package-installed-p 'ob-async)
+    (require 'ob-async)
+    (add-hook 'ob-async-pre-execute-src-block-hook
+              #'(lambda ()
+	          (require 'ob-sql-mode)
+	          (require 'hive2))))
+  )
+
+(setq ob-async-no-async-languages-alist '("python"))
+(setq org-html-htmlize-output-type 'css)
+
+;; For navigating to tangled src blocks
+;; https://emacs.stackexchange.com/a/69591
+(defun renz/org-babel-tangle-jump-to-src ()
+  "The opposite of `org-babel-tangle-jump-to-org'.
+Jumps at tangled code from org src block."
+  (interactive)
+  (if (org-in-src-block-p)
+      (let* ((header (car (org-babel-tangle-single-block 1 'only-this-block)))
+             (tangle (car header))
+             (lang (caadr header))
+             (buffer (nth 2 (cadr header)))
+             (org-id (nth 3 (cadr header)))
+             (source-name (nth 4 (cadr header)))
+             (search-comment (org-fill-template
+                              org-babel-tangle-comment-format-beg
+                              `(("link" . ,org-id) ("source-name" . ,source-name))))
+             (file (expand-file-name
+                    (org-babel-effective-tangled-filename buffer lang tangle))))
+        (if (not (file-exists-p file))
+            (message "File does not exist. 'org-babel-tangle' first to create file.")
+          (find-file file)
+          (beginning-of-buffer)
+          (search-forward search-comment)))
+    (message "Cannot jump to tangled file because point is not at org src block.")))
+
+;; TODO states
+(setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
+#+end_src
+
+#+begin_src emacs-lisp
 (setq org-agenda-files '("~/.emacs.d/org/work.org")
       org-hugo-front-matter-format "yaml")
+#+end_src
+
+** Org Roam
+#+begin_src emacs-lisp :tangle no
+(setq org-roam-directory (file-truename "~/.emacs.d/org/org-roam")
+
+Consider the below for Windows only
+(setq org-roam-database-connector 'sqlite3)
+
+(org-roam-db-autosync-mode)
+#+end_src
+
+** Displaying remote images
+Leaving this one out for a while too, as I'm not yet sure how useful it will be.  Taken from a blog post related to an issue I had running remote python from a local Org file: http://kychoi.org/blog/2014/11/02/Org-Display-Inline-Remote-Images
+
+#+begin_src emacs-lisp :tangle no
+(defun org-display-inline-images (&optional include-linked refresh beg end)
+  "Display inline images.
+
+An inline image is a link which follows either of these
+conventions:
+
+  1. Its path is a file with an extension matching return value
+     from `image-file-name-regexp' and it has no contents.
+
+  2. Its description consists in a single link of the previous
+     type.
+
+When optional argument INCLUDE-LINKED is non-nil, also links with
+a text description part will be inlined.  This can be nice for
+a quick look at those images, but it does not reflect what
+exported files will look like.
+
+When optional argument REFRESH is non-nil, refresh existing
+images between BEG and END.  This will create new image displays
+only if necessary.  BEG and END default to the buffer
+boundaries."
+  (interactive "P")
+  (when (display-graphic-p)
+    (unless refresh
+      (org-remove-inline-images)
+      (when (fboundp 'clear-image-cache) (clear-image-cache)))
+    (org-with-wide-buffer
+     (goto-char (or beg (point-min)))
+     (let ((case-fold-search t)
+	   (file-extension-re (org-image-file-name-regexp)))
+       (while (re-search-forward "[][]\\[\\(?:file\\|[./~]\\)" end t)
+	 (let ((link (save-match-data (org-element-context))))
+	   ;; Check if we're at an inline image.
+	   (when (and (equal (org-element-property :type link) "file")
+		      (or include-linked
+			  (not (org-element-property :contents-begin link)))
+		      (let ((parent (org-element-property :parent link)))
+			(or (not (eq (org-element-type parent) 'link))
+			    (not (cdr (org-element-contents parent)))))
+		      (org-string-match-p file-extension-re
+					  (org-element-property :path link)))
+	     (let ((file (substitute-in-file-name (expand-file-name (org-element-property :path link)))))
+	       (when (file-exists-p file)
+		 (let ((width
+			;; Apply `org-image-actual-width' specifications.
+			(cond
+			 ((not (image-type-available-p 'imagemagick)) nil)
+			 ((eq org-image-actual-width t) nil)
+			 ((listp org-image-actual-width)
+			  (or
+			   ;; First try to find a width among
+			   ;; attributes associated to the paragraph
+			   ;; containing link.
+			   (let ((paragraph
+				  (let ((e link))
+				    (while (and (setq e (org-element-property
+							 :parent e))
+						(not (eq (org-element-type e)
+							 'paragraph))))
+				    e)))
+			     (when paragraph
+			       (save-excursion
+				 (goto-char (org-element-property :begin paragraph))
+				   (when
+				       (re-search-forward
+					"^[ \t]*#\\+attr_.*?: +.*?:width +\\(\\S-+\\)"
+					(org-element-property
+					 :post-affiliated paragraph)
+					t)
+				     (string-to-number (match-string 1))))))
+			   ;; Otherwise, fall-back to provided number.
+			   (car org-image-actual-width)))
+			 ((numberp org-image-actual-width)
+			  org-image-actual-width)))
+		       (old (get-char-property-and-overlay
+			     (org-element-property :begin link)
+			     'org-image-overlay)))
+		   (if (and (car-safe old) refresh)
+		       (image-refresh (overlay-get (cdr old) 'display))
+		     (let ((image
+			    (create-image (if (org-file-remote-p file)
+					      (let* ((tramp-tmpdir (concat
+								    (if (featurep 'xemacs)
+									(temp-directory)
+								      temporary-file-directory)
+								    "/tramp"
+								    (file-name-directory (expand-file-name file))))
+						     (newname (concat
+							       tramp-tmpdir
+							       (file-name-nondirectory (expand-file-name file)))))
+						(make-directory tramp-tmpdir t)
+						(if (file-newer-than-file-p file newname)
+						    (copy-file file newname t t))
+						newname)
+					    file)
+					  (and width 'imagemagick)
+					  nil
+					  :width width)))
+		       (when image
+			 (let* ((link
+				 ;; If inline image is the description
+				 ;; of another link, be sure to
+				 ;; consider the latter as the one to
+				 ;; apply the overlay on.
+				 (let ((parent
+					(org-element-property :parent link)))
+				   (if (eq (org-element-type parent) 'link)
+				       parent
+				     link)))
+				(ov (make-overlay
+				     (org-element-property :begin link)
+				     (progn
+				       (goto-char
+					(org-element-property :end link))
+				       (skip-chars-backward " \t")
+				       (point)))))
+			   (overlay-put ov 'display image)
+			   (overlay-put ov 'face 'default)
+			   (overlay-put ov 'org-image-overlay t)
+			   (overlay-put
+			    ov 'modification-hooks
+			    (list 'org-display-inline-remove-overlay))
+			   (push ov org-inline-image-overlays)))))))))))))))
+#+end_src
+
+
+** =org-modern=
+From the lovely minad: https://github.com/minad/org-modern
+
+#+begin_src emacs-lisp
+;; TODO: move this to the misc./ window settings
+;; add frame borders and window dividers
+(modify-all-frames-parameters
+ '((right-divider-width . 40)
+   (internal-border-width . 40)))
+(dolist (face '(window-divider
+                window-divider-first-pixel
+                window-divider-last-pixel))
+  (face-spec-reset-face face)
+  (set-face-foreground face (face-attribute 'default :background)))
+(set-face-background 'fringe (face-attribute 'default :background))
+
+(setq
+ ;; edit settings
+ org-auto-align-tags nil
+ org-tags-column 0
+ org-catch-invisible-edits 'show-and-error
+ org-special-ctrl-a/e t
+ org-insert-heading-respect-content t
+
+ ;; Org styling, hide markup etc.
+ org-hide-emphasis-markers t
+ org-pretty-entities t
+ org-ellipsis "…"
+
+ ;; Agenda styling
+ org-agenda-tags-column 0
+ org-agenda-block-separator ?─
+ org-agenda-time-grid
+ '((daily today require-timed)
+   (800 1000 1200 1400 1600 1800 2000)
+   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+ org-agenda-current-time-string
+ "⭠ now ─────────────────────────────────────────────────")
+
+(global-org-modern-mode)
 #+end_src
 
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an Emacs package. If you would like to try my configuration, feel free to fork it on GitHub. So that's it, let's gracefully finish tangling everything:
 
-#+begin_src elisp
+#+begin_src emacs-lisp
 (provide 'init.el)
 ;;; init.el ends here
 #+end_src
