@@ -244,7 +244,6 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c l s") #'eglot-shutdown)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
 (global-set-key (kbd "C-c n") #'minimap-mode)
-
 #+end_src
 
 *** =C-c o= Org bindings
@@ -569,7 +568,6 @@ Enable colors in the =*compilation*= buffer.  Provided by a [[https://stackoverf
 I usually leave the tool bar disabled
 #+begin_src emacs-lisp
 (tool-bar-mode -1)
-
 #+end_src
 
 The MENU bar, on the other hand =(menu-bar-mode)=, is very handy, and I don't think I'll ever disable it.
@@ -628,9 +626,9 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 Keep all backup and auto-save files in a temporary folder.
 #+begin_src emacs-lisp
 (setq backup-directory-alist
-      `((".*" . temporary-file-directory,))
+      `(("." . temporary-file-directory))
       auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+      `(("." ,temporary-file-directory t)))
 #+end_src
 
 ** Code syntax in Markdown
@@ -855,8 +853,8 @@ Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup
     (require 'ob-async)
     (add-hook 'ob-async-pre-execute-src-block-hook
               #'(lambda ()
-	          (require 'ob-sql-mode)
-	          (require 'hive2))))
+                  (require 'ob-sql-mode)
+                  (require 'hive2))))
   )
 
 (setq ob-async-no-async-languages-alist '("python"))
