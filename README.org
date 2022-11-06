@@ -356,8 +356,14 @@ Like the =C-c <letter>= bindings, these are reserved for users.
 See the [[Windows][Microsoft Windows]] section for some hackery required to get these working on more platforms.
 
 #+begin_src emacs-lisp
+(global-set-key (kbd "s-c") #'kill-ring-save)
 (global-set-key (kbd "s-s") #'save-buffer)
+(global-set-key (kbd "s-t") #'tab-new)
+(global-set-key (kbd "s-v") #'yank)
 #+end_src
+
+#+RESULTS:
+: yank
 
 
 * Misc. Settings
@@ -791,7 +797,7 @@ For a while I was experimenting with ~company-mode~.  This section is obsolete a
 #+end_src
 
 
-* TODO Org-mode
+* Org-mode
 There is a beefy startup hit from eagerly loading org-tempo, so eventually we'll have to come around and get this lazy-loaded correctly.
 
 #+begin_src emacs-lisp :tangle no
@@ -1194,7 +1200,7 @@ However, this only operates on `run-python' shells.
 
 I don't use ~pyvenv~ much now though, since the vast majority of my development time is spent over Tramp, which ~pyvenv~ does not support.
 
-For a while, it looks like Emacs was trying out something called [[https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html][semantic-mode]], which looks a lot like a precursor to what we now know as the Language Server Protocol.  Enabling that mode would look like this:
+For a while, it looks like Emacs was trying out something called [[https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html][semantic-mode]], which looks a lot like a precursor to what we now know as the [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]].  Enabling that mode would look like this:
 
 #+begin_src emacs-lisp :tangle no
 (add-hook 'python-mode-hook 'semantic-mode)
@@ -1290,31 +1296,38 @@ To have ~eglot~ always start up for a python buffer, we would tangle this line i
 #+end_src
 
 * Tramp
+
+When using [[https://anaconda.org][conda]], I keep a special conda environment named ~robbmann~ for locally-installed and managed command line utilities.  Sometimes I link these over to ~.local/bin~, and other times I forget.  For the latter case, I tend to include it in a lot of my PATH-setting situations.
+
 #+begin_src emacs-lisp
 (setq vc-handled-backends '(Git))
 (setq remote-file-name-inhibit-locks t)
 (setq tramp-inline-compress-start-size 1000)
 (setq tramp-copy-size-limit 10000)
 (setq tramp-verbose 1)
+#+end_src
 
-;; Without this line, we get the "Forbidden reentrant call of Tramp" bug: https://github.com/joaotavora/eglot/issues/859
+eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden reentrant call of Tramp" message and freezing.  In the meantime, this setting was recommended.
+
+#+begin_src emacs-lisp
 (setq tramp-use-ssh-controlmaster-options nil)
+#+end_src
 
-;; Enable .dir-locals.el for remote files
-;; REMINDME: This can case a HUGE slowdown when doing things like `project-find-file'
+For some time I was having a lot of trouble with slowness over Tramp, and after careful scrutiny of the logs on (I belive) =tramp-verbose 6=, I found out that enabling remote dir-locals was causing a huge bottleneck.  On every operation it would trace up the filesystem tree back to the root directory, scanning for a ~.dir-locals~ file.  Since some of the drives were network-mounted, this caused thousands of network calls per file operation, obviously slowing things down a lot.  Because of this, I've opted to simply disable ~.dir-locals~ over Tramp entirely, since I don't really use it much, if at all.
+
+#+begin_src emacs-lisp :tangle no
 ;; (setq enable-remote-dir-locals t)
+#+end_src
 
+#+begin_src emacs-lisp
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path "~/.local/bin")
   (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
   ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
-  ;; (add-to-list 'tramp-connection-properties
-  ;;              (list (regexp-quote "/ssh:7p")
-  ;;                    "remote-shell" "/usr/bin/ksh"))
   )
 #+end_src
 
-[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable thing to put in, since I so frequently use VC over tramp.
+[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable thing to put in, since I so frequently use VC over tramp.  Fully disabling VC would include this snippet:
 
 #+begin_src emacs-lisp :tangle no
 (setq vc-ignore-dir-regexp
@@ -1323,16 +1336,12 @@ To have ~eglot~ always start up for a python buffer, we would tangle this line i
               tramp-file-name-regexp))
 #+end_src
 
-Additionally, these came up as potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs issues]].
+Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs issues]].
+
 #+begin_src emacs-lisp :tangle no
-(setq tramp-inline-compress-start-size 1000)
-(setq tramp-copy-size-limit 10000)
-(setq vc-handled-backends '(Git))
-(setq tramp-verbose 1)
+
 (setq tramp-default-method "scp")
-(setq tramp-use-ssh-controlmaster-options nil)
 (setq projectile--mode-line "Projectile")
-(setq tramp-verbose 1)
 #+end_src
 
 I often need to set these in ~/.ssh/config for TRAMP to speed up
@@ -1348,7 +1357,7 @@ Host *
 
 
 * LSP
-Another section that's almost totally obsolete, but kept in case I need references to it.  Since =eglot= will be a built-in package for future emacs, I'm going to stick to it.
+Another section that's totally obsolete, but kept in case I need references to it.  Since =eglot= will be a built-in package for future emacs, I'm going to stick to it.
 
 #+begin_src emacs-lisp :tangle no
 (require 'lsp-mode)
@@ -1411,9 +1420,9 @@ returns the command to execute."
 #+end_src
 
 
-* TreeSitter
+* TODO TreeSitter
+REMINDME: Convert to use-package
 #+begin_src emacs-lisp
-;; TODO: Convert this to use-package
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 (global-tree-sitter-mode)

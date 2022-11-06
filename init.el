@@ -241,7 +241,10 @@ emacs config site with matching `extension' regexp"
 ;; Nonstandard bindings:1 ends here
 
 ;; [[file:README.org::*Super bindings][Super bindings:1]]
+(global-set-key (kbd "s-c") #'kill-ring-save)
 (global-set-key (kbd "s-s") #'save-buffer)
+(global-set-key (kbd "s-t") #'tab-new)
+(global-set-key (kbd "s-v") #'yank)
 ;; Super bindings:1 ends here
 
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
@@ -777,26 +780,21 @@ Jumps at tangled code from org src block."
 (setq tramp-inline-compress-start-size 1000)
 (setq tramp-copy-size-limit 10000)
 (setq tramp-verbose 1)
+;; Tramp:1 ends here
 
-;; Without this line, we get the "Forbidden reentrant call of Tramp" bug: https://github.com/joaotavora/eglot/issues/859
+;; [[file:README.org::*Tramp][Tramp:2]]
 (setq tramp-use-ssh-controlmaster-options nil)
+;; Tramp:2 ends here
 
-;; Enable .dir-locals.el for remote files
-;; REMINDME: This can case a HUGE slowdown when doing things like `project-find-file'
-;; (setq enable-remote-dir-locals t)
-
+;; [[file:README.org::*Tramp][Tramp:4]]
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path "~/.local/bin")
   (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
   ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
-  ;; (add-to-list 'tramp-connection-properties
-  ;;              (list (regexp-quote "/ssh:7p")
-  ;;                    "remote-shell" "/usr/bin/ksh"))
   )
-;; Tramp:1 ends here
+;; Tramp:4 ends here
 
 ;; [[file:README.org::*TreeSitter][TreeSitter:1]]
-;; TODO: Convert this to use-package
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 (global-tree-sitter-mode)
