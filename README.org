@@ -722,37 +722,37 @@ If there is a convenient way to interact with this buffer from default key bindi
   "Close the *Completions* buffer without switching to it"
   (interactive)
   (kill-buffer "*Completions*"))
+#+end_src
 
-;; The combination of these two allows me to slam C-n several times to
-;; quickly go down the candidate list
+Much like Vim's built-in completion with the pop-up menu, I set =C-n= and =C-p= as a way to select completion candidates out of the ~*Completions*~ buffer.
+
+#+begin_src emacs-lisp
 (define-key completion-in-region-mode-map (kbd "C-n") 'renz/jump-completion)
 (define-key completion-list-mode-map (kbd "C-n") 'next-completion)
 (define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
+#+end_src
 
-;; REMINDME Don't use RET, TAB, and similar because there's a good
-;; chance you'll mess up required functionality in shell, minibuffer,
-;; and related modes
+For a while, I thought keys like =RET=, =TAB=, and similar would be intuitive candidates for accepting completion candidates.  That turned out to be a problem because there's a good chance you'll mess up required functionality in shell, minibuffer, and related modes.  So, instead, I opt for the similar =C-j=.
 
-;; Accept the first result in the completion buffer without switching
+#+begin_src emacs-lisp
 (define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
 #+end_src
 
+It's worth noting that the ~fido-vertical~ built-in is pretty good, but I had issues with micro-freezes in some situations.  [[https://github.com/minad/vertico][vertico]], on the other hand, has been lightning quick, and has intuitive keybindings that don't require any futzing.  /Especially/ in the case where I'm looking to tab-complete things like =C-x C-f /ssh:<thing>=.
+
 #+begin_src emacs-lisp
-;; Fuzzy, live minibuffer completion
 (vertico-mode)
-;; Vertico works better for C-x C-f /ssh:<thing> than the built-in icomplete
+#+end_src
 
-;; Use TAB in place of C-M-i for completion-at-point
-;; REMINDME: I think this causes some issues in shell-mode and the
-;; like?  Can't remember...
-;; (setq tab-always-indent 'complete)
+Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd much prefer to just use the easier and more intuitive =TAB=.
 
-
+#+begin_src emacs-lisp
+(setq tab-always-indent 'complete)
 #+end_src
 
 ** =company-mode=
-Mostly obsolete, since I don't use company anymore, but kept for historical reasons, especially if I ever decide to go back.
+This section is obsolete and not tangled into the final ~init.el~, since I don't use company anymore.  I do keep it around for historical reasons, though, in case if I ever decide to go back.
 
 #+begin_src emacs-lisp :tangle no
 ;; Company causes TRAMP to hang if we look for commands too fast
