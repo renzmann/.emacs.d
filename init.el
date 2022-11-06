@@ -160,6 +160,7 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c o b d") #'org-babel-detangle)
 (global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
 (global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
+(global-set-key (kbd "C-c o j") #'consult-org-heading)
 (global-set-key (kbd "C-c o o") #'renz/jump-org)
 (global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
 ;; =C-c o= Org bindings:1 ends here
@@ -421,9 +422,9 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Backup files][Backup files:1]]
 (setq backup-directory-alist
-      `((".*" . temporary-file-directory,))
+      `(("." . temporary-file-directory))
       auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+      `(("." ,temporary-file-directory t)))
 ;; Backup files:1 ends here
 
 ;; [[file:README.org::*Code syntax in Markdown][Code syntax in Markdown:1]]
@@ -433,13 +434,6 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*Esup][Esup:1]]
 (setq esup-depth 0)
 ;; Esup:1 ends here
-
-;; [[file:README.org::*Minimap][Minimap:1]]
-(use-package minimap
-  :config
-  (when (display-graphic-p)
-    (minimap-mode t)))
-;; Minimap:1 ends here
 
 ;; [[file:README.org::*Mode line][Mode line:1]]
 (setq column-number-mode t
@@ -563,8 +557,8 @@ emacs config site with matching `extension' regexp"
     (require 'ob-async)
     (add-hook 'ob-async-pre-execute-src-block-hook
               #'(lambda ()
-	          (require 'ob-sql-mode)
-	          (require 'hive2))))
+                  (require 'ob-sql-mode)
+                  (require 'hive2))))
   )
 
 (setq ob-async-no-async-languages-alist '("python"))
