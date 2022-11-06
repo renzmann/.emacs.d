@@ -1,6 +1,6 @@
 #+title: My Literate =.emacs.d=
 #+author: Robb Enzmann
-#+property: header-args:emacs-lisp :tangle init.el
+#+property: header-args:emacs-lisp :tangle init.el :comments link
 #+OPTIONS: toc:2 num:nil
 
 Want to use it? Go ahead!
@@ -35,7 +35,7 @@ My configuration is a single literate programming document, which is tangled int
 
 To comply with the Emacs conventions for libraries, the tangled init.el must have the following [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][header]] and [[Footer][footer:]]
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :comments no
 ;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2020-2022 Robert Enzmann
@@ -81,7 +81,7 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
 
 
 * Theme
-[[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will set creates larger, bolder headings when in =org-mode=.
+[[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will creates larger, bolder headings when in [[Org-mode]].
 
 #+begin_src emacs-lisp
 (setq ef-themes-headings
@@ -794,7 +794,7 @@ Provides popup, suggest-as-you type like we would expect from any modern IDE.  I
 #+end_src
 
 
-* Org-mode
+* TODO Org-mode
 There is a beefy startup hit from eagerly loading org-tempo, so eventually we'll have to come around and get this lazy-loaded correctly.
 
 #+begin_src emacs-lisp :tangle no
@@ -804,8 +804,12 @@ There is a beefy startup hit from eagerly loading org-tempo, so eventually we'll
 #+begin_src emacs-lisp
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
-;; (setq org-goto-interface 'outline-path-completion)
+#+end_src
 
+I use =consult-org-heading= for jumping between headers now, so I no longer tangle this line into my config.
+
+#+begin_src emacs-lisp :tangle no
+(setq org-goto-interface 'outline-path-completion)
 #+end_src
 
 When displaying images, I usually like to resize them to a comfortable width, which the following enables.
@@ -817,7 +821,6 @@ When displaying images, I usually like to resize them to a comfortable width, wh
 I often want to kill and paste entire ~src~ blocks at a time.  As far as I know, there's no built-in command for that, so I just made my own.
 
 #+begin_src emacs-lisp
-;; A kill-block command for working with src blocks
 (defun renz/org-kill-src-block ()
   "Kill the src block around point, if applicable."
   (interactive)
@@ -1392,7 +1395,7 @@ returns the command to execute."
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an Emacs package.  So that's it, let's gracefully finish tangling everything:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :comments no
 (provide 'init.el)
 ;;; init.el ends here
 #+end_src
