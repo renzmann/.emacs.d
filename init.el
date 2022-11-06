@@ -420,12 +420,13 @@ emacs config site with matching `extension' regexp"
   (setq pixel-scroll-precision-large-scroll-height 35.0))
 ;; Smooth scrolling:1 ends here
 
-;; [[file:README.org::*Backup files][Backup files:1]]
+;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
 (setq backup-directory-alist
       `(("." . temporary-file-directory))
-      auto-save-file-name-transforms
-      `(("." ,temporary-file-directory t)))
-;; Backup files:1 ends here
+      ;; auto-save-file-name-transforms
+      ;; `(("." ,temporary-file-directory t))
+      )
+;; Backup and auto-save files:1 ends here
 
 ;; [[file:README.org::*Code syntax in Markdown][Code syntax in Markdown:1]]
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
@@ -502,21 +503,24 @@ emacs config site with matching `extension' regexp"
 (setq tab-always-indent 'complete)
 ;; Autocompletion:8 ends here
 
-;; [[file:README.org::*=corfu=][=corfu=:1]]
+;; [[file:README.org::*Autocompletion][Autocompletion:9]]
 (unless (display-graphic-p)
   (corfu-terminal-mode +1))
 
-(defun renz/disable-corfu-remote ()
-  (when (and (fboundp 'corfu-mode)
-             (file-remote-p default-directory))
-    (corfu-mode -1)))
 
 (setq corfu-auto t
       corfu-auto-delay 0.0
       corfu-quit-no-match 'separator)
 
 (global-corfu-mode)
-;; =corfu=:1 ends here
+;; Autocompletion:9 ends here
+
+;; [[file:README.org::*Autocompletion][Autocompletion:10]]
+(defun renz/disable-corfu-remote ()
+  (when (and (fboundp 'corfu-mode)
+             (file-remote-p default-directory))
+    (corfu-mode -1)))
+;; Autocompletion:10 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:2]]
 (setq org-confirm-babel-evaluate nil)
@@ -560,12 +564,17 @@ emacs config site with matching `extension' regexp"
                   (require 'ob-sql-mode)
                   (require 'hive2))))
   )
+;; Org-mode:7 ends here
 
+;; [[file:README.org::*Org-mode][Org-mode:8]]
 (setq ob-async-no-async-languages-alist '("python"))
-(setq org-html-htmlize-output-type 'css)
+;; Org-mode:8 ends here
 
-;; For navigating to tangled src blocks
-;; https://emacs.stackexchange.com/a/69591
+;; [[file:README.org::*Org-mode][Org-mode:9]]
+(setq org-html-htmlize-output-type 'css)
+;; Org-mode:9 ends here
+
+;; [[file:README.org::*Org-mode][Org-mode:10]]
 (defun renz/org-babel-tangle-jump-to-src ()
   "The opposite of `org-babel-tangle-jump-to-org'.
 Jumps at tangled code from org src block."
@@ -588,15 +597,16 @@ Jumps at tangled code from org src block."
           (beginning-of-buffer)
           (search-forward search-comment)))
     (message "Cannot jump to tangled file because point is not at org src block.")))
+;; Org-mode:10 ends here
 
-;; TODO states
+;; [[file:README.org::*Org-mode][Org-mode:11]]
 (setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
-;; Org-mode:7 ends here
+;; Org-mode:11 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:8]]
+;; [[file:README.org::*Org-mode][Org-mode:12]]
 (setq org-agenda-files '("~/.emacs.d/org/work.org")
       org-hugo-front-matter-format "yaml")
-;; Org-mode:8 ends here
+;; Org-mode:12 ends here
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
 ;; TODO: move this to the misc./ window settings
@@ -674,68 +684,24 @@ Jumps at tangled code from org src block."
 ;; SQL:1 ends here
 
 ;; [[file:README.org::*Python][Python:1]]
-;; Example error from pyright
-;; --------------------------
-;; /home/robb/tmp/errors.py/
-;;   /home/robb/tmp/errors.py:1:1 - error: "foo" is not defined (reportUndefinedVariable)
-;;   /home/robb/tmp/errors.py:1:1 - warning: Expression value is unused (reportUnusedExpression)
-;;   /home/robb/tmp/errors.py:4:12 - error: Operator "+" not supported for types "str" and "Literal[1]"
-;;     Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
-;; 2 errors, 1 warning, 0 informations
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
-               ;; It would be nice if we could also capture the
-               ;; \\(error\\|warning\\) part as "KIND", but I got messed
-               ;; up on it
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
   (add-to-list 'compilation-error-regexp-alist 'pyright))
+;; Python:1 ends here
 
-;; Extra check commands for C-c C-v
+;; [[file:README.org::*Python][Python:2]]
 (with-eval-after-load 'python
   (if (executable-find "mypy")
       (setq python-check-command "mypy"))
   (if (executable-find "pyright")
       (setq python-check-command "pyright")))
+;; Python:2 ends here
 
-;; I ran into something similar to this on Windows:
-;; https://github.com/jorgenschaefer/elpy/issues/733
-;;
-;; The culprit was "App Execution Aliases" with python and python3
-;; redirecting to the windows store. Using:
-;;
-;;     winkey -> Manage app execution aliases -> uncheck python and python3
-;;
-;; fixed it.
-
-;; Also on Windows - a `pip install` of `pyreadline3' is required to
-;; make tab-completion work at all. It provides the `readline' import
-;; symbol.
-
-;; Virtualenvs - require .dir-locals.el to have e.g.:
-;;   ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
-;; However, this only operates on `run-python' shells.
-;;
-;; `pyvenv' solves the otherwise very annoying problem of getting
-;; external tools like `compile' and `eshell' to also use our virtual
-;; environment's python.  I may still use .dir-locals.el to set things
-;; like the python-check-command on a per-project basis, though.
-(when (package-installed-p 'pyvenv)
-  (pyvenv-mode)
-  ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
-  ;; (pyvenv-tracking-mode)
-  ;; (setenv "WORKON_HOME" "~/.conda/envs")
-  )
-
-;; Enable semantic mode for more intelligent code parsing
-;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
-;; (add-hook 'python-mode-hook 'semantic-mode)
-
-;; Don't mark the check command and virtualenv variables as unsafe
+;; [[file:README.org::*Python][Python:6]]
 (put 'python-check-command 'safe-local-variable #'stringp)
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
-
-;; (add-hook 'python-mode-hook 'eglot-ensure)
-;; Python:1 ends here
+;; Python:6 ends here
 
 ;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
 (when (eq system-type 'windows-nt)
