@@ -649,7 +649,7 @@ Enable syntax highlighting within code fences for markdown
 * Minimap
 I have a love-hate relationship with the minimap.  Sometimes it feels great, especially when I'm doing a mouse-heavy demo for navigation.  Other times it blocks the echo area when the window is too small and it drives me crazy.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package minimap
   :config
   (when (display-graphic-p)
