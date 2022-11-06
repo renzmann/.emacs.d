@@ -182,6 +182,9 @@ emacs config site with matching `extension' regexp"
     (consult-grep)))
 #+end_src
 
+#+RESULTS:
+: renz/consult-grep
+
 ** Expanded defaults
 
 #+begin_src emacs-lisp
@@ -803,9 +806,17 @@ There is a beefy startup hit from eagerly loading org-tempo, so eventually we'll
 (setq org-edit-src-content-indentation 0)
 ;; (setq org-goto-interface 'outline-path-completion)
 
-;; Allow for custom resize of images when displaying in org mode
-(setq org-image-actual-width nil)
+#+end_src
 
+When displaying images, I usually like to resize them to a comfortable width, which the following enables.
+
+#+begin_src emacs-lisp
+(setq org-image-actual-width nil)
+#+end_src
+
+I often want to kill and paste entire ~src~ blocks at a time.  As far as I know, there's no built-in command for that, so I just made my own.
+
+#+begin_src emacs-lisp
 ;; A kill-block command for working with src blocks
 (defun renz/org-kill-src-block ()
   "Kill the src block around point, if applicable."
@@ -813,13 +824,19 @@ There is a beefy startup hit from eagerly loading org-tempo, so eventually we'll
   (org-babel-remove-result)
   (org-mark-element)
   (kill-region nil nil t))
+#+end_src
 
+I also use ~org-mode~ for writing [[https://robbmann.io/posts][my blog.]]  With a little help from [[https://willschenk.com/articles/2019/using_org_mode_in_hugo/][an article]] we have exporting to Hugo-specific markdown.  Without the export, Hugo can read Org files /okay-ish/, but you wind up missing some nice QoL features, like header links.
+
+#+begin_src emacs-lisp
 (with-eval-after-load 'ox
   (require 'ox-hugo))
+#+end_src
 
-;; https://willschenk.com/articles/2019/using_org_mode_in_hugo/
+Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup-indented t)= t get indentation under each header, but this was interfering with the beautification features from ~org-modern~.  Preferring the latter over the former, I've removed the =org-startup-indented= call.
+
+#+begin_src emacs-lisp
 (with-eval-after-load 'org
-  ;; (setq org-startup-indented t) ; Enable `org-indent-mode' by default
   (add-hook 'org-mode-hook #'visual-line-mode)
 
   (org-babel-do-load-languages
