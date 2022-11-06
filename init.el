@@ -11,10 +11,13 @@
 
 ;;; Code:
 
+;; [[file:README.org::*Custom][Custom:1]]
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
   (load custom-file 'noerror))
+;; Custom:1 ends here
 
+;; [[file:README.org::*Packages][Packages:1]]
 (eval-when-compile
   (package-autoremove)
   (unless (package-installed-p 'use-package)
@@ -22,7 +25,9 @@
     (package-refresh-contents)
     (package-install 'use-package))
   (require 'use-package))
+;; Packages:1 ends here
 
+;; [[file:README.org::*Theme][Theme:1]]
 (setq ef-themes-headings
       '((0 . (1.9))
         (1 . (1.8))
@@ -33,13 +38,21 @@
         (6 . (1.3))
         (7 . (1.2))
         (t . (1.1))))
+;; Theme:1 ends here
 
+;; [[file:README.org::*Theme][Theme:2]]
 (load-theme 'ef-cherie :no-confirm)
+;; Theme:2 ends here
 
+;; [[file:README.org::*Theme][Theme:3]]
 (setq ef-themes-to-toggle '(ef-cherie ef-light))
+;; Theme:3 ends here
 
+;; [[file:README.org::*Theme][Theme:4]]
 (set-face-attribute 'default nil :family "Hack")
+;; Theme:4 ends here
 
+;; [[file:README.org::*Keybound functions][Keybound functions:1]]
 (defun renz/--jump-section (dirname prompt extension)
   "For internal use: prompt for a file under `dirname' in the user
 emacs config site with matching `extension' regexp"
@@ -64,7 +77,7 @@ emacs config site with matching `extension' regexp"
 (defun renz/jump-init ()
   (interactive)
   (find-file (expand-file-name "README.org" user-emacs-directory))
-  (org-goto))
+  (consult-org-heading))
 
 (defun renz/recentf-find-file ()
   "Find a recent file using the minibuffer with completion"
@@ -84,7 +97,9 @@ emacs config site with matching `extension' regexp"
   (if (executable-find "rg")
       (consult-ripgrep)
     (consult-grep)))
+;; Keybound functions:1 ends here
 
+;; [[file:README.org::*Expanded defaults][Expanded defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-h") 'backward-kill-sexp)
 
@@ -115,7 +130,9 @@ emacs config site with matching `extension' regexp"
     (interactive)
     (funcall #'isearch-done nopush edit)
     (when isearch-other-end (goto-char isearch-other-end))))
+;; Expanded defaults:1 ends here
 
+;; [[file:README.org::*C-c bindings][C-c bindings:1]]
 ;; (global-set-key (kbd "C-c a") #')
 ;; (global-set-key (kbd "C-c b") #')
 (global-set-key (kbd "C-c c i") #'change-inner)
@@ -136,32 +153,72 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c l s") #'eglot-shutdown)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
 (global-set-key (kbd "C-c n") #'minimap-mode)
+;; C-c bindings:1 ends here
+
+;; [[file:README.org::*=C-c o= Org bindings][=C-c o= Org bindings:1]]
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o b d") #'org-babel-detangle)
 (global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
 (global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
 (global-set-key (kbd "C-c o o") #'renz/jump-org)
 (global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
+;; =C-c o= Org bindings:1 ends here
+
+;; [[file:README.org::*=C-c o= Org bindings][=C-c o= Org bindings:2]]
 ;; (global-set-key (kbd "C-c p") #')
 ;; (global-set-key (kbd "C-c q") #')
+;; =C-c o= Org bindings:2 ends here
+
+;; [[file:README.org::*=C-c o= Org bindings][=C-c o= Org bindings:3]]
 (global-set-key (kbd "C-c r") #'renz/recentf-find-file)
+;; =C-c o= Org bindings:3 ends here
+
+;; [[file:README.org::*=C-c s= Settings][=C-c s= Settings:1]]
 (global-set-key (kbd "C-c s i") #'renz/jump-init)
 ;; (global-set-key (kbd "C-c s k") #'renz/jump-keybindings)
 ;; (global-set-key (kbd "C-c s s") #'renz/jump-configuration)
+;; =C-c s= Settings:1 ends here
+
+;; [[file:README.org::*=C-c s= Settings][=C-c s= Settings:2]]
 ;; (global-set-key (kbd "C-c t") #')
+;; =C-c s= Settings:2 ends here
+
+;; [[file:README.org::*=C-c u= Consult grep/rg][=C-c u= Consult grep/rg:1]]
 (global-set-key (kbd "C-c u") #'renz/consult-grep)
+;; =C-c u= Consult grep/rg:1 ends here
+
+;; [[file:README.org::*=C-c v=][=C-c v=:1]]
 ;; (global-set-key (kbd "C-c v") #')
+;; =C-c v=:1 ends here
+
+;; [[file:README.org::*=C-c v=][=C-c v=:2]]
 ;; (global-set-key (kbd "C-c w") #')
+;; =C-c v=:2 ends here
+
+;; [[file:README.org::*=C-c v=][=C-c v=:3]]
 ;; (global-set-key (kbd "C-c x") #')
+;; =C-c v=:3 ends here
+
+;; [[file:README.org::*=C-c y= Yank inner/outer][=C-c y= Yank inner/outer:1]]
 (global-set-key (kbd "C-c y i") #'copy-inner)
 (global-set-key (kbd "C-c y o") #'copy-outer)
+;; =C-c y= Yank inner/outer:1 ends here
+
+;; [[file:README.org::*=C-c z=][=C-c z=:1]]
 ;; (global-set-key (kbd "C-c z") #')
+;; =C-c z=:1 ends here
+
+;; [[file:README.org::*=C-c= Other bindings][=C-c= Other bindings:1]]
 (global-set-key (kbd "C-c ;") #'comment-line)  ; TTY-friendly
 (global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
+;; =C-c= Other bindings:1 ends here
 
+;; [[file:README.org::*Meta/Alt Modifications][Meta/Alt Modifications:1]]
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "M-S-j") 'dired-goto-file))
+;; Meta/Alt Modifications:1 ends here
 
+;; [[file:README.org::*F5-F9][F5-F9:1]]
 (global-set-key (kbd "<f5>") #'compile)
 (global-set-key (kbd "M-<f5>") #'recompile)
 ;; (global-set-key (kbd "<f6>") #')
@@ -174,55 +231,72 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "M-<f9>") #'eshell)
 (global-set-key (kbd "S-<f9>") #'ansi-term)
 (global-set-key (kbd "s-<f9>") #'shell)
+;; F5-F9:1 ends here
 
+;; [[file:README.org::*Nonstandard bindings][Nonstandard bindings:1]]
 (when (eq system-type 'darwin)
   (with-eval-after-load 'projectile
     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)))
+;; Nonstandard bindings:1 ends here
 
+;; [[file:README.org::*Super bindings][Super bindings:1]]
 (global-set-key (kbd "s-s") #'save-buffer)
+;; Super bindings:1 ends here
 
-;; Fill-column for visual lines
+;; [[file:README.org::*Fill-column][Fill-column:1]]
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
-(setq fill-column 120)
+(setq-default fill-column 120)
+;; Fill-column:1 ends here
 
+;; [[file:README.org::*Scroll bar][Scroll bar:1]]
 ;; Scroll bar
 (scroll-bar-mode -1)
+;; Scroll bar:1 ends here
 
+;; [[file:README.org::*Inline emojis][Inline emojis:1]]
 ;; Emojis inline 👍
 ;; (add-hook 'after-init-hook #'global-emojify-mode)
+;; Inline emojis:1 ends here
 
-;; Don't really need the splash screen
+;; [[file:README.org::*Inihibit splash screen][Inihibit splash screen:1]]
 (setq inhibit-splash-screen t)
+;; Inihibit splash screen:1 ends here
 
-;; Automatically visit symlink sources
+;; [[file:README.org::*Automatically visit symlink sources][Automatically visit symlink sources:1]]
 (setq find-file-visit-truename t)
+(setq vc-follow-symlinks t)
+;; Automatically visit symlink sources:1 ends here
 
-;; Indent with spaces, not tabs by default
+;; [[file:README.org::*Indent with spaces][Indent with spaces:1]]
 (setq-default indent-tabs-mode nil)
+;; Indent with spaces:1 ends here
 
-;; For files containing color escape codes, this provides a way to
-;; render the colors in-buffer
+;; [[file:README.org::*Render ASCII color escape codes][Render ASCII color escape codes:1]]
 (defun renz/display-ansi-colors ()
   (interactive)
   (require 'ansi-color)
   (ansi-color-apply-on-region (point-min) (point-max)))
+;; Render ASCII color escape codes:1 ends here
 
-;; Enable horizontal scrolling with mouse
-;; https://stackoverflow.com/a/67758169
+;; [[file:README.org::*Enable horizontal scrolling with mouse][Enable horizontal scrolling with mouse:1]]
 (setq mouse-wheel-tilt-scroll t)
+;; Enable horizontal scrolling with mouse:1 ends here
 
-;; https://www.masteringemacs.org/article/demystifying-emacs-window-manager
+;; [[file:README.org::*Window management][Window management:1]]
 (unless (version< emacs-version "27.1")
   (setq switch-to-buffer-obey-display-actions t))
+;; Window management:1 ends here
 
-;; Enable up/downcase-region
+;; [[file:README.org::*Enable up/downcase-region][Enable up/downcase-region:1]]
 (put 'upcase-region 'disabled nil)
 (put 'downcase-region 'disabled nil)
+;; Enable up/downcase-region:1 ends here
 
-;; Automatically update buffers when contents change on disk
+;; [[file:README.org::*Automatically update buffers when contents change on disk][Automatically update buffers when contents change on disk:1]]
 (global-auto-revert-mode)
+;; Automatically update buffers when contents change on disk:1 ends here
 
-;; Initial frame size for GUI
+;; [[file:README.org::*Initial frame size for GUI][Initial frame size for GUI:1]]
 (setq renz/frame-default-alist
       '(
         (tool-bar-lines . 0)
@@ -234,57 +308,69 @@ emacs config site with matching `extension' regexp"
 (when (display-graphic-p)
   (setq initial-frame-alist renz/frame-default-alist)
   (setq default-frame-alist renz/frame-default-alist))
+;; Initial frame size for GUI:1 ends here
 
-;; Adds helpful information in the margin when using the minibuffer
-(when (package-installed-p 'marginalia)
-  (marginalia-mode))
+;; [[file:README.org::*Marginalia][Marginalia:1]]
+(use-package marginalia
+  :ensure t
+  :config (marginalia-mode))
+;; Marginalia:1 ends here
 
-;; Highlight the line point is on
+;; [[file:README.org::*Highlight the line point is on][Highlight the line point is on:1]]
 (global-hl-line-mode)
+;; Highlight the line point is on:1 ends here
 
+;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
+;; Stop stupid bell:1 ends here
 
-;; Clock in statusline
+;; [[file:README.org::*Clock in mode line][Clock in mode line:1]]
 (setq display-time-day-and-date t)
 (display-time)
+;; Clock in mode line:1 ends here
 
-;; Enable split-window dired copying
+;; [[file:README.org::*Enable split-window dired copying][Enable split-window dired copying:1]]
 (setq dired-dwim-target t)
+;; Enable split-window dired copying:1 ends here
 
-;; Automatically create matching parens in programming modes
+;; [[file:README.org::*Automatically create matching parens in programming modes][Automatically create matching parens in programming modes:1]]
 (add-hook 'prog-mode-hook (electric-pair-mode t))
 (add-hook 'prog-mode-hook (show-paren-mode t))
+;; Automatically create matching parens in programming modes:1 ends here
 
-;; Follow symlinks to the real file
-(setq vc-follow-symlinks t)
-
-;; Show markers for trailing whitespace and delete on save
+;; [[file:README.org::*Delete whitespace on save][Delete whitespace on save:1]]
 ;; (add-hook 'prog-mode-hook 'whitespace-mode)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; Delete whitespace on save:1 ends here
 
-;; Don't wrap lines
+;; [[file:README.org::*Don't wrap lines][Don't wrap lines:1]]
 (setq-default truncate-lines t)
 (add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
+;; Don't wrap lines:1 ends here
 
-;; Relative line numbers in programming and writing modes
+;; [[file:README.org::*Relative line numbers][Relative line numbers:1]]
 (defun renz/display-line-numbers ()
   (setq display-line-numbers 'relative))
+;; Relative line numbers:1 ends here
 
-;; TODO line numbers mess up fringe for org-modern.  Any way to
-;; combine both?
+;; [[file:README.org::*Relative line numbers][Relative line numbers:2]]
 (add-hook 'prog-mode-hook 'renz/display-line-numbers)
-;; (add-hook 'text-mode-hook 'renz/display-line-numbers)
+;; Relative line numbers:2 ends here
 
-;; Delete the region when we yank on top of it
+;; [[file:README.org::*Delete region when we yank on top of it][Delete region when we yank on top of it:1]]
 (delete-selection-mode t)
+;; Delete region when we yank on top of it:1 ends here
 
-;; Enable mouse in terminal
+;; [[file:README.org::*Enable mouse in terminal/TTY][Enable mouse in terminal/TTY:1]]
 (xterm-mouse-mode 1)
+;; Enable mouse in terminal/TTY:1 ends here
 
-;; Scroll the *compilation* window as text appears
+;; [[file:README.org::*Compilation][Compilation:1]]
 (setq compilation-scroll-output t)
+;; Compilation:1 ends here
 
+;; [[file:README.org::*Compilation][Compilation:2]]
 ;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
 (defun renz/colorize-compilation-buffer ()
   "Enable colors in the *compilation* buffer."
@@ -293,81 +379,95 @@ emacs config site with matching `extension' regexp"
     (ansi-color-apply-on-region (point-min) (point-max))))
 
 (add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
+;; Compilation:2 ends here
 
-;; Disable tool bar
+;; [[file:README.org::*Tool bar][Tool bar:1]]
 (tool-bar-mode -1)
-;; The MENU bar, on the other hand (menu-bar-mode), is very handy, and
-;; I don't think I'll ever disable it
+;; Tool bar:1 ends here
 
-;; Show laptop battery in the modeline
+;; [[file:README.org::*Show laptop battery][Show laptop battery:1]]
 (display-battery-mode t)
+;; Show laptop battery:1 ends here
 
-;; Disable asking about risky variables from .dir-locals.el
-;; https://emacs.stackexchange.com/a/44604
+;; [[file:README.org::*Ignore risky .dir-locals.el][Ignore risky .dir-locals.el:1]]
 (advice-add 'risky-local-variable-p :override #'ignore)
+;; Ignore risky .dir-locals.el:1 ends here
 
-;; Faster grep
+;; [[file:README.org::*Prefer =rg= over =grep=][Prefer =rg= over =grep=:1]]
 (when (executable-find "rg")
   (setq grep-program "rg"))
+;; Prefer =rg= over =grep=:1 ends here
 
-;; Make dired human-readable
+;; [[file:README.org::*Make ~dired~ human-readable][Make ~dired~ human-readable:1]]
 (setq dired-listing-switches "-alFh")
 (setq-default dired-hide-details-mode t)
+;; Make ~dired~ human-readable:1 ends here
 
-;; Don't quit emacs by accident
+;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
 (setq confirm-kill-emacs 'yes-or-no-p)
+;; Confirm when exiting Emacs:1 ends here
 
-;; If aspell is installed, use it instead of ispell
+;; [[file:README.org::*Prefer ~aspell~ over ~ispell~][Prefer ~aspell~ over ~ispell~:1]]
 (when (executable-find "aspell")
   (setq ispell-program-name "aspell"))
+;; Prefer ~aspell~ over ~ispell~:1 ends here
 
-;; Smooth as butter scrolling
+;; [[file:README.org::*Smooth scrolling][Smooth scrolling:1]]
 (if (version< emacs-version "29.0")
     (pixel-scroll-mode)
   (pixel-scroll-precision-mode 1)
   (setq pixel-scroll-precision-large-scroll-height 35.0))
+;; Smooth scrolling:1 ends here
 
-;; Enable minimap if on graphical display
-;; (when (display-graphic-p)
-;;   (minimap-mode t))
+;; [[file:README.org::*Backup files][Backup files:1]]
+(setq backup-directory-alist
+      `((".*" . temporary-file-directory,))
+      auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+;; Backup files:1 ends here
 
-;; Keep all backup files in one place
-;; (let ((backup-dir (concat user-emacs-directory "backups")))
-;;   (make-directory backup-dir t)
-;;   (setq backup-directory-alist '(("." . backup-dir))))
-(setq backup-directory-alist nil)
-
-;; Enable syntax highlighting within code fences for markdown
+;; [[file:README.org::*Code syntax in Markdown][Code syntax in Markdown:1]]
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+;; Code syntax in Markdown:1 ends here
 
+;; [[file:README.org::*Esup][Esup:1]]
 (setq esup-depth 0)
+;; Esup:1 ends here
 
+;; [[file:README.org::*Minimap][Minimap:1]]
+(use-package minimap
+  :config
+  (when (display-graphic-p)
+    (minimap-mode t)))
+;; Minimap:1 ends here
+
+;; [[file:README.org::*Mode line][Mode line:1]]
 (setq column-number-mode t
       mode-line-in-non-selected-windows t)
+;; Mode line:1 ends here
 
+;; [[file:README.org::*=eldoc=][=eldoc=:1]]
 (setq eldoc-echo-area-use-multiline-p nil)
+;; =eldoc=:1 ends here
 
-;; "flex" is the built-in "fuzzy" completion style
+;; [[file:README.org::*Autocompletion][Autocompletion:1]]
 (setq completion-styles '(flex basic partial-completion emacs22))
-(if (not (package-installed-p 'orderless))
-    (add-to-list 'completion-styles 'flex)
-  (require 'orderless)
+;; Autocompletion:1 ends here
+
+;; [[file:README.org::*Autocompletion][Autocompletion:2]]
+(use-package orderless
+  :ensure t
+  :config
   (add-to-list 'completion-styles 'orderless)
-  (setq completion-category-overrides '((file (styles basic partial-completion)))))
+  :custom
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+;; Autocompletion:2 ends here
 
-;; Fuzzy, live minibuffer completion
-(vertico-mode)
-;; Vertico works better for C-x C-f /ssh:<thing> than the built-in icomplete
-
-;; Use TAB in place of C-M-i for completion-at-point
-;; REMINDME: I think this causes some issues in shell-mode and the
-;; like?  Can't remember...
-;; (setq tab-always-indent 'complete)
-
-;; Display candidates in *Completion* buffer vertically as a single list
+;; [[file:README.org::*Autocompletion][Autocompletion:3]]
 (setq completions-format 'one-column)
+;; Autocompletion:3 ends here
 
-;; Shortcuts for common completion actions
+;; [[file:README.org::*Autocompletion][Autocompletion:4]]
 (defun renz/completion-accept ()
   "Expand current text to first completion result"
   (interactive)
@@ -384,24 +484,31 @@ emacs config site with matching `extension' regexp"
   (next-completion 1))
 
 (defun renz/completion-kill-completion-buffer ()
-  "Close the *Completion* buffer without switching to it"
+  "Close the *Completions* buffer without switching to it"
   (interactive)
   (kill-buffer "*Completions*"))
+;; Autocompletion:4 ends here
 
-;; The combination of these two allows me to slam C-n several times to
-;; quickly go down the candidate list
+;; [[file:README.org::*Autocompletion][Autocompletion:5]]
 (define-key completion-in-region-mode-map (kbd "C-n") 'renz/jump-completion)
 (define-key completion-list-mode-map (kbd "C-n") 'next-completion)
 (define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
+;; Autocompletion:5 ends here
 
-;; REMINDME Don't use RET, TAB, and similar because there's a good
-;; chance you'll mess up required functionality in shell, minibuffer,
-;; and related modes
-
-;; Accept the first result in the completion buffer without switching
+;; [[file:README.org::*Autocompletion][Autocompletion:6]]
 (define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
+;; Autocompletion:6 ends here
 
+;; [[file:README.org::*Autocompletion][Autocompletion:7]]
+(vertico-mode)
+;; Autocompletion:7 ends here
+
+;; [[file:README.org::*Autocompletion][Autocompletion:8]]
+(setq tab-always-indent 'complete)
+;; Autocompletion:8 ends here
+
+;; [[file:README.org::*=corfu=][=corfu=:1]]
 (unless (display-graphic-p)
   (corfu-terminal-mode +1))
 
@@ -415,28 +522,33 @@ emacs config site with matching `extension' regexp"
       corfu-quit-no-match 'separator)
 
 (global-corfu-mode)
+;; =corfu=:1 ends here
 
+;; [[file:README.org::*Org-mode][Org-mode:2]]
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
-;; (setq org-goto-interface 'outline-path-completion)
+;; Org-mode:2 ends here
 
-;; Allow for custom resize of images when displaying in org mode
+;; [[file:README.org::*Org-mode][Org-mode:4]]
 (setq org-image-actual-width nil)
+;; Org-mode:4 ends here
 
-;; A kill-block command for working with src blocks
+;; [[file:README.org::*Org-mode][Org-mode:5]]
 (defun renz/org-kill-src-block ()
   "Kill the src block around point, if applicable."
   (interactive)
   (org-babel-remove-result)
   (org-mark-element)
   (kill-region nil nil t))
+;; Org-mode:5 ends here
 
+;; [[file:README.org::*Org-mode][Org-mode:6]]
 (with-eval-after-load 'ox
   (require 'ox-hugo))
+;; Org-mode:6 ends here
 
-;; https://willschenk.com/articles/2019/using_org_mode_in_hugo/
+;; [[file:README.org::*Org-mode][Org-mode:7]]
 (with-eval-after-load 'org
-  ;; (setq org-startup-indented t) ; Enable `org-indent-mode' by default
   (add-hook 'org-mode-hook #'visual-line-mode)
 
   (org-babel-do-load-languages
@@ -485,10 +597,14 @@ Jumps at tangled code from org src block."
 
 ;; TODO states
 (setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
+;; Org-mode:7 ends here
 
+;; [[file:README.org::*Org-mode][Org-mode:8]]
 (setq org-agenda-files '("~/.emacs.d/org/work.org")
       org-hugo-front-matter-format "yaml")
+;; Org-mode:8 ends here
 
+;; [[file:README.org::*=org-modern=][=org-modern=:1]]
 ;; TODO: move this to the misc./ window settings
 ;; add frame borders and window dividers
 (modify-all-frames-parameters
@@ -525,7 +641,9 @@ Jumps at tangled code from org src block."
  "⭠ now ─────────────────────────────────────────────────")
 
 (global-org-modern-mode)
+;; =org-modern=:1 ends here
 
+;; [[file:README.org::*SQL][SQL:1]]
 (defun renz/sql-mode-hook ()
   ;; (setq indent-line-function 'renz/sql-indent)
   (setq tab-width 4)
@@ -559,7 +677,9 @@ Jumps at tangled code from org src block."
               (setq sqlind-indentation-offsets-alist
                     renz/sql-indentation-offsets-alist)))
   )
+;; SQL:1 ends here
 
+;; [[file:README.org::*Python][Python:1]]
 ;; Example error from pyright
 ;; --------------------------
 ;; /home/robb/tmp/errors.py/
@@ -621,7 +741,9 @@ Jumps at tangled code from org src block."
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
 
 ;; (add-hook 'python-mode-hook 'eglot-ensure)
+;; Python:1 ends here
 
+;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
 (when (eq system-type 'windows-nt)
   ;; Set a better font on Windows
   (set-face-attribute 'default nil :font "Hack NF-12")
@@ -664,7 +786,9 @@ Jumps at tangled code from org src block."
   (w32-register-hot-key [s-x])
   (w32-register-hot-key [s-y])
   (w32-register-hot-key [s-z]))
+;; Microsoft Windows:1 ends here
 
+;; [[file:README.org::*macOS][macOS:1]]
 (when (eq system-type 'darwin)
   ;; Uncomment this if we can't install Hack Nerd font
   ;; (set-face-attribute 'default nil :font "Menlo-14")
@@ -678,12 +802,16 @@ Jumps at tangled code from org src block."
   (unless (version< emacs-version "29.0"))
     (setq pixel-scroll-precision-use-momentum t)
   )
+;; macOS:1 ends here
 
+;; [[file:README.org::*Linux][Linux:1]]
 (when (eq system-type 'gnu/linux)
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
   ;; (exec-path-from-shell-initialize)
   )
+;; Linux:1 ends here
 
+;; [[file:README.org::*Tramp][Tramp:1]]
 (setq vc-handled-backends '(Git))
 (setq remote-file-name-inhibit-locks t)
 (setq tramp-inline-compress-start-size 1000)
@@ -705,12 +833,15 @@ Jumps at tangled code from org src block."
   ;;              (list (regexp-quote "/ssh:7p")
   ;;                    "remote-shell" "/usr/bin/ksh"))
   )
+;; Tramp:1 ends here
 
+;; [[file:README.org::*TreeSitter][TreeSitter:1]]
 ;; TODO: Convert this to use-package
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 (global-tree-sitter-mode)
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+;; TreeSitter:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here
