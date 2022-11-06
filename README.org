@@ -253,6 +253,7 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c o b d") #'org-babel-detangle)
 (global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
 (global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
+(global-set-key (kbd "C-c o j") #'consult-org-heading)
 (global-set-key (kbd "C-c o o") #'renz/jump-org)
 (global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
 #+end_src
