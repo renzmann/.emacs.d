@@ -14,6 +14,14 @@
 # Undo-tree save-files
 *.~undo-tree
 
+# Images
+*.png
+*.svg
+*.webp
+*.jpg
+*.jpeg
+
+# Misc.
 recentf
 network-security.data
 server/
