@@ -27,6 +27,10 @@
   (require 'use-package))
 ;; Packages:1 ends here
 
+;; [[file:README.org::*Packages][Packages:2]]
+(add-to-list 'load-path (expand-file-name "packages/" user-emacs-directory))
+;; Packages:2 ends here
+
 ;; [[file:README.org::*Theme][Theme:1]]
 (setq ef-themes-headings
       '((0 . (1.9))

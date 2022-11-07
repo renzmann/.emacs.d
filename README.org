@@ -86,6 +86,12 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
 : use-package
 
 
+There are also a few hand-made packages I keep around in a special ~.emacs.d/packages/~ directory.
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path (expand-file-name "packages/" user-emacs-directory))
+#+end_src
+
 * Theme
 [[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will creates larger, bolder headings when in [[Org-mode]].
 
