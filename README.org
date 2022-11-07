@@ -1339,7 +1339,6 @@ For some time I was having a lot of trouble with slowness over Tramp, and after 
 Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs issues]].
 
 #+begin_src emacs-lisp :tangle no
-
 (setq tramp-default-method "scp")
 (setq projectile--mode-line "Projectile")
 #+end_src
@@ -1356,7 +1355,8 @@ Host *
 #+end_example
 
 
-* LSP
+* LSP :ARCHIVE:
+
 Another section that's totally obsolete, but kept in case I need references to it.  Since =eglot= will be a built-in package for future emacs, I'm going to stick to it.
 
 #+begin_src emacs-lisp :tangle no
