@@ -25,6 +25,12 @@ update this table.  For now though, the 16 bit colors don't react to
 my color theme, and so on Windows I rely singularly on GUI mode,
 rather than WSL or emacs inside Alacritty.
 
+* Inspirations
+
+Here's where I put the typical quote about standing on one form of shoulders or another.  I steal quite a lot from other, more qualified Emacs community contributors, such as
+
+- [[https://protesilaos.com/][Protesilaos Stavrou]]
+- [[https://panadestein.github.io/emacsd/][Ramón Panadestein]]
 
 * Tangling
 
@@ -69,8 +75,8 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
 #+begin_src emacs-lisp
 (eval-when-compile
   (package-autoremove)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (unless (package-installed-p 'use-package)
-    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
     (package-refresh-contents)
     (package-install 'use-package))
   (require 'use-package))
@@ -798,11 +804,6 @@ For a while I was experimenting with ~company-mode~.  This section is obsolete a
 
 
 * Org-mode
-There is a beefy startup hit from eagerly loading org-tempo, so eventually we'll have to come around and get this lazy-loaded correctly.
-
-#+begin_src emacs-lisp :tangle no
-(require 'org-tempo)
-#+end_src
 
 #+begin_src emacs-lisp
 (setq org-confirm-babel-evaluate nil)
@@ -842,15 +843,37 @@ I also use ~org-mode~ for writing [[https://robbmann.io/posts][my blog.]]  With 
 Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup-indented t)= t get indentation under each header, but this was interfering with the beautification features from ~org-modern~.  Preferring the latter over the former, I've removed the =org-startup-indented= call.
 
 #+begin_src emacs-lisp
-(with-eval-after-load 'org
+(use-package org
+  :ensure t
+  :init
+  (defun display-ansi-colors ()
+    "Fixes kernel output in emacs-jupyter"
+    (ansi-color-apply-on-region (point-min) (point-max)))
+  :hook
+  (org-mode . (lambda () (progn
+                           (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                           (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))))
+  :config
   (add-hook 'org-mode-hook #'visual-line-mode)
-
+  (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (python . t)
      (sql . t)
-     (shell . t)))
+     (shell . t)
+     (fortran . t)
+     (julia . t)
+     ;; (jupyter . t)
+     (scheme . t)
+     (haskell . t)
+     (lisp . t)
+     (clojure . t)
+     (C . t)
+     (org . t)
+     (gnuplot . t)
+     (awk . t)
+     (latex . t)))
 
   ;; Enable asynchronous execution of src blocks
   (when (package-installed-p 'ob-async)
@@ -861,6 +884,9 @@ Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup
                   (require 'hive2))))
   )
 #+end_src
+
+#+RESULTS:
+| (lambda nil (progn (add-hook 'after-save-hook #'org-babel-tangle :append :local) (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))) | visual-line-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
 
 Python has its own =:async yes= header argument we can use, so there's no need to inclkude it with ~ob-async~.
 
@@ -1219,6 +1245,7 @@ To have ~eglot~ always start up for a python buffer, we would tangle this line i
 (add-hook 'python-mode-hook 'eglot-ensure)
 #+end_src
 
+Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with Jupyter kernels from org-mode.
 
 * Microsoft Windows
 

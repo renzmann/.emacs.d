@@ -20,8 +20,8 @@
 ;; [[file:README.org::*Packages][Packages:1]]
 (eval-when-compile
   (package-autoremove)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (unless (package-installed-p 'use-package)
-    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
     (package-refresh-contents)
     (package-install 'use-package))
   (require 'use-package))
@@ -525,39 +525,61 @@ emacs config site with matching `extension' regexp"
     (corfu-mode -1)))
 ;; Autocompletion:10 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:2]]
+;; [[file:README.org::*Org-mode][Org-mode:1]]
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
-;; Org-mode:2 ends here
+;; Org-mode:1 ends here
+
+;; [[file:README.org::*Org-mode][Org-mode:3]]
+(setq org-image-actual-width nil)
+;; Org-mode:3 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:4]]
-(setq org-image-actual-width nil)
-;; Org-mode:4 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:5]]
 (defun renz/org-kill-src-block ()
   "Kill the src block around point, if applicable."
   (interactive)
   (org-babel-remove-result)
   (org-mark-element)
   (kill-region nil nil t))
+;; Org-mode:4 ends here
+
+;; [[file:README.org::*Org-mode][Org-mode:5]]
+(with-eval-after-load 'ox
+  (require 'ox-hugo))
 ;; Org-mode:5 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:6]]
-(with-eval-after-load 'ox
-  (require 'ox-hugo))
-;; Org-mode:6 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:7]]
-(with-eval-after-load 'org
+(use-package org
+  :ensure t
+  :init
+  (defun display-ansi-colors ()
+    "Fixes kernel output in emacs-jupyter"
+    (ansi-color-apply-on-region (point-min) (point-max)))
+  :hook
+  (org-mode . (lambda () (progn
+                           (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                           (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))))
+  :config
   (add-hook 'org-mode-hook #'visual-line-mode)
-
+  (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (python . t)
      (sql . t)
-     (shell . t)))
+     (shell . t)
+     (fortran . t)
+     (julia . t)
+     ;; (jupyter . t)
+     (scheme . t)
+     (haskell . t)
+     (lisp . t)
+     (clojure . t)
+     (C . t)
+     (org . t)
+     (gnuplot . t)
+     (awk . t)
+     (latex . t)))
 
   ;; Enable asynchronous execution of src blocks
   (when (package-installed-p 'ob-async)
@@ -567,17 +589,17 @@ emacs config site with matching `extension' regexp"
                   (require 'ob-sql-mode)
                   (require 'hive2))))
   )
+;; Org-mode:6 ends here
+
+;; [[file:README.org::*Org-mode][Org-mode:7]]
+(setq ob-async-no-async-languages-alist '("python"))
 ;; Org-mode:7 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:8]]
-(setq ob-async-no-async-languages-alist '("python"))
+(setq org-html-htmlize-output-type 'css)
 ;; Org-mode:8 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:9]]
-(setq org-html-htmlize-output-type 'css)
-;; Org-mode:9 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:10]]
 (defun renz/org-babel-tangle-jump-to-src ()
   "The opposite of `org-babel-tangle-jump-to-org'.
 Jumps at tangled code from org src block."
@@ -600,16 +622,16 @@ Jumps at tangled code from org src block."
           (beginning-of-buffer)
           (search-forward search-comment)))
     (message "Cannot jump to tangled file because point is not at org src block.")))
+;; Org-mode:9 ends here
+
+;; [[file:README.org::*Org-mode][Org-mode:10]]
+(setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
 ;; Org-mode:10 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:11]]
-(setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
-;; Org-mode:11 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:12]]
 (setq org-agenda-files '("~/.emacs.d/org/work.org")
       org-hugo-front-matter-format "yaml")
-;; Org-mode:12 ends here
+;; Org-mode:11 ends here
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
 ;; TODO: move this to the misc./ window settings
