@@ -25,13 +25,6 @@ update this table.  For now though, the 16 bit colors don't react to
 my color theme, and so on Windows I rely singularly on GUI mode,
 rather than WSL or emacs inside Alacritty.
 
-* Inspirations
-
-Here's where I put the typical quote about standing on one form of shoulders or another.  I steal quite a lot from other, more qualified Emacs community contributors, such as
-
-- [[https://protesilaos.com/][Protesilaos Stavrou]]
-- [[https://panadestein.github.io/emacsd/][Ramón Panadestein]]
-
 * Tangling
 
 My configuration is a single literate programming document, which is tangled into the standard =init.el= and supporting files.  This is so I can keep track of all the crazy things I try and explain them inline with the final code I decide to include.  Some platforms like GitHub can render this document in a limited way, but to see all the final configuration values I use you will likely have to view this document in Emacs itself.
@@ -380,6 +373,16 @@ See the [[Windows][Microsoft Windows]] section for some hackery required to get 
 
 * Misc. Settings
 Haven't found a home header for any of these yet.
+
+** Smooth scrolling
+Emacs 29 introduced smooth, pixel-level scrolling, which removes much of the "jumpiness" you see when scrolling past images.
+
+#+begin_src emacs-lisp
+(unless (version< "29.0" emacs-version)
+  (pixel-scroll-precision-mode)
+  (pixel-scroll-precision-use-momentum 1)
+  (setq pixel-scroll-precision-large-scroll-height 30.0))
+#+end_src
 
 ** Fill-column
 For visual lines, this adds line breaks at the fill-column value.  Especially useful for prose that is meant to be copied to other mediums, such as email or word.
@@ -1255,6 +1258,8 @@ Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][ema
 
 * Microsoft Windows
 
+Windows, funnily enough, has some trouble registering the Windows key as a usable modifier for emacs.  In fact, =s-l= will never be an option, since it's handled at the hardware level.  I also add a few nice-to-haves, like setting the default shell to ~pwsh~ and explicitly pathing out ~aspell~.
+
 #+begin_src emacs-lisp
 (when (eq system-type 'windows-nt)
   ;; Set a better font on Windows
@@ -1308,15 +1313,7 @@ Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][ema
   ;; Uncomment this if we can't install Hack Nerd font
   ;; (set-face-attribute 'default nil :font "Menlo-14")
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
-  (exec-path-from-shell-initialize)
-
-  ;; Better terminal emulation
-  (require 'vterm)
-  (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-
-  (unless (version< emacs-version "29.0"))
-    (setq pixel-scroll-precision-use-momentum t)
-  )
+  (exec-path-from-shell-initialize))
 #+end_src
 
 
@@ -1461,6 +1458,14 @@ REMINDME: Convert to use-package
 (global-tree-sitter-mode)
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 #+end_src
+
+* Inspirations
+
+Here's where I put the typical quote about standing on one form of shoulders or another.  I steal quite a lot from other, more qualified Emacs community contributors, such as:
+
+- [[https://protesilaos.com/][Protesilaos Stavrou]]
+- [[https://panadestein.github.io/emacsd/][Ramón Panadestein]]
+
 
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an Emacs package.  So that's it, let's gracefully finish tangling everything:

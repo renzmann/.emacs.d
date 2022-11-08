@@ -251,6 +251,13 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "s-v") #'yank)
 ;; Super bindings:1 ends here
 
+;; [[file:README.org::*Smooth scrolling][Smooth scrolling:1]]
+(unless (version< "29.0" emacs-version)
+  (pixel-scroll-precision-mode)
+  (pixel-scroll-precision-use-momentum 1)
+  (setq pixel-scroll-precision-large-scroll-height 30.0))
+;; Smooth scrolling:1 ends here
+
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
 (setq-default fill-column 120)
@@ -782,15 +789,7 @@ Jumps at tangled code from org src block."
   ;; Uncomment this if we can't install Hack Nerd font
   ;; (set-face-attribute 'default nil :font "Menlo-14")
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
-  (exec-path-from-shell-initialize)
-
-  ;; Better terminal emulation
-  (require 'vterm)
-  (add-hook 'vterm-mode-hook (lambda () (setq-local global-hl-line-mode nil)))
-
-  (unless (version< emacs-version "29.0"))
-    (setq pixel-scroll-precision-use-momentum t)
-  )
+  (exec-path-from-shell-initialize))
 ;; macOS:1 ends here
 
 ;; [[file:README.org::*Linux][Linux:1]]
