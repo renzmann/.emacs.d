@@ -7,7 +7,7 @@
 
 Want to use it? Go ahead!
 
-#+begin_src shell
+#+begin_src shell :eval never
 git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 #+end_src
 
@@ -51,6 +51,8 @@ To comply with the Emacs conventions for libraries, the tangled init.el must hav
 ;;; Code:
 #+end_src
 
+#+RESULTS:
+
 
 * Custom
 
@@ -61,6 +63,9 @@ I prefer having custom modify its own file.  This next snippet ensures any =pack
 (when (file-exists-p custom-file)
   (load custom-file 'noerror))
 #+end_src
+
+#+RESULTS:
+: t
 
 
 * Packages
@@ -87,6 +92,9 @@ There are also a few hand-made packages I keep around in a special ~.emacs.d/pac
 (add-to-list 'load-path (expand-file-name "packages/" user-emacs-directory))
 #+end_src
 
+#+RESULTS:
+| /Users/a834991/.emacs.d/packages/ | /Users/a834991/.emacs.d/elpa/blacken-20220922.2045 | /Users/a834991/.emacs.d/elpa/change-inner-20210126.1456 | /Users/a834991/.emacs.d/elpa/consult-20221020.2154 | /Users/a834991/.emacs.d/elpa/corfu-terminal-0.5 | /Users/a834991/.emacs.d/elpa/corfu-0.28 | /Users/a834991/.emacs.d/elpa/csv-mode-1.21 | /Users/a834991/.emacs.d/elpa/diff-hl-20221007.2147 | /Users/a834991/.emacs.d/elpa/ef-themes-0.9.0 | /Users/a834991/.emacs.d/elpa/eglot-20221020.1010 | /Users/a834991/.emacs.d/elpa/esup-20220202.2335 | /Users/a834991/.emacs.d/elpa/exec-path-from-shell-20220826.1535 | /Users/a834991/.emacs.d/elpa/expand-region-20221030.957 | /Users/a834991/.emacs.d/elpa/gnuplot-20220913.1152 | /Users/a834991/.emacs.d/elpa/go-mode-20220727.115 | /Users/a834991/.emacs.d/elpa/haskell-mode-20220917.1353 | /Users/a834991/.emacs.d/elpa/julia-mode-20220418.809 | /Users/a834991/.emacs.d/elpa/lua-mode-20220801.503 | /Users/a834991/.emacs.d/elpa/magit-20221101.2214 | /Users/a834991/.emacs.d/elpa/git-commit-20221101.2237 | /Users/a834991/.emacs.d/elpa/marginalia-20221016.1017 | /Users/a834991/.emacs.d/elpa/ob-async-20210428.2052 | /Users/a834991/.emacs.d/elpa/async-20221103.638 | /Users/a834991/.emacs.d/elpa/ob-sql-mode-20190421.1539 | /Users/a834991/.emacs.d/elpa/orderless-20221023.1708 | /Users/a834991/.emacs.d/elpa/org-modern-20221020.749 | /Users/a834991/.emacs.d/elpa/org-roam-20220908.1625 | /Users/a834991/.emacs.d/elpa/magit-section-20220929.1014 | /Users/a834991/.emacs.d/elpa/emacsql-sqlite-20221024.1455 | /Users/a834991/.emacs.d/elpa/emacsql-20221024.1455 | /Users/a834991/.emacs.d/elpa/ox-hugo-20221028.1631 | /Users/a834991/.emacs.d/elpa/poly-markdown-20220117.2351 | /Users/a834991/.emacs.d/elpa/markdown-mode-20221022.735 | /Users/a834991/.emacs.d/elpa/polymode-20220820.1630 | /Users/a834991/.emacs.d/elpa/popon-0.11 | /Users/a834991/.emacs.d/elpa/pythonic-20220723.1741 | /Users/a834991/.emacs.d/elpa/f-20220911.711 | /Users/a834991/.emacs.d/elpa/dash-20221013.836 | /Users/a834991/.emacs.d/elpa/restart-emacs-20201127.1425 | /Users/a834991/.emacs.d/elpa/ripgrep-20220520.1410 | /Users/a834991/.emacs.d/elpa/rust-mode-20220919.1051 | /Users/a834991/.emacs.d/elpa/s-20220902.1511 | /Users/a834991/.emacs.d/elpa/scala-mode-20221025.1502 | /Users/a834991/.emacs.d/elpa/sql-indent-1.6 | /Users/a834991/.emacs.d/elpa/sqlformat-20210305.209 | /Users/a834991/.emacs.d/elpa/reformatter-20220627.825 | /Users/a834991/.emacs.d/elpa/sqlup-mode-20170610.1537 | /Users/a834991/.emacs.d/elpa/tomelr-0.4.3 | /Users/a834991/.emacs.d/elpa/transient-20221028.1430 | /Users/a834991/.emacs.d/elpa/tree-sitter-langs-20220925.1020 | /Users/a834991/.emacs.d/elpa/tree-sitter-20220212.1632 | /Users/a834991/.emacs.d/elpa/tsc-20220212.1632 | /Users/a834991/.emacs.d/elpa/use-package-20221029.1857 | /Users/a834991/.emacs.d/elpa/bind-key-20221028.1858 | /Users/a834991/.emacs.d/elpa/vertico-0.28 | /Users/a834991/.emacs.d/elpa/vimrc-mode-20181116.1919 | /Users/a834991/.emacs.d/elpa/visual-fill-column-20220519.1959 | /Users/a834991/.emacs.d/elpa/vterm-20220831.835 | /Users/a834991/.emacs.d/elpa/with-editor-20220810.1159 | /Users/a834991/.emacs.d/elpa/compat-28.1.2.2 | /Users/a834991/.emacs.d/elpa/yaml-mode-20221022.920 | /Library/Application Support/Emacs/28.1/site-lisp | /Library/Application Support/Emacs/site-lisp | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/vc | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/url | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/textmodes | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/progmodes | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/play | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/org | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/nxml | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/net | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/mh-e | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/mail | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/leim | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/language | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/international | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/image | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/gnus | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/eshell | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/erc | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/emulation | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/emacs-lisp | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/cedet | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/calendar | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/calc | /Users/a834991/Applications/Emacs.app/Contents/Resources/lisp/obsolete |
+
 * Theme
 [[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will creates larger, bolder headings when in [[Org-mode]].
 
@@ -102,6 +110,17 @@ There are also a few hand-made packages I keep around in a special ~.emacs.d/pac
         (7 . (1.2))
         (t . (1.1))))
 #+end_src
+
+#+RESULTS:
+| 0 | 1.9 |
+| 1 | 1.8 |
+| 2 | 1.7 |
+| 3 | 1.6 |
+| 4 | 1.5 |
+| 5 | 1.4 |
+| 6 | 1.3 |
+| 7 | 1.2 |
+| t | 1.1 |
 
 I LOVE these themes from =ef-themes=:
 
@@ -119,17 +138,25 @@ I switch between them regularly, based on my mood of the day.
 (load-theme 'ef-cherie :no-confirm)
 #+end_src
 
+#+RESULTS:
+: t
+
 =ef-themes= also provides an option for toggling between two themes, bound to the =ef-themes-toggle= function.
 
 #+begin_src emacs-lisp
 (setq ef-themes-to-toggle '(ef-cherie ef-light))
 #+end_src
 
+#+RESULTS:
+| ef-cherie | ef-light |
+
 I consider the font to also be a component of "theme".  If it's installed, load the lovely Hack font.
 
 #+begin_src emacs-lisp
 (set-face-attribute 'default nil :family "Hack")
 #+end_src
+
+#+RESULTS:
 
 It's worth mentioning that I've tried [[https://www.nordtheme.com/ports/emacs/][nord-theme]] a couple times and found that the legibility or contrast wasn't quite good enough in some modes.  Though I still employ Nord for my terminal config in Alacritty or Kitty, where it looks /excellent/.
 
@@ -200,18 +227,26 @@ These convenient chords allow for fast text replacement by holding =C-M-= and ra
 (global-set-key (kbd "C-M-h") 'backward-kill-sexp)
 #+end_src
 
+#+RESULTS:
+: backward-kill-sexp
+
 The next line UNBINDS the suspend-frame keybinding.  Accidentally minimizing on the GUI was frustrating as hell, so now I use =C-x C-z= if I /really/ want to suspend the frame.
 
-#+begin_src
-
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-z") #'zap-up-to-char)
 #+end_src
 
+#+RESULTS:
+: zap-up-to-char
+
 Hippie-expand [[https://www.masteringemacs.org/article/text-expansion-hippie-expand][is purported]] to be a better version of ~dabbrev~, but I rather like the default behavior of ~dabbrev~.  So instead I typically have ~hippie-expand~ on a dedicated key, and leave the default =M-/= alone.  Otherwise, we would re-bind it like so:
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 #+end_src
+
+#+RESULTS:
+: hippie-expand
 
 Both ~ibuffer~ and ~consult-buffer~ are strictly superior versions of their counterparts.
 
@@ -220,6 +255,9 @@ Both ~ibuffer~ and ~consult-buffer~ are strictly superior versions of their coun
 (global-set-key [remap switch-to-buffer] 'consult-buffer)
 #+end_src
 
+#+RESULTS:
+: consult-buffer
+
 The most common situation where I'm running ~flymake~ would be for spelling in prose, or diagnostics from a language server.  In either case, I like having next/previous on easy to reach chords.
 
 #+begin_src emacs-lisp
@@ -227,6 +265,8 @@ The most common situation where I'm running ~flymake~ would be for spelling in p
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
 #+end_src
+
+#+RESULTS:
 
 When using ~isearch~ to jump to things, it's sometimes convenient to re-position point on the opposite side of where the search would normally put it.  E.g. when using =C-r=, but we want point to be at the end of the word when we're done.  Provided by a [[https://emacs.stackexchange.com/a/52554][stack overflow answer]].
 
@@ -238,6 +278,9 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
     (funcall #'isearch-done nopush edit)
     (when isearch-other-end (goto-char isearch-other-end))))
 #+end_src
+
+#+RESULTS:
+: isearch-done-opposite
 
 ** C-c bindings
 =C-c= <letter> is always free for users.
@@ -265,6 +308,9 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 (global-set-key (kbd "C-c n") #'minimap-mode)
 #+end_src
 
+#+RESULTS:
+: minimap-mode
+
 *** =C-c o= Org bindings
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-c o a") #'org-agenda)
@@ -276,15 +322,23 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 (global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
 #+end_src
 
+#+RESULTS:
+: renz/org-kill-src-block
+
 
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c p") #')
 ;; (global-set-key (kbd "C-c q") #')
 #+end_src
 
+#+RESULTS:
+
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-c r") #'renz/recentf-find-file)
 #+end_src
+
+#+RESULTS:
+: renz/recentf-find-file
 
 *** =C-c s= Settings
 
@@ -294,10 +348,15 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 ;; (global-set-key (kbd "C-c s s") #'renz/jump-configuration)
 #+end_src
 
+#+RESULTS:
+: renz/jump-init
+
 
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c t") #')
 #+end_src
+
+#+RESULTS:
 
 *** =C-c u= Consult grep/rg
 
@@ -305,19 +364,28 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 (global-set-key (kbd "C-c u") #'renz/consult-grep)
 #+end_src
 
+#+RESULTS:
+: renz/consult-grep
+
 *** =C-c v=
 
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c v") #')
 #+end_src
 
+#+RESULTS:
+
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c w") #')
 #+end_src
 
+#+RESULTS:
+
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c x") #')
 #+end_src
+
+#+RESULTS:
 
 *** =C-c y= Yank inner/outer
 
@@ -326,11 +394,16 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 (global-set-key (kbd "C-c y o") #'copy-outer)
 #+end_src
 
+#+RESULTS:
+: copy-outer
+
 *** =C-c z=
 
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c z") #')
 #+end_src
+
+#+RESULTS:
 
 *** =C-c= Other bindings
 
@@ -339,11 +412,17 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 (global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
 #+end_src
 
+#+RESULTS:
+: backward-kill-sexp
+
 ** Meta/Alt Modifications
 #+begin_src emacs-lisp
 (with-eval-after-load 'dired
   (define-key dired-mode-map (kbd "M-S-j") 'dired-goto-file))
 #+end_src
+
+#+RESULTS:
+: dired-goto-file
 
 ** F5-F9
 Like the =C-c <letter>= bindings, these are reserved for users.
@@ -363,6 +442,9 @@ Like the =C-c <letter>= bindings, these are reserved for users.
 (global-set-key (kbd "s-<f9>") #'shell)
 #+end_src
 
+#+RESULTS:
+: shell
+
 ** Nonstandard bindings
 
 #+begin_src emacs-lisp
@@ -370,6 +452,8 @@ Like the =C-c <letter>= bindings, these are reserved for users.
   (with-eval-after-load 'projectile
     (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)))
 #+end_src
+
+#+RESULTS:
 
 ** Super bindings
 See the [[Microsoft Windows][Microsoft Windows]] section for some hackery required to get these working on more platforms.
@@ -395,6 +479,9 @@ For visual lines, this adds line breaks at the fill-column value.  Especially us
 (setq-default fill-column 120)
 #+end_src
 
+#+RESULTS:
+: 120
+
 ** Scroll bar
 I toggle this one on/off sometimes depending on how I feel lately.
 
@@ -403,13 +490,18 @@ I toggle this one on/off sometimes depending on how I feel lately.
 (scroll-bar-mode -1)
 #+end_src
 
+#+RESULTS:
+
 ** Inline emojis
 I tried this for a while but boy did it consume a lot of space in the =elpa/= directory!  If I go back to it I might re-install it but have to ensure I ignore the source files.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 ;; Emojis inline 👍
 (add-hook 'after-init-hook #'global-emojify-mode)
 #+end_src
+
+#+RESULTS:
+| global-company-mode | global-emojify-mode | #[0 \303\235\203 \304\303"\301\305!\210	\205 \306 \210\307\211\207 [command-line-args desktop-save-mode inhibit-startup-screen --no-desktop delete 0 desktop-read t] 3] | tramp-register-archive-file-name-handler | magit-maybe-define-global-key-bindings | table--make-cell-map |
 
 ** Inihibit splash screen
 I can always get back to the OG GNU Spash with =C-h C-a=
@@ -417,6 +509,9 @@ I can always get back to the OG GNU Spash with =C-h C-a=
 #+begin_src emacs-lisp
 (setq inhibit-splash-screen t)
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Window margins and fringe
 
@@ -432,8 +527,9 @@ This hunk adds some space around all sides of each window so that we get a clear
   (face-spec-reset-face face)
   (set-face-foreground face (face-attribute 'default :background)))
 (set-face-background 'fringe (face-attribute 'default :background))
-
 #+end_src
+
+#+RESULTS:
 
 ** Automatically visit symlink sources
 
@@ -442,11 +538,16 @@ This hunk adds some space around all sides of each window so that we get a clear
 (setq vc-follow-symlinks t)
 #+end_src
 
+#+RESULTS:
+: t
+
 ** Indent with spaces
 
 #+begin_src emacs-lisp
 (setq-default indent-tabs-mode nil)
 #+end_src
+
+#+RESULTS:
 
 ** Render ASCII color escape codes
 For files containing color escape codes, this provides a way to render the colors in-buffer.
@@ -458,11 +559,17 @@ For files containing color escape codes, this provides a way to render the color
   (ansi-color-apply-on-region (point-min) (point-max)))
 #+end_src
 
+#+RESULTS:
+: renz/display-ansi-colors
+
 ** Enable horizontal scrolling with mouse
 From a helpful [[https://stackoverflow.com/a/67758169][stackoverflow answer.]]
 #+begin_src emacs-lisp
 (setq mouse-wheel-tilt-scroll t)
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Window management
 I need to give the [[https://www.masteringemacs.org/article/demystifying-emacs-window-manager][article]] another read about what's going on, but it seems helpful.
@@ -472,6 +579,9 @@ I need to give the [[https://www.masteringemacs.org/article/demystifying-emacs-w
   (setq switch-to-buffer-obey-display-actions t))
 #+end_src
 
+#+RESULTS:
+: t
+
 ** Enable up/downcase-region
 
 #+begin_src emacs-lisp
@@ -479,11 +589,16 @@ I need to give the [[https://www.masteringemacs.org/article/demystifying-emacs-w
 (put 'downcase-region 'disabled nil)
 #+end_src
 
+#+RESULTS:
+
 ** Automatically update buffers when contents change on disk
 
 #+begin_src emacs-lisp
 (global-auto-revert-mode)
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Initial frame size for GUI
 
@@ -501,6 +616,9 @@ I need to give the [[https://www.masteringemacs.org/article/demystifying-emacs-w
   (setq default-frame-alist renz/frame-default-alist))
 #+end_src
 
+#+RESULTS:
+: ((tool-bar-lines . 0) (width . 180) (height . 60) (left . 125) (top . 125))
+
 ** Marginalia
 Adds helpful information in the margin when using the minibuffer
 
@@ -510,11 +628,17 @@ Adds helpful information in the margin when using the minibuffer
   :config (marginalia-mode))
 #+end_src
 
+#+RESULTS:
+: t
+
 ** Highlight the line point is on
 
 #+begin_src emacs-lisp
 (global-hl-line-mode)
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Stop stupid bell
 This snippet has a special place in my heart, because it was the first two lines of elisp I wrote when first learning Emacs.
@@ -524,6 +648,9 @@ This snippet has a special place in my heart, because it was the first two lines
 (setq ring-bell-function 'ignore)
 #+end_src
 
+#+RESULTS:
+: ignore
+
 ** TODO Clock in mode line
 Move this to the [[Mode line][mode line]] section
 
@@ -532,11 +659,17 @@ Move this to the [[Mode line][mode line]] section
 (display-time)
 #+end_src
 
+#+RESULTS:
+: t
+
 ** Enable split-window dired copying
 
 #+begin_src emacs-lisp
 (setq dired-dwim-target t)
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Automatically create matching parens in programming modes
 
@@ -545,6 +678,9 @@ Move this to the [[Mode line][mode line]] section
 (add-hook 'prog-mode-hook (show-paren-mode t))
 #+end_src
 
+#+RESULTS:
+| renz/display-line-numbers | t |
+
 ** TODO Delete whitespace on save
 I would also like to have a good-looking display for trailing whitespace and leading tabs like in my Neovim setup, but its proven challenging to just narrow down to those two faces.
 #+begin_src emacs-lisp
@@ -552,12 +688,18 @@ I would also like to have a good-looking display for trailing whitespace and lea
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
+#+RESULTS:
+| delete-trailing-whitespace |
+
 ** Don't wrap lines
 
 #+begin_src emacs-lisp
 (setq-default truncate-lines t)
 (add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
 #+end_src
+
+#+RESULTS:
+| Truncate long lines enabled and ‘visual-line-mode’ disabled | Truncate long lines disabled |
 
 ** Relative line numbers
 For programming and prose/writing modes.
@@ -567,11 +709,17 @@ For programming and prose/writing modes.
   (setq display-line-numbers 'relative))
 #+end_src
 
+#+RESULTS:
+: renz/display-line-numbers
+
 Unfortunately, line numbers are displayed in the text area of the buffer, but org-modern uses the fringe to display source blocks.  [[https://www.reddit.com/r/emacs/comments/ymprwi/comment/iv5iafb/?utm_source=share&utm_medium=web2x&context=3][There's no way to display them to the left]] of the fringe, so I'm careful about only turning on line numbers in modes that I think I'll benefit from it.  It's been working pretty well in org-mode without the line numbers so far, since for each of the code blocks I can always use =C-c '= to edit in ~prog-mode~, where I /do/ get line numbers.
 
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook 'renz/display-line-numbers)
 #+end_src
+
+#+RESULTS:
+| renz/display-line-numbers | t |
 
 ** Delete region when we yank on top of it
 I just think that's a funny sentence, whatever we may think of it.
@@ -580,11 +728,17 @@ I just think that's a funny sentence, whatever we may think of it.
 (delete-selection-mode t)
 #+end_src
 
+#+RESULTS:
+: t
+
 ** Enable mouse in terminal/TTY
 
 #+begin_src emacs-lisp
 (xterm-mouse-mode 1)
 #+end_src
+
+#+RESULTS:
+: t
 
 ** Compilation
 As new text appears, the default behavior is for it to spill off the bottom where we can't see it.  This causes the window to follow new text as it is printed.
@@ -592,6 +746,9 @@ As new text appears, the default behavior is for it to spill off the bottom wher
 #+begin_src emacs-lisp
 (setq compilation-scroll-output t)
 #+end_src
+
+#+RESULTS:
+: t
 
 Enable colors in the =*compilation*= buffer.  Provided by a [[https://stackoverflow.com/a/3072831/13215205][helpful stackoverflow answer]].
 
@@ -606,11 +763,16 @@ Enable colors in the =*compilation*= buffer.  Provided by a [[https://stackoverf
 (add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
 #+end_src
 
+#+RESULTS:
+| renz/colorize-compilation-buffer |
+
 ** Tool bar
 I usually leave the tool bar disabled
 #+begin_src emacs-lisp
 (tool-bar-mode -1)
 #+end_src
+
+#+RESULTS:
 
 The MENU bar, on the other hand =(menu-bar-mode)=, is very handy, and I don't think I'll ever disable it.
 
@@ -621,12 +783,17 @@ Move this to mode-line configuration
 (display-battery-mode t)
 #+end_src
 
+#+RESULTS:
+: t
+
 ** Ignore risky .dir-locals.el
 From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 
 #+begin_src emacs-lisp
 (advice-add 'risky-local-variable-p :override #'ignore)
 #+end_src
+
+#+RESULTS:
 
 ** Prefer =rg= over =grep=
 
@@ -635,6 +802,9 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
   (setq grep-program "rg"))
 #+end_src
 
+#+RESULTS:
+: rg
+
 ** Make ~dired~ human-readable
 
 #+begin_src emacs-lisp
@@ -642,11 +812,17 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 (setq-default dired-hide-details-mode t)
 #+end_src
 
+#+RESULTS:
+: t
+
 ** Confirm when exiting Emacs
 
 #+begin_src emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p)
 #+end_src
+
+#+RESULTS:
+: yes-or-no-p
 
 ** Prefer ~aspell~ over ~ispell~
 
@@ -654,6 +830,8 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 (when (executable-find "aspell")
   (setq ispell-program-name "aspell"))
 #+end_src
+
+#+RESULTS:
 
 ** Smooth scrolling
 Emacs 29 introduced smooth, pixel-level scrolling, which removes much of the "jumpiness" you see when scrolling past images.
@@ -665,6 +843,9 @@ Emacs 29 introduced smooth, pixel-level scrolling, which removes much of the "ju
   (setq pixel-scroll-precision-large-scroll-height 35.0))
 #+end_src
 
+#+RESULTS:
+: t
+
 ** Backup and auto-save files
 Keep all backup files in a temporary folder.  At the moment I have some "file not found" errors popping up during auto-save on Windows.  Once I debug that, I'll uncomment the second part.
 #+begin_src emacs-lisp
@@ -675,6 +856,9 @@ Keep all backup files in a temporary folder.  At the moment I have some "file no
       )
 #+end_src
 
+#+RESULTS:
+: ((. . ~/.emacs.d/backups/))
+
 ** Code syntax in Markdown
 Enable syntax highlighting within code fences for markdown
 
@@ -682,12 +866,18 @@ Enable syntax highlighting within code fences for markdown
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
 #+end_src
 
+#+RESULTS:
+: ((\.odc\' . archive-mode) (\.odf\' . archive-mode) (\.odi\' . archive-mode) (\.otp\' . archive-mode) (\.odp\' . archive-mode) (\.otg\' . archive-mode) (\.odg\' . archive-mode) (\.ots\' . archive-mode) (\.ods\' . archive-mode) (\.odm\' . archive-mode) (\.ott\' . archive-mode) (\.odt\' . archive-mode) (\.md . poly-markdown-mode) (\.tsv\' . tsv-mode) (\.[Cc][Ss][Vv]\' . csv-mode) (go\.work\' . go-dot-work-mode) (go\.mod\' . go-dot-mod-mode) (\.go\' . go-mode) (\.hsc\' . haskell-mode) (\.l[gh]s\' . haskell-literate-mode) (\.hsig\' . haskell-mode) (\.[gh]s\' . haskell-mode) (\.cabal\'\|/cabal\.project\|/\.cabal/config\' . haskell-cabal-mode) (\.chs\' . haskell-c2hs-mode) (\.ghci\' . ghci-script-mode) (\.dump-simpl\' . ghc-core-mode) (\.hcr\' . ghc-core-mode) (\.jl\' . julia-mode) (\.lua\' . lua-mode) (/git-rebase-todo\' . git-rebase-mode) (\.md\' . poly-markdown-mode) (\.\(?:md\|markdown\|mkd\|mdown\|mkdn\|mdwn\)\' . markdown-mode) (\.rs\' . rust-mode) (\.\(scala\|sbt\|worksheet\.sc\)\' . scala-mode) (\.exrc\' . vimrc-mode) ([._]?g?vimrc\' . vimrc-mode) (\.vim\' . vimrc-mode) (\.\(e?ya?\|ra\)ml\' . yaml-mode) (\.gpg\(~\|\.~[0-9]+~\)?\' nil epa-file) (\.elc\' . elisp-byte-code-mode) (\.zst\' nil jka-compr) (\.dz\' nil jka-compr) (\.xz\' nil jka-compr) (\.lzma\' nil jka-compr) (\.lz\' nil jka-compr) (\.g?z\' nil jka-compr) (\.bz2\' nil jka-compr) (\.Z\' nil jka-compr) (\.vr[hi]?\' . vera-mode) (\(?:\.\(?:rbw?\|ru\|rake\|thor\|jbuilder\|rabl\|gemspec\|podspec\)\|/\(?:Gem\|Rake\|Cap\|Thor\|Puppet\|Berks\|Brew\|Vagrant\|Guard\|Pod\)file\)\' . ruby-mode) (\.re?st\' . rst-mode) (\.py[iw]?\' . python-mode) (\.m\' . octave-maybe-mode) (\.less\' . less-css-mode) (\.scss\' . scss-mode) (\.awk\' . awk-mode) (\.\(u?lpc\|pike\|pmod\(\.in\)?\)\' . pike-mode) (\.idl\' . idl-mode) (\.java\' . java-mode) (\.m\' . objc-mode) (\.ii\' . c++-mode) (\.i\' . c-mode) (\.lex\' . c-mode) (\.y\(acc\)?\' . c-mode) (\.h\' . c-or-c++-mode) (\.c\' . c-mode) (\.\(CC?\|HH?\)\' . c++-mode) (\.[ch]\(pp\|xx\|\+\+\)\' . c++-mode) (\.\(cc\|hh\)\' . c++-mode) (\.\(bat\|cmd\)\' . bat-mode) (\.[sx]?html?\(\.[a-zA-Z_]+\)?\' . mhtml-mode) (\.svgz?\' . image-mode) (\.svgz?\' . xml-mode) (\.x[bp]m\' . image-mode) (\.x[bp]m\' . c-mode) (\.p[bpgn]m\' . image-mode) (\.tiff?\' . image-mode) (\.gif\' . image-mode) (\.png\' . image-mode) (\.jpe?g\' . image-mode) (\.te?xt\' . text-mode) (\.[tT]e[xX]\' . tex-mode) (\.ins\' . tex-mode) (\.ltx\' . latex-mode) (\.dtx\' . doctex-mode) (\.org\' . org-mode) (\.dir-locals\(?:-2\)?\.el\' . lisp-data-mode) (eww-bookmarks\' . lisp-data-mode) (tramp\' . lisp-data-mode) (/archive-contents\' . lisp-data-mode) (places\' . lisp-data-mode) (\.emacs-places\' . lisp-data-mode) (\.el\' . emacs-lisp-mode) (Project\.ede\' . emacs-lisp-mode) (\.\(scm\|stk\|ss\|sch\)\' . scheme-mode) (\.l\' . lisp-mode) (\.li?sp\' . lisp-mode) (\.[fF]\' . fortran-mode) (\.for\' . fortran-mode) (\.p\' . pascal-mode) (\.pas\' . pascal-mode) (\.\(dpr\|DPR\)\' . delphi-mode) (\.\([pP]\([Llm]\|erl\|od\)\|al\)\' . perl-mode) (Imakefile\' . makefile-imake-mode) (Makeppfile\(?:\.mk\)?\' . makefile-makepp-mode) (\.makepp\' . makefile-makepp-mode) (\.mk\' . makefile-bsdmake-mode) (\.make\' . makefile-bsdmake-mode) (GNUmakefile\' . makefile-gmake-mode) ([Mm]akefile\' . makefile-bsdmake-mode) (\.am\' . makefile-automake-mode) (\.texinfo\' . texinfo-mode) (\.te?xi\' . texinfo-mode) (\.[sS]\' . asm-mode) (\.asm\' . asm-mode) (\.css\' . css-mode) (\.mixal\' . mixal-mode) (\.gcov\' . compilation-mode) (/\.[a-z0-9-]*gdbinit . gdb-script-mode) (-gdb\.gdb . gdb-script-mode) ([cC]hange\.?[lL]og?\' . change-log-mode) ([cC]hange[lL]og[-.][0-9]+\' . change-log-mode) (\$CHANGE_LOG\$\.TXT . change-log-mode) (\.scm\.[0-9]*\' . scheme-mode) (\.[ckz]?sh\'\|\.shar\'\|/\.z?profile\' . sh-mode) (\.bash\' . sh-mode) (/PKGBUILD\' . sh-mode) (\(/\|\`\)\.\(bash_\(profile\|history\|log\(in\|out\)\)\|z?log\(in\|out\)\)\' . sh-mode) (\(/\|\`\)\.\(shrc\|zshrc\|m?kshrc\|bashrc\|t?cshrc\|esrc\)\' . sh-mode) (\(/\|\`\)\.\([kz]shenv\|xinitrc\|startxrc\|xsession\)\' . sh-mode) (\.m?spec\' . sh-mode) (\.m[mes]\' . nroff-mode) (\.man\' . nroff-mode) (\.sty\' . latex-mode) (\.cl[so]\' . latex-mode) (\.bbl\' . latex-mode) (\.bib\' . bibtex-mode) (\.bst\' . bibtex-style-mode) (\.sql\' . sql-mode) (\(acinclude\|aclocal\|acsite\)\.m4\' . autoconf-mode) (\.m[4c]\' . m4-mode) (\.mf\' . metafont-mode) (\.mp\' . metapost-mode) (\.vhdl?\' . vhdl-mode) (\.article\' . text-mode) (\.letter\' . text-mode) (\.i?tcl\' . tcl-mode) (\.exp\' . tcl-mode) (\.itk\' . tcl-mode) (\.icn\' . icon-mode) (\.sim\' . simula-mode) (\.mss\' . scribe-mode) (\.f9[05]\' . f90-mode) (\.f0[38]\' . f90-mode) (\.indent\.pro\' . fundamental-mode) (\.\(pro\|PRO\)\' . idlwave-mode) (\.srt\' . srecode-template-mode) (\.prolog\' . prolog-mode) (\.tar\' . tar-mode) (\.\(arc\|zip\|lzh\|lha\|zoo\|[jew]ar\|xpi\|rar\|cbr\|7z\|squashfs\|ARC\|ZIP\|LZH\|LHA\|ZOO\|[JEW]AR\|XPI\|RAR\|CBR\|7Z\|SQUASHFS\)\' . archive-mode) (\.oxt\' . archive-mode) (\.\(deb\|[oi]pk\)\' . archive-mode) (\`/tmp/Re . text-mode) (/Message[0-9]*\' . text-mode) (\`/tmp/fol/ . text-mode) (\.oak\' . scheme-mode) (\.sgml?\' . sgml-mode) (\.x[ms]l\' . xml-mode) (\.dbk\' . xml-mode) (\.dtd\' . sgml-mode) (\.ds\(ss\)?l\' . dsssl-mode) (\.js[mx]?\' . javascript-mode) (\.har\' . javascript-mode) (\.json\' . javascript-mode) (\.[ds]?va?h?\' . verilog-mode) (\.by\' . bovine-grammar-mode) (\.wy\' . wisent-grammar-mode) ([:/\]\..*\(emacs\|gnus\|viper\)\' . emacs-lisp-mode) (\`\..*emacs\' . emacs-lisp-mode) ([:/]_emacs\' . emacs-lisp-mode) (/crontab\.X*[0-9]+\' . shell-script-mode) (\.ml\' . lisp-mode) (\.ld[si]?\' . ld-script-mode) (ld\.?script\' . ld-script-mode) (\.xs\' . c-mode) (\.x[abdsru]?[cnw]?\' . ld-script-mode) (\.zone\' . dns-mode) (\.soa\' . dns-mode) (\.asd\' . lisp-mode) (\.\(asn\|mib\|smi\)\' . snmp-mode) (\.\(as\|mi\|sm\)2\' . snmpv2-mode) (\.\(diffs?\|patch\|rej\)\' . diff-mode) (\.\(dif\|pat\)\' . diff-mode) (\.[eE]?[pP][sS]\' . ps-mode) (\.\(?:PDF\|DVI\|OD[FGPST]\|DOCX\|XLSX?\|PPTX?\|pdf\|djvu\|dvi\|od[fgpst]\|docx\|xlsx?\|pptx?\)\' . doc-view-mode-maybe) (configure\.\(ac\|in\)\' . autoconf-mode) (\.s\(v\|iv\|ieve\)\' . sieve-mode) (BROWSE\' . ebrowse-tree-mode) (\.ebrowse\' . ebrowse-tree-mode) (#\*mail\* . mail-mode) (\.g\' . antlr-mode) (\.mod\' . m2-mode) (\.ses\' . ses-mode) (\.docbook\' . sgml-mode) (\.com\' . dcl-mode) (/config\.\(?:bat\|log\)\' . fundamental-mode) (/\.\(authinfo\|netrc\)\' . authinfo-mode) (\.\(?:[iI][nN][iI]\|[lL][sS][tT]\|[rR][eE][gG]\|[sS][yY][sS]\)\' . conf-mode) (\.la\' . conf-unix-mode) (\.ppd\' . conf-ppd-mode) (java.+\.conf\' . conf-javaprop-mode) (\.properties\(?:\.[a-zA-Z0-9._-]+\)?\' . conf-javaprop-mode) (\.toml\' . conf-toml-mode) (\.desktop\' . conf-desktop-mode) (/\.redshift\.conf\' . conf-windows-mode) (\`/etc/\(?:DIR_COLORS\|ethers\|.?fstab\|.*hosts\|lesskey\|login\.?de\(?:fs\|vperm\)\|magic\|mtab\|pam\.d/.*\|permissions\(?:\.d/.+\)?\|protocols\|rpc\|services\)\' . conf-space-mode) (\`/etc/\(?:acpid?/.+\|aliases\(?:\.d/.+\)?\|default/.+\|group-?\|hosts\..+\|inittab\|ksysguarddrc\|opera6rc\|passwd-?\|shadow-?\|sysconfig/.+\)\' . conf-mode) ([cC]hange[lL]og[-.][-0-9a-z]+\' . change-log-mode) (/\.?\(?:gitconfig\|gnokiirc\|hgrc\|kde.*rc\|mime\.types\|wgetrc\)\' . conf-mode) (/\.\(?:asound\|enigma\|fetchmail\|gltron\|gtk\|hxplayer\|mairix\|mbsync\|msmtp\|net\|neverball\|nvidia-settings-\|offlineimap\|qt/.+\|realplayer\|reportbug\|rtorrent\.\|screen\|scummvm\|sversion\|sylpheed/.+\|xmp\)rc\' . conf-mode) (/\.\(?:gdbtkinit\|grip\|mpdconf\|notmuch-config\|orbital/.+txt\|rhosts\|tuxracer/options\)\' . conf-mode) (/\.?X\(?:default\|resource\|re\)s\> . conf-xdefaults-mode) (/X11.+app-defaults/\|\.ad\' . conf-xdefaults-mode) (/X11.+locale/.+/Compose\' . conf-colon-mode) (/X11.+locale/compose\.dir\' . conf-javaprop-mode) (\.~?[0-9]+\.[0-9][-.0-9]*~?\' nil t) (\.\(?:orig\|in\|[bB][aA][kK]\)\' nil t) ([/.]c\(?:on\)?f\(?:i?g\)?\(?:\.[a-zA-Z0-9._-]+\)?\' . conf-mode-maybe) (\.[1-9]\' . nroff-mode) (\.art\' . image-mode) (\.avs\' . image-mode) (\.bmp\' . image-mode) (\.cmyk\' . image-mode) (\.cmyka\' . image-mode) (\.crw\' . image-mode) (\.dcr\' . image-mode) (\.dcx\' . image-mode) (\.dng\' . image-mode) (\.dpx\' . image-mode) (\.fax\' . image-mode) (\.hrz\' . image-mode) (\.icb\' . image-mode) (\.icc\' . image-mode) (\.icm\' . image-mode) (\.ico\' . image-mode) (\.icon\' . image-mode) (\.jbg\' . image-mode) (\.jbig\' . image-mode) (\.jng\' . image-mode) (\.jnx\' . image-mode) (\.miff\' . image-mode) (\.mng\' . image-mode) (\.mvg\' . image-mode) (\.otb\' . image-mode) (\.p7\' . image-mode) (\.pcx\' . image-mode) (\.pdb\' . image-mode) (\.pfa\' . image-mode) (\.pfb\' . image-mode) (\.picon\' . image-mode) (\.pict\' . image-mode) (\.rgb\' . image-mode) (\.rgba\' . image-mode) (\.tga\' . image-mode) (\.wbmp\' . image-mode) (\.webp\' . image-mode) (\.wmf\' . image-mode) (\.wpg\' . image-mode) (\.xcf\' . image-mode) (\.xmp\' . image-mode) (\.xwd\' . image-mode) (\.yuv\' . image-mode) (\.tgz\' . tar-mode) (\.tbz2?\' . tar-mode) (\.txz\' . tar-mode) (\.tzst\' . tar-mode))
+
 ** Esup
 [[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work around of a bug where esup tries to step into the byte-compiled version of `cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
 
 #+begin_src emacs-lisp
 (setq esup-depth 0)
 #+end_src
+
+#+RESULTS:
+: 0
 
 ** Reloading Emacs
 Often used when changing up my ~init.el~.
@@ -697,15 +887,20 @@ Often used when changing up my ~init.el~.
   :ensure t)
 #+end_src
 
+#+RESULTS:
+
 * Minimap
 I have a love-hate relationship with the minimap.  Sometimes it feels great, especially when I'm doing a mouse-heavy demo for navigation.  Other times it blocks the echo area when the window is too small and it drives me crazy.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 (use-package minimap
   :config
   (when (display-graphic-p)
     (minimap-mode t)))
 #+end_src
+
+#+RESULTS:
+: t
 
 * Mode line
 
@@ -726,7 +921,6 @@ I find it very distracting when =eldoc= suddenly pops up and consumes a large pa
 #+end_src
 
 #+RESULTS:
-: t
 
 
 * Autocompletion
@@ -735,6 +929,9 @@ Emacs offers incredible depth and freedom when configuring methods that automati
 #+begin_src emacs-lisp
 (setq completion-styles '(flex basic partial-completion emacs22))
 #+end_src
+
+#+RESULTS:
+| flex | basic | partial-completion | emacs22 |
 
 I've found the [[https://github.com/oantolin/orderless][orderless]] completion style especially well-suited to Emacs.
 
@@ -747,11 +944,17 @@ I've found the [[https://github.com/oantolin/orderless][orderless]] completion s
   (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
+#+RESULTS:
+: t
+
 With the /completion style/ set, we have to now configure the interfaces for /displaying/ candidates as we type.  The natural place to start would be the built-in ~*Completions*~ buffer.  First, I want candidates displayed as a single, vertical list.
 
 #+begin_src emacs-lisp
 (setq completions-format 'one-column)
 #+end_src
+
+#+RESULTS:
+: one-column
 
 If there is a convenient way to interact with this buffer from default key bindings, I am not aware of it.  Because of this, I set a few convenience functions for navigating to, selecting, and closing the ~*Completions*~ buffer in the case I do need to use it.
 
@@ -777,6 +980,9 @@ If there is a convenient way to interact with this buffer from default key bindi
   (kill-buffer "*Completions*"))
 #+end_src
 
+#+RESULTS:
+: renz/completion-kill-completion-buffer
+
 Much like Vim's built-in completion with the pop-up menu, I set =C-n= and =C-p= as a way to select completion candidates out of the ~*Completions*~ buffer.
 
 #+begin_src emacs-lisp
@@ -785,6 +991,9 @@ Much like Vim's built-in completion with the pop-up menu, I set =C-n= and =C-p= 
 (define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
 #+end_src
 
+#+RESULTS:
+: previous-completion
+
 For a while, I thought keys like =RET=, =TAB=, and similar would be intuitive candidates for accepting completion candidates.  That turned out to be a problem because there's a good chance you'll mess up required functionality in shell, minibuffer, and related modes.  So, instead, I opt for the similar =C-j=.
 
 #+begin_src emacs-lisp
@@ -792,17 +1001,26 @@ For a while, I thought keys like =RET=, =TAB=, and similar would be intuitive ca
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
 #+end_src
 
+#+RESULTS:
+: choose-completion
+
 It's worth noting that the ~fido-vertical~ built-in is pretty good, but I had issues with micro-freezes in some situations.  [[https://github.com/minad/vertico][vertico]], on the other hand, has been lightning quick, and has intuitive keybindings that don't require any futzing.  /Especially/ in the case where I'm looking to tab-complete things like =C-x C-f /ssh:<thing>=.
 
 #+begin_src emacs-lisp
 (vertico-mode)
 #+end_src
 
+#+RESULTS:
+: t
+
 Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd much prefer to just use the easier and more intuitive =TAB=.
 
 #+begin_src emacs-lisp
 (setq tab-always-indent 'complete)
 #+end_src
+
+#+RESULTS:
+: complete
 
 For =completion-at-=point= suggestions, I like =corfu= a lot.  It's philosophy is to stick as close as possible to the native Emacs internal API as possible, without reinventing the whell.  In my experience, this has meant far fewer integration troubles with other packages.
 
@@ -818,6 +1036,9 @@ For =completion-at-=point= suggestions, I like =corfu= a lot.  It's philosophy i
 (global-corfu-mode)
 #+end_src
 
+#+RESULTS:
+: t
+
 There are some cases over Tramp, however, where corfu will case some performance issues.  Especially in the case where some folders under the =/= root might be mounted over a network.  In that case, I sometimes add =renz/disable-corfu-remote= to select hooks, such as =shell-mode=.
 
 #+begin_src emacs-lisp
@@ -827,9 +1048,12 @@ There are some cases over Tramp, however, where corfu will case some performance
     (corfu-mode -1)))
 #+end_src
 
+#+RESULTS:
+: renz/disable-corfu-remote
+
 For a while I was experimenting with ~company-mode~.  This section is obsolete and not tangled into the final ~init.el~, since I don't use company anymore.  I do keep it around for historical reasons, though, in case if I ever decide to go back.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 (add-hook 'after-init-hook 'global-company-mode)
 (add-hook 'shell-mode-hook 'renz/disable-company-remote-shell)
 (setq company-minimum-prefix-length 2)
@@ -840,6 +1064,9 @@ For a while I was experimenting with ~company-mode~.  This section is obsolete a
 (setq company-tooltip-margin 2)
 #+end_src
 
+#+RESULTS:
+: 2
+
 
 * Org-mode
 
@@ -848,17 +1075,25 @@ For a while I was experimenting with ~company-mode~.  This section is obsolete a
 (setq org-edit-src-content-indentation 0)
 #+end_src
 
+#+RESULTS:
+: 0
+
 I use =consult-org-heading= for jumping between headers now, so I no longer tangle this line into my config.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 (setq org-goto-interface 'outline-path-completion)
 #+end_src
+
+#+RESULTS:
+: outline-path-completion
 
 When displaying images, I usually like to resize them to a comfortable width, which the following enables.
 
 #+begin_src emacs-lisp
 (setq org-image-actual-width nil)
 #+end_src
+
+#+RESULTS:
 
 I often want to kill and paste entire ~src~ blocks at a time.  As far as I know, there's no built-in command for that, so I just made my own.
 
@@ -871,12 +1106,17 @@ I often want to kill and paste entire ~src~ blocks at a time.  As far as I know,
   (kill-region nil nil t))
 #+end_src
 
+#+RESULTS:
+: renz/org-kill-src-block
+
 I also use ~org-mode~ for writing [[https://robbmann.io/posts][my blog.]]  With a little help from [[https://willschenk.com/articles/2019/using_org_mode_in_hugo/][an article]] we have exporting to Hugo-specific markdown.  Without the export, Hugo can read Org files /okay-ish/, but you wind up missing some nice QoL features, like header links.
 
 #+begin_src emacs-lisp
 (use-package ox-hugo
   :ensure t)
 #+end_src
+
+#+RESULTS:
 
 ~org-mode~ provides =org-babel-tangle-jump-to-org=, which jumps back to an Org source file from within the tangled code.  ~renz/org-babel-tangle-jump-to-src~, defined below, does the opposite - given the Org source file and point inside a ~src~ block, it jumps to the location of the tangled code.  Provided by a helpful [[https://emacs.stackexchange.com/a/69591][stackoverflow answer.]]
 
@@ -905,6 +1145,9 @@ Jumps at tangled code from org src block."
     (message "Cannot jump to tangled file because point is not at org src block.")))
 #+end_src
 
+#+RESULTS:
+: renz/org-babel-tangle-jump-to-src
+
 Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup-indented t)= t get indentation under each header, but this was interfering with the beautification features from ~org-modern~.  Preferring the latter over the former, I've removed the =org-startup-indented= call.
 
 #+begin_src emacs-lisp
@@ -914,8 +1157,8 @@ Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup
   (org-mode . (lambda () (progn
                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))))
+  :hook (org-mode . visual-line-mode)
   :config
-  (add-hook 'org-mode-hook #'visual-line-mode)
   (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -934,13 +1177,16 @@ Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup
      (org . t)
      (gnuplot . t)
      (awk . t)
-     (latex . t))
+     (latex . t)))
    ;; Outside the typical TODO/DONE states, I like to use DEAD as an indicator
    ;; that something is fully blocked, but not done.
    (setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
    (setq org-agenda-files '("~/.emacs.d/org/work.org")
          org-hugo-front-matter-format "yaml"))
 #+end_src
+
+#+RESULTS:
+| (lambda nil (progn (add-hook 'after-save-hook #'org-babel-tangle :append :local) (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))) | org-tempo-setup | visual-line-mode | (closure (t) nil (progn (add-hook 'after-save-hook #'org-babel-tangle :append :local) (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))) | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
 
 ~ob-async~ adds asynchronous source block execution to some modes that otherwise wouldn't have it.
 
@@ -962,11 +1208,11 @@ Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup
 #+end_src
 
 #+RESULTS:
-| (lambda nil (progn (add-hook 'after-save-hook #'org-babel-tangle :append :local) (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))) | visual-line-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+: t
 
 ** Org Roam
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 (use-package org-roam
   :ensure t
   :config
@@ -976,40 +1222,41 @@ Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup
   (org-roam-db-autosync-mode))
 #+end_src
 
+#+RESULTS:
+: t
+
 ** =org-modern=
 A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
 
 #+begin_src emacs-lisp
-(use-package org-modern
-  :ensure t
-  :config
+(setq
+ ;; Edit settings
+ org-auto-align-tags nil
+ org-tags-column 0
+ org-catch-invisible-edits 'show-and-error
+ org-special-ctrl-a/e t
+ org-insert-heading-respect-content t
 
-  (setq
-   ;; edit settings
-   org-auto-align-tags nil
-   org-tags-column 0
-   org-catch-invisible-edits 'show-and-error
-   org-special-ctrl-a/e t
-   org-insert-heading-respect-content t
+ ;; Org styling, hide markup etc.
+ org-hide-emphasis-markers t
+ org-pretty-entities t
+ org-ellipsis "…"
 
-   ;; Org styling, hide markup etc.
-   org-hide-emphasis-markers t
-   org-pretty-entities t
-   org-ellipsis "…"
+ ;; Agenda styling
+ org-agenda-tags-column 0
+ org-agenda-block-separator ?─
+ org-agenda-time-grid
+ '((daily today require-timed)
+   (800 1000 1200 1400 1600 1800 2000)
+   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+ org-agenda-current-time-string
+ "⭠ now ─────────────────────────────────────────────────")
 
-   ;; Agenda styling
-   org-agenda-tags-column 0
-   org-agenda-block-separator ?─
-   org-agenda-time-grid
-   '((daily today require-timed)
-     (800 1000 1200 1400 1600 1800 2000)
-     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-   org-agenda-current-time-string
-   "⭠ now ─────────────────────────────────────────────────")
-
-  (global-org-modern-mode))
+(global-org-modern-mode)
 #+end_src
 
+#+RESULTS:
+: t
 
 * SQL
 
@@ -1023,16 +1270,17 @@ A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
   :ensure t
   :init
   (defvar renz/sql-indentation-offsets-alist
-           `((select-clause 0)
+           '((select-clause 0)
              (insert-clause 0)
              (delete-clause 0)
              (update-clause 0)
              ,@sqlind-default-indentation-offsets-alist))
 
-  (defun renz/sql-indentation-offsets ()
-    (add-hook 'sqlind-minor-mode-hook
-              (setq sqlind-indentation-offsets-alist
-                    renz/sql-indentation-offsets-alist)))
+  ;; (defun renz/sql-indentation-offsets ()
+  ;;   (add-hook 'sqlind-minor-mode-hook
+  ;;             (setq sqlind-indentation-offsets-alist
+  ;;                   renz/sql-indentation-offsets-alist)))
+
   :hook (sqlind-minor-mode . renz/sql-indentation-offsets))
 
 (use-package sqlup-mode
@@ -1062,6 +1310,8 @@ A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
   :after (sql))
 #+end_src
 
+#+RESULTS:
+
 
 * Python
 
@@ -1085,6 +1335,9 @@ To get the basic =M-g M-n= and =M-g M-p= navigation working, we just need a rege
   (add-to-list 'compilation-error-regexp-alist 'pyright))
 #+end_src
 
+#+RESULTS:
+| pyright | absoft | ada | aix | ant | bash | borland | python-tracebacks-and-caml | cmake | cmake-info | comma | msft | edg-1 | edg-2 | epc | ftnchek | gradle-kotlin | iar | ibm | irix | java | javac | jikes-file | maven | jikes-line | clang-include | gcc-include | ruby-Test::Unit | gmake | gnu | cucumber | lcc | makepp | mips-1 | mips-2 | omake | oracle | perl | php | rxp | shellcheck | sparc-pascal-file | sparc-pascal-line | sparc-pascal-example | sun | sun-ada | watcom | 4bsd | gcov-file | gcov-header | gcov-nomark | gcov-called-line | gcov-never-called | perl--Pod::Checker | perl--Test | perl--Test2 | perl--Test::Harness | weblint | guile-file | guile-line |
+
 It would be nice if we could also capture the =\\(error\\|warning\\)= part as "KIND", but I'm struggling to get it working.
 
 Another nice vanilla feature of ~python-mode~ is =M-x python-check=, which runs a pre-specified linter.  Setting that to ~mypy~ or ~pyright~ if either of those programs exist is a small time saver.
@@ -1097,6 +1350,9 @@ Another nice vanilla feature of ~python-mode~ is =M-x python-check=, which runs 
       (setq python-check-command "pyright")))
 #+end_src
 
+#+RESULTS:
+: pyright
+
 At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The culprit was "App Execution Aliases" with python and python3 redirecting to the windows store.  Using this fixed it:
 
 #+begin_example
@@ -1107,7 +1363,7 @@ Also on Windows - a `pip install` of `pyreadline3' is required to make tab-compl
 
 Virtualenvs require ~.dir-locals.el~ to have something like:
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
    ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
 #+end_src
 
@@ -1115,7 +1371,7 @@ However, this only operates on `run-python' shells.
 
 ~pyvenv~ solves the otherwise very annoying problem of getting external tools like `compile' and `eshell' to also use our virtual environment's python.  I may still use .dir-locals.el to set things like the python-check-command on a per-project basis, though.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 (when (package-installed-p 'pyvenv)
   (pyvenv-mode)
   ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
@@ -1124,13 +1380,18 @@ However, this only operates on `run-python' shells.
   )
 #+end_src
 
+#+RESULTS:
+
 I don't use ~pyvenv~ much now though, since the vast majority of my development time is spent over Tramp, which ~pyvenv~ does not support.
 
 For a while, it looks like Emacs was trying out something called [[https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html][semantic-mode]], which looks a lot like a precursor to what we now know as the [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]].  Enabling that mode would look like this:
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 (add-hook 'python-mode-hook 'semantic-mode)
 #+end_src
+
+#+RESULTS:
+| semantic-mode |
 
 Don't mark the check command and virtualenv variables as unsafe.
 
@@ -1139,11 +1400,17 @@ Don't mark the check command and virtualenv variables as unsafe.
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
 #+end_src
 
+#+RESULTS:
+: stringp
+
 To have ~eglot~ always start up for a python buffer, we would tangle this line into ~init.el~.  However, this can cause a significant loading delay over Tramp, and I would prefer snappy, simple access with LSP provided on an as-needed basis.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 (add-hook 'python-mode-hook 'eglot-ensure)
 #+end_src
+
+#+RESULTS:
+| eglot-ensure | semantic-mode |
 
 Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with Jupyter kernels from org-mode.
 
@@ -1196,6 +1463,8 @@ Windows, funnily enough, has some trouble registering the Windows key as a usabl
   (w32-register-hot-key [s-z]))
 #+end_src
 
+#+RESULTS:
+
 
 * macOS
 
@@ -1207,6 +1476,9 @@ Windows, funnily enough, has some trouble registering the Windows key as a usabl
   (exec-path-from-shell-initialize))
 #+end_src
 
+#+RESULTS:
+: ((MANPATH) (PATH . /Users/a834991/.cargo/bin:/Users/a834991/.local/bin:/usr/local/bin:/usr/bin:/bin:/Users/a834991/go/bin:/Users/a834991/Applications/kitty.app/Contents/MacOS/:/Users/a834991/Applications/Emacs.app/Contents/MacOS/bin:/Users/a834991/Applications/CMake.app/Contents/bin:/Users/a834991/opt/miniconda3/bin:/Users/a834991/.emacs.d/bin:/Users/a834991/Library/Python/3.9/bin))
+
 
 * Linux
 #+begin_src emacs-lisp
@@ -1215,6 +1487,8 @@ Windows, funnily enough, has some trouble registering the Windows key as a usabl
   ;; (exec-path-from-shell-initialize)
   )
 #+end_src
+
+#+RESULTS:
 
 * Tramp
 
@@ -1228,17 +1502,24 @@ When using [[https://anaconda.org][conda]], I keep a special conda environment n
 (setq tramp-verbose 1)
 #+end_src
 
+#+RESULTS:
+: 1
+
 eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden reentrant call of Tramp" message and freezing.  In the meantime, this setting was recommended.
 
 #+begin_src emacs-lisp
 (setq tramp-use-ssh-controlmaster-options nil)
 #+end_src
 
+#+RESULTS:
+
 For some time I was having a lot of trouble with slowness over Tramp, and after careful scrutiny of the logs on (I belive) =tramp-verbose 6=, I found out that enabling remote dir-locals was causing a huge bottleneck.  On every operation it would trace up the filesystem tree back to the root directory, scanning for a ~.dir-locals~ file.  Since some of the drives were network-mounted, this caused thousands of network calls per file operation, obviously slowing things down a lot.  Because of this, I've opted to simply disable ~.dir-locals~ over Tramp entirely, since I don't really use it much, if at all.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 ;; (setq enable-remote-dir-locals t)
 #+end_src
+
+#+RESULTS:
 
 #+begin_src emacs-lisp
 (with-eval-after-load 'tramp
@@ -1248,21 +1529,30 @@ For some time I was having a lot of trouble with slowness over Tramp, and after 
   )
 #+end_src
 
+#+RESULTS:
+| ~/.conda/envs/robbmann/bin | ~/.local/bin | tramp-default-remote-path | /bin | /usr/bin | /sbin | /usr/sbin | /usr/local/bin | /usr/local/sbin | /local/bin | /local/freeware/bin | /local/gnu/bin | /usr/freeware/bin | /usr/pkg/bin | /usr/contrib/bin | /opt/bin | /opt/sbin | /opt/local/bin |
+
 [[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable thing to put in, since I so frequently use VC over tramp.  Fully disabling VC would include this snippet:
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 (setq vc-ignore-dir-regexp
       (format "\\(%s\\)\\|\\(%s\\)"
               vc-ignore-dir-regexp
               tramp-file-name-regexp))
 #+end_src
 
+#+RESULTS:
+: \(\`\(?:[\/][\/][^\/]+[\/]\|/\(?:net\|afs\|\.\.\.\)/\)\'\)\|\(\`/[^/:]+:[^/:]*:\)
+
 Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs issues]].
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle no :eval never
 (setq tramp-default-method "scp")
 (setq projectile--mode-line "Projectile")
 #+end_src
+
+#+RESULTS:
+: Projectile
 
 I often need to set these in ~/.ssh/config for TRAMP to speed up
 
@@ -1276,71 +1566,6 @@ Host *
 #+end_example
 
 
-* LSP :ARCHIVE:
-
-Another section that's totally obsolete, but kept in case I need references to it.  Since =eglot= will be a built-in package for future emacs, I'm going to stick to it.
-
-#+begin_src emacs-lisp :tangle no
-(require 'lsp-mode)
-
-(setq lsp-keymap-prefix "s-p")
-(lsp-register-client
-    (make-lsp-client :new-connection (lsp-tramp-connection "pylsp")
-                     :major-modes '(python-mode)
-                     :remote? t
-                     :server-id 'pylsp-remote))
-
-(lsp-register-client
-    (make-lsp-client :new-connection (lsp-tramp-connection '("pyright-langserver" "--stdio"))
-                     :major-modes '(python-mode)
-                     :remote? t
-                     :server-id 'pyright-remote))
-
-(defun lsp-tramp-connection (local-command &optional generate-error-file-fn)
-    "Create LSP stdio connection named name.
-LOCAL-COMMAND is either list of strings, string or function which
-returns the command to execute."
-    (defvar tramp-connection-properties)
-    ;; Force a direct asynchronous process.
-    (when (file-remote-p default-directory)
-      (add-to-list 'tramp-connection-properties
-                   (list (regexp-quote (file-remote-p default-directory))
-                         "direct-async-process" t)))
-    (list :connect (lambda (filter sentinel name environment-fn)
-                     (let* ((final-command (lsp-resolve-final-function
-                                            local-command))
-                            (_stderr (or (when generate-error-file-fn
-                                           (funcall generate-error-file-fn name))
-                                         (format "/tmp/%s-%s-stderr" name
-                                                 (cl-incf lsp--stderr-index))))
-                            (process-name (generate-new-buffer-name name))
-                            (process-environment
-                             (lsp--compute-process-environment environment-fn))
-                            (proc (make-process
-                                   :name process-name
-                                   :buffer (format "*%s*" process-name)
-                                   :command final-command
-                                   :connection-type 'pipe
-                                   :coding 'no-conversion
-                                   :noquery t
-                                   :filter filter
-                                   :sentinel sentinel
-                                   :file-handler t)))
-                       (cons proc proc)))
-          :test? (lambda () (-> local-command lsp-resolve-final-function
-                           lsp-server-present?))))
-
-(setq lsp-completion-provider :none)
-
-(defun renz/corfu-lsp-setup ()
-  (setq-local completion-styles '(flex basic partial-completion emacs22)
-              completion-category-defaults nil))
-
-(add-hook 'lsp-mode-hook #'renz/corfu-lsp-setup)
-
-#+end_src
-
-
 * TODO TreeSitter
 REMINDME: Convert to use-package
 #+begin_src emacs-lisp
@@ -1349,6 +1574,9 @@ REMINDME: Convert to use-package
 (global-tree-sitter-mode)
 (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
 #+end_src
+
+#+RESULTS:
+| tree-sitter-hl-mode |
 
 * Inspirations
 
@@ -1365,3 +1593,6 @@ Thank you for reading 'till the end or for being interested on how to end an Ema
 (provide 'init.el)
 ;;; init.el ends here
 #+end_src
+
+#+RESULTS:
+: init\.el

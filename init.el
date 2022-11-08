@@ -108,25 +108,29 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-M-h") 'backward-kill-sexp)
 ;; Expanded defaults:1 ends here
 
-;; [[file:README.org::*Expanded defaults][Expanded defaults:3]]
-(global-set-key [remap list-buffers] 'ibuffer)
-(global-set-key [remap switch-to-buffer] 'consult-buffer)
-;; Expanded defaults:3 ends here
+;; [[file:README.org::*Expanded defaults][Expanded defaults:2]]
+(global-set-key (kbd "C-z") #'zap-up-to-char)
+;; Expanded defaults:2 ends here
 
 ;; [[file:README.org::*Expanded defaults][Expanded defaults:4]]
-(with-eval-after-load 'flymake
-  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
-  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+(global-set-key [remap list-buffers] 'ibuffer)
+(global-set-key [remap switch-to-buffer] 'consult-buffer)
 ;; Expanded defaults:4 ends here
 
 ;; [[file:README.org::*Expanded defaults][Expanded defaults:5]]
+(with-eval-after-load 'flymake
+  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+;; Expanded defaults:5 ends here
+
+;; [[file:README.org::*Expanded defaults][Expanded defaults:6]]
 (define-key isearch-mode-map (kbd "<C-return>")
   (defun isearch-done-opposite (&optional nopush edit)
     "End current search in the opposite side of the match."
     (interactive)
     (funcall #'isearch-done nopush edit)
     (when isearch-other-end (goto-char isearch-other-end))))
-;; Expanded defaults:5 ends here
+;; Expanded defaults:6 ends here
 
 ;; [[file:README.org::*C-c bindings][C-c bindings:1]]
 ;; (global-set-key (kbd "C-c a") #')
@@ -588,8 +592,8 @@ Jumps at tangled code from org src block."
   (org-mode . (lambda () (progn
                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))))
+  :hook (org-mode . visual-line-mode)
   :config
-  (add-hook 'org-mode-hook #'visual-line-mode)
   (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
    'org-babel-load-languages
@@ -608,7 +612,7 @@ Jumps at tangled code from org src block."
      (org . t)
      (gnuplot . t)
      (awk . t)
-     (latex . t))
+     (latex . t)))
    ;; Outside the typical TODO/DONE states, I like to use DEAD as an indicator
    ;; that something is fully blocked, but not done.
    (setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
@@ -634,34 +638,30 @@ Jumps at tangled code from org src block."
 ;; Org-mode:8 ends here
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
-(use-package org-modern
-  :ensure t
-  :config
+(setq
+ ;; Edit settings
+ org-auto-align-tags nil
+ org-tags-column 0
+ org-catch-invisible-edits 'show-and-error
+ org-special-ctrl-a/e t
+ org-insert-heading-respect-content t
 
-  (setq
-   ;; edit settings
-   org-auto-align-tags nil
-   org-tags-column 0
-   org-catch-invisible-edits 'show-and-error
-   org-special-ctrl-a/e t
-   org-insert-heading-respect-content t
+ ;; Org styling, hide markup etc.
+ org-hide-emphasis-markers t
+ org-pretty-entities t
+ org-ellipsis "…"
 
-   ;; Org styling, hide markup etc.
-   org-hide-emphasis-markers t
-   org-pretty-entities t
-   org-ellipsis "…"
+ ;; Agenda styling
+ org-agenda-tags-column 0
+ org-agenda-block-separator ?─
+ org-agenda-time-grid
+ '((daily today require-timed)
+   (800 1000 1200 1400 1600 1800 2000)
+   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+ org-agenda-current-time-string
+ "⭠ now ─────────────────────────────────────────────────")
 
-   ;; Agenda styling
-   org-agenda-tags-column 0
-   org-agenda-block-separator ?─
-   org-agenda-time-grid
-   '((daily today require-timed)
-     (800 1000 1200 1400 1600 1800 2000)
-     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-   org-agenda-current-time-string
-   "⭠ now ─────────────────────────────────────────────────")
-
-  (global-org-modern-mode))
+(global-org-modern-mode)
 ;; =org-modern=:1 ends here
 
 ;; [[file:README.org::*SQL][SQL:1]]
@@ -674,16 +674,17 @@ Jumps at tangled code from org src block."
   :ensure t
   :init
   (defvar renz/sql-indentation-offsets-alist
-           `((select-clause 0)
+           '((select-clause 0)
              (insert-clause 0)
              (delete-clause 0)
              (update-clause 0)
              ,@sqlind-default-indentation-offsets-alist))
 
-  (defun renz/sql-indentation-offsets ()
-    (add-hook 'sqlind-minor-mode-hook
-              (setq sqlind-indentation-offsets-alist
-                    renz/sql-indentation-offsets-alist)))
+  ;; (defun renz/sql-indentation-offsets ()
+  ;;   (add-hook 'sqlind-minor-mode-hook
+  ;;             (setq sqlind-indentation-offsets-alist
+  ;;                   renz/sql-indentation-offsets-alist)))
+
   :hook (sqlind-minor-mode . renz/sql-indentation-offsets))
 
 (use-package sqlup-mode
