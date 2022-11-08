@@ -20,12 +20,16 @@
 ;; [[file:README.org::*Packages][Packages:1]]
 (eval-when-compile
   (package-autoremove)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (unless (package-installed-p 'use-package)
-    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
     (package-refresh-contents)
     (package-install 'use-package))
   (require 'use-package))
 ;; Packages:1 ends here
+
+;; [[file:README.org::*Packages][Packages:2]]
+(add-to-list 'load-path (expand-file-name "packages/" user-emacs-directory))
+;; Packages:2 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
 (setq ef-themes-headings
@@ -160,6 +164,7 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c o b d") #'org-babel-detangle)
 (global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
 (global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
+(global-set-key (kbd "C-c o j") #'consult-org-heading)
 (global-set-key (kbd "C-c o o") #'renz/jump-org)
 (global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
 ;; =C-c o= Org bindings:1 ends here
@@ -240,7 +245,10 @@ emacs config site with matching `extension' regexp"
 ;; Nonstandard bindings:1 ends here
 
 ;; [[file:README.org::*Super bindings][Super bindings:1]]
+(global-set-key (kbd "s-c") #'kill-ring-save)
 (global-set-key (kbd "s-s") #'save-buffer)
+(global-set-key (kbd "s-t") #'tab-new)
+(global-set-key (kbd "s-v") #'yank)
 ;; Super bindings:1 ends here
 
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
@@ -419,12 +427,13 @@ emacs config site with matching `extension' regexp"
   (setq pixel-scroll-precision-large-scroll-height 35.0))
 ;; Smooth scrolling:1 ends here
 
-;; [[file:README.org::*Backup files][Backup files:1]]
+;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
 (setq backup-directory-alist
-      `((".*" . temporary-file-directory,))
-      auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
-;; Backup files:1 ends here
+      `(("." . temporary-file-directory))
+      ;; auto-save-file-name-transforms
+      ;; `(("." ,temporary-file-directory t))
+      )
+;; Backup and auto-save files:1 ends here
 
 ;; [[file:README.org::*Code syntax in Markdown][Code syntax in Markdown:1]]
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
@@ -433,13 +442,6 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*Esup][Esup:1]]
 (setq esup-depth 0)
 ;; Esup:1 ends here
-
-;; [[file:README.org::*Minimap][Minimap:1]]
-(use-package minimap
-  :config
-  (when (display-graphic-p)
-    (minimap-mode t)))
-;; Minimap:1 ends here
 
 ;; [[file:README.org::*Mode line][Mode line:1]]
 (setq column-number-mode t
@@ -508,70 +510,100 @@ emacs config site with matching `extension' regexp"
 (setq tab-always-indent 'complete)
 ;; Autocompletion:8 ends here
 
-;; [[file:README.org::*=corfu=][=corfu=:1]]
+;; [[file:README.org::*Autocompletion][Autocompletion:9]]
 (unless (display-graphic-p)
   (corfu-terminal-mode +1))
 
-(defun renz/disable-corfu-remote ()
-  (when (and (fboundp 'corfu-mode)
-             (file-remote-p default-directory))
-    (corfu-mode -1)))
 
 (setq corfu-auto t
       corfu-auto-delay 0.0
       corfu-quit-no-match 'separator)
 
 (global-corfu-mode)
-;; =corfu=:1 ends here
+;; Autocompletion:9 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:2]]
+;; [[file:README.org::*Autocompletion][Autocompletion:10]]
+(defun renz/disable-corfu-remote ()
+  (when (and (fboundp 'corfu-mode)
+             (file-remote-p default-directory))
+    (corfu-mode -1)))
+;; Autocompletion:10 ends here
+
+;; [[file:README.org::*Org-mode][Org-mode:1]]
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
-;; Org-mode:2 ends here
+;; Org-mode:1 ends here
+
+;; [[file:README.org::*Org-mode][Org-mode:3]]
+(setq org-image-actual-width nil)
+;; Org-mode:3 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:4]]
-(setq org-image-actual-width nil)
-;; Org-mode:4 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:5]]
 (defun renz/org-kill-src-block ()
   "Kill the src block around point, if applicable."
   (interactive)
   (org-babel-remove-result)
   (org-mark-element)
   (kill-region nil nil t))
+;; Org-mode:4 ends here
+
+;; [[file:README.org::*Org-mode][Org-mode:5]]
+(with-eval-after-load 'ox
+  (require 'ox-hugo))
 ;; Org-mode:5 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:6]]
-(with-eval-after-load 'ox
-  (require 'ox-hugo))
-;; Org-mode:6 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:7]]
-(with-eval-after-load 'org
+(use-package org
+  :ensure t
+  :init
+  (defun display-ansi-colors ()
+    "Fixes kernel output in emacs-jupyter"
+    (ansi-color-apply-on-region (point-min) (point-max)))
+  :hook
+  (org-mode . (lambda () (progn
+                           (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                           (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))))
+  :config
   (add-hook 'org-mode-hook #'visual-line-mode)
-
+  (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (python . t)
      (sql . t)
-     (shell . t)))
+     (shell . t)
+     (fortran . t)
+     (julia . t)
+     ;; (jupyter . t)
+     (scheme . t)
+     (haskell . t)
+     (lisp . t)
+     (clojure . t)
+     (C . t)
+     (org . t)
+     (gnuplot . t)
+     (awk . t)
+     (latex . t)))
 
   ;; Enable asynchronous execution of src blocks
   (when (package-installed-p 'ob-async)
     (require 'ob-async)
     (add-hook 'ob-async-pre-execute-src-block-hook
               #'(lambda ()
-	          (require 'ob-sql-mode)
-	          (require 'hive2))))
+                  (require 'ob-sql-mode)
+                  (require 'hive2))))
   )
+;; Org-mode:6 ends here
 
+;; [[file:README.org::*Org-mode][Org-mode:7]]
 (setq ob-async-no-async-languages-alist '("python"))
-(setq org-html-htmlize-output-type 'css)
+;; Org-mode:7 ends here
 
-;; For navigating to tangled src blocks
-;; https://emacs.stackexchange.com/a/69591
+;; [[file:README.org::*Org-mode][Org-mode:8]]
+(setq org-html-htmlize-output-type 'css)
+;; Org-mode:8 ends here
+
+;; [[file:README.org::*Org-mode][Org-mode:9]]
 (defun renz/org-babel-tangle-jump-to-src ()
   "The opposite of `org-babel-tangle-jump-to-org'.
 Jumps at tangled code from org src block."
@@ -594,15 +626,16 @@ Jumps at tangled code from org src block."
           (beginning-of-buffer)
           (search-forward search-comment)))
     (message "Cannot jump to tangled file because point is not at org src block.")))
+;; Org-mode:9 ends here
 
-;; TODO states
+;; [[file:README.org::*Org-mode][Org-mode:10]]
 (setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
-;; Org-mode:7 ends here
+;; Org-mode:10 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:8]]
+;; [[file:README.org::*Org-mode][Org-mode:11]]
 (setq org-agenda-files '("~/.emacs.d/org/work.org")
       org-hugo-front-matter-format "yaml")
-;; Org-mode:8 ends here
+;; Org-mode:11 ends here
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
 ;; TODO: move this to the misc./ window settings
@@ -680,68 +713,24 @@ Jumps at tangled code from org src block."
 ;; SQL:1 ends here
 
 ;; [[file:README.org::*Python][Python:1]]
-;; Example error from pyright
-;; --------------------------
-;; /home/robb/tmp/errors.py/
-;;   /home/robb/tmp/errors.py:1:1 - error: "foo" is not defined (reportUndefinedVariable)
-;;   /home/robb/tmp/errors.py:1:1 - warning: Expression value is unused (reportUnusedExpression)
-;;   /home/robb/tmp/errors.py:4:12 - error: Operator "+" not supported for types "str" and "Literal[1]"
-;;     Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
-;; 2 errors, 1 warning, 0 informations
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
-               ;; It would be nice if we could also capture the
-               ;; \\(error\\|warning\\) part as "KIND", but I got messed
-               ;; up on it
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
   (add-to-list 'compilation-error-regexp-alist 'pyright))
+;; Python:1 ends here
 
-;; Extra check commands for C-c C-v
+;; [[file:README.org::*Python][Python:2]]
 (with-eval-after-load 'python
   (if (executable-find "mypy")
       (setq python-check-command "mypy"))
   (if (executable-find "pyright")
       (setq python-check-command "pyright")))
+;; Python:2 ends here
 
-;; I ran into something similar to this on Windows:
-;; https://github.com/jorgenschaefer/elpy/issues/733
-;;
-;; The culprit was "App Execution Aliases" with python and python3
-;; redirecting to the windows store. Using:
-;;
-;;     winkey -> Manage app execution aliases -> uncheck python and python3
-;;
-;; fixed it.
-
-;; Also on Windows - a `pip install` of `pyreadline3' is required to
-;; make tab-completion work at all. It provides the `readline' import
-;; symbol.
-
-;; Virtualenvs - require .dir-locals.el to have e.g.:
-;;   ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
-;; However, this only operates on `run-python' shells.
-;;
-;; `pyvenv' solves the otherwise very annoying problem of getting
-;; external tools like `compile' and `eshell' to also use our virtual
-;; environment's python.  I may still use .dir-locals.el to set things
-;; like the python-check-command on a per-project basis, though.
-(when (package-installed-p 'pyvenv)
-  (pyvenv-mode)
-  ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
-  ;; (pyvenv-tracking-mode)
-  ;; (setenv "WORKON_HOME" "~/.conda/envs")
-  )
-
-;; Enable semantic mode for more intelligent code parsing
-;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
-;; (add-hook 'python-mode-hook 'semantic-mode)
-
-;; Don't mark the check command and virtualenv variables as unsafe
+;; [[file:README.org::*Python][Python:6]]
 (put 'python-check-command 'safe-local-variable #'stringp)
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
-
-;; (add-hook 'python-mode-hook 'eglot-ensure)
-;; Python:1 ends here
+;; Python:6 ends here
 
 ;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
 (when (eq system-type 'windows-nt)
@@ -817,26 +806,21 @@ Jumps at tangled code from org src block."
 (setq tramp-inline-compress-start-size 1000)
 (setq tramp-copy-size-limit 10000)
 (setq tramp-verbose 1)
+;; Tramp:1 ends here
 
-;; Without this line, we get the "Forbidden reentrant call of Tramp" bug: https://github.com/joaotavora/eglot/issues/859
+;; [[file:README.org::*Tramp][Tramp:2]]
 (setq tramp-use-ssh-controlmaster-options nil)
+;; Tramp:2 ends here
 
-;; Enable .dir-locals.el for remote files
-;; REMINDME: This can case a HUGE slowdown when doing things like `project-find-file'
-;; (setq enable-remote-dir-locals t)
-
+;; [[file:README.org::*Tramp][Tramp:4]]
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path "~/.local/bin")
   (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
   ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
-  ;; (add-to-list 'tramp-connection-properties
-  ;;              (list (regexp-quote "/ssh:7p")
-  ;;                    "remote-shell" "/usr/bin/ksh"))
   )
-;; Tramp:1 ends here
+;; Tramp:4 ends here
 
 ;; [[file:README.org::*TreeSitter][TreeSitter:1]]
-;; TODO: Convert this to use-package
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 (global-tree-sitter-mode)

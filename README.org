@@ -25,6 +25,12 @@ update this table.  For now though, the 16 bit colors don't react to
 my color theme, and so on Windows I rely singularly on GUI mode,
 rather than WSL or emacs inside Alacritty.
 
+* Inspirations
+
+Here's where I put the typical quote about standing on one form of shoulders or another.  I steal quite a lot from other, more qualified Emacs community contributors, such as
+
+- [[https://protesilaos.com/][Protesilaos Stavrou]]
+- [[https://panadestein.github.io/emacsd/][Ramón Panadestein]]
 
 * Tangling
 
@@ -69,8 +75,8 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
 #+begin_src emacs-lisp
 (eval-when-compile
   (package-autoremove)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (unless (package-installed-p 'use-package)
-    (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
     (package-refresh-contents)
     (package-install 'use-package))
   (require 'use-package))
@@ -79,6 +85,12 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
 #+RESULTS:
 : use-package
 
+
+There are also a few hand-made packages I keep around in a special ~.emacs.d/packages/~ directory.
+
+#+begin_src emacs-lisp
+(add-to-list 'load-path (expand-file-name "packages/" user-emacs-directory))
+#+end_src
 
 * Theme
 [[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will creates larger, bolder headings when in [[Org-mode]].
@@ -244,7 +256,6 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c l s") #'eglot-shutdown)
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
 (global-set-key (kbd "C-c n") #'minimap-mode)
-
 #+end_src
 
 *** =C-c o= Org bindings
@@ -253,6 +264,7 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c o b d") #'org-babel-detangle)
 (global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
 (global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
+(global-set-key (kbd "C-c o j") #'consult-org-heading)
 (global-set-key (kbd "C-c o o") #'renz/jump-org)
 (global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
 #+end_src
@@ -356,8 +368,14 @@ Like the =C-c <letter>= bindings, these are reserved for users.
 See the [[Windows][Microsoft Windows]] section for some hackery required to get these working on more platforms.
 
 #+begin_src emacs-lisp
+(global-set-key (kbd "s-c") #'kill-ring-save)
 (global-set-key (kbd "s-s") #'save-buffer)
+(global-set-key (kbd "s-t") #'tab-new)
+(global-set-key (kbd "s-v") #'yank)
 #+end_src
+
+#+RESULTS:
+: yank
 
 
 * Misc. Settings
@@ -568,7 +586,6 @@ Enable colors in the =*compilation*= buffer.  Provided by a [[https://stackoverf
 I usually leave the tool bar disabled
 #+begin_src emacs-lisp
 (tool-bar-mode -1)
-
 #+end_src
 
 The MENU bar, on the other hand =(menu-bar-mode)=, is very handy, and I don't think I'll ever disable it.
@@ -623,13 +640,14 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
   (setq pixel-scroll-precision-large-scroll-height 35.0))
 #+end_src
 
-** Backup files
-Keep all backup and auto-save files in a temporary folder.
+** Backup and auto-save files
+Keep all backup files in a temporary folder.  At the moment I have some "file not found" errors popping up during auto-save on Windows.  Once I debug that, I'll uncomment the second part.
 #+begin_src emacs-lisp
 (setq backup-directory-alist
-      `((".*" . temporary-file-directory,))
-      auto-save-file-name-transforms
-      `((".*" ,temporary-file-directory t)))
+      `(("." . temporary-file-directory))
+      ;; auto-save-file-name-transforms
+      ;; `(("." ,temporary-file-directory t))
+      )
 #+end_src
 
 ** Code syntax in Markdown
@@ -650,7 +668,7 @@ Enable syntax highlighting within code fences for markdown
 * Minimap
 I have a love-hate relationship with the minimap.  Sometimes it feels great, especially when I'm doing a mouse-heavy demo for navigation.  Other times it blocks the echo area when the window is too small and it drives me crazy.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package minimap
   :config
   (when (display-graphic-p)
@@ -754,16 +772,32 @@ Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd mu
 (setq tab-always-indent 'complete)
 #+end_src
 
-** =company-mode=
-This section is obsolete and not tangled into the final ~init.el~, since I don't use company anymore.  I do keep it around for historical reasons, though, in case if I ever decide to go back.
+For =completion-at-=point= suggestions, I like =corfu= a lot.  It's philosophy is to stick as close as possible to the native Emacs internal API as possible, without reinventing the whell.  In my experience, this has meant far fewer integration troubles with other packages.
+
+#+begin_src emacs-lisp
+(unless (display-graphic-p)
+  (corfu-terminal-mode +1))
+
+
+(setq corfu-auto t
+      corfu-auto-delay 0.0
+      corfu-quit-no-match 'separator)
+
+(global-corfu-mode)
+#+end_src
+
+There are some cases over Tramp, however, where corfu will case some performance issues.  Especially in the case where some folders under the =/= root might be mounted over a network.  In that case, I sometimes add =renz/disable-corfu-remote= to select hooks, such as =shell-mode=.
+
+#+begin_src emacs-lisp
+(defun renz/disable-corfu-remote ()
+  (when (and (fboundp 'corfu-mode)
+             (file-remote-p default-directory))
+    (corfu-mode -1)))
+#+end_src
+
+For a while I was experimenting with ~company-mode~.  This section is obsolete and not tangled into the final ~init.el~, since I don't use company anymore.  I do keep it around for historical reasons, though, in case if I ever decide to go back.
 
 #+begin_src emacs-lisp :tangle no
-;; Company causes TRAMP to hang if we look for commands too fast
-(defun renz/disable-company-remote-shell ()
-  (when (and (fboundp 'company-mode)
-             (file-remote-p default-directory))
-    (company-mode -1)))
-
 (add-hook 'after-init-hook 'global-company-mode)
 (add-hook 'shell-mode-hook 'renz/disable-company-remote-shell)
 (setq company-minimum-prefix-length 2)
@@ -774,32 +808,8 @@ This section is obsolete and not tangled into the final ~init.el~, since I don't
 (setq company-tooltip-margin 2)
 #+end_src
 
-** =corfu=
-Provides popup, suggest-as-you type like we would expect from any modern IDE.  I like =corfu= a lot, since it's philosophy is to stick as close as possible to the native Emacs internal API as possible, without inventing the whell.  In my experience, this has meant far fewer integration troubles with other packages that follow the same ideology.
 
-#+begin_src emacs-lisp
-(unless (display-graphic-p)
-  (corfu-terminal-mode +1))
-
-(defun renz/disable-corfu-remote ()
-  (when (and (fboundp 'corfu-mode)
-             (file-remote-p default-directory))
-    (corfu-mode -1)))
-
-(setq corfu-auto t
-      corfu-auto-delay 0.0
-      corfu-quit-no-match 'separator)
-
-(global-corfu-mode)
-#+end_src
-
-
-* TODO Org-mode
-There is a beefy startup hit from eagerly loading org-tempo, so eventually we'll have to come around and get this lazy-loaded correctly.
-
-#+begin_src emacs-lisp :tangle no
-(require 'org-tempo)
-#+end_src
+* Org-mode
 
 #+begin_src emacs-lisp
 (setq org-confirm-babel-evaluate nil)
@@ -839,30 +849,66 @@ I also use ~org-mode~ for writing [[https://robbmann.io/posts][my blog.]]  With 
 Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup-indented t)= t get indentation under each header, but this was interfering with the beautification features from ~org-modern~.  Preferring the latter over the former, I've removed the =org-startup-indented= call.
 
 #+begin_src emacs-lisp
-(with-eval-after-load 'org
+(use-package org
+  :ensure t
+  :init
+  (defun display-ansi-colors ()
+    "Fixes kernel output in emacs-jupyter"
+    (ansi-color-apply-on-region (point-min) (point-max)))
+  :hook
+  (org-mode . (lambda () (progn
+                           (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                           (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))))
+  :config
   (add-hook 'org-mode-hook #'visual-line-mode)
-
+  (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
    'org-babel-load-languages
    '((emacs-lisp . t)
      (python . t)
      (sql . t)
-     (shell . t)))
+     (shell . t)
+     (fortran . t)
+     (julia . t)
+     ;; (jupyter . t)
+     (scheme . t)
+     (haskell . t)
+     (lisp . t)
+     (clojure . t)
+     (C . t)
+     (org . t)
+     (gnuplot . t)
+     (awk . t)
+     (latex . t)))
 
   ;; Enable asynchronous execution of src blocks
   (when (package-installed-p 'ob-async)
     (require 'ob-async)
     (add-hook 'ob-async-pre-execute-src-block-hook
               #'(lambda ()
-	          (require 'ob-sql-mode)
-	          (require 'hive2))))
+                  (require 'ob-sql-mode)
+                  (require 'hive2))))
   )
+#+end_src
 
+#+RESULTS:
+| (lambda nil (progn (add-hook 'after-save-hook #'org-babel-tangle :append :local) (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))) | visual-line-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
+
+Python has its own =:async yes= header argument we can use, so there's no need to inclkude it with ~ob-async~.
+
+#+begin_src emacs-lisp
 (setq ob-async-no-async-languages-alist '("python"))
-(setq org-html-htmlize-output-type 'css)
+#+end_src
 
-;; For navigating to tangled src blocks
-;; https://emacs.stackexchange.com/a/69591
+I'm having trouble remmbering why I added this following line, except that I belive it has something to do with exporting to HTML with syntax highlighting
+
+#+begin_src emacs-lisp
+(setq org-html-htmlize-output-type 'css)
+#+end_src
+
+~org-mode~ provides =org-babel-tangle-jump-to-org=, which allows us to jump back to an Org source file from within the tangled code.  I needed a function that does the opposite - given the Org source file and point inside a ~src~ block, jump to the location of the tangled code.  Provided by a helpful [[https://emacs.stackexchange.com/a/69591][stackoverflow answer.]]
+
+#+begin_src emacs-lisp
 (defun renz/org-babel-tangle-jump-to-src ()
   "The opposite of `org-babel-tangle-jump-to-org'.
 Jumps at tangled code from org src block."
@@ -885,8 +931,11 @@ Jumps at tangled code from org src block."
           (beginning-of-buffer)
           (search-forward search-comment)))
     (message "Cannot jump to tangled file because point is not at org src block.")))
+#+end_src
 
-;; TODO states
+Outside the typical TODO/DONE states, I like to use DEAD as an indicator that something is fully blocked, but not done.
+
+#+begin_src emacs-lisp
 (setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
 #+end_src
 
@@ -1121,70 +1170,88 @@ From the lovely minad: https://github.com/minad/org-modern
 
 
 * Python
+
+The =M-x compile= feature does not recognize or parse ~pyright~ error messages out of the box, so I add that support myself.  Here's an example error message:
+
+#+begin_example
+/home/robb/tmp/errors.py/
+  /home/robb/tmp/errors.py:1:1 - error: "foo" is not defined (reportUndefinedVariable)
+  /home/robb/tmp/errors.py:1:1 - warning: Expression value is unused (reportUnusedExpression)
+  /home/robb/tmp/errors.py:4:12 - error: Operator "+" not supported for types "str" and "Literal[1]"
+    Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
+2 errors, 1 warning, 0 informations
+#+end_example
+
+To get the basic =M-g M-n= and =M-g M-p= navigation working, we just need a regex to parse file name, line, and column number.
+
 #+begin_src emacs-lisp
-;; Example error from pyright
-;; --------------------------
-;; /home/robb/tmp/errors.py/
-;;   /home/robb/tmp/errors.py:1:1 - error: "foo" is not defined (reportUndefinedVariable)
-;;   /home/robb/tmp/errors.py:1:1 - warning: Expression value is unused (reportUnusedExpression)
-;;   /home/robb/tmp/errors.py:4:12 - error: Operator "+" not supported for types "str" and "Literal[1]"
-;;     Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
-;; 2 errors, 1 warning, 0 informations
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
-               ;; It would be nice if we could also capture the
-               ;; \\(error\\|warning\\) part as "KIND", but I got messed
-               ;; up on it
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
   (add-to-list 'compilation-error-regexp-alist 'pyright))
+#+end_src
 
-;; Extra check commands for C-c C-v
+It would be nice if we could also capture the =\\(error\\|warning\\)= part as "KIND", but I'm struggling to get it working.
+
+Another nice vanilla feature of ~python-mode~ is =M-x python-check=, which runs a pre-specified linter.  Setting that to ~mypy~ or ~pyright~ if either of those programs exist is a small time saver.
+
+#+begin_src emacs-lisp
 (with-eval-after-load 'python
   (if (executable-find "mypy")
       (setq python-check-command "mypy"))
   (if (executable-find "pyright")
       (setq python-check-command "pyright")))
+#+end_src
 
-;; I ran into something similar to this on Windows:
-;; https://github.com/jorgenschaefer/elpy/issues/733
-;;
-;; The culprit was "App Execution Aliases" with python and python3
-;; redirecting to the windows store. Using:
-;;
-;;     winkey -> Manage app execution aliases -> uncheck python and python3
-;;
-;; fixed it.
+At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The culprit was "App Execution Aliases" with python and python3 redirecting to the windows store.  Using this fixed it:
 
-;; Also on Windows - a `pip install` of `pyreadline3' is required to
-;; make tab-completion work at all. It provides the `readline' import
-;; symbol.
+#+begin_example
+     winkey -> Manage app execution aliases -> uncheck python and python3
+#+end_example
 
-;; Virtualenvs - require .dir-locals.el to have e.g.:
-;;   ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
-;; However, this only operates on `run-python' shells.
-;;
-;; `pyvenv' solves the otherwise very annoying problem of getting
-;; external tools like `compile' and `eshell' to also use our virtual
-;; environment's python.  I may still use .dir-locals.el to set things
-;; like the python-check-command on a per-project basis, though.
+Also on Windows - a `pip install` of `pyreadline3' is required to make tab-completion work at all. It provides the `readline' import symbol.
+
+Virtualenvs require ~.dir-locals.el~ to have something like:
+
+#+begin_src emacs-lisp :tangle no
+   ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
+#+end_src
+
+However, this only operates on `run-python' shells.
+
+~pyvenv~ solves the otherwise very annoying problem of getting external tools like `compile' and `eshell' to also use our virtual environment's python.  I may still use .dir-locals.el to set things like the python-check-command on a per-project basis, though.
+
+#+begin_src emacs-lisp :tangle no
 (when (package-installed-p 'pyvenv)
   (pyvenv-mode)
   ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
   ;; (pyvenv-tracking-mode)
   ;; (setenv "WORKON_HOME" "~/.conda/envs")
   )
-
-;; Enable semantic mode for more intelligent code parsing
-;; https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html
-;; (add-hook 'python-mode-hook 'semantic-mode)
-
-;; Don't mark the check command and virtualenv variables as unsafe
-(put 'python-check-command 'safe-local-variable #'stringp)
-(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
-
-;; (add-hook 'python-mode-hook 'eglot-ensure)
 #+end_src
 
+I don't use ~pyvenv~ much now though, since the vast majority of my development time is spent over Tramp, which ~pyvenv~ does not support.
+
+For a while, it looks like Emacs was trying out something called [[https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html][semantic-mode]], which looks a lot like a precursor to what we now know as the [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]].  Enabling that mode would look like this:
+
+#+begin_src emacs-lisp :tangle no
+(add-hook 'python-mode-hook 'semantic-mode)
+#+end_src
+
+Don't mark the check command and virtualenv variables as unsafe.
+
+#+begin_src emacs-lisp
+(put 'python-check-command 'safe-local-variable #'stringp)
+(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+#+end_src
+
+To have ~eglot~ always start up for a python buffer, we would tangle this line into ~init.el~.  However, this can cause a significant loading delay over Tramp, and I would prefer snappy, simple access with LSP provided on an as-needed basis.
+
+#+begin_src emacs-lisp :tangle no
+(add-hook 'python-mode-hook 'eglot-ensure)
+#+end_src
+
+Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with Jupyter kernels from org-mode.
 
 * Microsoft Windows
 
@@ -1262,31 +1329,38 @@ From the lovely minad: https://github.com/minad/org-modern
 #+end_src
 
 * Tramp
+
+When using [[https://anaconda.org][conda]], I keep a special conda environment named ~robbmann~ for locally-installed and managed command line utilities.  Sometimes I link these over to ~.local/bin~, and other times I forget.  For the latter case, I tend to include it in a lot of my PATH-setting situations.
+
 #+begin_src emacs-lisp
 (setq vc-handled-backends '(Git))
 (setq remote-file-name-inhibit-locks t)
 (setq tramp-inline-compress-start-size 1000)
 (setq tramp-copy-size-limit 10000)
 (setq tramp-verbose 1)
+#+end_src
 
-;; Without this line, we get the "Forbidden reentrant call of Tramp" bug: https://github.com/joaotavora/eglot/issues/859
+eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden reentrant call of Tramp" message and freezing.  In the meantime, this setting was recommended.
+
+#+begin_src emacs-lisp
 (setq tramp-use-ssh-controlmaster-options nil)
+#+end_src
 
-;; Enable .dir-locals.el for remote files
-;; REMINDME: This can case a HUGE slowdown when doing things like `project-find-file'
+For some time I was having a lot of trouble with slowness over Tramp, and after careful scrutiny of the logs on (I belive) =tramp-verbose 6=, I found out that enabling remote dir-locals was causing a huge bottleneck.  On every operation it would trace up the filesystem tree back to the root directory, scanning for a ~.dir-locals~ file.  Since some of the drives were network-mounted, this caused thousands of network calls per file operation, obviously slowing things down a lot.  Because of this, I've opted to simply disable ~.dir-locals~ over Tramp entirely, since I don't really use it much, if at all.
+
+#+begin_src emacs-lisp :tangle no
 ;; (setq enable-remote-dir-locals t)
+#+end_src
 
+#+begin_src emacs-lisp
 (with-eval-after-load 'tramp
   (add-to-list 'tramp-remote-path "~/.local/bin")
   (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
   ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
-  ;; (add-to-list 'tramp-connection-properties
-  ;;              (list (regexp-quote "/ssh:7p")
-  ;;                    "remote-shell" "/usr/bin/ksh"))
   )
 #+end_src
 
-[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable thing to put in, since I so frequently use VC over tramp.
+[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable thing to put in, since I so frequently use VC over tramp.  Fully disabling VC would include this snippet:
 
 #+begin_src emacs-lisp :tangle no
 (setq vc-ignore-dir-regexp
@@ -1295,16 +1369,11 @@ From the lovely minad: https://github.com/minad/org-modern
               tramp-file-name-regexp))
 #+end_src
 
-Additionally, these came up as potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs issues]].
+Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs issues]].
+
 #+begin_src emacs-lisp :tangle no
-(setq tramp-inline-compress-start-size 1000)
-(setq tramp-copy-size-limit 10000)
-(setq vc-handled-backends '(Git))
-(setq tramp-verbose 1)
 (setq tramp-default-method "scp")
-(setq tramp-use-ssh-controlmaster-options nil)
 (setq projectile--mode-line "Projectile")
-(setq tramp-verbose 1)
 #+end_src
 
 I often need to set these in ~/.ssh/config for TRAMP to speed up
@@ -1319,8 +1388,9 @@ Host *
 #+end_example
 
 
-* LSP
-Another section that's almost totally obsolete, but kept in case I need references to it.  Since =eglot= will be a built-in package for future emacs, I'm going to stick to it.
+* LSP :ARCHIVE:
+
+Another section that's totally obsolete, but kept in case I need references to it.  Since =eglot= will be a built-in package for future emacs, I'm going to stick to it.
 
 #+begin_src emacs-lisp :tangle no
 (require 'lsp-mode)
@@ -1383,9 +1453,9 @@ returns the command to execute."
 #+end_src
 
 
-* TreeSitter
+* TODO TreeSitter
+REMINDME: Convert to use-package
 #+begin_src emacs-lisp
-;; TODO: Convert this to use-package
 (require 'tree-sitter)
 (require 'tree-sitter-langs)
 (global-tree-sitter-mode)
