@@ -243,13 +243,6 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "s-v") #'yank)
 ;; Super bindings:1 ends here
 
-;; [[file:README.org::*Smooth scrolling][Smooth scrolling:1]]
-(unless (version< "29.0" emacs-version)
-  (pixel-scroll-precision-mode)
-  (pixel-scroll-precision-use-momentum 1)
-  (setq pixel-scroll-precision-large-scroll-height 30.0))
-;; Smooth scrolling:1 ends here
-
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
 (setq-default fill-column 120)
@@ -263,6 +256,18 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*Inihibit splash screen][Inihibit splash screen:1]]
 (setq inhibit-splash-screen t)
 ;; Inihibit splash screen:1 ends here
+
+;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
+(modify-all-frames-parameters
+ '((right-divider-width . 40)
+   (internal-border-width . 40)))
+(dolist (face '(window-divider
+                window-divider-first-pixel
+                window-divider-last-pixel))
+  (face-spec-reset-face face)
+  (set-face-foreground face (face-attribute 'default :background)))
+(set-face-background 'fringe (face-attribute 'default :background))
+;; Window margins and fringe:1 ends here
 
 ;; [[file:README.org::*Automatically visit symlink sources][Automatically visit symlink sources:1]]
 (setq find-file-visit-truename t)
@@ -423,9 +428,9 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
 (setq backup-directory-alist
-      `(("." . temporary-file-directory))
+      '(("." . "~/.emacs.d/backups/"))
       ;; auto-save-file-name-transforms
-      ;; `(("." ,temporary-file-directory t))
+      ;; '(("." ,temporary-file-directory t))
       )
 ;; Backup and auto-save files:1 ends here
 
@@ -436,6 +441,11 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*Esup][Esup:1]]
 (setq esup-depth 0)
 ;; Esup:1 ends here
+
+;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
+(use-package restart-emacs
+  :ensure t)
+;; Reloading Emacs:1 ends here
 
 ;; [[file:README.org::*Mode line][Mode line:1]]
 (setq column-number-mode t
@@ -542,62 +552,11 @@ emacs config site with matching `extension' regexp"
 ;; Org-mode:4 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:5]]
-(with-eval-after-load 'ox
-  (require 'ox-hugo))
+(use-package ox-hugo
+  :ensure t)
 ;; Org-mode:5 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:6]]
-(use-package org
-  :ensure t
-  :init
-  (defun display-ansi-colors ()
-    "Fixes kernel output in emacs-jupyter"
-    (ansi-color-apply-on-region (point-min) (point-max)))
-  :hook
-  (org-mode . (lambda () (progn
-                           (add-hook 'after-save-hook #'org-babel-tangle :append :local)
-                           (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))))
-  :config
-  (add-hook 'org-mode-hook #'visual-line-mode)
-  (add-to-list 'org-modules 'org-tempo)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)
-     (sql . t)
-     (shell . t)
-     (fortran . t)
-     (julia . t)
-     ;; (jupyter . t)
-     (scheme . t)
-     (haskell . t)
-     (lisp . t)
-     (clojure . t)
-     (C . t)
-     (org . t)
-     (gnuplot . t)
-     (awk . t)
-     (latex . t)))
-
-  ;; Enable asynchronous execution of src blocks
-  (when (package-installed-p 'ob-async)
-    (require 'ob-async)
-    (add-hook 'ob-async-pre-execute-src-block-hook
-              #'(lambda ()
-                  (require 'ob-sql-mode)
-                  (require 'hive2))))
-  )
-;; Org-mode:6 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:7]]
-(setq ob-async-no-async-languages-alist '("python"))
-;; Org-mode:7 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:8]]
-(setq org-html-htmlize-output-type 'css)
-;; Org-mode:8 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:9]]
 (defun renz/org-babel-tangle-jump-to-src ()
   "The opposite of `org-babel-tangle-jump-to-org'.
 Jumps at tangled code from org src block."
@@ -620,90 +579,138 @@ Jumps at tangled code from org src block."
           (beginning-of-buffer)
           (search-forward search-comment)))
     (message "Cannot jump to tangled file because point is not at org src block.")))
-;; Org-mode:9 ends here
+;; Org-mode:6 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:10]]
-(setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
-;; Org-mode:10 ends here
+;; [[file:README.org::*Org-mode][Org-mode:7]]
+(use-package org
+  :ensure t
+  :hook
+  (org-mode . (lambda () (progn
+                           (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                           (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))))
+  :config
+  (add-hook 'org-mode-hook #'visual-line-mode)
+  (add-to-list 'org-modules 'org-tempo)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (sql . t)
+     (shell . t)
+     (fortran . t)
+     (julia . t)
+     ;; (jupyter . t)
+     (scheme . t)
+     (haskell . t)
+     (lisp . t)
+     (clojure . t)
+     (C . t)
+     (org . t)
+     (gnuplot . t)
+     (awk . t)
+     (latex . t))
+   ;; Outside the typical TODO/DONE states, I like to use DEAD as an indicator
+   ;; that something is fully blocked, but not done.
+   (setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
+   (setq org-agenda-files '("~/.emacs.d/org/work.org")
+         org-hugo-front-matter-format "yaml"))
+;; Org-mode:7 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:11]]
-(setq org-agenda-files '("~/.emacs.d/org/work.org")
-      org-hugo-front-matter-format "yaml")
-;; Org-mode:11 ends here
+;; [[file:README.org::*Org-mode][Org-mode:8]]
+(use-package ob-async
+  :ensure t
+  :config
+  (add-hook 'ob-async-pre-execute-src-block-hook
+            #'(lambda ()
+                (require 'ob-sql-mode)
+                (require 'hive2)))
+  ;; Python has its own =:async yes= header argument we can use, so there's no
+  ;; need to include it with ~ob-async~.
+  (setq ob-async-no-async-languages-alist '("python"))
+  ;; I'm having trouble rembering why I added this following line, except that I
+  ;; belive it has something to do with exporting to HTML with syntax
+  ;; highlighting.
+  (setq org-html-htmlize-output-type 'css))
+;; Org-mode:8 ends here
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
-;; TODO: move this to the misc./ window settings
-;; add frame borders and window dividers
-(modify-all-frames-parameters
- '((right-divider-width . 40)
-   (internal-border-width . 40)))
-(dolist (face '(window-divider
-                window-divider-first-pixel
-                window-divider-last-pixel))
-  (face-spec-reset-face face)
-  (set-face-foreground face (face-attribute 'default :background)))
-(set-face-background 'fringe (face-attribute 'default :background))
+(use-package org-modern
+  :ensure t
+  :config
 
-(setq
- ;; edit settings
- org-auto-align-tags nil
- org-tags-column 0
- org-catch-invisible-edits 'show-and-error
- org-special-ctrl-a/e t
- org-insert-heading-respect-content t
+  (setq
+   ;; edit settings
+   org-auto-align-tags nil
+   org-tags-column 0
+   org-catch-invisible-edits 'show-and-error
+   org-special-ctrl-a/e t
+   org-insert-heading-respect-content t
 
- ;; Org styling, hide markup etc.
- org-hide-emphasis-markers t
- org-pretty-entities t
- org-ellipsis "…"
+   ;; Org styling, hide markup etc.
+   org-hide-emphasis-markers t
+   org-pretty-entities t
+   org-ellipsis "…"
 
- ;; Agenda styling
- org-agenda-tags-column 0
- org-agenda-block-separator ?─
- org-agenda-time-grid
- '((daily today require-timed)
-   (800 1000 1200 1400 1600 1800 2000)
-   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
- org-agenda-current-time-string
- "⭠ now ─────────────────────────────────────────────────")
+   ;; Agenda styling
+   org-agenda-tags-column 0
+   org-agenda-block-separator ?─
+   org-agenda-time-grid
+   '((daily today require-timed)
+     (800 1000 1200 1400 1600 1800 2000)
+     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+   org-agenda-current-time-string
+   "⭠ now ─────────────────────────────────────────────────")
 
-(global-org-modern-mode)
+  (global-org-modern-mode))
 ;; =org-modern=:1 ends here
 
 ;; [[file:README.org::*SQL][SQL:1]]
 (defun renz/sql-mode-hook ()
-  ;; (setq indent-line-function 'renz/sql-indent)
   (setq tab-width 4)
   (setq sqlformat-command 'sql-formatter)
-  (setq sqlind-basic-offset 4)
-  ;; (setq electric-indent-inhibit t)
-  )
+  (setq sqlind-basic-offset 4))
 
-(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
-(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
-(add-hook 'sql-mode-hook 'sqlup-mode)
-(add-hook 'sql-mode-hook 'sqlind-minor-mode)
-(add-hook 'sql-interactive-mode-hook 'sqlup-mode)
-
-(with-eval-after-load 'sql
-  (require 'hive2)
-  (require 'ob-sql-mode)
-  (require 'sqlformat)
-  (require 'sqlup-mode)
-  (require 'sql-indent)
-
+(use-package sql-indent
+  :ensure t
+  :init
   (defvar renz/sql-indentation-offsets-alist
-    `((select-clause 0)
-      (insert-clause 0)
-      (delete-clause 0)
-      (update-clause 0)
-      ,@sqlind-default-indentation-offsets-alist))
+           `((select-clause 0)
+             (insert-clause 0)
+             (delete-clause 0)
+             (update-clause 0)
+             ,@sqlind-default-indentation-offsets-alist))
 
-  (add-hook 'sqlind-minor-mode-hook
-            (lambda ()
+  (defun renz/sql-indentation-offsets ()
+    (add-hook 'sqlind-minor-mode-hook
               (setq sqlind-indentation-offsets-alist
                     renz/sql-indentation-offsets-alist)))
-  )
+  :hook (sqlind-minor-mode . renz/sql-indentation-offsets))
+
+(use-package sqlup-mode
+  :ensure t
+  :hook sql-interactive-mode
+  :after (sql))
+
+(use-package sql
+  :hook  ((sql-mode . renz/sql-mode-hook)
+          (sql-mode . sqlup-mode)
+          (sql-mode . sqlind-minor-mode))
+  :after (sqlup-mode sql)
+  :mode "\\.hql")
+
+;; (add-hook 'sql-mode-hook #'renz/sql-mode-hook)
+;; (add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
+;; (add-hook 'sql-mode-hook 'sqlup-mode)
+;; (add-hook 'sql-mode-hook 'sqlind-minor-mode)
+;; (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+
+(use-package hive2
+  :load-path "packages/"
+  :after (sql))
+
+(use-package ob-sql-mode
+  :ensure t
+  :after (sql))
 ;; SQL:1 ends here
 
 ;; [[file:README.org::*Python][Python:1]]

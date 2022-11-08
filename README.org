@@ -2,6 +2,8 @@
 #+author: Robb Enzmann
 #+property: header-args:emacs-lisp :tangle init.el :comments link
 #+OPTIONS: toc:2 num:nil
+#+HUGO_BASE_DIR: ~/repos/renzmann.github.io/
+#+HUGO_SECTION: posts/
 
 Want to use it? Go ahead!
 
@@ -370,7 +372,7 @@ Like the =C-c <letter>= bindings, these are reserved for users.
 #+end_src
 
 ** Super bindings
-See the [[Windows][Microsoft Windows]] section for some hackery required to get these working on more platforms.
+See the [[Microsoft Windows][Microsoft Windows]] section for some hackery required to get these working on more platforms.
 
 #+begin_src emacs-lisp
 (global-set-key (kbd "s-c") #'kill-ring-save)
@@ -385,16 +387,6 @@ See the [[Windows][Microsoft Windows]] section for some hackery required to get 
 
 * Misc. Settings
 Haven't found a home header for any of these yet.
-
-** Smooth scrolling
-Emacs 29 introduced smooth, pixel-level scrolling, which removes much of the "jumpiness" you see when scrolling past images.
-
-#+begin_src emacs-lisp
-(unless (version< "29.0" emacs-version)
-  (pixel-scroll-precision-mode)
-  (pixel-scroll-precision-use-momentum 1)
-  (setq pixel-scroll-precision-large-scroll-height 30.0))
-#+end_src
 
 ** Fill-column
 For visual lines, this adds line breaks at the fill-column value.  Especially useful for prose that is meant to be copied to other mediums, such as email or word.
@@ -424,6 +416,23 @@ I can always get back to the OG GNU Spash with =C-h C-a=
 
 #+begin_src emacs-lisp
 (setq inhibit-splash-screen t)
+#+end_src
+
+** Window margins and fringe
+
+This hunk adds some space around all sides of each window so that we get a clear space between the edge of the screen and the fringe.  This helps ~src~ blocks look clean and well delineated for [[=org-modern=][org-modern]].
+
+#+begin_src emacs-lisp
+(modify-all-frames-parameters
+ '((right-divider-width . 40)
+   (internal-border-width . 40)))
+(dolist (face '(window-divider
+                window-divider-first-pixel
+                window-divider-last-pixel))
+  (face-spec-reset-face face)
+  (set-face-foreground face (face-attribute 'default :background)))
+(set-face-background 'fringe (face-attribute 'default :background))
+
 #+end_src
 
 ** Automatically visit symlink sources
@@ -647,6 +656,7 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 #+end_src
 
 ** Smooth scrolling
+Emacs 29 introduced smooth, pixel-level scrolling, which removes much of the "jumpiness" you see when scrolling past images.
 
 #+begin_src emacs-lisp
 (if (version< emacs-version "29.0")
@@ -659,9 +669,9 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 Keep all backup files in a temporary folder.  At the moment I have some "file not found" errors popping up during auto-save on Windows.  Once I debug that, I'll uncomment the second part.
 #+begin_src emacs-lisp
 (setq backup-directory-alist
-      `(("." . temporary-file-directory))
+      '(("." . "~/.emacs.d/backups/"))
       ;; auto-save-file-name-transforms
-      ;; `(("." ,temporary-file-directory t))
+      ;; '(("." ,temporary-file-directory t))
       )
 #+end_src
 
@@ -679,6 +689,13 @@ Enable syntax highlighting within code fences for markdown
 (setq esup-depth 0)
 #+end_src
 
+** Reloading Emacs
+Often used when changing up my ~init.el~.
+
+#+begin_src emacs-lisp
+(use-package restart-emacs
+  :ensure t)
+#+end_src
 
 * Minimap
 I have a love-hate relationship with the minimap.  Sometimes it feels great, especially when I'm doing a mouse-heavy demo for navigation.  Other times it blocks the echo area when the window is too small and it drives me crazy.
@@ -857,71 +874,11 @@ I often want to kill and paste entire ~src~ blocks at a time.  As far as I know,
 I also use ~org-mode~ for writing [[https://robbmann.io/posts][my blog.]]  With a little help from [[https://willschenk.com/articles/2019/using_org_mode_in_hugo/][an article]] we have exporting to Hugo-specific markdown.  Without the export, Hugo can read Org files /okay-ish/, but you wind up missing some nice QoL features, like header links.
 
 #+begin_src emacs-lisp
-(with-eval-after-load 'ox
-  (require 'ox-hugo))
+(use-package ox-hugo
+  :ensure t)
 #+end_src
 
-Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup-indented t)= t get indentation under each header, but this was interfering with the beautification features from ~org-modern~.  Preferring the latter over the former, I've removed the =org-startup-indented= call.
-
-#+begin_src emacs-lisp
-(use-package org
-  :ensure t
-  :init
-  (defun display-ansi-colors ()
-    "Fixes kernel output in emacs-jupyter"
-    (ansi-color-apply-on-region (point-min) (point-max)))
-  :hook
-  (org-mode . (lambda () (progn
-                           (add-hook 'after-save-hook #'org-babel-tangle :append :local)
-                           (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))))
-  :config
-  (add-hook 'org-mode-hook #'visual-line-mode)
-  (add-to-list 'org-modules 'org-tempo)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)
-     (sql . t)
-     (shell . t)
-     (fortran . t)
-     (julia . t)
-     ;; (jupyter . t)
-     (scheme . t)
-     (haskell . t)
-     (lisp . t)
-     (clojure . t)
-     (C . t)
-     (org . t)
-     (gnuplot . t)
-     (awk . t)
-     (latex . t)))
-
-  ;; Enable asynchronous execution of src blocks
-  (when (package-installed-p 'ob-async)
-    (require 'ob-async)
-    (add-hook 'ob-async-pre-execute-src-block-hook
-              #'(lambda ()
-                  (require 'ob-sql-mode)
-                  (require 'hive2))))
-  )
-#+end_src
-
-#+RESULTS:
-| (lambda nil (progn (add-hook 'after-save-hook #'org-babel-tangle :append :local) (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))) | visual-line-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
-
-Python has its own =:async yes= header argument we can use, so there's no need to inclkude it with ~ob-async~.
-
-#+begin_src emacs-lisp
-(setq ob-async-no-async-languages-alist '("python"))
-#+end_src
-
-I'm having trouble remmbering why I added this following line, except that I belive it has something to do with exporting to HTML with syntax highlighting
-
-#+begin_src emacs-lisp
-(setq org-html-htmlize-output-type 'css)
-#+end_src
-
-~org-mode~ provides =org-babel-tangle-jump-to-org=, which allows us to jump back to an Org source file from within the tangled code.  I needed a function that does the opposite - given the Org source file and point inside a ~src~ block, jump to the location of the tangled code.  Provided by a helpful [[https://emacs.stackexchange.com/a/69591][stackoverflow answer.]]
+~org-mode~ provides =org-babel-tangle-jump-to-org=, which jumps back to an Org source file from within the tangled code.  ~renz/org-babel-tangle-jump-to-src~, defined below, does the opposite - given the Org source file and point inside a ~src~ block, it jumps to the location of the tangled code.  Provided by a helpful [[https://emacs.stackexchange.com/a/69591][stackoverflow answer.]]
 
 #+begin_src emacs-lisp
 (defun renz/org-babel-tangle-jump-to-src ()
@@ -948,200 +905,109 @@ Jumps at tangled code from org src block."
     (message "Cannot jump to tangled file because point is not at org src block.")))
 #+end_src
 
-Outside the typical TODO/DONE states, I like to use DEAD as an indicator that something is fully blocked, but not done.
+Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup-indented t)= t get indentation under each header, but this was interfering with the beautification features from ~org-modern~.  Preferring the latter over the former, I've removed the =org-startup-indented= call.
 
 #+begin_src emacs-lisp
-(setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
+(use-package org
+  :ensure t
+  :hook
+  (org-mode . (lambda () (progn
+                           (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                           (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))))
+  :config
+  (add-hook 'org-mode-hook #'visual-line-mode)
+  (add-to-list 'org-modules 'org-tempo)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (sql . t)
+     (shell . t)
+     (fortran . t)
+     (julia . t)
+     ;; (jupyter . t)
+     (scheme . t)
+     (haskell . t)
+     (lisp . t)
+     (clojure . t)
+     (C . t)
+     (org . t)
+     (gnuplot . t)
+     (awk . t)
+     (latex . t))
+   ;; Outside the typical TODO/DONE states, I like to use DEAD as an indicator
+   ;; that something is fully blocked, but not done.
+   (setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
+   (setq org-agenda-files '("~/.emacs.d/org/work.org")
+         org-hugo-front-matter-format "yaml"))
+#+end_src
+
+~ob-async~ adds asynchronous source block execution to some modes that otherwise wouldn't have it.
+
+#+begin_src emacs-lisp
+(use-package ob-async
+  :ensure t
+  :config
+  (add-hook 'ob-async-pre-execute-src-block-hook
+            #'(lambda ()
+                (require 'ob-sql-mode)
+                (require 'hive2)))
+  ;; Python has its own =:async yes= header argument we can use, so there's no
+  ;; need to include it with ~ob-async~.
+  (setq ob-async-no-async-languages-alist '("python"))
+  ;; I'm having trouble rembering why I added this following line, except that I
+  ;; belive it has something to do with exporting to HTML with syntax
+  ;; highlighting.
+  (setq org-html-htmlize-output-type 'css))
 #+end_src
 
 #+RESULTS:
-| sequence | TODO | DEAD | DONE |
-
-#+begin_src emacs-lisp
-(setq org-agenda-files '("~/.emacs.d/org/work.org")
-      org-hugo-front-matter-format "yaml")
-#+end_src
+| (lambda nil (progn (add-hook 'after-save-hook #'org-babel-tangle :append :local) (add-hook 'org-babel-after-execute-hook #'display-ansi-colors))) | visual-line-mode | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-show-all append local] 5] | #[0 \300\301\302\303\304$\207 [add-hook change-major-mode-hook org-babel-show-result-all append local] 5] | org-babel-result-hide-spec | org-babel-hide-all-hashes |
 
 ** Org Roam
-#+begin_src emacs-lisp :tangle no
-(setq org-roam-directory (file-truename "~/.emacs.d/org/org-roam")
-
-Consider the below for Windows only
-(setq org-roam-database-connector 'sqlite3)
-
-(org-roam-db-autosync-mode)
-#+end_src
-
-** Displaying remote images
-Leaving this one out for a while too, as I'm not yet sure how useful it will be.  Taken from a blog post related to an issue I had running remote python from a local Org file: http://kychoi.org/blog/2014/11/02/Org-Display-Inline-Remote-Images
 
 #+begin_src emacs-lisp :tangle no
-(defun org-display-inline-images (&optional include-linked refresh beg end)
-  "Display inline images.
-
-An inline image is a link which follows either of these
-conventions:
-
-  1. Its path is a file with an extension matching return value
-     from `image-file-name-regexp' and it has no contents.
-
-  2. Its description consists in a single link of the previous
-     type.
-
-When optional argument INCLUDE-LINKED is non-nil, also links with
-a text description part will be inlined.  This can be nice for
-a quick look at those images, but it does not reflect what
-exported files will look like.
-
-When optional argument REFRESH is non-nil, refresh existing
-images between BEG and END.  This will create new image displays
-only if necessary.  BEG and END default to the buffer
-boundaries."
-  (interactive "P")
-  (when (display-graphic-p)
-    (unless refresh
-      (org-remove-inline-images)
-      (when (fboundp 'clear-image-cache) (clear-image-cache)))
-    (org-with-wide-buffer
-     (goto-char (or beg (point-min)))
-     (let ((case-fold-search t)
-	   (file-extension-re (org-image-file-name-regexp)))
-       (while (re-search-forward "[][]\\[\\(?:file\\|[./~]\\)" end t)
-	 (let ((link (save-match-data (org-element-context))))
-	   ;; Check if we're at an inline image.
-	   (when (and (equal (org-element-property :type link) "file")
-		      (or include-linked
-			  (not (org-element-property :contents-begin link)))
-		      (let ((parent (org-element-property :parent link)))
-			(or (not (eq (org-element-type parent) 'link))
-			    (not (cdr (org-element-contents parent)))))
-		      (org-string-match-p file-extension-re
-					  (org-element-property :path link)))
-	     (let ((file (substitute-in-file-name (expand-file-name (org-element-property :path link)))))
-	       (when (file-exists-p file)
-		 (let ((width
-			;; Apply `org-image-actual-width' specifications.
-			(cond
-			 ((not (image-type-available-p 'imagemagick)) nil)
-			 ((eq org-image-actual-width t) nil)
-			 ((listp org-image-actual-width)
-			  (or
-			   ;; First try to find a width among
-			   ;; attributes associated to the paragraph
-			   ;; containing link.
-			   (let ((paragraph
-				  (let ((e link))
-				    (while (and (setq e (org-element-property
-							 :parent e))
-						(not (eq (org-element-type e)
-							 'paragraph))))
-				    e)))
-			     (when paragraph
-			       (save-excursion
-				 (goto-char (org-element-property :begin paragraph))
-				   (when
-				       (re-search-forward
-					"^[ \t]*#\\+attr_.*?: +.*?:width +\\(\\S-+\\)"
-					(org-element-property
-					 :post-affiliated paragraph)
-					t)
-				     (string-to-number (match-string 1))))))
-			   ;; Otherwise, fall-back to provided number.
-			   (car org-image-actual-width)))
-			 ((numberp org-image-actual-width)
-			  org-image-actual-width)))
-		       (old (get-char-property-and-overlay
-			     (org-element-property :begin link)
-			     'org-image-overlay)))
-		   (if (and (car-safe old) refresh)
-		       (image-refresh (overlay-get (cdr old) 'display))
-		     (let ((image
-			    (create-image (if (org-file-remote-p file)
-					      (let* ((tramp-tmpdir (concat
-								    (if (featurep 'xemacs)
-									(temp-directory)
-								      temporary-file-directory)
-								    "/tramp"
-								    (file-name-directory (expand-file-name file))))
-						     (newname (concat
-							       tramp-tmpdir
-							       (file-name-nondirectory (expand-file-name file)))))
-						(make-directory tramp-tmpdir t)
-						(if (file-newer-than-file-p file newname)
-						    (copy-file file newname t t))
-						newname)
-					    file)
-					  (and width 'imagemagick)
-					  nil
-					  :width width)))
-		       (when image
-			 (let* ((link
-				 ;; If inline image is the description
-				 ;; of another link, be sure to
-				 ;; consider the latter as the one to
-				 ;; apply the overlay on.
-				 (let ((parent
-					(org-element-property :parent link)))
-				   (if (eq (org-element-type parent) 'link)
-				       parent
-				     link)))
-				(ov (make-overlay
-				     (org-element-property :begin link)
-				     (progn
-				       (goto-char
-					(org-element-property :end link))
-				       (skip-chars-backward " \t")
-				       (point)))))
-			   (overlay-put ov 'display image)
-			   (overlay-put ov 'face 'default)
-			   (overlay-put ov 'org-image-overlay t)
-			   (overlay-put
-			    ov 'modification-hooks
-			    (list 'org-display-inline-remove-overlay))
-			   (push ov org-inline-image-overlays)))))))))))))))
+(use-package org-roam
+  :ensure t
+  :config
+  (setq org-roam-directory (file-truename "~/.emacs.d/org/org-roam")
+        ;; Consider the below for Windows only
+        org-roam-database-connector 'sqlite3)
+  (org-roam-db-autosync-mode))
 #+end_src
-
 
 ** =org-modern=
-From the lovely minad: https://github.com/minad/org-modern
+A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
 
 #+begin_src emacs-lisp
-;; TODO: move this to the misc./ window settings
-;; add frame borders and window dividers
-(modify-all-frames-parameters
- '((right-divider-width . 40)
-   (internal-border-width . 40)))
-(dolist (face '(window-divider
-                window-divider-first-pixel
-                window-divider-last-pixel))
-  (face-spec-reset-face face)
-  (set-face-foreground face (face-attribute 'default :background)))
-(set-face-background 'fringe (face-attribute 'default :background))
+(use-package org-modern
+  :ensure t
+  :config
 
-(setq
- ;; edit settings
- org-auto-align-tags nil
- org-tags-column 0
- org-catch-invisible-edits 'show-and-error
- org-special-ctrl-a/e t
- org-insert-heading-respect-content t
+  (setq
+   ;; edit settings
+   org-auto-align-tags nil
+   org-tags-column 0
+   org-catch-invisible-edits 'show-and-error
+   org-special-ctrl-a/e t
+   org-insert-heading-respect-content t
 
- ;; Org styling, hide markup etc.
- org-hide-emphasis-markers t
- org-pretty-entities t
- org-ellipsis "…"
+   ;; Org styling, hide markup etc.
+   org-hide-emphasis-markers t
+   org-pretty-entities t
+   org-ellipsis "…"
 
- ;; Agenda styling
- org-agenda-tags-column 0
- org-agenda-block-separator ?─
- org-agenda-time-grid
- '((daily today require-timed)
-   (800 1000 1200 1400 1600 1800 2000)
-   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
- org-agenda-current-time-string
- "⭠ now ─────────────────────────────────────────────────")
+   ;; Agenda styling
+   org-agenda-tags-column 0
+   org-agenda-block-separator ?─
+   org-agenda-time-grid
+   '((daily today require-timed)
+     (800 1000 1200 1400 1600 1800 2000)
+     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+   org-agenda-current-time-string
+   "⭠ now ─────────────────────────────────────────────────")
 
-(global-org-modern-mode)
+  (global-org-modern-mode))
 #+end_src
 
 
@@ -1149,38 +1015,51 @@ From the lovely minad: https://github.com/minad/org-modern
 
 #+begin_src emacs-lisp
 (defun renz/sql-mode-hook ()
-  ;; (setq indent-line-function 'renz/sql-indent)
   (setq tab-width 4)
   (setq sqlformat-command 'sql-formatter)
-  (setq sqlind-basic-offset 4)
-  ;; (setq electric-indent-inhibit t)
-  )
+  (setq sqlind-basic-offset 4))
 
-(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
-(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
-(add-hook 'sql-mode-hook 'sqlup-mode)
-(add-hook 'sql-mode-hook 'sqlind-minor-mode)
-(add-hook 'sql-interactive-mode-hook 'sqlup-mode)
-
-(with-eval-after-load 'sql
-  (require 'hive2)
-  (require 'ob-sql-mode)
-  (require 'sqlformat)
-  (require 'sqlup-mode)
-  (require 'sql-indent)
-
+(use-package sql-indent
+  :ensure t
+  :init
   (defvar renz/sql-indentation-offsets-alist
-    `((select-clause 0)
-      (insert-clause 0)
-      (delete-clause 0)
-      (update-clause 0)
-      ,@sqlind-default-indentation-offsets-alist))
+           `((select-clause 0)
+             (insert-clause 0)
+             (delete-clause 0)
+             (update-clause 0)
+             ,@sqlind-default-indentation-offsets-alist))
 
-  (add-hook 'sqlind-minor-mode-hook
-            (lambda ()
+  (defun renz/sql-indentation-offsets ()
+    (add-hook 'sqlind-minor-mode-hook
               (setq sqlind-indentation-offsets-alist
                     renz/sql-indentation-offsets-alist)))
-  )
+  :hook (sqlind-minor-mode . renz/sql-indentation-offsets))
+
+(use-package sqlup-mode
+  :ensure t
+  :hook sql-interactive-mode
+  :after (sql))
+
+(use-package sql
+  :hook  ((sql-mode . renz/sql-mode-hook)
+          (sql-mode . sqlup-mode)
+          (sql-mode . sqlind-minor-mode))
+  :after (sqlup-mode sql)
+  :mode "\\.hql")
+
+;; (add-hook 'sql-mode-hook #'renz/sql-mode-hook)
+;; (add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
+;; (add-hook 'sql-mode-hook 'sqlup-mode)
+;; (add-hook 'sql-mode-hook 'sqlind-minor-mode)
+;; (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+
+(use-package hive2
+  :load-path "packages/"
+  :after (sql))
+
+(use-package ob-sql-mode
+  :ensure t
+  :after (sql))
 #+end_src
 
 
