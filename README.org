@@ -191,32 +191,44 @@ emacs config site with matching `extension' regexp"
 : renz/consult-grep
 
 ** Expanded defaults
+These convenient chords allow for fast text replacement by holding =C-M-= and rapidly typing =k= and =h= in succession.
 
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-h") 'backward-kill-sexp)
+#+end_src
 
-;; UNBINDS the suspend-frame keybinding, which is annoying on GUI.
-;; Use C-x C-z if you really want to suspend the frame.
+The next line UNBINDS the suspend-frame keybinding.  Accidentally minimizing on the GUI was frustrating as hell, so now I use =C-x C-z= if I /really/ want to suspend the frame.
+
+#+begin_src
+
 (global-set-key (kbd "C-z") #'zap-up-to-char)
+#+end_src
 
-;; A better version of `dabbrev'
-;; https://www.masteringemacs.org/article/text-expansion-hippie-expand
-;; I tend to prefer this on its own key, since I like a lot of the
-;; default dabbrev behavior.
-;; (global-set-key [remap dabbrev-expand] 'hippie-expand)
+Hippie-expand [[https://www.masteringemacs.org/article/text-expansion-hippie-expand][is purported]] to be a better version of ~dabbrev~, but I rather like the default behavior of ~dabbrev~.  So instead I typically have ~hippie-expand~ on a dedicated key, and leave the default =M-/= alone.  Otherwise, we would re-bind it like so:
 
-;; Better buffer list for C-x C-b
+#+begin_src emacs-lisp :tangle no
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
+#+end_src
+
+Both ~ibuffer~ and ~consult-buffer~ are strictly superior versions of their counterparts.
+
+#+begin_src emacs-lisp
 (global-set-key [remap list-buffers] 'ibuffer)
 (global-set-key [remap switch-to-buffer] 'consult-buffer)
+#+end_src
 
-;; When flycheck is running (usually from a language server), bind next/previous
+The most common situation where I'm running ~flymake~ would be for spelling in prose, or diagnostics from a language server.  In either case, I like having next/previous on easy to reach chords.
+
+#+begin_src emacs-lisp
 (with-eval-after-load 'flymake
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+#+end_src
 
-;; When using isearch to jump to things, use C-RET to put point on the
-;; opposite side of where it would normally end up
+When using ~isearch~ to jump to things, it's sometimes convenient to re-position point on the opposite side of where the search would normally put it.  E.g. when using =C-r=, but we want point to be at the end of the word when we're done.  Provided by a [[https://emacs.stackexchange.com/a/52554][stack overflow answer]].
+
+#+begin_src emacs-lisp
 (define-key isearch-mode-map (kbd "<C-return>")
   (defun isearch-done-opposite (&optional nopush edit)
     "End current search in the opposite side of the match."
@@ -402,9 +414,9 @@ I toggle this one on/off sometimes depending on how I feel lately.
 ** Inline emojis
 I tried this for a while but boy did it consume a lot of space in the =elpa/= directory!  If I go back to it I might re-install it but have to ensure I ignore the source files.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;; Emojis inline 👍
-;; (add-hook 'after-init-hook #'global-emojify-mode)
+(add-hook 'after-init-hook #'global-emojify-mode)
 #+end_src
 
 ** Inihibit splash screen

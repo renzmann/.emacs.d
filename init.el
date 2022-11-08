@@ -106,35 +106,27 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*Expanded defaults][Expanded defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-h") 'backward-kill-sexp)
+;; Expanded defaults:1 ends here
 
-;; UNBINDS the suspend-frame keybinding, which is annoying on GUI.
-;; Use C-x C-z if you really want to suspend the frame.
-(global-set-key (kbd "C-z") #'zap-up-to-char)
-
-;; A better version of `dabbrev'
-;; https://www.masteringemacs.org/article/text-expansion-hippie-expand
-;; I tend to prefer this on its own key, since I like a lot of the
-;; default dabbrev behavior.
-;; (global-set-key [remap dabbrev-expand] 'hippie-expand)
-
-;; Better buffer list for C-x C-b
+;; [[file:README.org::*Expanded defaults][Expanded defaults:3]]
 (global-set-key [remap list-buffers] 'ibuffer)
 (global-set-key [remap switch-to-buffer] 'consult-buffer)
+;; Expanded defaults:3 ends here
 
-;; When flycheck is running (usually from a language server), bind next/previous
+;; [[file:README.org::*Expanded defaults][Expanded defaults:4]]
 (with-eval-after-load 'flymake
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+;; Expanded defaults:4 ends here
 
-;; When using isearch to jump to things, use C-RET to put point on the
-;; opposite side of where it would normally end up
+;; [[file:README.org::*Expanded defaults][Expanded defaults:5]]
 (define-key isearch-mode-map (kbd "<C-return>")
   (defun isearch-done-opposite (&optional nopush edit)
     "End current search in the opposite side of the match."
     (interactive)
     (funcall #'isearch-done nopush edit)
     (when isearch-other-end (goto-char isearch-other-end))))
-;; Expanded defaults:1 ends here
+;; Expanded defaults:5 ends here
 
 ;; [[file:README.org::*C-c bindings][C-c bindings:1]]
 ;; (global-set-key (kbd "C-c a") #')
@@ -267,11 +259,6 @@ emacs config site with matching `extension' regexp"
 ;; Scroll bar
 (scroll-bar-mode -1)
 ;; Scroll bar:1 ends here
-
-;; [[file:README.org::*Inline emojis][Inline emojis:1]]
-;; Emojis inline 👍
-;; (add-hook 'after-init-hook #'global-emojify-mode)
-;; Inline emojis:1 ends here
 
 ;; [[file:README.org::*Inihibit splash screen][Inihibit splash screen:1]]
 (setq inhibit-splash-screen t)
