@@ -234,12 +234,6 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "s-<f9>") #'shell)
 ;; F5-F9:1 ends here
 
-;; [[file:README.org::*Nonstandard bindings][Nonstandard bindings:1]]
-(when (eq system-type 'darwin)
-  (with-eval-after-load 'projectile
-    (define-key projectile-mode-map (kbd "s-p") 'projectile-command-map)))
-;; Nonstandard bindings:1 ends here
-
 ;; [[file:README.org::*Super bindings][Super bindings:1]]
 (global-set-key (kbd "s-c") #'kill-ring-save)
 (global-set-key (kbd "s-s") #'save-buffer)
