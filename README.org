@@ -1,6 +1,6 @@
 #+title: My Literate =.emacs.d=
 #+author: Robb Enzmann
-#+property: header-args:emacs-lisp :tangle init.el :comments link
+#+property: header-args:emacs-lisp :tangle init.el :comments link :results none
 #+OPTIONS: toc:2 num:nil
 #+HUGO_BASE_DIR: ~/repos/renzmann.github.io/
 #+HUGO_SECTION: posts/
@@ -10,6 +10,7 @@ Want to use it? Go ahead!
 #+begin_src shell :eval never
 git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 #+end_src
+
 
 * Goals
 
@@ -26,6 +27,7 @@ Once I figure out how to get colors working in Windows terminal, I'll
 update this table.  For now though, the 16 bit colors don't react to
 my color theme, and so on Windows I rely singularly on GUI mode,
 rather than WSL or emacs inside Alacritty.
+
 
 * Tangling
 
@@ -86,8 +88,10 @@ There are also a few hand-made packages I keep around in a special ~.emacs.d/pac
 (add-to-list 'load-path (expand-file-name "packages/" user-emacs-directory))
 #+end_src
 
+
 * Theme
-[[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will creates larger, bolder headings when in [[Org-mode]].
+[[https://protesilaos.com/][
+Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will creates larger, bolder headings when in [[Org-mode]].
 
 #+begin_src emacs-lisp
 (use-package ef-themes
@@ -122,7 +126,9 @@ I switch between them regularly, based on my mood of the day.
 
 It's worth mentioning that I've tried [[https://www.nordtheme.com/ports/emacs/][nord-theme]] a couple times and found that the legibility or contrast wasn't quite good enough in some modes.  Though I still employ Nord for my terminal config in Alacritty or Kitty, where it looks /excellent/.
 
+
 * Keybindings
+
 In the unlikely event that something below is loaded incorrectly and causes initialization to stop, I like to have my basic key command loaded early, especially so that navigating to the error can happen more quickly.
 
 Emacs has [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html][some standards]] about where user-configured keys should go.  Other non-standard modifications are marked as such.
@@ -217,7 +223,7 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 #+end_src
 
 ** C-c bindings
-=C-c= <letter> is always free for users.
+=C-c= <letter> is always free for users.  It may seem like overkill how I set a header for each possible =C-c= combination, but it's increcibly handy when I want to jump directly to one of these headings while in another buffer.  See e.g. =renz/jump-init=, which allows me to narrow in on a particular key I'd like to bind by leveraging =completing-read=.
 
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c a") #')
@@ -231,16 +237,51 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 (global-set-key (kbd "C-c c o") #'change-outer)
 #+end_src
 
-*** =C-c d= through =k=
+*** =C-c d= jump to a tag
 
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-c d") #'renz/find-tag)
-(global-set-key (kbd "C-c e") #'shell)
+#+end_src
+
+*** =C-c e=
+
+#+begin_src emacs-lisp
+;; (global-set-key (kbd "C-c e") #')
+#+end_src
+
+*** =C-c f= hippie-expand
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c f") #'hippie-expand)
+#+end_src
+
+*** =C-c g= find file at point
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c g") #'ffap)  ; inspired by vim `gf`
+#+end_src
+
+*** =C-c h=
+
+#+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c h") #')
+#+end_src
+
+*** =C-c i= jump to a header in my configuration
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c i") #'renz/jump-init)
+#+end_src
+
+*** =C-c j= imenu
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c j") #'consult-imenu)  ; matches major modes that use C-c C-j
+#+end_src
+
+*** =C-c k= kill all but one space
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c k") #'just-one-space)
 #+end_src
 
@@ -268,6 +309,7 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 #+end_src
 
 *** =C-c o= Org bindings
+
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-c o a") #'org-agenda)
 (global-set-key (kbd "C-c o b d") #'org-babel-detangle)
@@ -280,9 +322,15 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 (global-set-key (kbd "C-c o y") #'ox-clip-image-to-clipboard)
 #+end_src
 
+*** =C-c p=
 
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c p") #')
+#+end_src
+
+*** =C-c q=
+
+#+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c q") #')
 #+end_src
 
@@ -295,9 +343,12 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 *** =C-c s= shell
 
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-c s") #'shell)
+(global-set-key (kbd "C-c s s") #'shell)
+(global-set-key (kbd "C-c s t") #'ansi-term)
+(global-set-key (kbd "C-c s v") #'vterm)
 #+end_src
 
+*** =C-c t=
 
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c t") #')

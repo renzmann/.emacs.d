@@ -129,16 +129,37 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c c o") #'change-outer)
 ;; =C-c c= change inner/outer:1 ends here
 
-;; [[file:README.org::*=C-c d= through =k=][=C-c d= through =k=:1]]
+;; [[file:README.org::*=C-c d= jump to a tag][=C-c d= jump to a tag:1]]
 (global-set-key (kbd "C-c d") #'renz/find-tag)
-(global-set-key (kbd "C-c e") #'shell)
+;; =C-c d= jump to a tag:1 ends here
+
+;; [[file:README.org::*=C-c e=][=C-c e=:1]]
+;; (global-set-key (kbd "C-c e") #')
+;; =C-c e=:1 ends here
+
+;; [[file:README.org::*=C-c f= hippie-expand][=C-c f= hippie-expand:1]]
 (global-set-key (kbd "C-c f") #'hippie-expand)
+;; =C-c f= hippie-expand:1 ends here
+
+;; [[file:README.org::*=C-c g= find file at point][=C-c g= find file at point:1]]
 (global-set-key (kbd "C-c g") #'ffap)  ; inspired by vim `gf`
+;; =C-c g= find file at point:1 ends here
+
+;; [[file:README.org::*=C-c h=][=C-c h=:1]]
 ;; (global-set-key (kbd "C-c h") #')
+;; =C-c h=:1 ends here
+
+;; [[file:README.org::*=C-c i= jump to a header in my configuration][=C-c i= jump to a header in my configuration:1]]
 (global-set-key (kbd "C-c i") #'renz/jump-init)
+;; =C-c i= jump to a header in my configuration:1 ends here
+
+;; [[file:README.org::*=C-c j= imenu][=C-c j= imenu:1]]
 (global-set-key (kbd "C-c j") #'consult-imenu)  ; matches major modes that use C-c C-j
+;; =C-c j= imenu:1 ends here
+
+;; [[file:README.org::*=C-c k= kill all but one space][=C-c k= kill all but one space:1]]
 (global-set-key (kbd "C-c k") #'just-one-space)
-;; =C-c d= through =k=:1 ends here
+;; =C-c k= kill all but one space:1 ends here
 
 ;; [[file:README.org::*=C-c l= Everything LSP (eglot)][=C-c l= Everything LSP (eglot):1]]
 (global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
@@ -169,22 +190,27 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c o y") #'ox-clip-image-to-clipboard)
 ;; =C-c o= Org bindings:1 ends here
 
-;; [[file:README.org::*=C-c o= Org bindings][=C-c o= Org bindings:2]]
+;; [[file:README.org::*=C-c p=][=C-c p=:1]]
 ;; (global-set-key (kbd "C-c p") #')
+;; =C-c p=:1 ends here
+
+;; [[file:README.org::*=C-c q=][=C-c q=:1]]
 ;; (global-set-key (kbd "C-c q") #')
-;; =C-c o= Org bindings:2 ends here
+;; =C-c q=:1 ends here
 
 ;; [[file:README.org::*=C-c r= recent files][=C-c r= recent files:1]]
 (global-set-key (kbd "C-c r") #'consult-recent-file)
 ;; =C-c r= recent files:1 ends here
 
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
-(global-set-key (kbd "C-c s") #'shell)
+(global-set-key (kbd "C-c s s") #'shell)
+(global-set-key (kbd "C-c s t") #'ansi-term)
+(global-set-key (kbd "C-c s v") #'vterm)
 ;; =C-c s= shell:1 ends here
 
-;; [[file:README.org::*=C-c s= shell][=C-c s= shell:2]]
+;; [[file:README.org::*=C-c t=][=C-c t=:1]]
 ;; (global-set-key (kbd "C-c t") #')
-;; =C-c s= shell:2 ends here
+;; =C-c t=:1 ends here
 
 ;; [[file:README.org::*=C-c u= Consult grep/rg][=C-c u= Consult grep/rg:1]]
 (global-set-key (kbd "C-c u") #'renz/consult-grep)
