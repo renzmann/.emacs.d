@@ -335,7 +335,7 @@
 		("Artur Malabarba" . "emacs@endlessparentheses.com"))
 	       (:keywords "lisp"))])
  (cape .
-       [(0 9)
+       [(0 10)
 	((emacs
 	  (27 1)))
 	"Completion At Point Extensions" tar
@@ -343,7 +343,7 @@
 	 (:maintainer "Daniel Mendler" . "mail@daniel-mendler.de")
 	 (:authors
 	  ("Daniel Mendler" . "mail@daniel-mendler.de"))
-	 (:commit . "5cd6b861b7fb88c7a0a3d5062b36631b561fea8c"))])
+	 (:commit . "4b32036a6c667b445dcc001fd70a01eee8baa924"))])
  (capf-autosuggest .
 		   [(0 3)
 		    ((emacs
@@ -933,7 +933,7 @@
 	       ("Markus Triska" . "triska@metalevel.at"))
 	      (:commit . "cfcdf9e42821d246b7fbc84877aa4ecacc184a1c"))])
  (eev .
-      [(20221015)
+      [(20221108)
        ((emacs
 	 (24 4)))
        "Support for e-scripts (eepitch blocks, elisp hyperlinks, etc)" tar
@@ -942,7 +942,7 @@
 	(:maintainer "Eduardo Ochs" . "eduardoochs@gmail.com")
 	(:authors
 	 ("Eduardo Ochs" . "eduardoochs@gmail.com"))
-	(:commit . "e80c5efd00214613e6837fa11036bf8463040529"))])
+	(:commit . "34d4e02b19e94a95648f125110a18c97414d547f"))])
  (ef-themes .
 	    [(0 9 0)
 	     ((emacs
@@ -2283,7 +2283,7 @@
 		("Noboru Ota" . "me@nobiot.com"))
 	       (:commit . "576e5680682bfb80a50b057b8752e0674d766f8d"))])
  (org-transclusion .
-		   [(1 3 0)
+		   [(1 3 1)
 		    ((emacs
 		      (27 1))
 		     (org
@@ -2294,7 +2294,7 @@
 		     (:maintainer "Noboru Ota" . "me@nobiot.com")
 		     (:authors
 		      ("Noboru Ota" . "me@nobiot.com"))
-		     (:commit . "5cb94542e18722bf72a281441e944a8039b5301f"))])
+		     (:commit . "cf51df7b87e0d32ba13ac5380557e81d9845d81b"))])
  (org-translate .
 		[(0 1 4)
 		 ((emacs
