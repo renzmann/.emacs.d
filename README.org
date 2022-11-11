@@ -229,12 +229,22 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c a") #')
 (global-set-key (kbd "C-c b") #'scroll-bar-mode)
+#+end_src
+
+*** =C-c c= change inner/outer
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c c i") #'change-inner)
 (global-set-key (kbd "C-c c o") #'change-outer)
+#+end_src
+
+*** =C-c d= through =k=
+
+#+begin_src emacs-lisp
 (global-set-key (kbd "C-c d") #'renz/find-tag)
 (global-set-key (kbd "C-c e") #'shell)
 (global-set-key (kbd "C-c f") #'hippie-expand)
-(global-set-key (kbd "C-c g") #'ffap)  ; TODO my own func that takes universal args
+(global-set-key (kbd "C-c g") #'ffap)  ; inspired by vim `gf`
 ;; (global-set-key (kbd "C-c h") #')
 (global-set-key (kbd "C-c i") #'renz/jump-init)
 (global-set-key (kbd "C-c j") #'consult-imenu)  ; matches major modes that use C-c C-j

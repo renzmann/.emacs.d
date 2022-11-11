@@ -129,17 +129,23 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*C-c bindings][C-c bindings:1]]
 ;; (global-set-key (kbd "C-c a") #')
 (global-set-key (kbd "C-c b") #'scroll-bar-mode)
+;; C-c bindings:1 ends here
+
+;; [[file:README.org::*=C-c c= change inner/outer][=C-c c= change inner/outer:1]]
 (global-set-key (kbd "C-c c i") #'change-inner)
 (global-set-key (kbd "C-c c o") #'change-outer)
+;; =C-c c= change inner/outer:1 ends here
+
+;; [[file:README.org::*=C-c d= through =k=][=C-c d= through =k=:1]]
 (global-set-key (kbd "C-c d") #'renz/find-tag)
 (global-set-key (kbd "C-c e") #'shell)
 (global-set-key (kbd "C-c f") #'hippie-expand)
-(global-set-key (kbd "C-c g") #'ffap)  ; TODO my own func that takes universal args
+(global-set-key (kbd "C-c g") #'ffap)  ; inspired by vim `gf`
 ;; (global-set-key (kbd "C-c h") #')
 (global-set-key (kbd "C-c i") #'renz/jump-init)
 (global-set-key (kbd "C-c j") #'consult-imenu)  ; matches major modes that use C-c C-j
 (global-set-key (kbd "C-c k") #'just-one-space)
-;; C-c bindings:1 ends here
+;; =C-c d= through =k=:1 ends here
 
 ;; [[file:README.org::*=C-c l= Everything LSP (eglot)][=C-c l= Everything LSP (eglot):1]]
 (global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
