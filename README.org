@@ -17,11 +17,13 @@ git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 I use all three of the major platforms, in both GUI and TTY mode.  So
 this config is designed to work equally well for:
 
+|----------+----------+-----+-----------+-------|
 | platform | terminal | GUI | ssh + TTY | Tramp |
 |----------+----------+-----+-----------+-------|
-| Linux    | ✔        | ✔   | ✔         | ✔     |
-| macOS    | ✔        | ✔   | ✔         | ✔     |
-| Windows  | ❌       | ✔   | ❌        | ✔     |
+| Linux    | ✅       | ✅  | ✅        | ✅    |
+| macOS    | ✅       | ✅  | ✅        | ✅    |
+| Windows  | ❌       | ✅  | ❌        | ✅    |
+|----------+----------+-----+-----------+-------|
 
 Once I figure out how to get colors working in Windows terminal, I'll
 update this table.  For now though, the 16 bit colors don't react to
