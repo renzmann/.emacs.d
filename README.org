@@ -38,7 +38,7 @@ My configuration is a single literate programming document, which is tangled int
 
 * Header
 
-To comply with the Emacs conventions for libraries, the tangled init.el must have the following [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][header]] and [[Footer][footer:]]
+To comply with the Emacs [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][conventions for libraries]], the tangled init.el must have the following header and [[Footer][footer:]]
 
 #+begin_src emacs-lisp :comments no
 ;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
