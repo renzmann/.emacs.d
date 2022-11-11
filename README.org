@@ -176,7 +176,7 @@ emacs config site with matching `extension' regexp"
     (consult-grep)))
 #+end_src
 
-** Expanded defaults
+** Expanded/better defaults
 These convenient chords allow for fast text replacement by holding =C-M-= and rapidly typing =k= and =h= in succession.
 
 #+begin_src emacs-lisp
@@ -196,11 +196,10 @@ Hippie-expand [[https://www.masteringemacs.org/article/text-expansion-hippie-exp
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 #+end_src
 
-Both ~ibuffer~ and ~consult-buffer~ are strictly superior versions of their counterparts.
+~ibuffer~ is a strictly superior, built-in version of its counterpart.
 
 #+begin_src emacs-lisp
 (global-set-key [remap list-buffers] 'ibuffer)
-(global-set-key [remap switch-to-buffer] 'consult-buffer)
 #+end_src
 
 The most common situation where I'm running ~flymake~ would be for spelling in prose, or diagnostics from a language server.  In either case, I like having next/previous on easy to reach chords.
@@ -492,13 +491,12 @@ Forms a large foundation of my workflow.  [[https://github.com/minad/consult][Th
         :map minibuffer-local-map
         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
 
-  ;; The :init configuration is always executed (Not lazy)
   :init
-
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.

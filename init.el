@@ -90,34 +90,33 @@ emacs config site with matching `extension' regexp"
     (consult-grep)))
 ;; Keybound functions:1 ends here
 
-;; [[file:README.org::*Expanded defaults][Expanded defaults:1]]
+;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-h") 'backward-kill-sexp)
-;; Expanded defaults:1 ends here
+;; Expanded/better defaults:1 ends here
 
-;; [[file:README.org::*Expanded defaults][Expanded defaults:2]]
+;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:2]]
 (global-set-key (kbd "C-z") #'zap-up-to-char)
-;; Expanded defaults:2 ends here
+;; Expanded/better defaults:2 ends here
 
-;; [[file:README.org::*Expanded defaults][Expanded defaults:4]]
+;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:4]]
 (global-set-key [remap list-buffers] 'ibuffer)
-(global-set-key [remap switch-to-buffer] 'consult-buffer)
-;; Expanded defaults:4 ends here
+;; Expanded/better defaults:4 ends here
 
-;; [[file:README.org::*Expanded defaults][Expanded defaults:5]]
+;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:5]]
 (with-eval-after-load 'flymake
   (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
   (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
-;; Expanded defaults:5 ends here
+;; Expanded/better defaults:5 ends here
 
-;; [[file:README.org::*Expanded defaults][Expanded defaults:6]]
+;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:6]]
 (define-key isearch-mode-map (kbd "<C-return>")
   (defun isearch-done-opposite (&optional nopush edit)
     "End current search in the opposite side of the match."
     (interactive)
     (funcall #'isearch-done nopush edit)
     (when isearch-other-end (goto-char isearch-other-end))))
-;; Expanded defaults:6 ends here
+;; Expanded/better defaults:6 ends here
 
 ;; [[file:README.org::*C-c bindings][C-c bindings:1]]
 ;; (global-set-key (kbd "C-c a") #')
@@ -320,13 +319,12 @@ emacs config site with matching `extension' regexp"
         :map minibuffer-local-map
         ("M-s" . consult-history)                 ;; orig. next-matching-history-element
         ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+
   ;; Enable automatic preview at point in the *Completions* buffer. This is
   ;; relevant when you use the default completion UI.
   :hook (completion-list-mode . consult-preview-at-point-mode)
 
-  ;; The :init configuration is always executed (Not lazy)
   :init
-
   ;; Optionally configure the register formatting. This improves the register
   ;; preview for `consult-register', `consult-register-load',
   ;; `consult-register-store' and the Emacs built-ins.
