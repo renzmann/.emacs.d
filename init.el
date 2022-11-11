@@ -32,29 +32,23 @@
 ;; Packages:2 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
-(setq ef-themes-headings
-      '((0 . (1.9))
-        (1 . (1.8))
-        (2 . (1.7))
-        (3 . (1.6))
-        (4 . (1.5))
-        (5 . (1.4)) ; absence of weight means `bold'
-        (6 . (1.3))
-        (7 . (1.2))
-        (t . (1.1))))
+(use-package ef-themes
+  :ensure t
+  :init
+  (setq ef-themes-headings
+        '((0 . (1.9))
+          (1 . (1.8))
+          (2 . (1.7))
+          (3 . (1.6))
+          (4 . (1.5))
+          (5 . (1.4)) ; absence of weight means `bold'
+          (6 . (1.3))
+          (7 . (1.2))
+          (t . (1.1))))
+  (setq ef-themes-to-toggle '(ef-cherie ef-light))
+  :config
+  (load-theme 'ef-cherie :no-confirm))
 ;; Theme:1 ends here
-
-;; [[file:README.org::*Theme][Theme:2]]
-(load-theme 'ef-cherie :no-confirm)
-;; Theme:2 ends here
-
-;; [[file:README.org::*Theme][Theme:3]]
-(setq ef-themes-to-toggle '(ef-cherie ef-light))
-;; Theme:3 ends here
-
-;; [[file:README.org::*Theme][Theme:4]]
-(set-face-attribute 'default nil :family "Hack")
-;; Theme:4 ends here
 
 ;; [[file:README.org::*Keybound functions][Keybound functions:1]]
 (defun renz/--jump-section (dirname prompt extension)
@@ -134,7 +128,7 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*C-c bindings][C-c bindings:1]]
 ;; (global-set-key (kbd "C-c a") #')
-;; (global-set-key (kbd "C-c b") #')
+(global-set-key (kbd "C-c b") #'scroll-bar-mode)
 (global-set-key (kbd "C-c c i") #'change-inner)
 (global-set-key (kbd "C-c c o") #'change-outer)
 (global-set-key (kbd "C-c d") #'renz/find-tag)
@@ -142,18 +136,27 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c f") #'hippie-expand)
 (global-set-key (kbd "C-c g") #'ffap)  ; TODO my own func that takes universal args
 ;; (global-set-key (kbd "C-c h") #')
-;; (global-set-key (kbd "C-c i") #')
-(global-set-key (kbd "C-c j") #'imenu)  ; matches major modes that use C-c C-j
+(global-set-key (kbd "C-c i") #'renz/jump-init)
+(global-set-key (kbd "C-c j") #'consult-imenu)  ; matches major modes that use C-c C-j
 (global-set-key (kbd "C-c k") #'just-one-space)
+;; C-c bindings:1 ends here
+
+;; [[file:README.org::*=C-c l= Everything LSP (eglot)][=C-c l= Everything LSP (eglot):1]]
 (global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
 (global-set-key (kbd "C-c l f f") #'eglot-format)
 (global-set-key (kbd "C-c l f b") #'eglot-format-buffer)
 (global-set-key (kbd "C-c l l") #'eglot)
 (global-set-key (kbd "C-c l r n") #'eglot-rename)
 (global-set-key (kbd "C-c l s") #'eglot-shutdown)
+;; =C-c l= Everything LSP (eglot):1 ends here
+
+;; [[file:README.org::*=C-c m= toggle ef-theme][=C-c m= toggle ef-theme:1]]
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
+;; =C-c m= toggle ef-theme:1 ends here
+
+;; [[file:README.org::*=C-c n= toggle minimap][=C-c n= toggle minimap:1]]
 (global-set-key (kbd "C-c n") #'minimap-mode)
-;; C-c bindings:1 ends here
+;; =C-c n= toggle minimap:1 ends here
 
 ;; [[file:README.org::*=C-c o= Org bindings][=C-c o= Org bindings:1]]
 (global-set-key (kbd "C-c o a") #'org-agenda)
@@ -161,8 +164,10 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
 (global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
 (global-set-key (kbd "C-c o j") #'consult-org-heading)
+(global-set-key (kbd "C-c o k") #'org-babel-remove-result)
 (global-set-key (kbd "C-c o o") #'renz/jump-org)
 (global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
+(global-set-key (kbd "C-c o y") #'ox-clip-image-to-clipboard)
 ;; =C-c o= Org bindings:1 ends here
 
 ;; [[file:README.org::*=C-c o= Org bindings][=C-c o= Org bindings:2]]
@@ -174,31 +179,29 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c r") #'renz/recentf-find-file)
 ;; =C-c o= Org bindings:3 ends here
 
-;; [[file:README.org::*=C-c s= Settings][=C-c s= Settings:1]]
-(global-set-key (kbd "C-c s i") #'renz/jump-init)
-;; (global-set-key (kbd "C-c s k") #'renz/jump-keybindings)
-;; (global-set-key (kbd "C-c s s") #'renz/jump-configuration)
-;; =C-c s= Settings:1 ends here
+;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
+(global-set-key (kbd "C-c s") #'shell)
+;; =C-c s= shell:1 ends here
 
-;; [[file:README.org::*=C-c s= Settings][=C-c s= Settings:2]]
+;; [[file:README.org::*=C-c s= shell][=C-c s= shell:2]]
 ;; (global-set-key (kbd "C-c t") #')
-;; =C-c s= Settings:2 ends here
+;; =C-c s= shell:2 ends here
 
 ;; [[file:README.org::*=C-c u= Consult grep/rg][=C-c u= Consult grep/rg:1]]
 (global-set-key (kbd "C-c u") #'renz/consult-grep)
 ;; =C-c u= Consult grep/rg:1 ends here
 
-;; [[file:README.org::*=C-c v=][=C-c v=:1]]
-;; (global-set-key (kbd "C-c v") #')
-;; =C-c v=:1 ends here
+;; [[file:README.org::*=C-c v= Consult line][=C-c v= Consult line:1]]
+(global-set-key (kbd "C-c v") #'consult-line)
+;; =C-c v= Consult line:1 ends here
 
-;; [[file:README.org::*=C-c v=][=C-c v=:2]]
+;; [[file:README.org::*=C-c w=][=C-c w=:1]]
 ;; (global-set-key (kbd "C-c w") #')
-;; =C-c v=:2 ends here
+;; =C-c w=:1 ends here
 
-;; [[file:README.org::*=C-c v=][=C-c v=:3]]
+;; [[file:README.org::*=C-c x=][=C-c x=:1]]
 ;; (global-set-key (kbd "C-c x") #')
-;; =C-c v=:3 ends here
+;; =C-c x=:1 ends here
 
 ;; [[file:README.org::*=C-c y= Yank inner/outer][=C-c y= Yank inner/outer:1]]
 (global-set-key (kbd "C-c y i") #'copy-inner)
@@ -216,7 +219,7 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Meta/Alt Modifications][Meta/Alt Modifications:1]]
 (with-eval-after-load 'dired
-  (define-key dired-mode-map (kbd "M-S-j") 'dired-goto-file))
+(define-key dired-mode-map (kbd "M-S-j") 'dired-goto-file))
 ;; Meta/Alt Modifications:1 ends here
 
 ;; [[file:README.org::*F5-F9][F5-F9:1]]
@@ -240,6 +243,11 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "s-t") #'tab-new)
 (global-set-key (kbd "s-v") #'yank)
 ;; Super bindings:1 ends here
+
+;; [[file:README.org::*Consult][Consult:1]]
+(use-package consult
+  :ensure t)
+;; Consult:1 ends here
 
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
 (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
@@ -330,11 +338,6 @@ emacs config site with matching `extension' regexp"
 (setq ring-bell-function 'ignore)
 ;; Stop stupid bell:1 ends here
 
-;; [[file:README.org::*Clock in mode line][Clock in mode line:1]]
-(setq display-time-day-and-date t)
-(display-time)
-;; Clock in mode line:1 ends here
-
 ;; [[file:README.org::*Enable split-window dired copying][Enable split-window dired copying:1]]
 (setq dired-dwim-target t)
 ;; Enable split-window dired copying:1 ends here
@@ -390,10 +393,6 @@ emacs config site with matching `extension' regexp"
 (tool-bar-mode -1)
 ;; Tool bar:1 ends here
 
-;; [[file:README.org::*Show laptop battery][Show laptop battery:1]]
-(display-battery-mode t)
-;; Show laptop battery:1 ends here
-
 ;; [[file:README.org::*Ignore risky .dir-locals.el][Ignore risky .dir-locals.el:1]]
 (advice-add 'risky-local-variable-p :override #'ignore)
 ;; Ignore risky .dir-locals.el:1 ends here
@@ -447,7 +446,11 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Mode line][Mode line:1]]
 (setq column-number-mode t
-      mode-line-in-non-selected-windows t)
+      mode-line-in-non-selected-windows t
+      display-battery-mode t
+      display-time-day-and-date t)
+
+(display-time)
 ;; Mode line:1 ends here
 
 ;; [[file:README.org::*=eldoc=][=eldoc=:1]]
@@ -540,15 +543,6 @@ emacs config site with matching `extension' regexp"
 (setq org-image-actual-width nil)
 ;; Org-mode:3 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:4]]
-(defun renz/org-kill-src-block ()
-  "Kill the src block around point, if applicable."
-  (interactive)
-  (org-babel-remove-result)
-  (org-mark-element)
-  (kill-region nil nil t))
-;; Org-mode:4 ends here
-
 ;; [[file:README.org::*Org-mode][Org-mode:5]]
 (use-package ox-hugo
   :ensure t)
@@ -581,7 +575,6 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*Org-mode][Org-mode:7]]
 (use-package org
-  :ensure t
   :hook
   (org-mode . (lambda () (progn
                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
@@ -657,6 +650,17 @@ Jumps at tangled code from org src block."
 
 (global-org-modern-mode)
 ;; =org-modern=:1 ends here
+
+;; [[file:README.org::*Code block syntax highlighting for HTML export][Code block syntax highlighting for HTML export:1]]
+(use-package htmlize
+  :ensure t
+  :after (org))
+;; Code block syntax highlighting for HTML export:1 ends here
+
+;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
+(use-package ox-clip
+  :ensure t)
+;; Copying images out of org-babel:1 ends here
 
 ;; [[file:README.org::*SQL][SQL:1]]
 (defun renz/sql-mode-hook ()
@@ -778,14 +782,14 @@ Jumps at tangled code from org src block."
   ;; Uncomment this if we can't install Hack Nerd font
   ;; (set-face-attribute 'default nil :font "Menlo-14")
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
-  (exec-path-from-shell-initialize))
+  (exec-path-from-shell-initialize)
+  (use-package vterm :ensure t))
 ;; macOS:1 ends here
 
 ;; [[file:README.org::*Linux][Linux:1]]
 (when (eq system-type 'gnu/linux)
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
-  ;; (exec-path-from-shell-initialize)
-  )
+  (use-package vterm :ensure t))
 ;; Linux:1 ends here
 
 ;; [[file:README.org::*Tramp][Tramp:1]]
@@ -809,10 +813,13 @@ Jumps at tangled code from org src block."
 ;; Tramp:4 ends here
 
 ;; [[file:README.org::*TreeSitter][TreeSitter:1]]
-(require 'tree-sitter)
-(require 'tree-sitter-langs)
-(global-tree-sitter-mode)
-(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+(use-package tree-sitter
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs
+  :after (tree-sitter))
 ;; TreeSitter:1 ends here
 
 (provide 'init.el)
