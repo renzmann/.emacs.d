@@ -157,13 +157,6 @@ emacs config site with matching `extension' regexp"
   (find-file (expand-file-name "README.org" user-emacs-directory))
   (consult-org-heading))
 
-(defun renz/recentf-find-file ()
-  "Find a recent file using the minibuffer with completion"
-  (interactive)
-  (recentf-mode t)
-  (unless (find-file (completing-read "Find recent file: " recentf-list))
-    (message "Aborting...")))
-
 (defun renz/find-tag ()
   "Use completing-read to navigate to a tag"
   (interactive)
@@ -293,10 +286,10 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 ;; (global-set-key (kbd "C-c q") #')
 #+end_src
 
-#+RESULTS:
+*** =C-c r= recent files
 
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-c r") #'renz/recentf-find-file)
+(global-set-key (kbd "C-c r") #'consult-recent-file)
 #+end_src
 
 *** =C-c s= shell
@@ -1036,6 +1029,7 @@ Offers two functions:
 #+end_src
 
 * SQL
+I'm not yet sure how to get Hive-SQL (~.hql~) recognized with the ~:mode~ keyword.  When I figure that out I'll move that part up.
 
 #+begin_src emacs-lisp
 (defun renz/sql-mode-hook ()
@@ -1070,10 +1064,11 @@ Offers two functions:
           (sql-mode . sqlup-mode)
           (sql-mode . sqlind-minor-mode))
   :after (sqlup-mode sql)
-  :mode "\\.hql")
+  ;; :mode "\\.hql"
+  )
 
 ;; (add-hook 'sql-mode-hook #'renz/sql-mode-hook)
-;; (add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
+(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
 ;; (add-hook 'sql-mode-hook 'sqlup-mode)
 ;; (add-hook 'sql-mode-hook 'sqlind-minor-mode)
 ;; (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
@@ -1317,10 +1312,6 @@ I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece 
   :after (tree-sitter))
 #+end_src
 
-* LaTeX
-
-This looks interesting: https://github.com/oantolin/math-delimiters
-
 * Embark
 
 #+begin_src emacs-lisp :tangle no
@@ -1329,6 +1320,14 @@ This looks interesting: https://github.com/oantolin/math-delimiters
 #+end_src
 
 Looking into this: https://github.com/oantolin/embark
+
+* Don't forget about these
+There are several other interesting options that I haven't tried out yet, including:
++ [[https://github.com/abo-abo/org-download][org-download]]
++ [[https://github.com/oantolin/math-delimiters][math-delimiters]]
++ [[https://github.com/oantolin/placeholder][oantolin/placeholder]]
+
+
 
 * Inspirations
 

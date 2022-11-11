@@ -77,13 +77,6 @@ emacs config site with matching `extension' regexp"
   (find-file (expand-file-name "README.org" user-emacs-directory))
   (consult-org-heading))
 
-(defun renz/recentf-find-file ()
-  "Find a recent file using the minibuffer with completion"
-  (interactive)
-  (recentf-mode t)
-  (unless (find-file (completing-read "Find recent file: " recentf-list))
-    (message "Aborting...")))
-
 (defun renz/find-tag ()
   "Use completing-read to navigate to a tag"
   (interactive)
@@ -181,9 +174,9 @@ emacs config site with matching `extension' regexp"
 ;; (global-set-key (kbd "C-c q") #')
 ;; =C-c o= Org bindings:2 ends here
 
-;; [[file:README.org::*=C-c o= Org bindings][=C-c o= Org bindings:3]]
-(global-set-key (kbd "C-c r") #'renz/recentf-find-file)
-;; =C-c o= Org bindings:3 ends here
+;; [[file:README.org::*=C-c r= recent files][=C-c r= recent files:1]]
+(global-set-key (kbd "C-c r") #'consult-recent-file)
+;; =C-c r= recent files:1 ends here
 
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
 (global-set-key (kbd "C-c s") #'shell)
@@ -701,10 +694,11 @@ Jumps at tangled code from org src block."
           (sql-mode . sqlup-mode)
           (sql-mode . sqlind-minor-mode))
   :after (sqlup-mode sql)
-  :mode "\\.hql")
+  ;; :mode "\\.hql"
+  )
 
 ;; (add-hook 'sql-mode-hook #'renz/sql-mode-hook)
-;; (add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
+(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
 ;; (add-hook 'sql-mode-hook 'sqlup-mode)
 ;; (add-hook 'sql-mode-hook 'sqlind-minor-mode)
 ;; (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
