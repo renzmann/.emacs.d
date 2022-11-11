@@ -55,8 +55,6 @@ To comply with the Emacs [[https://www.gnu.org/software/emacs/manual/html_node/e
 ;;; Code:
 #+end_src
 
-#+RESULTS:
-
 
 * Custom
 
