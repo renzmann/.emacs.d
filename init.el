@@ -915,5 +915,10 @@ Jumps at tangled code from org src block."
   :after (tree-sitter))
 ;; TreeSitter:1 ends here
 
+;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]
+(use-package ahk-mode
+  :ensure t)
+;; AutoHotkey:1 ends here
+
 (provide 'init.el)
 ;;; init.el ends here

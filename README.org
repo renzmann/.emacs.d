@@ -1436,6 +1436,13 @@ I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece 
 
 Looking into this: https://github.com/oantolin/embark
 
+* AutoHotkey
+
+#+begin_src emacs-lisp
+(use-package ahk-mode
+  :ensure t)
+#+end_src
+
 * Don't forget about these
 There are several other interesting options that I haven't tried out yet, including:
 + [[https://github.com/abo-abo/org-download][org-download]]
