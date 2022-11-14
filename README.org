@@ -914,7 +914,10 @@ For a while, I thought keys like =RET=, =TAB=, and similar would be intuitive ca
 It's worth noting that the ~fido-vertical~ built-in is pretty good, but I had issues with micro-freezes in some situations.  [[https://github.com/minad/vertico][vertico]], on the other hand, has been lightning quick, and has intuitive keybindings that don't require any futzing.  /Especially/ in the case where I'm looking to tab-complete things like =C-x C-f /ssh:<thing>=.
 
 #+begin_src emacs-lisp
-(vertico-mode)
+  (use-package vertico
+    :ensure t
+    :config
+    (vertico-mode))
 #+end_src
 
 Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd much prefer to just use the easier and more intuitive =TAB=.
@@ -926,15 +929,20 @@ Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd mu
 For =completion-at-=point= suggestions, I like =corfu= a lot.  It's philosophy is to stick as close as possible to the native Emacs internal API as possible, without reinventing the whell.  In my experience, this has meant far fewer integration troubles with other packages.
 
 #+begin_src emacs-lisp
-(unless (display-graphic-p)
-  (corfu-terminal-mode +1))
+  (use-package corfu-terminal
+    :ensure t)
 
+  (use-package corfu
+    :ensure t
+    :config
+    (unless (display-graphic-p)
+      (corfu-terminal-mode +1))
 
-(setq corfu-auto t
-      corfu-auto-delay 0.0
-      corfu-quit-no-match 'separator)
+    (setq corfu-auto t
+          corfu-auto-delay 0.0
+          corfu-quit-no-match 'separator)
 
-(global-corfu-mode)
+    (global-corfu-mode))
 #+end_src
 
 There are some cases over Tramp, however, where corfu will case some performance issues.  Especially in the case where some folders under the =/= root might be mounted over a network.  In that case, I sometimes add =renz/disable-corfu-remote= to select hooks, such as =shell-mode=.
@@ -1100,30 +1108,33 @@ Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup
 A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
 
 #+begin_src emacs-lisp
-(setq
- ;; Edit settings
- org-auto-align-tags nil
- org-tags-column 0
- org-catch-invisible-edits 'show-and-error
- org-special-ctrl-a/e t
- org-insert-heading-respect-content t
+(use-package org-modern
+  :ensure t
+  :config
+  (setq
+   ;; Edit settings
+   org-auto-align-tags nil
+   org-tags-column 0
+   org-catch-invisible-edits 'show-and-error
+   org-special-ctrl-a/e t
+   org-insert-heading-respect-content t
 
- ;; Org styling, hide markup etc.
- org-hide-emphasis-markers t
- org-pretty-entities t
- org-ellipsis "…"
+   ;; Org styling, hide markup etc.
+   org-hide-emphasis-markers t
+   org-pretty-entities t
+   org-ellipsis "…"
 
- ;; Agenda styling
- org-agenda-tags-column 0
- org-agenda-block-separator ?─
- org-agenda-time-grid
- '((daily today require-timed)
-   (800 1000 1200 1400 1600 1800 2000)
-   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
- org-agenda-current-time-string
- "⭠ now ─────────────────────────────────────────────────")
+   ;; Agenda styling
+   org-agenda-tags-column 0
+   org-agenda-block-separator ?─
+   org-agenda-time-grid
+   '((daily today require-timed)
+     (800 1000 1200 1400 1600 1800 2000)
+     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+   org-agenda-current-time-string
+   "⭠ now ─────────────────────────────────────────────────")
 
-(global-org-modern-mode)
+  (global-org-modern-mode))
 #+end_src
 
 ** Code block syntax highlighting for HTML export
