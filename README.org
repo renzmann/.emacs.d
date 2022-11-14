@@ -1415,7 +1415,7 @@ Host *
 
 
 * TreeSitter
-I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /by golly/ is it nice!  Nearly every major language has a tree-sitter parser that adds a lot of extra context, highlighting, and syntax-aware selection that old-school regexp simply cannot match.
+I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /boy/ is it nice!  Nearly every major language has a tree-sitter parser that adds a lot of extra context, highlighting, and syntax-aware selection that old-school regexp simply cannot match.
 
 #+begin_src emacs-lisp
 (use-package tree-sitter
