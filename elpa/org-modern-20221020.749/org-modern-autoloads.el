@@ -45,15 +45,13 @@ or call the function `global-org-modern-mode'.")
 
 (autoload 'global-org-modern-mode "org-modern" "\
 Toggle Org-Modern mode in all buffers.
-With prefix ARG, enable Global Org-Modern mode if ARG is positive;
-otherwise, disable it.
+With prefix ARG, enable Global Org-Modern mode if ARG is positive; otherwise, disable it.
 
 If called from Lisp, toggle the mode if ARG is `toggle'.
 Enable the mode if ARG is nil, omitted, or is a positive number.
 Disable the mode if ARG is a negative number.
 
-Org-Modern mode is enabled in all buffers where `org-modern--on' would
-do it.
+Org-Modern mode is enabled in all buffers where `org-modern--on' would do it.
 
 See `org-modern-mode' for more information on Org-Modern mode.
 

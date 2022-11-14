@@ -43,7 +43,7 @@ To comply with the Emacs [[https://www.gnu.org/software/emacs/manual/html_node/e
 #+begin_src emacs-lisp :comments no
 ;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2022 Robert Enzmann
+;; Copyright (C) 2022 Robert Enzmann
 
 ;; Author: Robb Enzmann <robbenzmann@gmail.com>
 ;; Keywords: internal
@@ -522,8 +522,11 @@ Haven't found a home header for any of these yet.
 For visual lines, this adds line breaks at the fill-column value.  Especially useful for prose that is meant to be copied to other mediums, such as email or word.
 
 #+begin_src emacs-lisp
-(add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
-(setq-default fill-column 120)
+(use-package visual-fill-column
+  :ensure t
+  :config
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
+  (setq-default fill-column 120))
 #+end_src
 
 ** Scroll bar
@@ -806,7 +809,10 @@ Enable syntax highlighting within code fences for markdown
 [[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work around of a bug where esup tries to step into the byte-compiled version of `cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
 
 #+begin_src emacs-lisp
-(setq esup-depth 0)
+(use-package esup
+  :ensure t
+  :config
+  (setq esup-depth 0))
 #+end_src
 
 ** Reloading Emacs
@@ -847,6 +853,14 @@ I find it very distracting when =eldoc= suddenly pops up and consumes a large pa
 (setq eldoc-echo-area-use-multiline-p nil)
 #+end_src
 
+
+* Magit
+The one and only.
+
+#+begin_src emacs-lisp
+(use-package magit
+  :ensure t)
+#+end_src
 
 * Autocompletion
 Emacs offers incredible depth and freedom when configuring methods that automatically complete text.  First, we set the "completion style", which is the method of assigning completion candidates to a given input string.  "flex" is the built-in "fuzzy" completion style, familiar to us from command prompts in IDEs and VSCode's command palette.
@@ -914,10 +928,10 @@ For a while, I thought keys like =RET=, =TAB=, and similar would be intuitive ca
 It's worth noting that the ~fido-vertical~ built-in is pretty good, but I had issues with micro-freezes in some situations.  [[https://github.com/minad/vertico][vertico]], on the other hand, has been lightning quick, and has intuitive keybindings that don't require any futzing.  /Especially/ in the case where I'm looking to tab-complete things like =C-x C-f /ssh:<thing>=.
 
 #+begin_src emacs-lisp
-  (use-package vertico
-    :ensure t
-    :config
-    (vertico-mode))
+(use-package vertico
+  :ensure t
+  :config
+  (vertico-mode))
 #+end_src
 
 Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd much prefer to just use the easier and more intuitive =TAB=.
@@ -926,23 +940,23 @@ Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd mu
 (setq tab-always-indent 'complete)
 #+end_src
 
-For =completion-at-=point= suggestions, I like =corfu= a lot.  It's philosophy is to stick as close as possible to the native Emacs internal API as possible, without reinventing the whell.  In my experience, this has meant far fewer integration troubles with other packages.
+For =completion-at-=point= suggestions, I like =corfu= a lot.  It's philosophy is to stick as close as possible to the native Emacs internal API as possible, without reinventing the whell.  In my experience, this has meant far fewer integration troubles with other packages.  It uses child frames for displaying the completion candidates, however, which means we need a separate =corfu-terminal= extension for it to work in TTY mode.
 
 #+begin_src emacs-lisp
-  (use-package corfu-terminal
-    :ensure t)
+(use-package corfu-terminal
+  :ensure t)
 
-  (use-package corfu
-    :ensure t
-    :config
-    (unless (display-graphic-p)
-      (corfu-terminal-mode +1))
+(use-package corfu
+  :ensure t
+  :config
+  (unless (display-graphic-p)
+    (corfu-terminal-mode +1))
 
-    (setq corfu-auto t
-          corfu-auto-delay 0.0
-          corfu-quit-no-match 'separator)
+  (setq corfu-auto t
+        corfu-auto-delay 0.0
+        corfu-quit-no-match 'separator)
 
-    (global-corfu-mode))
+  (global-corfu-mode))
 #+end_src
 
 There are some cases over Tramp, however, where corfu will case some performance issues.  Especially in the case where some folders under the =/= root might be mounted over a network.  In that case, I sometimes add =renz/disable-corfu-remote= to select hooks, such as =shell-mode=.
@@ -1293,6 +1307,94 @@ To have ~eglot~ always start up for a python buffer, we would tangle this line i
 
 Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with Jupyter kernels from org-mode.
 
+** blacken
+Formatting a buffer with =black= has never been easier!
+
+#+begin_src emacs-lisp
+(use-package blacken
+  :ensure t)
+#+end_src
+
+* Haskell
+Enemy of the state.
+
+#+begin_src emacs-lisp
+(use-package haskell-mode
+  :ensure t)
+#+end_src
+
+
+* Golang
+Winner of "cutest language mascot" since 2009.
+
+#+begin_src emacs-lisp
+(use-package go-mode
+  :ensure t)
+#+end_src
+
+
+* Lua
+
+#+begin_src emacs-lisp
+(use-package lua-mode
+  :ensure t)
+#+end_src
+
+
+* yaml
+
+#+begin_src emacs-lisp
+(use-package yaml-mode
+  :ensure t)
+#+end_src
+
+
+* Markdown
+
+#+begin_src emacs-lisp
+(use-package markdown-mode
+  :ensure t)
+
+(use-package poly-markdown
+  :ensure t
+  :after (markdown-mode))
+#+end_src
+
+
+* Rust
+Feeling crabby?
+
+#+begin_src emacs-lisp
+(use-package rust-mode
+  :ensure t)
+#+end_src
+
+
+* Scala
+
+#+begin_src emacs-lisp
+(use-package scala-mode
+  :ensure t)
+#+end_src
+
+
+* Vim-mode
+In case we have to go to the dark place.
+
+#+begin_src emacs-lisp
+(use-package vimrc-mdoe
+  :ensure t)
+#+end_src
+
+
+* ripgrep
+
+#+begin_src emacs-lisp
+(use-package ripgrep
+  :ensure t)
+#+end_src
+
+
 * Microsoft Windows
 
 Windows, funnily enough, has some trouble registering the Windows key as a usable modifier for emacs.  In fact, =s-l= will /never/ be an option, since it's handled at the hardware level.  I also add a few nice-to-haves, like setting the default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always install with ~msys64~.
@@ -1425,6 +1527,14 @@ Host *
 #+end_example
 
 
+* Language server protocol (LSP) with =eglot=
+In Emacs 29, =eglot= will be built-in.  Until then, we have to ensure it's installed explicitly.  Amazingly, I've required basically no configuration to this program in order for it to work in most scenarios.
+
+#+begin_src emacs-lisp
+(use-package eglot
+  :ensure t)
+#+end_src
+
 * TreeSitter
 I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /boy/ is it nice!  Nearly every major language has a tree-sitter parser that adds a lot of extra context, highlighting, and syntax-aware selection that old-school regexp simply cannot match.
 
@@ -1453,6 +1563,40 @@ Looking into this: https://github.com/oantolin/embark
 
 #+begin_src emacs-lisp
 (use-package ahk-mode
+  :ensure t)
+#+end_src
+
+
+* csv-mode
+Handy for viewing data quickly.
+
+#+begin_src emacs-lisp
+(use-package csv-mode
+  :ensure t)
+#+end_src
+
+* diff-hl
+adds highlighting to the fringe to see what's been added, deleted, or modified from =git='s perspective.
+
+#+begin_src emacs-lisp
+(use-package diff-hl
+  :ensure t)
+#+end_src
+
+
+* GNU Plot
+Scientific plotting - the old fashioned way!
+
+#+begin_src emacs-lisp
+(use-package gnuplot
+  :ensure t)
+#+end_src
+
+* change-inner
+Modeled after Vim's =ci=, =ca=, =yi=, and =ya= commands, these let us yank or kill text within a "surrounding" delimiter, such as "" or ().
+
+#+begin_src emacs-lisp
+(use-package change-inner
   :ensure t)
 #+end_src
 

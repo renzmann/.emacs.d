@@ -600,7 +600,10 @@ emacs config site with matching `extension' regexp"
 ;; Autocompletion:6 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:7]]
-(vertico-mode)
+(use-package vertico
+  :ensure t
+  :config
+  (vertico-mode))
 ;; Autocompletion:7 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:8]]
@@ -608,15 +611,20 @@ emacs config site with matching `extension' regexp"
 ;; Autocompletion:8 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:9]]
-(unless (display-graphic-p)
-  (corfu-terminal-mode +1))
+(use-package corfu-terminal
+  :ensure t)
 
+(use-package corfu
+  :ensure t
+  :config
+  (unless (display-graphic-p)
+    (corfu-terminal-mode +1))
 
-(setq corfu-auto t
-      corfu-auto-delay 0.0
-      corfu-quit-no-match 'separator)
+  (setq corfu-auto t
+        corfu-auto-delay 0.0
+        corfu-quit-no-match 'separator)
 
-(global-corfu-mode)
+  (global-corfu-mode))
 ;; Autocompletion:9 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:10]]
@@ -717,30 +725,33 @@ Jumps at tangled code from org src block."
 ;; Org-mode:8 ends here
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
-(setq
- ;; Edit settings
- org-auto-align-tags nil
- org-tags-column 0
- org-catch-invisible-edits 'show-and-error
- org-special-ctrl-a/e t
- org-insert-heading-respect-content t
+(use-package org-modern
+  :ensure t
+  :config
+  (setq
+   ;; Edit settings
+   org-auto-align-tags nil
+   org-tags-column 0
+   org-catch-invisible-edits 'show-and-error
+   org-special-ctrl-a/e t
+   org-insert-heading-respect-content t
 
- ;; Org styling, hide markup etc.
- org-hide-emphasis-markers t
- org-pretty-entities t
- org-ellipsis "…"
+   ;; Org styling, hide markup etc.
+   org-hide-emphasis-markers t
+   org-pretty-entities t
+   org-ellipsis "…"
 
- ;; Agenda styling
- org-agenda-tags-column 0
- org-agenda-block-separator ?─
- org-agenda-time-grid
- '((daily today require-timed)
-   (800 1000 1200 1400 1600 1800 2000)
-   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
- org-agenda-current-time-string
- "⭠ now ─────────────────────────────────────────────────")
+   ;; Agenda styling
+   org-agenda-tags-column 0
+   org-agenda-block-separator ?─
+   org-agenda-time-grid
+   '((daily today require-timed)
+     (800 1000 1200 1400 1600 1800 2000)
+     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+   org-agenda-current-time-string
+   "⭠ now ─────────────────────────────────────────────────")
 
-(global-org-modern-mode)
+  (global-org-modern-mode))
 ;; =org-modern=:1 ends here
 
 ;; [[file:README.org::*Code block syntax highlighting for HTML export][Code block syntax highlighting for HTML export:1]]
