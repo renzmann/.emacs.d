@@ -907,11 +907,13 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*TreeSitter][TreeSitter:1]]
 (use-package tree-sitter
+  :ensure t
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 (use-package tree-sitter-langs
+  :ensure t
   :after (tree-sitter))
 ;; TreeSitter:1 ends here
 
