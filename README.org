@@ -11,6 +11,8 @@ Want to use it? Go ahead!
 git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 #+end_src
 
+#+attr_html: :width 800px
+[[file:./img/emacs-org.JPG]]
 
 * Goals
 
@@ -79,6 +81,8 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
     (package-refresh-contents)
     (package-install 'use-package))
   (require 'use-package))
+
+(package-install-selected-packages)
 #+end_src
 
 
