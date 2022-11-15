@@ -12,7 +12,7 @@ git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 #+end_src
 
 #+attr_html: :width 800px
-[[https://user-images.githubusercontent.com/32076780/201819271-6d62026d-9e65-4b24-b9f3-e8f1a0cad966.JPG]]
+[[https://user-images.githubusercontent.com/32076780/201825125-aa94bfa3-0d1a-47d4-b451-be3718850da2.jpg]]
 
 * Goals
 
