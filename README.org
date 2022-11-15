@@ -156,7 +156,10 @@ emacs config site with matching `extension' regexp"
 (defun renz/jump-org ()
   "Prompt for an org file in my emacs directory, then go there."
   (interactive)
-  (renz/--jump-section "org" "Org files: " ".*\.org$"))
+  (find-file
+   (concat "~/org/"
+           (completing-read "Org files: "
+                            (directory-files "~/org/" nil ".*\.org$")))))
 
 (defun renz/jump-init ()
   (interactive)
@@ -190,9 +193,9 @@ The next line UNBINDS the suspend-frame keybinding.  Accidentally minimizing on 
 (global-set-key (kbd "C-z") #'zap-up-to-char)
 #+end_src
 
-Hippie-expand [[https://www.masteringemacs.org/article/text-expansion-hippie-expand][is purported]] to be a better version of ~dabbrev~, but I rather like the default behavior of ~dabbrev~.  So instead I typically have ~hippie-expand~ on a dedicated key, and leave the default =M-/= alone.  Otherwise, we would re-bind it like so:
+Hippie-expand [[https://www.masteringemacs.org/article/text-expansion-hippie-expand][is purported]] to be a better version of ~dabbrev~, but I rather like the default behavior of ~dabbrev~.  I typically have ~hippie-expand~ on a dedicated key, and sometimes re-bind the default =M-/= as well, depending on my current workflow.
 
-#+begin_src emacs-lisp :tangle no :eval never
+#+begin_src emacs-lisp
 (global-set-key [remap dabbrev-expand] 'hippie-expand)
 #+end_src
 

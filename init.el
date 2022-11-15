@@ -70,7 +70,10 @@ emacs config site with matching `extension' regexp"
 (defun renz/jump-org ()
   "Prompt for an org file in my emacs directory, then go there."
   (interactive)
-  (renz/--jump-section "org" "Org files: " ".*\.org$"))
+  (find-file
+   (concat "~/org/"
+           (completing-read "Org files: "
+                            (directory-files "~/org/" nil ".*\.org$")))))
 
 (defun renz/jump-init ()
   (interactive)
@@ -98,6 +101,10 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:2]]
 (global-set-key (kbd "C-z") #'zap-up-to-char)
 ;; Expanded/better defaults:2 ends here
+
+;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:3]]
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
+;; Expanded/better defaults:3 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:4]]
 (global-set-key [remap list-buffers] 'ibuffer)
