@@ -85,7 +85,6 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
 (package-install-selected-packages)
 #+end_src
 
-
 There are also a few hand-made packages I keep around in a special ~.emacs.d/packages/~ directory.
 
 #+begin_src emacs-lisp
