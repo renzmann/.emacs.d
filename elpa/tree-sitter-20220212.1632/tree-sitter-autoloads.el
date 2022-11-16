@@ -45,15 +45,13 @@ or call the function `global-tree-sitter-mode'.")
 
 (autoload 'global-tree-sitter-mode "tree-sitter" "\
 Toggle Tree-Sitter mode in all buffers.
-With prefix ARG, enable Global Tree-Sitter mode if ARG is positive;
-otherwise, disable it.
+With prefix ARG, enable Global Tree-Sitter mode if ARG is positive; otherwise, disable it.
 
 If called from Lisp, toggle the mode if ARG is `toggle'.
 Enable the mode if ARG is nil, omitted, or is a positive number.
 Disable the mode if ARG is a negative number.
 
-Tree-Sitter mode is enabled in all buffers where
-`turn-on-tree-sitter-mode' would do it.
+Tree-Sitter mode is enabled in all buffers where `turn-on-tree-sitter-mode' would do it.
 
 See `tree-sitter-mode' for more information on Tree-Sitter mode.
 

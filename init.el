@@ -1,6 +1,6 @@
 ;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
 
-;; Copyright (C) 2020-2022 Robert Enzmann
+;; Copyright (C) 2022 Robert Enzmann
 
 ;; Author: Robb Enzmann <robbenzmann@gmail.com>
 ;; Keywords: internal
@@ -25,6 +25,8 @@
     (package-refresh-contents)
     (package-install 'use-package))
   (require 'use-package))
+
+(package-install-selected-packages)
 ;; Packages:1 ends here
 
 ;; [[file:README.org::*Packages][Packages:2]]
@@ -349,8 +351,11 @@ emacs config site with matching `extension' regexp"
 ;; Consult:1 ends here
 
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
-(add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
-(setq-default fill-column 120)
+(use-package visual-fill-column
+  :ensure t
+  :config
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
+  (setq-default fill-column 120))
 ;; Fill-column:1 ends here
 
 ;; [[file:README.org::*Scroll bar][Scroll bar:1]]
@@ -535,7 +540,10 @@ emacs config site with matching `extension' regexp"
 ;; Code syntax in Markdown:1 ends here
 
 ;; [[file:README.org::*Esup][Esup:1]]
-(setq esup-depth 0)
+(use-package esup
+  :ensure t
+  :config
+  (setq esup-depth 0))
 ;; Esup:1 ends here
 
 ;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
@@ -555,6 +563,11 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*=eldoc=][=eldoc=:1]]
 (setq eldoc-echo-area-use-multiline-p nil)
 ;; =eldoc=:1 ends here
+
+;; [[file:README.org::*Magit][Magit:1]]
+(use-package magit
+  :ensure t)
+;; Magit:1 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:1]]
 (setq completion-styles '(flex basic partial-completion emacs22))
@@ -607,7 +620,10 @@ emacs config site with matching `extension' regexp"
 ;; Autocompletion:6 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:7]]
-(vertico-mode)
+(use-package vertico
+  :ensure t
+  :config
+  (vertico-mode))
 ;; Autocompletion:7 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:8]]
@@ -615,15 +631,20 @@ emacs config site with matching `extension' regexp"
 ;; Autocompletion:8 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:9]]
-(unless (display-graphic-p)
-  (corfu-terminal-mode +1))
+(use-package corfu-terminal
+  :ensure t)
 
+(use-package corfu
+  :ensure t
+  :config
+  (unless (display-graphic-p)
+    (corfu-terminal-mode +1))
 
-(setq corfu-auto t
-      corfu-auto-delay 0.0
-      corfu-quit-no-match 'separator)
+  (setq corfu-auto t
+        corfu-auto-delay 0.0
+        corfu-quit-no-match 'separator)
 
-(global-corfu-mode)
+  (global-corfu-mode))
 ;; Autocompletion:9 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:10]]
@@ -724,30 +745,33 @@ Jumps at tangled code from org src block."
 ;; Org-mode:8 ends here
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
-(setq
- ;; Edit settings
- org-auto-align-tags nil
- org-tags-column 0
- org-catch-invisible-edits 'show-and-error
- org-special-ctrl-a/e t
- org-insert-heading-respect-content t
+(use-package org-modern
+  :ensure t
+  :config
+  (setq
+   ;; Edit settings
+   org-auto-align-tags nil
+   org-tags-column 0
+   org-catch-invisible-edits 'show-and-error
+   org-special-ctrl-a/e t
+   org-insert-heading-respect-content t
 
- ;; Org styling, hide markup etc.
- org-hide-emphasis-markers t
- org-pretty-entities t
- org-ellipsis "…"
+   ;; Org styling, hide markup etc.
+   org-hide-emphasis-markers t
+   org-pretty-entities t
+   org-ellipsis "…"
 
- ;; Agenda styling
- org-agenda-tags-column 0
- org-agenda-block-separator ?─
- org-agenda-time-grid
- '((daily today require-timed)
-   (800 1000 1200 1400 1600 1800 2000)
-   " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
- org-agenda-current-time-string
- "⭠ now ─────────────────────────────────────────────────")
+   ;; Agenda styling
+   org-agenda-tags-column 0
+   org-agenda-block-separator ?─
+   org-agenda-time-grid
+   '((daily today require-timed)
+     (800 1000 1200 1400 1600 1800 2000)
+     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+   org-agenda-current-time-string
+   "⭠ now ─────────────────────────────────────────────────")
 
-(global-org-modern-mode)
+  (global-org-modern-mode))
 ;; =org-modern=:1 ends here
 
 ;; [[file:README.org::*Code block syntax highlighting for HTML export][Code block syntax highlighting for HTML export:1]]
@@ -832,6 +856,60 @@ Jumps at tangled code from org src block."
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
 ;; Python:6 ends here
 
+;; [[file:README.org::*blacken][blacken:1]]
+(use-package blacken
+  :ensure t)
+;; blacken:1 ends here
+
+;; [[file:README.org::*Haskell][Haskell:1]]
+(use-package haskell-mode
+  :ensure t)
+;; Haskell:1 ends here
+
+;; [[file:README.org::*Golang][Golang:1]]
+(use-package go-mode
+  :ensure t)
+;; Golang:1 ends here
+
+;; [[file:README.org::*Lua][Lua:1]]
+(use-package lua-mode
+  :ensure t)
+;; Lua:1 ends here
+
+;; [[file:README.org::*yaml][yaml:1]]
+(use-package yaml-mode
+  :ensure t)
+;; yaml:1 ends here
+
+;; [[file:README.org::*Markdown][Markdown:1]]
+(use-package markdown-mode
+  :ensure t)
+
+(use-package poly-markdown
+  :ensure t
+  :after (markdown-mode))
+;; Markdown:1 ends here
+
+;; [[file:README.org::*Rust][Rust:1]]
+(use-package rust-mode
+  :ensure t)
+;; Rust:1 ends here
+
+;; [[file:README.org::*Scala][Scala:1]]
+(use-package scala-mode
+  :ensure t)
+;; Scala:1 ends here
+
+;; [[file:README.org::*Vim-mode][Vim-mode:1]]
+(use-package vimrc-mdoe
+  :ensure t)
+;; Vim-mode:1 ends here
+
+;; [[file:README.org::*ripgrep][ripgrep:1]]
+(use-package ripgrep
+  :ensure t)
+;; ripgrep:1 ends here
+
 ;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
 (when (eq system-type 'windows-nt)
   ;; Set a better font on Windows
@@ -912,6 +990,11 @@ Jumps at tangled code from org src block."
   )
 ;; Tramp:4 ends here
 
+;; [[file:README.org::*Language server protocol (LSP) with =eglot=][Language server protocol (LSP) with =eglot=:1]]
+(use-package eglot
+  :ensure t)
+;; Language server protocol (LSP) with =eglot=:1 ends here
+
 ;; [[file:README.org::*TreeSitter][TreeSitter:1]]
 (use-package tree-sitter
   :ensure t
@@ -934,6 +1017,26 @@ Jumps at tangled code from org src block."
   :config
   (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
 ;; eww - search engine and browser:1 ends here
+
+;; [[file:README.org::*csv-mode][csv-mode:1]]
+(use-package csv-mode
+  :ensure t)
+;; csv-mode:1 ends here
+
+;; [[file:README.org::*diff-hl][diff-hl:1]]
+(use-package diff-hl
+  :ensure t)
+;; diff-hl:1 ends here
+
+;; [[file:README.org::*GNU Plot][GNU Plot:1]]
+(use-package gnuplot
+  :ensure t)
+;; GNU Plot:1 ends here
+
+;; [[file:README.org::*change-inner][change-inner:1]]
+(use-package change-inner
+  :ensure t)
+;; change-inner:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here
