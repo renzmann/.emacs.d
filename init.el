@@ -929,5 +929,11 @@ Jumps at tangled code from org src block."
   :ensure t)
 ;; AutoHotkey:1 ends here
 
+;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
+(use-package eww
+  :config
+  (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
+;; eww - search engine and browser:1 ends here
+
 (provide 'init.el)
 ;;; init.el ends here

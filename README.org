@@ -1448,11 +1448,24 @@ Looking into this: https://github.com/oantolin/embark
   :ensure t)
 #+end_src
 
+
+* eww - search engine and browser
+
+Ecosia requires Javascript, unfortunately.
+
+#+begin_src emacs-lisp
+(use-package eww
+  :config
+  (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
+#+end_src
+
+
 * Don't forget about these
 There are several other interesting options that I haven't tried out yet, including:
 + [[https://github.com/abo-abo/org-download][org-download]]
 + [[https://github.com/oantolin/math-delimiters][math-delimiters]]
 + [[https://github.com/oantolin/placeholder][oantolin/placeholder]]
++ [[https://github.com/emacs-eaf/emacs-application-framework][emacs-eaf/emacs-application-framework]] <--- priority, this looks /awesome/ for DS/Jupyter
 
 
 
