@@ -900,11 +900,6 @@ Jumps at tangled code from org src block."
   :ensure t)
 ;; Scala:1 ends here
 
-;; [[file:README.org::*Vim-mode][Vim-mode:1]]
-(use-package vimrc-mdoe
-  :ensure t)
-;; Vim-mode:1 ends here
-
 ;; [[file:README.org::*ripgrep][ripgrep:1]]
 (use-package ripgrep
   :ensure t)

@@ -1,0 +1,2 @@
+;;; Generated package description from sqlformat.el  -*- no-byte-compile: t -*-
+(define-package "sqlformat" "20210305.209" "Reformat SQL using sqlformat or pgformatter" '((emacs "24.3") (reformatter "0.3")) :commit "7db76e74b7d1e2abfd13670c91bbdc12c6cb4fa9" :authors '(("Steve Purcell" . "steve@sanityinc.com")) :maintainer '("Steve Purcell" . "steve@sanityinc.com") :keywords '("languages") :url "https://github.com/purcell/sqlformat")

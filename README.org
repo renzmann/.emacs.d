@@ -1384,7 +1384,7 @@ Feeling crabby?
 #+end_src
 
 
-* Vim-mode
+* COMMENT Vim-mode
 In case we have to go to the dark place.
 
 #+begin_src emacs-lisp
