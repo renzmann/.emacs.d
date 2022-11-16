@@ -868,6 +868,8 @@ The one and only.
   :ensure t)
 #+end_src
 
+As a reminder - when using pre-commit hooks it may take a while for the hooks to install.  Magit will asynchronously kick off that process, and we can check on it with =$=.  The built-in `vc` is /synchronous/, and will block Emacs entirely until it's done.  So some of the performance hit from using Magit is well worth it in situations like that.
+
 * Autocompletion
 Emacs offers incredible depth and freedom when configuring methods that automatically complete text.  First, we set the "completion style", which is the method of assigning completion candidates to a given input string.  "flex" is the built-in "fuzzy" completion style, familiar to us from command prompts in IDEs and VSCode's command palette.
 
