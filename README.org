@@ -330,7 +330,7 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 *** =C-c p=
 
 #+begin_src emacs-lisp
-;; (global-set-key (kbd "C-c p") #')
+(global-set-key (kbd "C-c p") #'blacken-mode)
 #+end_src
 
 *** =C-c q=
@@ -654,7 +654,9 @@ Adds helpful information in the margin when using the minibuffer
 ** Highlight the line point is on
 
 #+begin_src emacs-lisp
-(global-hl-line-mode)
+(add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'text-mode-hook #'hl-line-mode)
+(add-hook 'org-mode-hook #'hl-line-mode)
 #+end_src
 
 ** Stop stupid bell
@@ -768,7 +770,7 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 
 #+begin_src emacs-lisp
 (setq dired-listing-switches "-alFh")
-(setq-default dired-hide-details-mode t)
+;; (setq-default dired-hide-details-mode t)
 #+end_src
 
 ** Confirm when exiting Emacs
@@ -1262,7 +1264,8 @@ Another nice vanilla feature of ~python-mode~ is =M-x python-check=, which runs 
   (if (executable-find "mypy")
       (setq python-check-command "mypy"))
   (if (executable-find "pyright")
-      (setq python-check-command "pyright")))
+      (setq python-check-command "pyright"))
+  (add-hook 'python-mode-hook #'blacken-mode))
 #+end_src
 
 At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The culprit was "App Execution Aliases" with python and python3 redirecting to the windows store.  Using this fixed it:
@@ -1360,8 +1363,14 @@ Winner of "cutest language mascot" since 2009.
 * Markdown
 
 #+begin_src emacs-lisp
+(defun renz/md-hook ()
+  (visual-fill-column-mode)
+  (setq-local fill-column 120))
+
 (use-package markdown-mode
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'markdown-mode-hook #'renz/md-hook))
 
 (use-package poly-markdown
   :ensure t
@@ -1481,7 +1490,7 @@ When using [[https://anaconda.org][conda]], I keep a special conda environment n
 
 #+begin_src emacs-lisp
 (setq vc-handled-backends '(Git))
-(setq remote-file-name-inhibit-locks t)
+(setq file-name-inhibit-locks t)
 (setq tramp-inline-compress-start-size 1000)
 (setq tramp-copy-size-limit 10000)
 (setq tramp-verbose 1)
@@ -1619,7 +1628,26 @@ Modeled after Vim's =ci=, =ca=, =yi=, and =ya= commands, these let us yank or ki
   :ensure t)
 #+end_src
 
->>>>>>> b8b6695ebde5b6aa8af301e337b23ff27378f4f1
+
+* Emacs Application Framework (eaf)
+
+#+begin_src emacs-lisp
+(use-package eaf
+  :load-path (expand-file-name "site-lisp/emacs-application-framework" user-emacs-directory)
+  :custom
+  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
+  :config
+  (defalias 'browse-web #'eaf-open-browser)
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+#+end_src
+
+
 * Don't forget about these
 There are several other interesting options that I haven't tried out yet, including:
 + [[https://github.com/abo-abo/org-download][org-download]]

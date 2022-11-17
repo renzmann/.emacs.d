@@ -199,7 +199,7 @@ emacs config site with matching `extension' regexp"
 ;; =C-c o= Org bindings:1 ends here
 
 ;; [[file:README.org::*=C-c p=][=C-c p=:1]]
-;; (global-set-key (kbd "C-c p") #')
+(global-set-key (kbd "C-c p") #'blacken-mode)
 ;; =C-c p=:1 ends here
 
 ;; [[file:README.org::*=C-c q=][=C-c q=:1]]
@@ -434,7 +434,9 @@ emacs config site with matching `extension' regexp"
 ;; Marginalia:1 ends here
 
 ;; [[file:README.org::*Highlight the line point is on][Highlight the line point is on:1]]
-(global-hl-line-mode)
+(add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'text-mode-hook #'hl-line-mode)
+(add-hook 'org-mode-hook #'hl-line-mode)
 ;; Highlight the line point is on:1 ends here
 
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
@@ -508,7 +510,7 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Make ~dired~ human-readable][Make ~dired~ human-readable:1]]
 (setq dired-listing-switches "-alFh")
-(setq-default dired-hide-details-mode t)
+;; (setq-default dired-hide-details-mode t)
 ;; Make ~dired~ human-readable:1 ends here
 
 ;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
@@ -848,7 +850,8 @@ Jumps at tangled code from org src block."
   (if (executable-find "mypy")
       (setq python-check-command "mypy"))
   (if (executable-find "pyright")
-      (setq python-check-command "pyright")))
+      (setq python-check-command "pyright"))
+  (add-hook 'python-mode-hook #'blacken-mode))
 ;; Python:2 ends here
 
 ;; [[file:README.org::*Python][Python:6]]
@@ -882,8 +885,14 @@ Jumps at tangled code from org src block."
 ;; yaml:1 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:1]]
+(defun renz/md-hook ()
+  (visual-fill-column-mode)
+  (setq-local fill-column 120))
+
 (use-package markdown-mode
-  :ensure t)
+  :ensure t
+  :config
+  (add-hook 'markdown-mode-hook #'renz/md-hook))
 
 (use-package poly-markdown
   :ensure t
@@ -967,7 +976,7 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*Tramp][Tramp:1]]
 (setq vc-handled-backends '(Git))
-(setq remote-file-name-inhibit-locks t)
+(setq file-name-inhibit-locks t)
 (setq tramp-inline-compress-start-size 1000)
 (setq tramp-copy-size-limit 10000)
 (setq tramp-verbose 1)
@@ -1032,6 +1041,22 @@ Jumps at tangled code from org src block."
 (use-package change-inner
   :ensure t)
 ;; change-inner:1 ends here
+
+;; [[file:README.org::*Emacs Application Framework (eaf)][Emacs Application Framework (eaf):1]]
+(use-package eaf
+  :load-path (expand-file-name "site-lisp/emacs-application-framework" user-emacs-directory)
+  :custom
+  ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
+  :config
+  (defalias 'browse-web #'eaf-open-browser)
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key take_photo "p" eaf-camera-keybinding)
+  (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+;; Emacs Application Framework (eaf):1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here
