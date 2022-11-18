@@ -41,3 +41,5 @@ projectile-bookmarks.eld
 backups/
 *.png
 *.svg
+eaf/
+README.html
