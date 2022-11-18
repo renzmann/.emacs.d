@@ -43,3 +43,4 @@ backups/
 *.svg
 eaf/
 README.html
+elpa/ox-clip-20220117.1909/html-clip-w32.py
