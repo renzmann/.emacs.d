@@ -793,22 +793,18 @@ Jumps at tangled code from org src block."
   (setq sqlformat-command 'sql-formatter)
   (setq sqlind-basic-offset 4))
 
-(use-package sql-indent
-  :ensure t
-  :init
-  (defvar renz/sql-indentation-offsets-alist
-           '((select-clause 0)
-             (insert-clause 0)
-             (delete-clause 0)
-             (update-clause 0)
-             ,@sqlind-default-indentation-offsets-alist))
+(defvar renz/sql-indentation-offsets-alist
+  '((select-clause 0)
+    (insert-clause 0)
+    (delete-clause 0)
+    (update-clause 0)
+    ,@sqlind-default-indentation-offsets-alist))
 
-  ;; (defun renz/sql-indentation-offsets ()
-  ;;   (add-hook 'sqlind-minor-mode-hook
-  ;;             (setq sqlind-indentation-offsets-alist
-  ;;                   renz/sql-indentation-offsets-alist)))
+(defun renz/sql-indentation-offsets ()
+  (add-hook 'sqlind-minor-mode-hook
+            (setq sqlind-indentation-offsets-alist
+                  renz/sql-indentation-offsets-alist)))
 
-  :hook (sqlind-minor-mode . renz/sql-indentation-offsets))
 
 (use-package sqlup-mode
   :ensure t
@@ -823,11 +819,11 @@ Jumps at tangled code from org src block."
   ;; :mode "\\.hql"
   )
 
-;; (add-hook 'sql-mode-hook #'renz/sql-mode-hook)
+(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
 (add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
-;; (add-hook 'sql-mode-hook 'sqlup-mode)
-;; (add-hook 'sql-mode-hook 'sqlind-minor-mode)
-;; (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+(add-hook 'sql-mode-hook 'sqlup-mode)
+(add-hook 'sql-mode-hook 'sqlind-minor-mode)
+(add-hook 'sql-interactive-mode-hook 'sqlup-mode)
 
 (use-package hive2
   :load-path "packages/"
