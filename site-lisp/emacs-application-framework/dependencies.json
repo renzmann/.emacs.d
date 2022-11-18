@@ -1,0 +1,72 @@
+{
+  "pacman": [
+    "wmctrl",
+    "nodejs",
+    "npm"
+  ],
+  "emerge": [
+    "x11-misc/wmctrl",
+    "dev-python/gssapi",
+    "net-libs/nodejs"
+  ],
+  "apt": [
+    "wmctrl",
+    "nodejs",
+    "npm"
+  ],
+  "dnf": [
+    "wmctrl",
+    "nodejs",
+    "npm"
+  ],
+  "pkg": [
+    "wmctrl",
+    "node",
+    "npm"
+  ],
+  "zypper": [
+    "wmctrl",
+    "nodejs16",
+    "npm16"
+  ],
+  "brew": [
+    "node"
+  ],
+  "pip": {
+    "linux": [
+      "epc",
+      "sexpdata",
+      "tld",
+      "lxml",
+      "PyQt6==6.3.1",
+      "PyQt6-Qt6==6.3.1",
+      "PyQt6-sip",
+      "PyQt6-WebEngine==6.3.1",
+      "PyQt6-WebEngine-Qt6==6.3.1"
+    ],
+    "win32": [
+      "epc",
+      "sexpdata",
+      "tld",
+      "lxml",
+      "pygetwindow",
+      "PyQt6==6.3.1",
+      "PyQt6-Qt6==6.3.1",
+      "PyQt6-sip",
+      "PyQt6-WebEngine==6.3.1",
+      "PyQt6-WebEngine-Qt6==6.3.1"
+    ],
+    "darwin": [
+      "epc",
+      "sexpdata",
+      "tld",
+      "lxml",
+      "mac-app-frontmost",
+      "PyQt6==6.3.1",
+      "PyQt6-Qt6==6.3.1",
+      "PyQt6-sip",
+      "PyQt6-WebEngine==6.3.1",
+      "PyQt6-WebEngine-Qt6==6.3.1"
+    ]
+  }
+}
