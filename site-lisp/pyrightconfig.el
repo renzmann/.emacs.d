@@ -34,7 +34,7 @@
 (defun pyrightconfig-write (virtualenv)
   (interactive "DEnv: ")
   ;; Naming convention for venvPath matches the field for pyrightconfig.json
-  (let* ((venv-dir (tramp-file-local-name virtualenv))
+  (let* ((venv-dir (tramp-file-local-name (file-truename virtualenv)))
          (venv-file-name (directory-file-name venv-dir))
          (venvPath (file-name-directory venv-file-name))
          (venv (file-name-base venv-file-name))
