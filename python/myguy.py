@@ -15,8 +15,10 @@ def foo() -> str:
 @dataclass
 class MyGuy:
     """My guy is always there for me"""
+
     foo: int
     bar: str
+
 
 if __name__ == "__main__":
     mg = MyGuy()
