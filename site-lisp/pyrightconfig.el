@@ -6,7 +6,6 @@
 ;; Keywords: python pyright venv tramp
 ;; URL: https://robbmann.io/
 ;; Version: 0.1
-;; Package-Requires: ((f "0.17.2"))
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -26,8 +25,6 @@
 
 ;;; Code:
 
-(require 'f)
-
 (defun pyrightconfig--json-contents (venvPath venv)
   (format "{
     \"venvPath\": \"%s\",
@@ -36,14 +33,15 @@
 
 (defun pyrightconfig-write (virtualenv)
   (interactive "DEnv: ")
-  ;; Naming convention for venvPath matches the fields for pyrightconfig.json
-  (let* ((standard-file-name (convert-standard-filename virtualenv))
-         (venvPath (f-parent standard-file-name))
-         (venv (f-base standard-file-name))
+  ;; Naming convention for venvPath matches the field for pyrightconfig.json
+  (let* ((venv-dir (tramp-file-local-name virtualenv))
+         (venv-file-name (directory-file-name venv-dir))
+         (venvPath (file-name-directory venv-file-name))
+         (venv (file-name-base venv-file-name))
          (base-dir (vc-git-root default-directory))
          (out-file (expand-file-name "pyrightconfig.json" base-dir))
          (out-contents (pyrightconfig--json-contents venvPath venv)))
-    (f-write-text out-contents 'utf-8 out-file)))
+    (with-temp-file out-file (insert out-contents))))
 
 (provide 'pyrightconfig)
 
