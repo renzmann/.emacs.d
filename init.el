@@ -1066,31 +1066,5 @@ Jumps at tangled code from org src block."
   :ensure t)
 ;; change-inner:1 ends here
 
-;; [[file:README.org::*Emacs Application Framework (eaf)][Emacs Application Framework (eaf):1]]
-(use-package eaf
-  :load-path "~/.emacs.d/site-lisp/emacs-application-framework/"
-  :custom ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
-  (eaf-browser-continue-where-left-off t)
-  (eaf-browser-enable-adblocker t)
-  (browse-url-browser-function 'eaf-open-browser)
-  :config
-  (defalias 'browse-web #'eaf-open-browser))
-  ;; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
-
-(use-package eaf-jupyter
-  :load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
-
-(require 'eaf-jupyter)
-
-(use-package eaf-browser)
-
-(use-package eaf-pdf-viewer
-  :config
-  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
-  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding))
-
-(use-package eaf-org-previewer)
-;; Emacs Application Framework (eaf):1 ends here
-
 (provide 'init.el)
 ;;; init.el ends here
