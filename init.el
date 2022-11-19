@@ -30,7 +30,7 @@
 ;; Packages:1 ends here
 
 ;; [[file:README.org::*Packages][Packages:2]]
-(add-to-list 'load-path (expand-file-name "packages/" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:2 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
@@ -1068,7 +1068,7 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*Emacs Application Framework (eaf)][Emacs Application Framework (eaf):1]]
 (use-package eaf
-  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework/"
   :custom ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   (eaf-browser-continue-where-left-off t)
   (eaf-browser-enable-adblocker t)
@@ -1077,7 +1077,11 @@ Jumps at tangled code from org src block."
   (defalias 'browse-web #'eaf-open-browser))
   ;; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
 
-(use-package eaf-jupyter)
+(use-package eaf-jupyter
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+
+(require 'eaf-jupyter)
+
 (use-package eaf-browser)
 
 (use-package eaf-pdf-viewer

@@ -85,10 +85,10 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
 (package-install-selected-packages)
 #+end_src
 
-There are also a few hand-made packages I keep around in a special ~.emacs.d/packages/~ directory.
+There are also a few hand-made packages I keep around in a special ~.emacs.d/site-lisp~ directory.
 
 #+begin_src emacs-lisp
-(add-to-list 'load-path (expand-file-name "packages/" user-emacs-directory))
+(add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 #+end_src
 
 
@@ -1659,7 +1659,7 @@ Modeled after Vim's =ci=, =ca=, =yi=, and =ya= commands, these let us yank or ki
 
 #+begin_src emacs-lisp
 (use-package eaf
-  :load-path "~/.emacs.d/site-lisp/emacs-application-framework"
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework/"
   :custom ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
   (eaf-browser-continue-where-left-off t)
   (eaf-browser-enable-adblocker t)
@@ -1668,7 +1668,11 @@ Modeled after Vim's =ci=, =ca=, =yi=, and =ya= commands, these let us yank or ki
   (defalias 'browse-web #'eaf-open-browser))
   ;; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
 
-(use-package eaf-jupyter)
+(use-package eaf-jupyter
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework/")
+
+(require 'eaf-jupyter)
+
 (use-package eaf-browser)
 
 (use-package eaf-pdf-viewer
