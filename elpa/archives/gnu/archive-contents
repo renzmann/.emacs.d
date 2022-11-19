@@ -152,14 +152,14 @@
 	   ("John Wiegley" . "jwiegley@gmail.com"))
 	  (:commit . "53addd02fbad33765f508f8e6254ebd44e1f81e5"))])
  (auctex .
-	 [(13 1 5)
+	 [(13 1 6)
 	  ((emacs
 	    (25 1)))
 	  "Integrated environment for *TeX*" tar
 	  ((:url . "https://www.gnu.org/software/auctex/")
 	   (:keywords "tex" "latex" "texinfo" "context" "doctex" "preview-latex")
 	   (:maintainer nil . "auctex-devel@gnu.org")
-	   (:commit . "c569c7d486624ac7a5bb924ca92c41e80a58091f"))])
+	   (:commit . "945aba3d418657b1a66ea83b98728017cc5b92b5"))])
  (aumix-mode .
 	     [(7)
 	      nil "run the aumix program in a buffer" single
@@ -2474,7 +2474,7 @@
 	   ("Mario Lang" . "mlang@delysid.org"))
 	  (:maintainer "Mario Lang" . "mlang@delysid.org"))])
  (posframe .
-	   [(1 1 8)
+	   [(1 2 0)
 	    ((emacs
 	      (26 1)))
 	    "Pop a posframe (just a frame) at point" tar
@@ -2483,7 +2483,7 @@
 	     (:maintainer "Feng Shu" . "tumashu@163.com")
 	     (:authors
 	      ("Feng Shu" . "tumashu@163.com"))
-	     (:commit . "0c5e57ac870735cb780936b1efc4bdd17fe87112"))])
+	     (:commit . "48b7130ca3b5c98bdb21bf99b64a3536acf2b0eb"))])
  (project .
 	  [(0 8 3)
 	   ((emacs

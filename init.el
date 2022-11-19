@@ -350,6 +350,10 @@ emacs config site with matching `extension' regexp"
   )
 ;; Consult:1 ends here
 
+;; [[file:README.org::*Recent files menu][Recent files menu:1]]
+(recentf-mode t)
+;; Recent files menu:1 ends here
+
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
 (use-package visual-fill-column
   :ensure t
@@ -790,40 +794,64 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*SQL][SQL:1]]
 (defun renz/sql-mode-hook ()
   (setq tab-width 4)
-  (setq sqlformat-command 'sql-formatter)
-  (setq sqlind-basic-offset 4))
+  (setq sqlformat-command 'sql-formatter))
 
 (defvar renz/sql-indentation-offsets-alist
-  '((select-clause 0)
+  '((syntax-error sqlind-report-sytax-error)
+    (in-string sqlind-report-runaway-string)
+    (comment-continuation sqlind-indent-comment-continuation)
+    (comment-start sqlind-indent-comment-start)
+    (toplevel 0)
+    (in-block +)
+    (in-begin-block +)
+    (block-start 0)
+    (block-end 0)
+    (declare-statement +)
+    (package ++)
+    (package-body 0)
+    (create-statement +)
+    (defun-start +)
+    (labeled-statement-start 0)
+    (statement-continuation +)
+    (nested-statement-open sqlind-use-anchor-indentation +)
+    (nested-statement-continuation sqlind-use-previous-line-indentation)
+    (nested-statement-close sqlind-use-anchor-indentation)
+    (with-clause sqlind-use-anchor-indentation)
+    (with-clause-cte +)
+    (with-clause-cte-cont ++)
+    (case-clause 0)
+    (case-clause-item sqlind-use-anchor-indentation +)
+    (case-clause-item-cont sqlind-right-justify-clause)
+    (select-clause 0)
+    (select-column sqlind-indent-select-column)
+    (select-column-continuation sqlind-indent-select-column +)
+    (select-join-condition ++)
+    (select-table sqlind-indent-select-table)
+    (select-table-continuation sqlind-indent-select-table +)
+    (in-select-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
     (insert-clause 0)
+    (in-insert-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
     (delete-clause 0)
+    (in-delete-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
     (update-clause 0)
-    ,@sqlind-default-indentation-offsets-alist))
+    (in-update-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)))
 
 (defun renz/sql-indentation-offsets ()
-  (add-hook 'sqlind-minor-mode-hook
-            (setq sqlind-indentation-offsets-alist
-                  renz/sql-indentation-offsets-alist)))
+  (setq sqlind-indentation-offsets-alist
+        renz/sql-indentation-offsets-alist)
+  (setq sqlind-basic-offset 4))
 
-
-(use-package sqlup-mode
-  :ensure t
-  :hook sql-interactive-mode
-  :after (sql))
-
-(use-package sql
-  :hook  ((sql-mode . renz/sql-mode-hook)
-          (sql-mode . sqlup-mode)
-          (sql-mode . sqlind-minor-mode))
-  :after (sqlup-mode sql)
-  ;; :mode "\\.hql"
-  )
-
-(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
+(add-hook 'sqlind-minor-mode-hook #'renz/sql-indentation-offsets)
 (add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
+(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
 (add-hook 'sql-mode-hook 'sqlup-mode)
 (add-hook 'sql-mode-hook 'sqlind-minor-mode)
 (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+
+;; TODO we've modified sqlformat for sql-formatter.  Need a way to pass in configuration values
+(use-package sqlformat
+  :load-path "packages/"
+  :after (sql))
 
 (use-package hive2
   :load-path "packages/"
