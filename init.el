@@ -883,9 +883,15 @@ Jumps at tangled code from org src block."
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
 ;; Python:6 ends here
 
+;; [[file:README.org::*pyrightconfig.json, Tramp, and eglot][pyrightconfig.json, Tramp, and eglot:1]]
+(use-package pyrightconfig
+  :after (python))
+;; pyrightconfig.json, Tramp, and eglot:1 ends here
+
 ;; [[file:README.org::*blacken][blacken:1]]
 (use-package blacken
-  :ensure t)
+  :ensure t
+  :after (python))
 ;; blacken:1 ends here
 
 ;; [[file:README.org::*Haskell][Haskell:1]]
@@ -945,7 +951,7 @@ Jumps at tangled code from org src block."
   ;; Alternate ispell when we've got msys on Windows
   (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe")
   ;; Set default shell to pwsh
-  (setq explicit-shell-file-name "pwsh")
+  ;; (setq explicit-shell-file-name "pwsh")
   ;; Enable use of Winkey as super
   (setq w32-pass-lwindow-to-system nil)
   (setq w32-lwindow-modifier 'super) ; Left Windows key
