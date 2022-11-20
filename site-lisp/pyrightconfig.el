@@ -25,12 +25,6 @@
 
 ;;; Code:
 
-(defun pyrightconfig--json-contents (venvPath venv)
-  (format "{
-    \"venvPath\": \"%s\",
-    \"venv\": \"%s\"
-}" venvPath venv))
-
 (defun pyrightconfig-write (virtualenv)
   (interactive "DEnv: ")
   ;; Naming convention for venvPath matches the field for pyrightconfig.json
@@ -40,7 +34,7 @@
          (venv (file-name-base venv-file-name))
          (base-dir (vc-git-root default-directory))
          (out-file (expand-file-name "pyrightconfig.json" base-dir))
-         (out-contents (pyrightconfig--json-contents venvPath venv)))
+         (out-contents (json-encode (list :venvPath venvPath :venv venv))))
     (with-temp-file out-file (insert out-contents))))
 
 (provide 'pyrightconfig)
