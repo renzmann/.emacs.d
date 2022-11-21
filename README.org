@@ -98,7 +98,7 @@ Prot's]] themes have been reliably legible in nearly every situation.  Now with 
 
 #+begin_src emacs-lisp
 (use-package ef-themes
-  :ensure t
+
   :init
   (setq ef-themes-headings
         '((0 . (1.9))
@@ -448,7 +448,7 @@ Forms a large foundation of my workflow.  [[https://github.com/minad/consult][Th
 
 #+begin_src emacs-lisp
 (use-package consult
-  :ensure t
+
   :bind(
         ;; C-x bindings (ctl-x-map)
         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
@@ -535,7 +535,7 @@ For visual lines, this adds line breaks at the fill-column value.  Especially us
 
 #+begin_src emacs-lisp
 (use-package visual-fill-column
-  :ensure t
+
   :config
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
   (setq-default fill-column 120))
@@ -653,7 +653,7 @@ Adds helpful information in the margin when using the minibuffer
 
 #+begin_src emacs-lisp
 (use-package marginalia
-  :ensure t
+
   :config (marginalia-mode))
 #+end_src
 
@@ -824,7 +824,6 @@ Enable syntax highlighting within code fences for markdown
 
 #+begin_src emacs-lisp
 (use-package esup
-  :ensure t
   :config
   (setq esup-depth 0))
 #+end_src
@@ -834,7 +833,7 @@ Often used when changing up my ~init.el~.
 
 #+begin_src emacs-lisp
 (use-package restart-emacs
-  :ensure t)
+  )
 #+end_src
 
 * Minimap
@@ -842,7 +841,7 @@ I have a love-hate relationship with the minimap.  Sometimes it feels great, esp
 
 #+begin_src emacs-lisp :tangle no
 (use-package minimap
-  :ensure t
+
   :config
   (when (display-graphic-p)
     (minimap-mode t)))
@@ -872,8 +871,7 @@ I find it very distracting when =eldoc= suddenly pops up and consumes a large pa
 The one and only.
 
 #+begin_src emacs-lisp
-(use-package magit
-  :ensure t)
+(use-package magit)
 #+end_src
 
 As a reminder - when using pre-commit hooks it may take a while for the hooks to install.  Magit will asynchronously kick off that process, and we can check on it with =$=.  The built-in `vc` is /synchronous/, and will block Emacs entirely until it's done.  So some of the performance hit from using Magit is well worth it in situations like that.
@@ -889,9 +887,9 @@ I've found the [[https://github.com/oantolin/orderless][orderless]] completion s
 
 #+begin_src emacs-lisp
 (use-package orderless
-  :ensure t
   :config
   (add-to-list 'completion-styles 'orderless)
+
   :custom
   (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
@@ -945,7 +943,6 @@ It's worth noting that the ~fido-vertical~ built-in is pretty good, but I had is
 
 #+begin_src emacs-lisp
 (use-package vertico
-  :ensure t
   :config
   (vertico-mode))
 #+end_src
@@ -959,11 +956,9 @@ Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd mu
 For =completion-at-=point= suggestions, I like =corfu= a lot.  It's philosophy is to stick as close as possible to the native Emacs internal API as possible, without reinventing the whell.  In my experience, this has meant far fewer integration troubles with other packages.  It uses child frames for displaying the completion candidates, however, which means we need a separate =corfu-terminal= extension for it to work in TTY mode.
 
 #+begin_src emacs-lisp
-(use-package corfu-terminal
-  :ensure t)
+(use-package corfu-terminal)
 
 (use-package corfu
-  :ensure t
   :config
   (unless (display-graphic-p)
     (corfu-terminal-mode +1))
@@ -1036,8 +1031,7 @@ However, this won't add the contents of the =#+RESULTS:= block to the kill-ring,
 I also use ~org-mode~ for writing [[https://robbmann.io/posts][my blog.]]  With a little help from [[https://willschenk.com/articles/2019/using_org_mode_in_hugo/][an article]] we have exporting to Hugo-specific markdown.  Without the export, Hugo can read Org files /okay-ish/, but you wind up missing some nice QoL features, like header links.
 
 #+begin_src emacs-lisp
-(use-package ox-hugo
-  :ensure t)
+(use-package ox-hugo)
 #+end_src
 
 ~org-mode~ provides =org-babel-tangle-jump-to-org=, which jumps back to an Org source file from within the tangled code.  ~renz/org-babel-tangle-jump-to-src~, defined below, does the opposite - given the Org source file and point inside a ~src~ block, it jumps to the location of the tangled code.  Provided by a helpful [[https://emacs.stackexchange.com/a/69591][stackoverflow answer.]]
@@ -1107,7 +1101,7 @@ Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup
 
 #+begin_src emacs-lisp
 (use-package ob-async
-  :ensure t
+
   :config
   (add-hook 'ob-async-pre-execute-src-block-hook
             #'(lambda ()
@@ -1126,7 +1120,6 @@ Now we configure ~org-mode~ itself.  For a while I was trying =(setq org-startup
 
 #+begin_src emacs-lisp :tangle no :eval never
 (use-package org-roam
-  :ensure t
   :config
   (setq org-roam-directory (file-truename "~/.emacs.d/org/org-roam")
         ;; Consider the below for Windows only
@@ -1139,7 +1132,6 @@ A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
 
 #+begin_src emacs-lisp
 (use-package org-modern
-  :ensure t
   :config
   (setq
    ;; Edit settings
@@ -1171,7 +1163,6 @@ A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
 
 #+begin_src emacs-lisp
 (use-package htmlize
-  :ensure t
   :after (org))
 #+end_src
 
@@ -1180,8 +1171,7 @@ Offers two functions:
 + ~ox-clip-formatted-copy~
 + ~ox-clip-image-to-clipboard~
 #+begin_src emacs-lisp
-(use-package ox-clip
-  :ensure t)
+(use-package ox-clip)
 #+end_src
 
 * SQL
@@ -1254,7 +1244,7 @@ I'm not yet sure how to get Hive-SQL (~.hql~) recognized with the ~:mode~ keywor
   :after (sql))
 
 (use-package ob-sql-mode
-  :ensure t
+
   :after (sql))
 #+end_src
 
@@ -1360,7 +1350,6 @@ Formatting a buffer with =black= has never been easier!
 
 #+begin_src emacs-lisp
 (use-package blacken
-  :ensure t
   :after (python))
 #+end_src
 
@@ -1368,8 +1357,7 @@ Formatting a buffer with =black= has never been easier!
 Enemy of the state.
 
 #+begin_src emacs-lisp
-(use-package haskell-mode
-  :ensure t)
+(use-package haskell-mode)
 #+end_src
 
 
@@ -1377,24 +1365,21 @@ Enemy of the state.
 Winner of "cutest language mascot" since 2009.
 
 #+begin_src emacs-lisp
-(use-package go-mode
-  :ensure t)
+(use-package go-mode)
 #+end_src
 
 
 * Lua
 
 #+begin_src emacs-lisp
-(use-package lua-mode
-  :ensure t)
+(use-package lua-mode)
 #+end_src
 
 
 * yaml
 
 #+begin_src emacs-lisp
-(use-package yaml-mode
-  :ensure t)
+(use-package yaml-mode)
 #+end_src
 
 
@@ -1406,12 +1391,10 @@ Winner of "cutest language mascot" since 2009.
   (setq-local fill-column 120))
 
 (use-package markdown-mode
-  :ensure t
   :config
   (add-hook 'markdown-mode-hook #'renz/md-hook))
 
 (use-package poly-markdown
-  :ensure t
   :after (markdown-mode))
 #+end_src
 
@@ -1420,16 +1403,14 @@ Winner of "cutest language mascot" since 2009.
 Feeling crabby?
 
 #+begin_src emacs-lisp
-(use-package rust-mode
-  :ensure t)
+(use-package rust-mode)
 #+end_src
 
 
 * Scala
 
 #+begin_src emacs-lisp
-(use-package scala-mode
-  :ensure t)
+(use-package scala-mode)
 #+end_src
 
 
@@ -1437,16 +1418,14 @@ Feeling crabby?
 In case we have to go to the dark place.
 
 #+begin_src emacs-lisp
-(use-package vimrc-mdoe
-  :ensure t)
+(use-package vimrc-mdoe)
 #+end_src
 
 
 * ripgrep
 
 #+begin_src emacs-lisp
-(use-package ripgrep
-  :ensure t)
+(use-package ripgrep)
 #+end_src
 
 
@@ -1509,7 +1488,7 @@ Launching Emacs from the typical application launcher or command-space usually w
   ;; (set-face-attribute 'default nil :font "Menlo-14")
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
   (exec-path-from-shell-initialize)
-  (use-package vterm :ensure t))
+  (use-package vterm ))
 #+end_src
 
 
@@ -1519,7 +1498,7 @@ Very little to do here.  Emacs on on Linux seems to "just work".
 #+begin_src emacs-lisp
 (when (eq system-type 'gnu/linux)
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
-  (use-package vterm :ensure t))
+  (use-package vterm ))
 #+end_src
 
 * Tramp
@@ -1586,8 +1565,7 @@ Host *
 In Emacs 29, =eglot= will be built-in.  Until then, we have to ensure it's installed explicitly.  Amazingly, I've required basically no configuration to this program in order for it to work in most scenarios.
 
 #+begin_src emacs-lisp
-(use-package eglot
-  :ensure t)
+(use-package eglot)
 #+end_src
 
 * TreeSitter
@@ -1595,21 +1573,18 @@ I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece 
 
 #+begin_src emacs-lisp
 (use-package tree-sitter
-  :ensure t
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 (use-package tree-sitter-langs
-  :ensure t
   :after (tree-sitter))
 #+end_src
 
 * Embark
 
 #+begin_src emacs-lisp :tangle no
-(use-package embark
-  :ensure t)
+(use-package embark)
 #+end_src
 
 Looking into this: https://github.com/oantolin/embark
@@ -1617,8 +1592,7 @@ Looking into this: https://github.com/oantolin/embark
 * AutoHotkey
 
 #+begin_src emacs-lisp
-(use-package ahk-mode
-  :ensure t)
+(use-package ahk-mode)
 #+end_src
 
 
@@ -1637,16 +1611,14 @@ Ecosia requires Javascript, unfortunately.
 Handy for viewing data quickly.
 
 #+begin_src emacs-lisp
-(use-package csv-mode
-  :ensure t)
+(use-package csv-mode)
 #+end_src
 
 * diff-hl
 adds highlighting to the fringe to see what's been added, deleted, or modified from =git='s perspective.
 
 #+begin_src emacs-lisp
-(use-package diff-hl
-  :ensure t)
+(use-package diff-hl)
 #+end_src
 
 
@@ -1654,16 +1626,14 @@ adds highlighting to the fringe to see what's been added, deleted, or modified f
 Scientific plotting - the old fashioned way!
 
 #+begin_src emacs-lisp
-(use-package gnuplot
-  :ensure t)
+(use-package gnuplot)
 #+end_src
 
 * change-inner
 Modeled after Vim's =ci=, =ca=, =yi=, and =ya= commands, these let us yank or kill text within a "surrounding" delimiter, such as "" or ().
 
 #+begin_src emacs-lisp
-(use-package change-inner
-  :ensure t)
+(use-package change-inner)
 #+end_src
 
 
