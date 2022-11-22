@@ -1,9 +1,12 @@
 #+title: My Literate =.emacs.d=
 #+author: Robb Enzmann
-#+property: header-args:emacs-lisp :tangle init.el :comments link :results none
-#+OPTIONS: toc:2 num:nil
-#+HUGO_BASE_DIR: ~/repos/renzmann.github.io/
-#+HUGO_SECTION: posts/
+#+property: header-args:emacs-lisp :tangle init.el :comments link :results none :eval never-export
+#+options: toc:2 num:nil
+#+hugo_base_dir: ~/repos/renzmann.github.io/
+#+hugo_section: .
+#+export_date: <2022-11-21 Mon>
+#+export_file_name: emacsd
+#+export_hugo_menu: :menu "main"
 
 Want to use it? Go ahead!
 
@@ -13,6 +16,8 @@ git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 
 #+attr_html: :width 800px
 [[https://user-images.githubusercontent.com/32076780/201825125-aa94bfa3-0d1a-47d4-b451-be3718850da2.jpg]]
+
+If you prefer a prettier reading experience, check out this same document weaved into [[https://robbmann.io/emacsd/][my website.]]
 
 * Goals
 
