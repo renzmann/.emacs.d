@@ -1455,7 +1455,7 @@ In case we have to go to the dark place.
 Windows, funnily enough, has some trouble registering the Windows key as a usable modifier for emacs.  In fact, =s-l= will /never/ be an option, since it's handled at the hardware level.  I also add a few nice-to-haves, like setting the default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always install with ~msys64~.
 
 #+begin_src emacs-lisp
-(when (eq system-type 'windows-nt)
+(when (memq system-type '(windows-nt cygwin ms-dos))
   ;; Set a better font on Windows
   (set-face-attribute 'default nil :font "Hack NF-12")
   ;; Alternate ispell when we've got msys on Windows

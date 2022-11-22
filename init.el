@@ -945,7 +945,7 @@ Jumps at tangled code from org src block."
 ;; ripgrep:1 ends here
 
 ;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
-(when (eq system-type 'windows-nt)
+(when (memq system-type '(windows-nt cygwin ms-dos))
   ;; Set a better font on Windows
   (set-face-attribute 'default nil :font "Hack NF-12")
   ;; Alternate ispell when we've got msys on Windows
