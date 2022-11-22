@@ -35,7 +35,7 @@
 
 ;; [[file:README.org::*Theme][Theme:1]]
 (use-package ef-themes
-  :ensure t
+
   :init
   (setq ef-themes-headings
         '((0 . (1.9))
@@ -229,7 +229,7 @@ emacs config site with matching `extension' regexp"
 ;; =C-c v= Consult line:1 ends here
 
 ;; [[file:README.org::*=C-c w=][=C-c w=:1]]
-;; (global-set-key (kbd "C-c w") #')
+(global-set-key (kbd "C-c w") #'whitespace-mode)
 ;; =C-c w=:1 ends here
 
 ;; [[file:README.org::*=C-c x=][=C-c x=:1]]
@@ -279,7 +279,7 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Consult][Consult:1]]
 (use-package consult
-  :ensure t
+
   :bind(
         ;; C-x bindings (ctl-x-map)
         ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
@@ -356,7 +356,7 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
 (use-package visual-fill-column
-  :ensure t
+
   :config
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
   (setq-default fill-column 120))
@@ -433,7 +433,7 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Marginalia][Marginalia:1]]
 (use-package marginalia
-  :ensure t
+
   :config (marginalia-mode))
 ;; Marginalia:1 ends here
 
@@ -547,14 +547,13 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Esup][Esup:1]]
 (use-package esup
-  :ensure t
   :config
   (setq esup-depth 0))
 ;; Esup:1 ends here
 
 ;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
 (use-package restart-emacs
-  :ensure t)
+  )
 ;; Reloading Emacs:1 ends here
 
 ;; [[file:README.org::*Mode line][Mode line:1]]
@@ -571,8 +570,7 @@ emacs config site with matching `extension' regexp"
 ;; =eldoc=:1 ends here
 
 ;; [[file:README.org::*Magit][Magit:1]]
-(use-package magit
-  :ensure t)
+(use-package magit)
 ;; Magit:1 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:1]]
@@ -581,9 +579,9 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:2]]
 (use-package orderless
-  :ensure t
   :config
   (add-to-list 'completion-styles 'orderless)
+
   :custom
   (completion-category-overrides '((file (styles basic partial-completion)))))
 ;; Autocompletion:2 ends here
@@ -627,7 +625,6 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:7]]
 (use-package vertico
-  :ensure t
   :config
   (vertico-mode))
 ;; Autocompletion:7 ends here
@@ -637,11 +634,9 @@ emacs config site with matching `extension' regexp"
 ;; Autocompletion:8 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:9]]
-(use-package corfu-terminal
-  :ensure t)
+(use-package corfu-terminal)
 
 (use-package corfu
-  :ensure t
   :config
   (unless (display-graphic-p)
     (corfu-terminal-mode +1))
@@ -670,8 +665,7 @@ emacs config site with matching `extension' regexp"
 ;; Org-mode:3 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:5]]
-(use-package ox-hugo
-  :ensure t)
+(use-package ox-hugo)
 ;; Org-mode:5 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:6]]
@@ -735,7 +729,7 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*Org-mode][Org-mode:8]]
 (use-package ob-async
-  :ensure t
+
   :config
   (add-hook 'ob-async-pre-execute-src-block-hook
             #'(lambda ()
@@ -752,7 +746,6 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
 (use-package org-modern
-  :ensure t
   :config
   (setq
    ;; Edit settings
@@ -782,13 +775,11 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*Code block syntax highlighting for HTML export][Code block syntax highlighting for HTML export:1]]
 (use-package htmlize
-  :ensure t
   :after (org))
 ;; Code block syntax highlighting for HTML export:1 ends here
 
 ;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
-(use-package ox-clip
-  :ensure t)
+(use-package ox-clip)
 ;; Copying images out of org-babel:1 ends here
 
 ;; [[file:README.org::*SQL][SQL:1]]
@@ -858,7 +849,7 @@ Jumps at tangled code from org src block."
   :after (sql))
 
 (use-package ob-sql-mode
-  :ensure t
+
   :after (sql))
 ;; SQL:1 ends here
 
@@ -890,28 +881,23 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*blacken][blacken:1]]
 (use-package blacken
-  :ensure t
   :after (python))
 ;; blacken:1 ends here
 
 ;; [[file:README.org::*Haskell][Haskell:1]]
-(use-package haskell-mode
-  :ensure t)
+(use-package haskell-mode)
 ;; Haskell:1 ends here
 
 ;; [[file:README.org::*Golang][Golang:1]]
-(use-package go-mode
-  :ensure t)
+(use-package go-mode)
 ;; Golang:1 ends here
 
 ;; [[file:README.org::*Lua][Lua:1]]
-(use-package lua-mode
-  :ensure t)
+(use-package lua-mode)
 ;; Lua:1 ends here
 
 ;; [[file:README.org::*yaml][yaml:1]]
-(use-package yaml-mode
-  :ensure t)
+(use-package yaml-mode)
 ;; yaml:1 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:1]]
@@ -920,28 +906,23 @@ Jumps at tangled code from org src block."
   (setq-local fill-column 120))
 
 (use-package markdown-mode
-  :ensure t
   :config
   (add-hook 'markdown-mode-hook #'renz/md-hook))
 
 (use-package poly-markdown
-  :ensure t
   :after (markdown-mode))
 ;; Markdown:1 ends here
 
 ;; [[file:README.org::*Rust][Rust:1]]
-(use-package rust-mode
-  :ensure t)
+(use-package rust-mode)
 ;; Rust:1 ends here
 
 ;; [[file:README.org::*Scala][Scala:1]]
-(use-package scala-mode
-  :ensure t)
+(use-package scala-mode)
 ;; Scala:1 ends here
 
 ;; [[file:README.org::*ripgrep][ripgrep:1]]
-(use-package ripgrep
-  :ensure t)
+(use-package ripgrep)
 ;; ripgrep:1 ends here
 
 ;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
@@ -995,13 +976,13 @@ Jumps at tangled code from org src block."
   ;; (set-face-attribute 'default nil :font "Menlo-14")
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
   (exec-path-from-shell-initialize)
-  (use-package vterm :ensure t))
+  (use-package vterm ))
 ;; macOS:1 ends here
 
 ;; [[file:README.org::*Linux][Linux:1]]
 (when (eq system-type 'gnu/linux)
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
-  (use-package vterm :ensure t))
+  (use-package vterm ))
 ;; Linux:1 ends here
 
 ;; [[file:README.org::*Tramp][Tramp:1]]
@@ -1025,25 +1006,21 @@ Jumps at tangled code from org src block."
 ;; Tramp:4 ends here
 
 ;; [[file:README.org::*Language server protocol (LSP) with =eglot=][Language server protocol (LSP) with =eglot=:1]]
-(use-package eglot
-  :ensure t)
+(use-package eglot)
 ;; Language server protocol (LSP) with =eglot=:1 ends here
 
 ;; [[file:README.org::*TreeSitter][TreeSitter:1]]
 (use-package tree-sitter
-  :ensure t
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
 (use-package tree-sitter-langs
-  :ensure t
   :after (tree-sitter))
 ;; TreeSitter:1 ends here
 
 ;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]
-(use-package ahk-mode
-  :ensure t)
+(use-package ahk-mode)
 ;; AutoHotkey:1 ends here
 
 ;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
@@ -1053,23 +1030,19 @@ Jumps at tangled code from org src block."
 ;; eww - search engine and browser:1 ends here
 
 ;; [[file:README.org::*csv-mode][csv-mode:1]]
-(use-package csv-mode
-  :ensure t)
+(use-package csv-mode)
 ;; csv-mode:1 ends here
 
 ;; [[file:README.org::*diff-hl][diff-hl:1]]
-(use-package diff-hl
-  :ensure t)
+(use-package diff-hl)
 ;; diff-hl:1 ends here
 
 ;; [[file:README.org::*GNU Plot][GNU Plot:1]]
-(use-package gnuplot
-  :ensure t)
+(use-package gnuplot)
 ;; GNU Plot:1 ends here
 
 ;; [[file:README.org::*change-inner][change-inner:1]]
-(use-package change-inner
-  :ensure t)
+(use-package change-inner)
 ;; change-inner:1 ends here
 
 (provide 'init.el)
