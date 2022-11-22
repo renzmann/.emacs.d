@@ -1665,7 +1665,7 @@
 	   ("Random User"))
 	  (:commit . "7842bb9f15f08ea3d223f98bf7be98d6d01be522"))])
  (sweeprolog .
-	     [(0 8 8)
+	     [(0 8 11)
 	      ((emacs
 		(28 1)))
 	      "Embedded SWI-Prolog" tar
@@ -1674,7 +1674,7 @@
 	       (:maintainer "Eshel Yaron" . "~eshel/dev@lists.sr.ht")
 	       (:authors
 		("Eshel Yaron" . "me@eshelyaron.com"))
-	       (:commit . "f6176cb8d4da1c689f6c9bc5dd71cccf4422a75b"))])
+	       (:commit . "560ba07e9220aab5f56091ee028da3aa3b4ee5b7"))])
  (swift-mode .
 	     [(8 6 0)
 	      ((emacs
@@ -1842,13 +1842,13 @@
 		     ("Campbell Barton" . "ideasman42@gmail.com"))
 		    (:commit . "e2043f8350970e1a9ef06a94956a733826cdf32b"))])
  (vc-fossil .
-	    [(20220707)
+	    [(20221120)
 	     nil "VC backend for the fossil sofware configuraiton management system" tar
 	     ((:maintainer "Alfred M. Szmidt" . "ams@gnu.org")
 	      (:authors
 	       ("Venkat Iyer" . "venkat@comit.com"))
 	      (:url . "https://elpa.nongnu.org/nongnu/vc-fossil.html")
-	      (:commit . "8ce6113aa272583130e5f929fefd67115c8f572a"))])
+	      (:commit . "e059ca466cc8914757c6bdb26fa9cc6b0820a9c1"))])
  (vcomplete .
 	    [(2 0)
 	     ((emacs

@@ -355,7 +355,7 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s t") #'ansi-term)
-(global-set-key (kbd "C-c s v") #'vterm)
+;; (global-set-key (kbd "C-c s v") #'vterm)
 #+end_src
 
 *** =C-c t=
@@ -430,7 +430,7 @@ Like the =C-c <letter>= bindings, these are reserved for users.  In practice, ev
 ;; (global-set-key (kbd "M-<f7>") #')
 ;; (global-set-key (kbd "<f8>") #')
 ;; (global-set-key (kbd "M-<f8>") #')
-(global-set-key (kbd "<f9>") #'vterm)
+;; (global-set-key (kbd "<f9>") #'vterm)
 (global-set-key (kbd "M-<f9>") #'eshell)
 (global-set-key (kbd "S-<f9>") #'ansi-term)
 (global-set-key (kbd "s-<f9>") #'shell)
@@ -1492,8 +1492,7 @@ Launching Emacs from the typical application launcher or command-space usually w
   ;; Uncomment this if we can't install Hack Nerd font
   ;; (set-face-attribute 'default nil :font "Menlo-14")
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
-  (exec-path-from-shell-initialize)
-  (use-package vterm ))
+  (exec-path-from-shell-initialize))
 #+end_src
 
 
@@ -1502,8 +1501,7 @@ Very little to do here.  Emacs on on Linux seems to "just work".
 
 #+begin_src emacs-lisp
 (when (eq system-type 'gnu/linux)
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
-  (use-package vterm ))
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
 #+end_src
 
 * Tramp

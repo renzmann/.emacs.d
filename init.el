@@ -213,7 +213,7 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s t") #'ansi-term)
-(global-set-key (kbd "C-c s v") #'vterm)
+;; (global-set-key (kbd "C-c s v") #'vterm)
 ;; =C-c s= shell:1 ends here
 
 ;; [[file:README.org::*=C-c t=][=C-c t=:1]]
@@ -264,7 +264,7 @@ emacs config site with matching `extension' regexp"
 ;; (global-set-key (kbd "M-<f7>") #')
 ;; (global-set-key (kbd "<f8>") #')
 ;; (global-set-key (kbd "M-<f8>") #')
-(global-set-key (kbd "<f9>") #'vterm)
+;; (global-set-key (kbd "<f9>") #'vterm)
 (global-set-key (kbd "M-<f9>") #'eshell)
 (global-set-key (kbd "S-<f9>") #'ansi-term)
 (global-set-key (kbd "s-<f9>") #'shell)
@@ -975,14 +975,12 @@ Jumps at tangled code from org src block."
   ;; Uncomment this if we can't install Hack Nerd font
   ;; (set-face-attribute 'default nil :font "Menlo-14")
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
-  (exec-path-from-shell-initialize)
-  (use-package vterm ))
+  (exec-path-from-shell-initialize))
 ;; macOS:1 ends here
 
 ;; [[file:README.org::*Linux][Linux:1]]
 (when (eq system-type 'gnu/linux)
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
-  (use-package vterm ))
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
 ;; Linux:1 ends here
 
 ;; [[file:README.org::*Tramp][Tramp:1]]
