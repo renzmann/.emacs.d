@@ -99,7 +99,7 @@ There are also a few hand-made packages I keep around in a special ~.emacs.d/sit
 
 * Theme
 [[https://protesilaos.com/][
-Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will creates larger, bolder headings when in [[Org-mode]].
+Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable creates larger, bolder headings when in [[Org-mode]].
 
 #+begin_src emacs-lisp
 (use-package ef-themes
