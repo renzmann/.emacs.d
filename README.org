@@ -524,7 +524,6 @@ Forms a large foundation of my workflow.  [[https://github.com/minad/consult][Th
   )
 #+end_src
 
-TODO: Definitely check out the [[https://github.com/minad/consult#use-package-example][recommended configuration]] for all the options we could set here.
 
 * Misc. Settings
 Haven't found a home header for any of these yet.
