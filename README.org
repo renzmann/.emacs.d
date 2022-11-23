@@ -1,9 +1,12 @@
 #+title: My Literate =.emacs.d=
 #+author: Robb Enzmann
-#+property: header-args:emacs-lisp :tangle init.el :comments link :results none
-#+OPTIONS: toc:2 num:nil
-#+HUGO_BASE_DIR: ~/repos/renzmann.github.io/
-#+HUGO_SECTION: posts/
+#+property: header-args:emacs-lisp :tangle init.el :comments link :results none :eval never-export
+#+options: toc:2 num:nil
+#+hugo_base_dir: ~/repos/renzmann.github.io/
+#+hugo_section: .
+#+export_date: <2022-11-21 Mon>
+#+export_file_name: emacsd
+#+export_hugo_menu: :menu "main"
 
 Want to use it? Go ahead!
 
@@ -13,6 +16,8 @@ git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 
 #+attr_html: :width 800px
 [[https://user-images.githubusercontent.com/32076780/201825125-aa94bfa3-0d1a-47d4-b451-be3718850da2.jpg]]
+
+If you prefer a prettier reading experience, check out this same document weaved into [[https://robbmann.io/emacsd/][my website.]]
 
 * Goals
 
@@ -94,7 +99,7 @@ There are also a few hand-made packages I keep around in a special ~.emacs.d/sit
 
 * Theme
 [[https://protesilaos.com/][
-Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable will creates larger, bolder headings when in [[Org-mode]].
+Prot's]] themes have been reliably legible in nearly every situation.  Now with his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable creates larger, bolder headings when in [[Org-mode]].
 
 #+begin_src emacs-lisp
 (use-package ef-themes
@@ -350,7 +355,7 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s t") #'ansi-term)
-(global-set-key (kbd "C-c s v") #'vterm)
+;; (global-set-key (kbd "C-c s v") #'vterm)
 #+end_src
 
 *** =C-c t=
@@ -425,7 +430,7 @@ Like the =C-c <letter>= bindings, these are reserved for users.  In practice, ev
 ;; (global-set-key (kbd "M-<f7>") #')
 ;; (global-set-key (kbd "<f8>") #')
 ;; (global-set-key (kbd "M-<f8>") #')
-(global-set-key (kbd "<f9>") #'vterm)
+;; (global-set-key (kbd "<f9>") #'vterm)
 (global-set-key (kbd "M-<f9>") #'eshell)
 (global-set-key (kbd "S-<f9>") #'ansi-term)
 (global-set-key (kbd "s-<f9>") #'shell)
@@ -519,7 +524,6 @@ Forms a large foundation of my workflow.  [[https://github.com/minad/consult][Th
   )
 #+end_src
 
-TODO: Definitely check out the [[https://github.com/minad/consult#use-package-example][recommended configuration]] for all the options we could set here.
 
 * Misc. Settings
 Haven't found a home header for any of these yet.
@@ -1434,7 +1438,7 @@ In case we have to go to the dark place.
 Windows, funnily enough, has some trouble registering the Windows key as a usable modifier for emacs.  In fact, =s-l= will /never/ be an option, since it's handled at the hardware level.  I also add a few nice-to-haves, like setting the default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always install with ~msys64~.
 
 #+begin_src emacs-lisp
-(when (eq system-type 'windows-nt)
+(when (memq system-type '(windows-nt cygwin ms-dos))
   ;; Set a better font on Windows
   (set-face-attribute 'default nil :font "Hack NF-12")
   ;; Alternate ispell when we've got msys on Windows
@@ -1487,8 +1491,7 @@ Launching Emacs from the typical application launcher or command-space usually w
   ;; Uncomment this if we can't install Hack Nerd font
   ;; (set-face-attribute 'default nil :font "Menlo-14")
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
-  (exec-path-from-shell-initialize)
-  (use-package vterm ))
+  (exec-path-from-shell-initialize))
 #+end_src
 
 
@@ -1497,8 +1500,7 @@ Very little to do here.  Emacs on on Linux seems to "just work".
 
 #+begin_src emacs-lisp
 (when (eq system-type 'gnu/linux)
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
-  (use-package vterm ))
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
 #+end_src
 
 * Tramp
