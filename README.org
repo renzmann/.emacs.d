@@ -82,12 +82,8 @@ The initial cornerstone of every Emacs configuration is a decision on package ma
 (eval-when-compile
   (package-autoremove)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
+  (package-install-selected-packages)
   (require 'use-package))
-
-(package-install-selected-packages)
 #+end_src
 
 There are also a few hand-made packages I keep around in a special ~.emacs.d/site-lisp~ directory.
@@ -103,7 +99,6 @@ Prot's]] themes have been reliably legible in nearly every situation.  Now with 
 
 #+begin_src emacs-lisp
 (use-package ef-themes
-
   :init
   (setq ef-themes-headings
         '((0 . (1.9))
@@ -823,7 +818,7 @@ Enable syntax highlighting within code fences for markdown
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
 #+end_src
 
-** Esup
+** Esup: startup time profiling
 [[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work around of a bug where esup tries to step into the byte-compiled version of `cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
 
 #+begin_src emacs-lisp
@@ -1442,7 +1437,7 @@ Windows, funnily enough, has some trouble registering the Windows key as a usabl
   ;; Set a better font on Windows
   (set-face-attribute 'default nil :font "Hack NF-12")
   ;; Alternate ispell when we've got msys on Windows
-  (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe")
+  (setq ispell-program-name "aspell.exe")
   ;; Set default shell to pwsh
   ;; (setq explicit-shell-file-name "pwsh")
   ;; Enable use of Winkey as super
@@ -1575,6 +1570,8 @@ I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece 
 
 #+begin_src emacs-lisp
 (use-package tree-sitter
+  :defer t
+  :hook (prog-mode . tree-sitter-mode)
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))

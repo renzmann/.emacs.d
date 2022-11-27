@@ -21,12 +21,8 @@
 (eval-when-compile
   (package-autoremove)
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
+  (package-install-selected-packages)
   (require 'use-package))
-
-(package-install-selected-packages)
 ;; Packages:1 ends here
 
 ;; [[file:README.org::*Packages][Packages:2]]
@@ -35,7 +31,6 @@
 
 ;; [[file:README.org::*Theme][Theme:1]]
 (use-package ef-themes
-
   :init
   (setq ef-themes-headings
         '((0 . (1.9))
@@ -545,11 +540,11 @@ emacs config site with matching `extension' regexp"
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
 ;; Code syntax in Markdown:1 ends here
 
-;; [[file:README.org::*Esup][Esup:1]]
+;; [[file:README.org::*Esup: startup time profiling][Esup: startup time profiling:1]]
 (use-package esup
   :config
   (setq esup-depth 0))
-;; Esup:1 ends here
+;; Esup: startup time profiling:1 ends here
 
 ;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
 (use-package restart-emacs
@@ -930,7 +925,7 @@ Jumps at tangled code from org src block."
   ;; Set a better font on Windows
   (set-face-attribute 'default nil :font "Hack NF-12")
   ;; Alternate ispell when we've got msys on Windows
-  (setq ispell-program-name "c:/msys64/usr/bin/aspell.exe")
+  (setq ispell-program-name "aspell.exe")
   ;; Set default shell to pwsh
   ;; (setq explicit-shell-file-name "pwsh")
   ;; Enable use of Winkey as super
@@ -1009,6 +1004,8 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*TreeSitter][TreeSitter:1]]
 (use-package tree-sitter
+  :defer t
+  :hook (prog-mode . tree-sitter-mode)
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
