@@ -564,19 +564,24 @@ emacs config site with matching `extension' regexp"
 ;; Autocompletion:1 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:2]]
+(temp-buffer-resize-mode)
+(setq temp-buffer-max-height 20)
+;; Autocompletion:2 ends here
+
+;; [[file:README.org::*Autocompletion][Autocompletion:3]]
 (use-package orderless
   :config
   (add-to-list 'completion-styles 'orderless)
 
   :custom
   (completion-category-overrides '((file (styles basic partial-completion)))))
-;; Autocompletion:2 ends here
-
-;; [[file:README.org::*Autocompletion][Autocompletion:3]]
-(setq completions-format 'one-column)
 ;; Autocompletion:3 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:4]]
+(setq completions-format 'one-column)
+;; Autocompletion:4 ends here
+
+;; [[file:README.org::*Autocompletion][Autocompletion:5]]
 (defun renz/completion-accept ()
   "Expand current text to first completion result"
   (interactive)
@@ -596,18 +601,18 @@ emacs config site with matching `extension' regexp"
   "Close the *Completions* buffer without switching to it"
   (interactive)
   (kill-buffer "*Completions*"))
-;; Autocompletion:4 ends here
-
-;; [[file:README.org::*Autocompletion][Autocompletion:5]]
-(define-key completion-in-region-mode-map (kbd "C-n") 'renz/jump-completion)
-(define-key completion-list-mode-map (kbd "C-n") 'next-completion)
-(define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
 ;; Autocompletion:5 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:6]]
+(define-key completion-in-region-mode-map (kbd "C-n") 'renz/jump-completion)
+(define-key completion-list-mode-map (kbd "C-n") 'next-completion)
+(define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
+;; Autocompletion:6 ends here
+
+;; [[file:README.org::*Autocompletion][Autocompletion:7]]
 (define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
-;; Autocompletion:6 ends here
+;; Autocompletion:7 ends here
 
 ;; [[file:README.org::*Minibuffer completion with ~vertico~][Minibuffer completion with ~vertico~:1]]
 (use-package vertico
@@ -626,7 +631,7 @@ emacs config site with matching `extension' regexp"
   (corfu-terminal-mode +1))
 
 (use-package corfu
-  :if window-system
+  :demand t
 
   :custom
   (corfu-cycle t)             ;; Enable cycling for `corfu-next/previous'

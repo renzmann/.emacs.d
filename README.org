@@ -892,6 +892,13 @@ Emacs offers incredible depth and freedom when configuring methods that automati
 (setq completion-styles '(flex basic partial-completion emacs22))
 #+end_src
 
+When using the default, built-in completion-at-point, the buffer can sometimes take up the whole screen when there are a lot of candidates.  [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Temporary-Displays.html][Setting this]] prevents that:
+
+#+begin_src emacs-lisp
+(temp-buffer-resize-mode)
+(setq temp-buffer-max-height 20)
+#+end_src
+
 I've found the [[https://github.com/oantolin/orderless][orderless]] completion style especially well-suited to Emacs.
 
 #+begin_src emacs-lisp
@@ -978,7 +985,7 @@ I've also enabled the TNG (Tab-n-go) style of completion, as laid out in corfu's
   (corfu-terminal-mode +1))
 
 (use-package corfu
-  :if window-system
+  :demand t
 
   :custom
   (corfu-cycle t)             ;; Enable cycling for `corfu-next/previous'
