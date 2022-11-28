@@ -51,26 +51,26 @@
 (defun renz/--jump-section (dirname prompt extension)
   "For internal use: prompt for a file under `dirname' in the user
 emacs config site with matching `extension' regexp"
-  (let ((complete-dir (concat user-emacs-directory dirname "/")))
-    (find-file
-     (concat complete-dir
-             (completing-read prompt
-                              (directory-files complete-dir nil extension))))))
+  (find-file
+   (concat dirname
+	   (completing-read prompt
+			    (directory-files dirname nil extension)))))
+
+(setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
 
 (defun renz/jump-configuration ()
-  "Prompt for a .el file in my configuration folder, then go there."
+  "Prompt for a .el file in my site-lisp folder, then go there."
   (interactive)
-  (renz/--jump-section "config" "Elisp config files: " ".*\.el$"))
+  (renz/--jump-section renz/site-lisp-dir
+		       "Elisp config files: "
+		       ".*\.el$"))
 
-;; FIXME: should set an org-home or something like that.  Probably a common variable
-;; described somewhere in the org manual
 (defun renz/jump-org ()
   "Prompt for an org file in my emacs directory, then go there."
   (interactive)
-  (find-file
-   (concat "~/org/"
-           (completing-read "Org files: "
-                            (directory-files "~/org/" nil ".*\.org$")))))
+  (renz/--jump-section renz/org-home
+		       "Org files: "
+		       ".*\.org$"))
 
 (defun renz/jump-init ()
   (interactive)
@@ -207,6 +207,7 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
 (global-set-key (kbd "C-c s s") #'shell)
+(global-set-key (kbd "C-c s e") #'eshell)
 (global-set-key (kbd "C-c s t") #'ansi-term)
 (global-set-key (kbd "C-c s v") #'vterm)
 ;; =C-c s= shell:1 ends here
@@ -345,6 +346,11 @@ emacs config site with matching `extension' regexp"
   )
 ;; Consult:1 ends here
 
+;; [[file:README.org::*Use ~aspell~ by default for spell checking][Use ~aspell~ by default for spell checking:1]]
+(when (executable-find "aspell")
+  (setq ispell-program-name "aspell"))
+;; Use ~aspell~ by default for spell checking:1 ends here
+
 ;; [[file:README.org::*Colored output in ~eshell~][Colored output in ~eshell~:1]]
 (add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
 ;; Colored output in ~eshell~:1 ends here
@@ -415,20 +421,6 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*Automatically update buffers when contents change on disk][Automatically update buffers when contents change on disk:1]]
 (global-auto-revert-mode)
 ;; Automatically update buffers when contents change on disk:1 ends here
-
-;; [[file:README.org::*Initial frame size for GUI][Initial frame size for GUI:1]]
-(setq renz/frame-default-alist
-      '(
-        (tool-bar-lines . 0)
-        (width . 180) ; chars
-        (height . 60) ; lines
-        (left . 125)
-        (top . 125)))
-
-(when (display-graphic-p)
-  (setq initial-frame-alist renz/frame-default-alist)
-  (setq default-frame-alist renz/frame-default-alist))
-;; Initial frame size for GUI:1 ends here
 
 ;; [[file:README.org::*Marginalia][Marginalia:1]]
 (use-package marginalia
@@ -617,39 +609,94 @@ emacs config site with matching `extension' regexp"
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
 ;; Autocompletion:6 ends here
 
-;; [[file:README.org::*Autocompletion][Autocompletion:7]]
+;; [[file:README.org::*Minibuffer completion with ~vertico~][Minibuffer completion with ~vertico~:1]]
 (use-package vertico
   :config
   (vertico-mode))
-;; Autocompletion:7 ends here
+;; Minibuffer completion with ~vertico~:1 ends here
 
-;; [[file:README.org::*Autocompletion][Autocompletion:8]]
+;; [[file:README.org::*Minibuffer completion with ~vertico~][Minibuffer completion with ~vertico~:2]]
 (setq tab-always-indent 'complete)
-;; Autocompletion:8 ends here
+;; Minibuffer completion with ~vertico~:2 ends here
 
-;; [[file:README.org::*Autocompletion][Autocompletion:9]]
-(use-package corfu-terminal)
+;; [[file:README.org::*Completion at point with ~corfu~][Completion at point with ~corfu~:1]]
+(use-package corfu-terminal
+  :unless window-system
+  :config
+  (corfu-terminal-mode +1))
 
 (use-package corfu
+  :if window-system
+
+  :custom
+  (corfu-cycle t)             ;; Enable cycling for `corfu-next/previous'
+  (corfu-preselect-first nil) ;; Disable candidate preselection
+
+  :bind
+  (:map corfu-map
+        ("M-SPC" . corfu-insert-separator)
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+
   :config
-  (unless (display-graphic-p)
-    (corfu-terminal-mode +1))
+  (defun corfu-enable-always-in-minibuffer ()
+    "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+    (unless (or (bound-and-true-p mct--active)
+                (bound-and-true-p vertico--input))
+      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay nil)
+      (corfu-mode 1)))
+
+  (defun corfu-send-shell (&rest _)
+    "Send completion candidate when inside comint/eshell."
+    (cond
+     ((and (derived-mode-p 'eshell-mode) (fboundp 'eshell-send-input))
+      (eshell-send-input))
+     ((and (derived-mode-p 'comint-mode)  (fboundp 'comint-send-input))
+      (comint-send-input))))
 
   (setq corfu-auto t
         corfu-auto-delay 0.0
         corfu-quit-no-match 'separator)
 
-  (global-corfu-mode))
-;; Autocompletion:9 ends here
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+  (advice-add #'corfu-insert :after #'corfu-send-shell)
 
-;; [[file:README.org::*Autocompletion][Autocompletion:10]]
+  (global-corfu-mode))
+;; Completion at point with ~corfu~:1 ends here
+
+;; [[file:README.org::*Completion at point with ~corfu~][Completion at point with ~corfu~:2]]
 (defun renz/disable-corfu-remote ()
   (when (and (fboundp 'corfu-mode)
              (file-remote-p default-directory))
     (corfu-mode -1)))
-;; Autocompletion:10 ends here
+;; Completion at point with ~corfu~:2 ends here
+
+;; [[file:README.org::*~dabbrev~ adjustments for corfu][~dabbrev~ adjustments for corfu:1]]
+(use-package dabbrev
+  ;; Swap M-/ and C-M-/
+  :bind (("M-/" . dabbrev-completion)
+         ("C-M-/" . dabbrev-expand))
+  ;; Other useful Dabbrev configurations.
+  :custom
+  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
+;; ~dabbrev~ adjustments for corfu:1 ends here
+
+;; [[file:README.org::*Fancy icons for ~corfu~ completions using ~kind-icon~][Fancy icons for ~corfu~ completions using ~kind-icon~:1]]
+(use-package kind-icon
+  :ensure t
+  :after corfu
+  :custom
+  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+;; Fancy icons for ~corfu~ completions using ~kind-icon~:1 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:1]]
+(setq renz/org-home "~/org/")
 (setq org-confirm-babel-evaluate nil)
 (setq org-edit-src-content-indentation 0)
 ;; Org-mode:1 ends here
