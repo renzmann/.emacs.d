@@ -690,16 +690,6 @@ emacs config site with matching `extension' regexp"
   (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
 ;; ~dabbrev~ adjustments for corfu:1 ends here
 
-;; [[file:README.org::*Fancy icons for ~corfu~ completions using ~kind-icon~][Fancy icons for ~corfu~ completions using ~kind-icon~:1]]
-(use-package kind-icon
-  :ensure t
-  :after corfu
-  :custom
-  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
-  :config
-  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
-;; Fancy icons for ~corfu~ completions using ~kind-icon~:1 ends here
-
 ;; [[file:README.org::*In case of emergency: ~fzf~][In case of emergency: ~fzf~:1]]
 (use-package fzf
   :bind (("C-c f" . fzf))

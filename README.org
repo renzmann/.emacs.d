@@ -1090,7 +1090,7 @@ Still not totally sure how/if I should work this in.  Put it on the reading list
 #+end_src
 
 
-*** Fancy icons for ~corfu~ completions using ~kind-icon~
+*** COMMENT Fancy icons for ~corfu~ completions using ~kind-icon~
 
 If Emacs is compiled with SVG support, this will use them.  I may or may not have disabled warnings from popping up when Emacs /isn't/ built with SVG, such as from [[https://emacsformacosx.com/][emacsforosx]].
 
@@ -1103,6 +1103,8 @@ If Emacs is compiled with SVG support, this will use them.  I may or may not hav
   :config
   (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
 #+end_src
+
+For now, this is causing some completions to not fit on the pop up menu (tested on Windows).  Maybe there's something we can do to address that, but maybe not worth the time.
 
 *** Obsolete: company-mode
 
