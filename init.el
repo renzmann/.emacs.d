@@ -208,7 +208,7 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s t") #'ansi-term)
-;; (global-set-key (kbd "C-c s v") #'vterm)
+(global-set-key (kbd "C-c s v") #'vterm)
 ;; =C-c s= shell:1 ends here
 
 ;; [[file:README.org::*=C-c t=][=C-c t=:1]]
@@ -345,6 +345,10 @@ emacs config site with matching `extension' regexp"
   )
 ;; Consult:1 ends here
 
+;; [[file:README.org::*Colored output in ~eshell~][Colored output in ~eshell~:1]]
+(add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
+;; Colored output in ~eshell~:1 ends here
+
 ;; [[file:README.org::*Recent files menu][Recent files menu:1]]
 (recentf-mode t)
 ;; Recent files menu:1 ends here
@@ -463,13 +467,8 @@ emacs config site with matching `extension' regexp"
 ;; Don't wrap lines:1 ends here
 
 ;; [[file:README.org::*Relative line numbers][Relative line numbers:1]]
-(defun renz/display-line-numbers ()
-  (setq display-line-numbers 'relative))
+(add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
 ;; Relative line numbers:1 ends here
-
-;; [[file:README.org::*Relative line numbers][Relative line numbers:2]]
-(add-hook 'prog-mode-hook 'renz/display-line-numbers)
-;; Relative line numbers:2 ends here
 
 ;; [[file:README.org::*Delete region when we yank on top of it][Delete region when we yank on top of it:1]]
 (delete-selection-mode t)
@@ -1001,18 +1000,6 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Language server protocol (LSP) with =eglot=][Language server protocol (LSP) with =eglot=:1]]
 (use-package eglot)
 ;; Language server protocol (LSP) with =eglot=:1 ends here
-
-;; [[file:README.org::*TreeSitter][TreeSitter:1]]
-(use-package tree-sitter
-  :defer t
-  :hook (prog-mode . tree-sitter-mode)
-  :config
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
-(use-package tree-sitter-langs
-  :after (tree-sitter))
-;; TreeSitter:1 ends here
 
 ;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]
 (use-package ahk-mode)
