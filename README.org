@@ -1041,28 +1041,30 @@ There are some cases over Tramp, however, where corfu will case some performance
   (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
   #+end_src
 
-*** COMMENT Corfu expansions with ~cape~
+*** TODO COMMENT Corfu expansions with ~cape~
+
+Still not totally sure how/if I should work this in.  Put it on the reading list!
 
 #+begin_src emacs-lisp
 (use-package cape
   ;; Bind dedicated completion commands
   ;; Alternative prefix keys: C-c p, M-p, M-+, ...
-  :bind (("C-c p p" . completion-at-point) ;; capf
-         ("C-c p t" . complete-tag)        ;; etags
-         ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-         ("C-c p h" . cape-history)
-         ("C-c p f" . cape-file)
-         ("C-c p k" . cape-keyword)
-         ("C-c p s" . cape-symbol)
-         ("C-c p a" . cape-abbrev)
-         ("C-c p i" . cape-ispell)
-         ("C-c p l" . cape-line)
-         ("C-c p w" . cape-dict)
-         ("C-c p \\" . cape-tex)
-         ("C-c p _" . cape-tex)
-         ("C-c p ^" . cape-tex)
-         ("C-c p &" . cape-sgml)
-         ("C-c p r" . cape-rfc1345))
+  :bind (("C-c t p" . completion-at-point) ;; capf
+         ("C-c t t" . complete-tag)        ;; etags
+         ("C-c t d" . cape-dabbrev)        ;; or dabbrev-completion
+         ("C-c t h" . cape-history)
+         ("C-c t f" . cape-file)
+         ("C-c t k" . cape-keyword)
+         ("C-c t s" . cape-symbol)
+         ("C-c t a" . cape-abbrev)
+         ("C-c t i" . cape-ispell)
+         ("C-c t l" . cape-line)
+         ("C-c t w" . cape-dict)
+         ("C-c t \\" . cape-tex)
+         ("C-c t _" . cape-tex)
+         ("C-c t ^" . cape-tex)
+         ("C-c t &" . cape-sgml)
+         ("C-c t r" . cape-rfc1345))
   :init
   ;; Add `completion-at-point-functions', used by `completion-at-point'.
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
@@ -1082,6 +1084,8 @@ There are some cases over Tramp, however, where corfu will case some performance
 
 
 *** Fancy icons for ~corfu~ completions using ~kind-icon~
+
+If Emacs is compiled with SVG support, this will use them.  I may or may not have disabled warnings from popping up when Emacs /isn't/ built with SVG, such as from [[https://emacsformacosx.com/][emacsforosx]].
 
 #+begin_src emacs-lisp
 (use-package kind-icon
