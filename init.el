@@ -193,13 +193,13 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c o y") #'ox-clip-image-to-clipboard)
 ;; =C-c o= Org bindings:1 ends here
 
-;; [[file:README.org::*=C-c p=][=C-c p=:1]]
+;; [[file:README.org::*=C-c p= blacken-mode][=C-c p= blacken-mode:1]]
 (global-set-key (kbd "C-c p") #'blacken-mode)
-;; =C-c p=:1 ends here
+;; =C-c p= blacken-mode:1 ends here
 
-;; [[file:README.org::*=C-c q=][=C-c q=:1]]
-;; (global-set-key (kbd "C-c q") #')
-;; =C-c q=:1 ends here
+;; [[file:README.org::*=C-c q= replace regexp][=C-c q= replace regexp:1]]
+(global-set-key (kbd "C-c q") #'replace-regexp)
+;; =C-c q= replace regexp:1 ends here
 
 ;; [[file:README.org::*=C-c r= recent files][=C-c r= recent files:1]]
 (global-set-key (kbd "C-c r") #'consult-recent-file)

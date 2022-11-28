@@ -327,16 +327,16 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 (global-set-key (kbd "C-c o y") #'ox-clip-image-to-clipboard)
 #+end_src
 
-*** =C-c p=
+*** =C-c p= blacken-mode
 
 #+begin_src emacs-lisp
 (global-set-key (kbd "C-c p") #'blacken-mode)
 #+end_src
 
-*** =C-c q=
+*** =C-c q= replace regexp
 
 #+begin_src emacs-lisp
-;; (global-set-key (kbd "C-c q") #')
+(global-set-key (kbd "C-c q") #'replace-regexp)
 #+end_src
 
 *** =C-c r= recent files
