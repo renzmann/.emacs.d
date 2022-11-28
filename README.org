@@ -1116,6 +1116,29 @@ Some things that also looked interesting:
 
   * [[https://github.com/oantolin/live-completions][Live updating =*Completions*= buffer by oantolin]]
 
+*** In case of emergency: ~fzf~
+
+Some cases don't seem to be covered well by the existing file searching tools, such as looking for files that are ignored by ~.gitignore~, but are still important.
+
+#+begin_src emacs-lisp
+(use-package fzf
+  :bind (("C-c f" . fzf))
+  :config
+  ;; (setq fzf/args "-x --color bw --print-query --margin=1,0 --no-hscroll"
+  (setq fzf/args "-x --print-query --margin=1,0 --no-hscroll"
+        fzf/executable "fzf"
+        fzf/git-grep-args "-i --line-number %s"
+        ;; command used for `fzf-grep-*` functions
+        ;; example usage for ripgrep:
+        ;; fzf/grep-command "rg --no-heading -nH"
+        fzf/grep-command "grep -nrH"
+        ;; If nil, the fzf buffer will appear at the top of the window
+        fzf/position-bottom t
+        fzf/window-height 15))
+#+end_src
+
+I have yet to test this over Tramp.
+
 * Org-mode
 
 #+begin_src emacs-lisp
