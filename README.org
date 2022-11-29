@@ -722,7 +722,7 @@ Unfortunately, line numbers are displayed in the text area of the buffer, but or
 
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
-(add-hook 'text-mode-hook (lambda () (setq display-line-numbers 'relative)))
+(add-hook 'yaml-mode-hook (lambda () (setq display-line-numbers 'relative)))
 #+end_src
 
 ** Delete region when we yank on top of it

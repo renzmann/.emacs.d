@@ -460,7 +460,7 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Relative line numbers][Relative line numbers:1]]
 (add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
-(add-hook 'text-mode-hook (lambda () (setq display-line-numbers 'relative)))
+(add-hook 'yaml-mode-hook (lambda () (setq display-line-numbers 'relative)))
 ;; Relative line numbers:1 ends here
 
 ;; [[file:README.org::*Delete region when we yank on top of it][Delete region when we yank on top of it:1]]
