@@ -721,7 +721,8 @@ For programming and prose/writing modes.
 Unfortunately, line numbers are displayed in the text area of the buffer, but org-modern uses the fringe to display source blocks.  [[https://www.reddit.com/r/emacs/comments/ymprwi/comment/iv5iafb/?utm_source=share&utm_medium=web2x&context=3][There's no way to display them to the left]] of the fringe, so I'm careful about only turning on line numbers in modes that I think I'll benefit from it.  It's been working pretty well in org-mode without the line numbers so far, since for each of the code blocks I can always use =C-c '= to edit in ~prog-mode~, where I /do/ get line numbers.
 
 #+begin_src emacs-lisp
-  (add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
+(add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
+(add-hook 'text-mode-hook (lambda () (setq display-line-numbers 'relative)))
 #+end_src
 
 ** Delete region when we yank on top of it
