@@ -275,7 +275,8 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 *** =C-c i= jump to a header in my configuration
 
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-c i") #'renz/jump-init)
+(global-set-key (kbd "C-c i i") #'renz/jump-init)
+(global-set-key (kbd "C-c i l") #'renz/jump-configuration)
 #+end_src
 
 *** =C-c j= imenu
@@ -325,12 +326,6 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 (global-set-key (kbd "C-c o o") #'renz/jump-org)
 (global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
 (global-set-key (kbd "C-c o y") #'ox-clip-image-to-clipboard)
-#+end_src
-
-*** =C-c p= blacken-mode
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c p") #'blacken-mode)
 #+end_src
 
 *** =C-c q= replace regexp
@@ -524,12 +519,14 @@ Forms a large foundation of my workflow.  [[https://github.com/minad/consult][Th
 * Misc. Settings
 Haven't found a home header for any of these yet.
 
+
 ** Use ~aspell~ by default for spell checking
 
 #+begin_src emacs-lisp
 (when (executable-find "aspell")
   (setq ispell-program-name "aspell"))
 #+end_src
+
 
 ** Colored output in ~eshell~
 Copy-pasted from a [[https://emacs.stackexchange.com/questions/9517/colored-git-output-in-eshell][stack overflow question]].
@@ -538,35 +535,47 @@ Copy-pasted from a [[https://emacs.stackexchange.com/questions/9517/colored-git-
 (add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
 #+end_src
 
+
 ** Recent files menu
 
 #+begin_src emacs-lisp
 (recentf-mode t)
 #+end_src
 
+
 ** Fill-column
-For visual lines, this adds line breaks at the fill-column value.  Especially useful for prose that is meant to be copied to other mediums, such as email or word.
+For visual lines, this adds line breaks at the fill-column value.  Especially
+useful for prose that is meant to be copied to other mediums, such as email or
+word.
 
 #+begin_src emacs-lisp
 (use-package visual-fill-column
-
   :config
-  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
-  (setq-default fill-column 120))
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
+#+end_src
+
+Regardless of whether we're doing visual fill or hard fill, I like the default
+at around 80 characters, and I'll manually change it per buffer if I want
+something different
+
+#+begin_src emacs-lisp
+(setq-default fill-column 80)
 #+end_src
 
 ** Scroll bar
-I toggle this one on/off sometimes depending on how I feel and which OS I'm currently on.
+I toggle this one on/off sometimes depending on how I feel and which OS I'm
+currently on.
 
 #+begin_src emacs-lisp
 ;; Scroll bar
 (scroll-bar-mode -1)
 #+end_src
 
-#+RESULTS:
 
 ** Inline emojis
-I tried this for a while but boy did it consume a lot of space in the =elpa/= directory!  If I go back to it I might re-install it but have to ensure I ignore the source files.
+I tried this for a while but boy did it consume a lot of space in the =elpa/=
+directory!  If I go back to it I might re-install it but have to ensure I ignore
+the source files.
 
 #+begin_src emacs-lisp :tangle no :eval never
 ;; Emojis inline 👍
@@ -1504,6 +1513,7 @@ Formatting a buffer with =black= has never been easier!
 
 #+begin_src emacs-lisp
 (use-package blacken
+  :bind ("C-c p" . blacken-mode)
   :after (python))
 #+end_src
 
@@ -1797,6 +1807,7 @@ There are several other interesting options that I haven't tried out yet, includ
 + [ ] [[https://github.com/oantolin/placeholder][oantolin/placeholder]]
 + [X] [[https://github.com/emacs-eaf/emacs-application-framework][emacs-eaf/emacs-application-framework]] <--- big hassle
 + [ ] [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
++ [ ] [[https://notmuchmail.org/notmuch-emacs/][notmuch for email]]
 
 
 * Inspirations

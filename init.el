@@ -153,7 +153,8 @@ emacs config site with matching `extension' regexp"
 ;; =C-c h=:1 ends here
 
 ;; [[file:README.org::*=C-c i= jump to a header in my configuration][=C-c i= jump to a header in my configuration:1]]
-(global-set-key (kbd "C-c i") #'renz/jump-init)
+(global-set-key (kbd "C-c i i") #'renz/jump-init)
+(global-set-key (kbd "C-c i l") #'renz/jump-configuration)
 ;; =C-c i= jump to a header in my configuration:1 ends here
 
 ;; [[file:README.org::*=C-c j= imenu][=C-c j= imenu:1]]
@@ -192,10 +193,6 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
 (global-set-key (kbd "C-c o y") #'ox-clip-image-to-clipboard)
 ;; =C-c o= Org bindings:1 ends here
-
-;; [[file:README.org::*=C-c p= blacken-mode][=C-c p= blacken-mode:1]]
-(global-set-key (kbd "C-c p") #'blacken-mode)
-;; =C-c p= blacken-mode:1 ends here
 
 ;; [[file:README.org::*=C-c q= replace regexp][=C-c q= replace regexp:1]]
 (global-set-key (kbd "C-c q") #'replace-regexp)
@@ -361,11 +358,13 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
 (use-package visual-fill-column
-
   :config
-  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
-  (setq-default fill-column 120))
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 ;; Fill-column:1 ends here
+
+;; [[file:README.org::*Fill-column][Fill-column:2]]
+(setq-default fill-column 80)
+;; Fill-column:2 ends here
 
 ;; [[file:README.org::*Scroll bar][Scroll bar:1]]
 ;; Scroll bar
@@ -935,6 +934,7 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*blacken][blacken:1]]
 (use-package blacken
+  :bind ("C-c p" . blacken-mode)
   :after (python))
 ;; blacken:1 ends here
 
