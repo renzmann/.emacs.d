@@ -21,7 +21,8 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;; Sets `pyrightconfig.json' in the git root directory.  Useful for using eglot + tramp + virtualenv + python
+;; Sets `pyrightconfig.json' in the git root directory.  Useful for
+;; using eglot + tramp + virtualenv + python
 
 ;;; Code:
 
