@@ -11,6 +11,27 @@
 
 ;;; Code:
 
+;; [[file:README.org::*Theme][Theme:1]]
+(use-package ef-themes
+  :ensure t
+
+  :init
+  (setq ef-themes-headings
+	'((0 . (1.9))
+	  (1 . (1.8))
+	  (2 . (1.7))
+	  (3 . (1.6))
+	  (4 . (1.5))
+	  (5 . (1.4)) ; absence of weight means `bold'
+	  (6 . (1.3))
+	  (7 . (1.2))
+	  (t . (1.1))))
+  (setq ef-themes-to-toggle '(ef-cherie ef-light))
+
+  :config
+  (load-theme 'ef-cherie :no-confirm))
+;; Theme:1 ends here
+
 ;; [[file:README.org::*Custom][Custom:1]]
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 (when (file-exists-p custom-file)
@@ -28,67 +49,6 @@
 ;; [[file:README.org::*Packages][Packages:2]]
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:2 ends here
-
-;; [[file:README.org::*Theme][Theme:1]]
-(use-package ef-themes
-  :init
-  (setq ef-themes-headings
-        '((0 . (1.9))
-          (1 . (1.8))
-          (2 . (1.7))
-          (3 . (1.6))
-          (4 . (1.5))
-          (5 . (1.4)) ; absence of weight means `bold'
-          (6 . (1.3))
-          (7 . (1.2))
-          (t . (1.1))))
-  (setq ef-themes-to-toggle '(ef-cherie ef-light))
-  :config
-  (load-theme 'ef-cherie :no-confirm))
-;; Theme:1 ends here
-
-;; [[file:README.org::*Keybound functions][Keybound functions:1]]
-(defun renz/--jump-section (dirname prompt extension)
-  "For internal use: prompt for a file under `dirname' in the user
-emacs config site with matching `extension' regexp"
-  (find-file
-   (concat dirname
-	   (completing-read prompt
-			    (directory-files dirname nil extension)))))
-
-(setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
-
-(defun renz/jump-configuration ()
-  "Prompt for a .el file in my site-lisp folder, then go there."
-  (interactive)
-  (renz/--jump-section renz/site-lisp-dir
-		       "Elisp config files: "
-		       ".*\.el$"))
-
-(defun renz/jump-org ()
-  "Prompt for an org file in my emacs directory, then go there."
-  (interactive)
-  (renz/--jump-section renz/org-home
-		       "Org files: "
-		       ".*\.org$"))
-
-(defun renz/jump-init ()
-  (interactive)
-  (find-file (expand-file-name "README.org" user-emacs-directory))
-  (consult-org-heading))
-
-(defun renz/find-tag ()
-  "Use completing-read to navigate to a tag"
-  (interactive)
-  (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
-
-(defun renz/consult-grep ()
-  "Live grep using `rg' if found, otherwise `grep'"
-  (interactive)
-  (if (executable-find "rg")
-      (consult-ripgrep)
-    (consult-grep)))
-;; Keybound functions:1 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
@@ -176,10 +136,6 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*=C-c m= toggle ef-theme][=C-c m= toggle ef-theme:1]]
 (global-set-key (kbd "C-c m") #'ef-themes-toggle)
 ;; =C-c m= toggle ef-theme:1 ends here
-
-;; [[file:README.org::*=C-c n= toggle minimap][=C-c n= toggle minimap:1]]
-(global-set-key (kbd "C-c n") #'minimap-mode)
-;; =C-c n= toggle minimap:1 ends here
 
 ;; [[file:README.org::*=C-c o= Org bindings][=C-c o= Org bindings:1]]
 (global-set-key (kbd "C-c o a") #'org-agenda)
@@ -274,276 +230,6 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "s-v") #'yank)
 ;; Super bindings:1 ends here
 
-;; [[file:README.org::*Consult][Consult:1]]
-(use-package consult
-
-  :bind(
-        ;; C-x bindings (ctl-x-map)
-        ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-        ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-        ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-        ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-        ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-        ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-
-        ;; Other custom bindings
-        ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-        ("<help> a" . consult-apropos)            ;; orig. apropos-command
-
-        ;; M-g bindings (goto-map)
-        ("M-g e" . consult-compile-error)
-        ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-        ("M-g g" . consult-goto-line)             ;; orig. goto-line
-        ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-        ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-        ("M-g m" . consult-mark)
-        ("M-g k" . consult-global-mark)
-        ("M-g i" . consult-imenu)
-        ("M-g I" . consult-imenu-multi)
-
-        ;; M-s bindings (search-map)
-        ("M-s d" . consult-find)
-        ("M-s D" . consult-locate)
-        ("M-s g" . consult-grep)
-        ("M-s G" . consult-git-grep)
-        ("M-s r" . consult-ripgrep)
-        ("M-s l" . consult-line)
-        ("M-s L" . consult-line-multi)
-        ("M-s m" . consult-multi-occur)
-        ("M-s k" . consult-keep-lines)
-        ("M-s u" . consult-focus-lines)
-
-        ;; Isearch integration
-        ("M-s e" . consult-isearch-history)
-        :map isearch-mode-map
-        ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-        ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-        ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-        ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-
-        ;; Minibuffer history
-        :map minibuffer-local-map
-        ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-        ("M-r" . consult-history))                ;; orig. previous-matching-history-element
-
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-
-  :init
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
-        register-preview-function #'consult-register-format)
-
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-  )
-;; Consult:1 ends here
-
-;; [[file:README.org::*Use ~aspell~ by default for spell checking][Use ~aspell~ by default for spell checking:1]]
-(when (executable-find "aspell")
-  (setq ispell-program-name "aspell"))
-;; Use ~aspell~ by default for spell checking:1 ends here
-
-;; [[file:README.org::*Colored output in ~eshell~][Colored output in ~eshell~:1]]
-(add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
-;; Colored output in ~eshell~:1 ends here
-
-;; [[file:README.org::*Recent files menu][Recent files menu:1]]
-(recentf-mode t)
-;; Recent files menu:1 ends here
-
-;; [[file:README.org::*Fill-column][Fill-column:1]]
-(use-package visual-fill-column
-
-  :config
-  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
-  (setq-default fill-column 120))
-;; Fill-column:1 ends here
-
-;; [[file:README.org::*Scroll bar][Scroll bar:1]]
-;; Scroll bar
-(scroll-bar-mode -1)
-;; Scroll bar:1 ends here
-
-;; [[file:README.org::*Inihibit splash screen][Inihibit splash screen:1]]
-(setq inhibit-splash-screen t)
-;; Inihibit splash screen:1 ends here
-
-;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
-(modify-all-frames-parameters
- '((right-divider-width . 40)
-   (internal-border-width . 40)))
-(dolist (face '(window-divider
-                window-divider-first-pixel
-                window-divider-last-pixel))
-  (face-spec-reset-face face)
-  (set-face-foreground face (face-attribute 'default :background)))
-(set-face-background 'fringe (face-attribute 'default :background))
-;; Window margins and fringe:1 ends here
-
-;; [[file:README.org::*Automatically visit symlink sources][Automatically visit symlink sources:1]]
-(setq find-file-visit-truename t)
-(setq vc-follow-symlinks t)
-;; Automatically visit symlink sources:1 ends here
-
-;; [[file:README.org::*Indent with spaces][Indent with spaces:1]]
-(setq-default indent-tabs-mode nil)
-;; Indent with spaces:1 ends here
-
-;; [[file:README.org::*Render ASCII color escape codes][Render ASCII color escape codes:1]]
-(defun renz/display-ansi-colors ()
-  (interactive)
-  (require 'ansi-color)
-  (ansi-color-apply-on-region (point-min) (point-max)))
-;; Render ASCII color escape codes:1 ends here
-
-;; [[file:README.org::*Enable horizontal scrolling with mouse][Enable horizontal scrolling with mouse:1]]
-(setq mouse-wheel-tilt-scroll t)
-;; Enable horizontal scrolling with mouse:1 ends here
-
-;; [[file:README.org::*Window management][Window management:1]]
-(unless (version< emacs-version "27.1")
-  (setq switch-to-buffer-obey-display-actions t))
-;; Window management:1 ends here
-
-;; [[file:README.org::*Enable up/downcase-region][Enable up/downcase-region:1]]
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-;; Enable up/downcase-region:1 ends here
-
-;; [[file:README.org::*Automatically update buffers when contents change on disk][Automatically update buffers when contents change on disk:1]]
-(global-auto-revert-mode)
-;; Automatically update buffers when contents change on disk:1 ends here
-
-;; [[file:README.org::*Marginalia][Marginalia:1]]
-(use-package marginalia
-
-  :config (marginalia-mode))
-;; Marginalia:1 ends here
-
-;; [[file:README.org::*Highlight the line point is on][Highlight the line point is on:1]]
-(add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'text-mode-hook #'hl-line-mode)
-(add-hook 'org-mode-hook #'hl-line-mode)
-;; Highlight the line point is on:1 ends here
-
-;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
-;; Stop stupid bell
-(setq ring-bell-function 'ignore)
-;; Stop stupid bell:1 ends here
-
-;; [[file:README.org::*Enable split-window dired copying][Enable split-window dired copying:1]]
-(setq dired-dwim-target t)
-;; Enable split-window dired copying:1 ends here
-
-;; [[file:README.org::*Automatically create matching parens in programming modes][Automatically create matching parens in programming modes:1]]
-(add-hook 'prog-mode-hook (electric-pair-mode t))
-(add-hook 'prog-mode-hook (show-paren-mode t))
-;; Automatically create matching parens in programming modes:1 ends here
-
-;; [[file:README.org::*Delete whitespace on save][Delete whitespace on save:1]]
-;; (add-hook 'prog-mode-hook 'whitespace-mode)
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-;; Delete whitespace on save:1 ends here
-
-;; [[file:README.org::*Don't wrap lines][Don't wrap lines:1]]
-(setq-default truncate-lines t)
-(add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
-;; Don't wrap lines:1 ends here
-
-;; [[file:README.org::*Relative line numbers][Relative line numbers:1]]
-(add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
-(add-hook 'yaml-mode-hook (lambda () (setq display-line-numbers 'relative)))
-;; Relative line numbers:1 ends here
-
-;; [[file:README.org::*Delete region when we yank on top of it][Delete region when we yank on top of it:1]]
-(delete-selection-mode t)
-;; Delete region when we yank on top of it:1 ends here
-
-;; [[file:README.org::*Enable mouse in terminal/TTY][Enable mouse in terminal/TTY:1]]
-(xterm-mouse-mode 1)
-;; Enable mouse in terminal/TTY:1 ends here
-
-;; [[file:README.org::*Compilation][Compilation:1]]
-(setq compilation-scroll-output t)
-;; Compilation:1 ends here
-
-;; [[file:README.org::*Compilation][Compilation:2]]
-;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
-(defun renz/colorize-compilation-buffer ()
-  "Enable colors in the *compilation* buffer."
-  (require 'ansi-color)
-  (let ((inhibit-read-only t))
-    (ansi-color-apply-on-region (point-min) (point-max))))
-
-(add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
-;; Compilation:2 ends here
-
-;; [[file:README.org::*Tool bar][Tool bar:1]]
-(tool-bar-mode -1)
-;; Tool bar:1 ends here
-
-;; [[file:README.org::*Ignore risky .dir-locals.el][Ignore risky .dir-locals.el:1]]
-(advice-add 'risky-local-variable-p :override #'ignore)
-;; Ignore risky .dir-locals.el:1 ends here
-
-;; [[file:README.org::*Prefer =rg= over =grep=][Prefer =rg= over =grep=:1]]
-(when (executable-find "rg")
-  (setq grep-program "rg"))
-;; Prefer =rg= over =grep=:1 ends here
-
-;; [[file:README.org::*Make ~dired~ human-readable][Make ~dired~ human-readable:1]]
-(setq dired-listing-switches "-alFh")
-;; (setq-default dired-hide-details-mode t)
-;; Make ~dired~ human-readable:1 ends here
-
-;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
-(setq confirm-kill-emacs 'yes-or-no-p)
-;; Confirm when exiting Emacs:1 ends here
-
-;; [[file:README.org::*Prefer ~aspell~ over ~ispell~][Prefer ~aspell~ over ~ispell~:1]]
-(when (executable-find "aspell")
-  (setq ispell-program-name "aspell"))
-;; Prefer ~aspell~ over ~ispell~:1 ends here
-
-;; [[file:README.org::*Smooth scrolling][Smooth scrolling:1]]
-(if (version< emacs-version "29.0")
-    (pixel-scroll-mode)
-  (pixel-scroll-precision-mode 1)
-  (setq pixel-scroll-precision-large-scroll-height 35.0))
-;; Smooth scrolling:1 ends here
-
-;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
-(setq backup-directory-alist
-      '(("." . "~/.emacs.d/backups/"))
-      ;; auto-save-file-name-transforms
-      ;; '(("." ,temporary-file-directory t))
-      )
-;; Backup and auto-save files:1 ends here
-
-;; [[file:README.org::*Code syntax in Markdown][Code syntax in Markdown:1]]
-(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
-;; Code syntax in Markdown:1 ends here
-
-;; [[file:README.org::*Esup: startup time profiling][Esup: startup time profiling:1]]
-(use-package esup
-  :config
-  (setq esup-depth 0))
-;; Esup: startup time profiling:1 ends here
-
-;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
-(use-package restart-emacs
-  )
-;; Reloading Emacs:1 ends here
-
 ;; [[file:README.org::*Mode line][Mode line:1]]
 (setq column-number-mode t
       mode-line-in-non-selected-windows t
@@ -558,7 +244,8 @@ emacs config site with matching `extension' regexp"
 ;; =eldoc=:1 ends here
 
 ;; [[file:README.org::*Magit][Magit:1]]
-(use-package magit)
+(use-package magit
+  :bind ("C-x g" . magit-status))
 ;; Magit:1 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:1]]
@@ -641,20 +328,20 @@ emacs config site with matching `extension' regexp"
 
   :bind
   (:map corfu-map
-        ("M-SPC" . corfu-insert-separator)
-        ("TAB" . corfu-next)
-        ([tab] . corfu-next)
-        ("S-TAB" . corfu-previous)
-        ([backtab] . corfu-previous))
+	("M-SPC" . corfu-insert-separator)
+	("TAB" . corfu-next)
+	([tab] . corfu-next)
+	("S-TAB" . corfu-previous)
+	([backtab] . corfu-previous))
 
   :config
   (defun corfu-enable-always-in-minibuffer ()
     "Enable Corfu in the minibuffer if Vertico/Mct are not active."
     (unless (or (bound-and-true-p mct--active)
-                (bound-and-true-p vertico--input))
+		(bound-and-true-p vertico--input))
       ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
       (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-                  corfu-popupinfo-delay nil)
+		  corfu-popupinfo-delay nil)
       (corfu-mode 1)))
 
   (defun corfu-send-shell (&rest _)
@@ -666,8 +353,8 @@ emacs config site with matching `extension' regexp"
       (comint-send-input))))
 
   (setq corfu-auto t
-        corfu-auto-delay 0.0
-        corfu-quit-no-match 'separator)
+	corfu-auto-delay 0.0
+	corfu-quit-no-match 'separator)
 
   (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
   (advice-add #'corfu-insert :after #'corfu-send-shell)
@@ -678,7 +365,7 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*Completion at point with ~corfu~][Completion at point with ~corfu~:2]]
 (defun renz/disable-corfu-remote ()
   (when (and (fboundp 'corfu-mode)
-             (file-remote-p default-directory))
+	     (file-remote-p default-directory))
     (corfu-mode -1)))
 ;; Completion at point with ~corfu~:2 ends here
 
@@ -686,7 +373,7 @@ emacs config site with matching `extension' regexp"
 (use-package dabbrev
   ;; Swap M-/ and C-M-/
   :bind (("M-/" . dabbrev-completion)
-         ("C-M-/" . dabbrev-expand))
+	 ("C-M-/" . dabbrev-expand))
   ;; Other useful Dabbrev configurations.
   :custom
   (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
@@ -698,15 +385,15 @@ emacs config site with matching `extension' regexp"
   :config
   ;; (setq fzf/args "-x --color bw --print-query --margin=1,0 --no-hscroll"
   (setq fzf/args "-x --print-query --margin=1,0 --no-hscroll"
-        fzf/executable "fzf"
-        fzf/git-grep-args "-i --line-number %s"
-        ;; command used for `fzf-grep-*` functions
-        ;; example usage for ripgrep:
-        ;; fzf/grep-command "rg --no-heading -nH"
-        fzf/grep-command "grep -nrH"
-        ;; If nil, the fzf buffer will appear at the top of the window
-        fzf/position-bottom t
-        fzf/window-height 15))
+	fzf/executable "fzf"
+	fzf/git-grep-args "-i --line-number %s"
+	;; command used for `fzf-grep-*` functions
+	;; example usage for ripgrep:
+	;; fzf/grep-command "rg --no-heading -nH"
+	fzf/grep-command "grep -nrH"
+	;; If nil, the fzf buffer will appear at the top of the window
+	fzf/position-bottom t
+	fzf/window-height 15))
 ;; In case of emergency: ~fzf~:1 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:1]]
@@ -719,42 +406,46 @@ emacs config site with matching `extension' regexp"
 (setq org-image-actual-width nil)
 ;; Org-mode:3 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:5]]
-(use-package ox-hugo)
-;; Org-mode:5 ends here
+;; [[file:README.org::*~ox-hugo~ for exporting my blog][~ox-hugo~ for exporting my blog:1]]
+(use-package ox-hugo
+  :after (org))
+;; ~ox-hugo~ for exporting my blog:1 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:6]]
+;; [[file:README.org::*Jumping to org sources][Jumping to org sources:1]]
 (defun renz/org-babel-tangle-jump-to-src ()
   "The opposite of `org-babel-tangle-jump-to-org'.
 Jumps at tangled code from org src block."
   (interactive)
   (if (org-in-src-block-p)
       (let* ((header (car (org-babel-tangle-single-block 1 'only-this-block)))
-             (tangle (car header))
-             (lang (caadr header))
-             (buffer (nth 2 (cadr header)))
-             (org-id (nth 3 (cadr header)))
-             (source-name (nth 4 (cadr header)))
-             (search-comment (org-fill-template
-                              org-babel-tangle-comment-format-beg
-                              `(("link" . ,org-id) ("source-name" . ,source-name))))
-             (file (expand-file-name
-                    (org-babel-effective-tangled-filename buffer lang tangle))))
-        (if (not (file-exists-p file))
-            (message "File does not exist. 'org-babel-tangle' first to create file.")
-          (find-file file)
-          (beginning-of-buffer)
-          (search-forward search-comment)))
+	     (tangle (car header))
+	     (lang (caadr header))
+	     (buffer (nth 2 (cadr header)))
+	     (org-id (nth 3 (cadr header)))
+	     (source-name (nth 4 (cadr header)))
+	     (search-comment (org-fill-template
+			      org-babel-tangle-comment-format-beg
+			      `(("link" . ,org-id) ("source-name" . ,source-name))))
+	     (file (expand-file-name
+		    (org-babel-effective-tangled-filename buffer lang tangle))))
+	(if (not (file-exists-p file))
+	    (message "File does not exist. 'org-babel-tangle' first to create file.")
+	  (find-file file)
+	  (beginning-of-buffer)
+	  (search-forward search-comment)))
     (message "Cannot jump to tangled file because point is not at org src block.")))
-;; Org-mode:6 ends here
+;; Jumping to org sources:1 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:7]]
+;; [[file:README.org::*Jumping to org sources][Jumping to org sources:2]]
 (use-package org
+  :mode ("\\.org\\'" . org-mode)
+
   :hook
   (org-mode . (lambda () (progn
-                           (add-hook 'after-save-hook #'org-babel-tangle :append :local)
-                           (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))))
+			   (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+			   (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))))
   :hook (org-mode . visual-line-mode)
+
   :config
   (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
@@ -763,44 +454,29 @@ Jumps at tangled code from org src block."
      (python . t)
      (sql . t)
      (shell . t)
-     (fortran . t)
-     (julia . t)
+     ;; (fortran . t)
+     ;; (julia . t)
      ;; (jupyter . t)
-     (scheme . t)
-     (haskell . t)
-     (lisp . t)
-     (clojure . t)
-     (C . t)
-     (org . t)
-     (gnuplot . t)
-     (awk . t)
-     (latex . t)))
+     ;; (scheme . t)
+     ;; (haskell . t)
+     ;; (lisp . t)
+     ;; (clojure . t)
+     ;; (C . t)
+     ;; (org . t)
+     ;; (gnuplot . t)
+     ;; (awk . t)
+     ;; (latex . t))
+     )
    ;; Outside the typical TODO/DONE states, I like to use DEAD as an indicator
    ;; that something is fully blocked, but not done.
    (setq org-todo-keywords '((sequence "TODO" "DEAD" "DONE")))
    (setq org-agenda-files '("~/.emacs.d/org/work.org")
-         org-hugo-front-matter-format "yaml"))
-;; Org-mode:7 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:8]]
-(use-package ob-async
-
-  :config
-  (add-hook 'ob-async-pre-execute-src-block-hook
-            #'(lambda ()
-                (require 'ob-sql-mode)
-                (require 'hive2)))
-  ;; Python has its own =:async yes= header argument we can use, so there's no
-  ;; need to include it with ~ob-async~.
-  (setq ob-async-no-async-languages-alist '("python"))
-  ;; I'm having trouble rembering why I added this following line, except that I
-  ;; belive it has something to do with exporting to HTML with syntax
-  ;; highlighting.
-  (setq org-html-htmlize-output-type 'css))
-;; Org-mode:8 ends here
+	 org-hugo-front-matter-format "yaml")))
+;; Jumping to org sources:2 ends here
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
 (use-package org-modern
+  :after (org)
   :config
   (setq
    ;; Edit settings
@@ -834,259 +510,9 @@ Jumps at tangled code from org src block."
 ;; Code block syntax highlighting for HTML export:1 ends here
 
 ;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
-(use-package ox-clip)
+(use-package ox-clip
+  :after (org))
 ;; Copying images out of org-babel:1 ends here
-
-;; [[file:README.org::*SQL][SQL:1]]
-(defun renz/sql-mode-hook ()
-  (setq tab-width 4)
-  (setq sqlformat-command 'sql-formatter))
-
-(defvar renz/sql-indentation-offsets-alist
-  '((syntax-error sqlind-report-sytax-error)
-    (in-string sqlind-report-runaway-string)
-    (comment-continuation sqlind-indent-comment-continuation)
-    (comment-start sqlind-indent-comment-start)
-    (toplevel 0)
-    (in-block +)
-    (in-begin-block +)
-    (block-start 0)
-    (block-end 0)
-    (declare-statement +)
-    (package ++)
-    (package-body 0)
-    (create-statement +)
-    (defun-start +)
-    (labeled-statement-start 0)
-    (statement-continuation +)
-    (nested-statement-open sqlind-use-anchor-indentation +)
-    (nested-statement-continuation sqlind-use-previous-line-indentation)
-    (nested-statement-close sqlind-use-anchor-indentation)
-    (with-clause sqlind-use-anchor-indentation)
-    (with-clause-cte +)
-    (with-clause-cte-cont ++)
-    (case-clause 0)
-    (case-clause-item sqlind-use-anchor-indentation +)
-    (case-clause-item-cont sqlind-right-justify-clause)
-    (select-clause 0)
-    (select-column sqlind-indent-select-column)
-    (select-column-continuation sqlind-indent-select-column +)
-    (select-join-condition ++)
-    (select-table sqlind-indent-select-table)
-    (select-table-continuation sqlind-indent-select-table +)
-    (in-select-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
-    (insert-clause 0)
-    (in-insert-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
-    (delete-clause 0)
-    (in-delete-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
-    (update-clause 0)
-    (in-update-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)))
-
-(defun renz/sql-indentation-offsets ()
-  (setq sqlind-indentation-offsets-alist
-        renz/sql-indentation-offsets-alist)
-  (setq sqlind-basic-offset 4))
-
-(add-hook 'sqlind-minor-mode-hook #'renz/sql-indentation-offsets)
-(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
-(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
-(add-hook 'sql-mode-hook 'sqlup-mode)
-(add-hook 'sql-mode-hook 'sqlind-minor-mode)
-(add-hook 'sql-interactive-mode-hook 'sqlup-mode)
-
-;; TODO we've modified sqlformat for sql-formatter.  Need a way to pass in configuration values
-(use-package sqlformat
-  :load-path "packages/"
-  :after (sql))
-
-(use-package hive2
-  :load-path "packages/"
-  :after (sql))
-
-(use-package ob-sql-mode
-
-  :after (sql))
-;; SQL:1 ends here
-
-;; [[file:README.org::*Python][Python:1]]
-(with-eval-after-load 'compile
-  (add-to-list 'compilation-error-regexp-alist-alist
-               '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
-  (add-to-list 'compilation-error-regexp-alist 'pyright))
-;; Python:1 ends here
-
-;; [[file:README.org::*Python][Python:2]]
-(with-eval-after-load 'python
-  (if (executable-find "mypy")
-      (setq python-check-command "mypy"))
-  (if (executable-find "pyright")
-      (setq python-check-command "pyright"))
-  (add-hook 'python-mode-hook #'blacken-mode))
-;; Python:2 ends here
-
-;; [[file:README.org::*Python][Python:6]]
-(put 'python-check-command 'safe-local-variable #'stringp)
-(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
-;; Python:6 ends here
-
-;; [[file:README.org::*pyrightconfig.json, Tramp, and eglot][pyrightconfig.json, Tramp, and eglot:1]]
-(use-package pyrightconfig
-  :after (python))
-;; pyrightconfig.json, Tramp, and eglot:1 ends here
-
-;; [[file:README.org::*blacken][blacken:1]]
-(use-package blacken
-  :after (python))
-;; blacken:1 ends here
-
-;; [[file:README.org::*Haskell][Haskell:1]]
-(use-package haskell-mode)
-;; Haskell:1 ends here
-
-;; [[file:README.org::*Golang][Golang:1]]
-(use-package go-mode)
-;; Golang:1 ends here
-
-;; [[file:README.org::*Lua][Lua:1]]
-(use-package lua-mode)
-;; Lua:1 ends here
-
-;; [[file:README.org::*yaml][yaml:1]]
-(use-package yaml-mode)
-;; yaml:1 ends here
-
-;; [[file:README.org::*Markdown][Markdown:1]]
-(defun renz/md-hook ()
-  (visual-fill-column-mode)
-  (setq-local fill-column 120))
-
-(use-package markdown-mode
-  :config
-  (add-hook 'markdown-mode-hook #'renz/md-hook))
-
-(use-package poly-markdown
-  :after (markdown-mode))
-;; Markdown:1 ends here
-
-;; [[file:README.org::*Rust][Rust:1]]
-(use-package rust-mode)
-;; Rust:1 ends here
-
-;; [[file:README.org::*Scala][Scala:1]]
-(use-package scala-mode)
-;; Scala:1 ends here
-
-;; [[file:README.org::*ripgrep][ripgrep:1]]
-(use-package ripgrep)
-;; ripgrep:1 ends here
-
-;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
-(when (memq system-type '(windows-nt cygwin ms-dos))
-  ;; Set a better font on Windows
-  (set-face-attribute 'default nil :font "Hack NF-12")
-  ;; Alternate ispell when we've got msys on Windows
-  (setq ispell-program-name "aspell.exe")
-  ;; Set default shell to pwsh
-  ;; (setq explicit-shell-file-name "pwsh")
-  ;; Enable use of Winkey as super
-  (setq w32-pass-lwindow-to-system nil)
-  (setq w32-lwindow-modifier 'super) ; Left Windows key
-  (setq w32-pass-rwindow-to-system nil)
-  (setq w32-rwindow-modifier 'super) ; Right Windows key
-  ;; If we want to use a hotkey, we have to also register each
-  ;; combination specifically, like this:
-  (w32-register-hot-key [s-a])
-  (w32-register-hot-key [s-b])
-  (w32-register-hot-key [s-c])
-  (w32-register-hot-key [s-d])
-  (w32-register-hot-key [s-e])
-  (w32-register-hot-key [s-f])
-  (w32-register-hot-key [s-g])
-  (w32-register-hot-key [s-h])
-  (w32-register-hot-key [s-i])
-  (w32-register-hot-key [s-j])
-  (w32-register-hot-key [s-k])
-  ;; s-l can NEVER be registered as a key combination, since Windows
-  ;; handles it at a much lower level.
-  ;; (w32-register-hot-key [s-l])
-  (w32-register-hot-key [s-m])
-  (w32-register-hot-key [s-n])
-  (w32-register-hot-key [s-o])
-  (w32-register-hot-key [s-p])
-  (w32-register-hot-key [s-q])
-  (w32-register-hot-key [s-r])
-  (w32-register-hot-key [s-s])
-  (w32-register-hot-key [s-t])
-  (w32-register-hot-key [s-u])
-  (w32-register-hot-key [s-v])
-  (w32-register-hot-key [s-w])
-  (w32-register-hot-key [s-x])
-  (w32-register-hot-key [s-y])
-  (w32-register-hot-key [s-z]))
-;; Microsoft Windows:1 ends here
-
-;; [[file:README.org::*macOS][macOS:1]]
-(when (eq system-type 'darwin)
-  ;; Uncomment this if we can't install Hack Nerd font
-  ;; (set-face-attribute 'default nil :font "Menlo-14")
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
-  (exec-path-from-shell-initialize))
-;; macOS:1 ends here
-
-;; [[file:README.org::*Linux][Linux:1]]
-(when (eq system-type 'gnu/linux)
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
-;; Linux:1 ends here
-
-;; [[file:README.org::*Tramp][Tramp:1]]
-(setq vc-handled-backends '(Git))
-(setq file-name-inhibit-locks t)
-(setq tramp-inline-compress-start-size 1000)
-(setq tramp-copy-size-limit 10000)
-(setq tramp-verbose 1)
-;; Tramp:1 ends here
-
-;; [[file:README.org::*Tramp][Tramp:2]]
-(setq tramp-use-ssh-controlmaster-options nil)
-;; Tramp:2 ends here
-
-;; [[file:README.org::*Tramp][Tramp:4]]
-(with-eval-after-load 'tramp
-  (add-to-list 'tramp-remote-path "~/.local/bin")
-  (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
-  ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
-  )
-;; Tramp:4 ends here
-
-;; [[file:README.org::*Language server protocol (LSP) with =eglot=][Language server protocol (LSP) with =eglot=:1]]
-(use-package eglot)
-;; Language server protocol (LSP) with =eglot=:1 ends here
-
-;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]
-(use-package ahk-mode)
-;; AutoHotkey:1 ends here
-
-;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
-(use-package eww
-  :config
-  (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
-;; eww - search engine and browser:1 ends here
-
-;; [[file:README.org::*csv-mode][csv-mode:1]]
-(use-package csv-mode)
-;; csv-mode:1 ends here
-
-;; [[file:README.org::*diff-hl][diff-hl:1]]
-(use-package diff-hl)
-;; diff-hl:1 ends here
-
-;; [[file:README.org::*GNU Plot][GNU Plot:1]]
-(use-package gnuplot)
-;; GNU Plot:1 ends here
-
-;; [[file:README.org::*change-inner][change-inner:1]]
-(use-package change-inner)
-;; change-inner:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here
