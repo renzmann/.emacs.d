@@ -39,7 +39,8 @@ select."
          (base-dir (vc-git-root default-directory))
          (out-file (expand-file-name "pyrightconfig.json" base-dir))
          (out-contents (json-encode (list :venvPath venvPath :venv venv))))
-    (with-temp-file out-file (insert out-contents))))
+    (with-temp-file out-file (insert out-contents))
+    (message (concat "Configured `" out-file "` to use environment `" venv-dir))))
 
 (provide 'pyrightconfig)
 
