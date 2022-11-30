@@ -11,7 +11,7 @@
 Want to use it? Go ahead!
 
 #+begin_src shell :eval never
-git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
+git clone --depth 1 https://github.com/renzmann/.emacs.d ~/.emacs.d
 #+end_src
 
 #+attr_html: :width 800px
@@ -432,6 +432,7 @@ See the [[Microsoft Windows][Microsoft Windows]] section for some hackery requir
 
 #+begin_src emacs-lisp
 (global-set-key (kbd "s-c") #'kill-ring-save)
+(global-set-key (kbd "s-q") #'save-buffers-kill-terminal)
 (global-set-key (kbd "s-s") #'save-buffer)
 (global-set-key (kbd "s-t") #'tab-new)
 (global-set-key (kbd "s-v") #'yank)
@@ -1735,13 +1736,11 @@ I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece 
 
 #+begin_src emacs-lisp
 (use-package tree-sitter
-
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
-(use-package tree-sitter-langs
-  :after (tree-sitter))
+(use-package tree-sitter-langs)
 #+end_src
 
 * Embark
@@ -1806,9 +1805,8 @@ There are several other interesting options that I haven't tried out yet, includ
 + [ ] [[https://github.com/oantolin/math-delimiters][math-delimiters]]
 + [ ] [[https://github.com/oantolin/placeholder][oantolin/placeholder]]
 + [X] [[https://github.com/emacs-eaf/emacs-application-framework][emacs-eaf/emacs-application-framework]] <--- big hassle
-+ [ ] [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
++ [X] [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 + [ ] [[https://notmuchmail.org/notmuch-emacs/][notmuch for email]]
-
 
 * Inspirations
 
