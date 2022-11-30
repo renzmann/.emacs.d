@@ -1726,13 +1726,11 @@ I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece 
 
 #+begin_src emacs-lisp
 (use-package tree-sitter
-
   :config
   (global-tree-sitter-mode)
   (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
 
-(use-package tree-sitter-langs
-  :after (tree-sitter))
+(use-package tree-sitter-langs)
 #+end_src
 
 * Embark
@@ -1797,7 +1795,7 @@ There are several other interesting options that I haven't tried out yet, includ
 + [ ] [[https://github.com/oantolin/math-delimiters][math-delimiters]]
 + [ ] [[https://github.com/oantolin/placeholder][oantolin/placeholder]]
 + [X] [[https://github.com/emacs-eaf/emacs-application-framework][emacs-eaf/emacs-application-framework]] <--- big hassle
-+ [ ] [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
++ [X] [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 
 
 * Inspirations
