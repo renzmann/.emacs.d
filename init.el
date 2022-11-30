@@ -268,6 +268,7 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Super bindings][Super bindings:1]]
 (global-set-key (kbd "s-c") #'kill-ring-save)
+(global-set-key (kbd "s-q") #'save-buffers-kill-terminal)
 (global-set-key (kbd "s-s") #'save-buffer)
 (global-set-key (kbd "s-t") #'tab-new)
 (global-set-key (kbd "s-v") #'yank)
