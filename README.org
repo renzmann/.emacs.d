@@ -517,8 +517,18 @@ Forms a large foundation of my workflow.  [[https://github.com/minad/consult][Th
 #+end_src
 
 
-* Misc. Settings
-Haven't found a home header for any of these yet.
+* Builtin Settings
+My settings for base emacs.  Assuming I ran with /no/ plugins (ala ~emacs -Q~), I would still set most of these by hand at one point or another.
+
+
+** Remember minibuffer history
+
+Found this on a [[https://www.youtube.com/watch?v=51eSeqcaikM][System Crafters video]].
+
+#+begin_src emacs-lisp
+(setq history-length 25)
+(savehist-mode 1)
+#+end_src
 
 
 ** Use ~aspell~ by default for spell checking
@@ -538,6 +548,7 @@ Copy-pasted from a [[https://emacs.stackexchange.com/questions/9517/colored-git-
 
 
 ** Recent files menu
+This enables "File -> Open Recent" from the menu bar, and ~consult-recent-file~.
 
 #+begin_src emacs-lisp
 (recentf-mode t)
@@ -568,19 +579,7 @@ I toggle this one on/off sometimes depending on how I feel and which OS I'm
 currently on.
 
 #+begin_src emacs-lisp
-;; Scroll bar
 (scroll-bar-mode -1)
-#+end_src
-
-
-** Inline emojis
-I tried this for a while but boy did it consume a lot of space in the =elpa/=
-directory!  If I go back to it I might re-install it but have to ensure I ignore
-the source files.
-
-#+begin_src emacs-lisp :tangle no :eval never
-;; Emojis inline 👍
-(add-hook 'after-init-hook #'global-emojify-mode)
 #+end_src
 
 ** Inihibit splash screen
@@ -598,11 +597,13 @@ This hunk adds some space around all sides of each window so that we get a clear
 (modify-all-frames-parameters
  '((right-divider-width . 40)
    (internal-border-width . 40)))
+
 (dolist (face '(window-divider
                 window-divider-first-pixel
                 window-divider-last-pixel))
   (face-spec-reset-face face)
   (set-face-foreground face (face-attribute 'default :background)))
+
 (set-face-background 'fringe (face-attribute 'default :background))
 #+end_src
 
@@ -658,6 +659,9 @@ I need to give the [[https://www.masteringemacs.org/article/demystifying-emacs-w
 
 ** COMMENT Initial frame size for GUI
 
+This kind of assumes that startup is fast.  Add this back in once we get a
+snappy startup again.
+
 #+begin_src emacs-lisp
 (setq renz/frame-default-alist
       '(
@@ -711,10 +715,9 @@ This snippet has a special place in my heart, because it was the first two lines
 #+end_src
 
 ** TODO Delete whitespace on save
-I would also like to have a good-looking display for trailing whitespace and leading tabs like in my Neovim setup, but it has proven challenging to just narrow down to those two faces.
+I would also like to have a good-looking display for trailing whitespace and leading tabs like in my Neovim setup, but it has proven challenging to just narrow down to those two faces.  In the interim, I toggle ~M-x whitespace-mode~ to check for mixed tabs, spaces, and line endings.
 
 #+begin_src emacs-lisp
-;; (add-hook 'prog-mode-hook 'whitespace-mode)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
@@ -832,28 +835,32 @@ Keep all backup files in a temporary folder.  At the moment I have some "file no
       )
 #+end_src
 
-** Code syntax in Markdown
+* TODO Code syntax in Markdown
 Enable syntax highlighting within code fences for markdown
 
 #+begin_src emacs-lisp
 (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
 #+end_src
 
-** Esup: startup time profiling
+This depends on ~poly-mode~, which I should declare via ~use-package~ in the block
+above.
+
+* Esup: startup time profiling
 [[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work around of a bug where esup tries to step into the byte-compiled version of `cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
 
 #+begin_src emacs-lisp
 (use-package esup
+  :bind ("C-c x p")
   :config
   (setq esup-depth 0))
 #+end_src
 
-** Reloading Emacs
+* Reloading Emacs
 Often used when changing up my ~init.el~.
 
 #+begin_src emacs-lisp
 (use-package restart-emacs
-  )
+  :bind ("C-c x r" . restart-emacs))
 #+end_src
 
 * Minimap
@@ -1796,6 +1803,18 @@ Modeled after Vim's =ci=, =ca=, =yi=, and =ya= commands, these let us yank or ki
 
 #+begin_src emacs-lisp
 (use-package change-inner)
+#+end_src
+
+
+
+* Inline emojis
+I tried this for a while but boy did it consume a lot of space in the =elpa/=
+directory!  If I go back to it I might re-install it but have to ensure I ignore
+the source files.
+
+#+begin_src emacs-lisp :tangle no :eval never
+;; Emojis inline 👍
+(add-hook 'after-init-hook #'global-emojify-mode)
 #+end_src
 
 

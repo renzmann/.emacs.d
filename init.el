@@ -344,6 +344,11 @@ emacs config site with matching `extension' regexp"
   )
 ;; Consult:1 ends here
 
+;; [[file:README.org::*Remember minibuffer history][Remember minibuffer history:1]]
+(setq history-length 25)
+(savehist-mode 1)
+;; Remember minibuffer history:1 ends here
+
 ;; [[file:README.org::*Use ~aspell~ by default for spell checking][Use ~aspell~ by default for spell checking:1]]
 (when (executable-find "aspell")
   (setq ispell-program-name "aspell"))
@@ -368,7 +373,6 @@ emacs config site with matching `extension' regexp"
 ;; Fill-column:2 ends here
 
 ;; [[file:README.org::*Scroll bar][Scroll bar:1]]
-;; Scroll bar
 (scroll-bar-mode -1)
 ;; Scroll bar:1 ends here
 
@@ -380,11 +384,13 @@ emacs config site with matching `extension' regexp"
 (modify-all-frames-parameters
  '((right-divider-width . 40)
    (internal-border-width . 40)))
+
 (dolist (face '(window-divider
                 window-divider-first-pixel
                 window-divider-last-pixel))
   (face-spec-reset-face face)
   (set-face-foreground face (face-attribute 'default :background)))
+
 (set-face-background 'fringe (face-attribute 'default :background))
 ;; Window margins and fringe:1 ends here
 
@@ -449,7 +455,6 @@ emacs config site with matching `extension' regexp"
 ;; Automatically create matching parens in programming modes:1 ends here
 
 ;; [[file:README.org::*Delete whitespace on save][Delete whitespace on save:1]]
-;; (add-hook 'prog-mode-hook 'whitespace-mode)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 ;; Delete whitespace on save:1 ends here
 
@@ -534,13 +539,14 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Esup: startup time profiling][Esup: startup time profiling:1]]
 (use-package esup
+  :bind ("C-c x p")
   :config
   (setq esup-depth 0))
 ;; Esup: startup time profiling:1 ends here
 
 ;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
 (use-package restart-emacs
-  )
+  :bind ("C-c x r" . restart-emacs))
 ;; Reloading Emacs:1 ends here
 
 ;; [[file:README.org::*Mode line][Mode line:1]]
