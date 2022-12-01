@@ -166,6 +166,7 @@ emacs config site with matching `extension' regexp"
 ;; =C-c k= kill all but one space:1 ends here
 
 ;; [[file:README.org::*=C-c l= Everything LSP (eglot)][=C-c l= Everything LSP (eglot):1]]
+(global-set-key (kbd "C-c l c") #'eglot-reconnect)
 (global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
 (global-set-key (kbd "C-c l f f") #'eglot-format)
 (global-set-key (kbd "C-c l f b") #'eglot-format-buffer)

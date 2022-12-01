@@ -294,6 +294,7 @@ When using ~isearch~ to jump to things, it's sometimes convenient to re-position
 *** =C-c l= Everything LSP (eglot)
 
 #+begin_src emacs-lisp
+(global-set-key (kbd "C-c l c") #'eglot-reconnect)
 (global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
 (global-set-key (kbd "C-c l f f") #'eglot-format)
 (global-set-key (kbd "C-c l f b") #'eglot-format-buffer)
