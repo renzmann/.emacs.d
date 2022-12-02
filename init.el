@@ -505,13 +505,6 @@ emacs config site with matching `extension' regexp"
       )
 ;; Backup and auto-save files:1 ends here
 
-;; [[file:README.org::*Code syntax in Markdown][Code syntax in Markdown:1]]
-(use-package poly-mode
-  :after markdown
-  :config
-  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode)))
-;; Code syntax in Markdown:1 ends here
-
 ;; [[file:README.org::*Esup: startup time profiling][Esup: startup time profiling:1]]
 (use-package esup
   :bind ("C-c x p")
@@ -818,6 +811,254 @@ Jumps at tangled code from org src block."
          ("C-c l r n" . eglot-rename)
          ("C-c l s" . eglot-shutdown)))
 ;; Language Server Protocol (LSP) with ~eglot~:1 ends here
+
+;; [[file:README.org::*Code block syntax highlighting for HTML export][Code block syntax highlighting for HTML export:1]]
+(use-package htmlize
+  :after (org))
+;; Code block syntax highlighting for HTML export:1 ends here
+
+;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
+(use-package ox-clip)
+;; Copying images out of org-babel:1 ends here
+
+;; [[file:README.org::*SQL][SQL:1]]
+(defun renz/sql-mode-hook ()
+  (setq tab-width 4)
+  (setq sqlformat-command 'sql-formatter))
+
+(defvar renz/sql-indentation-offsets-alist
+  '((syntax-error sqlind-report-sytax-error)
+    (in-string sqlind-report-runaway-string)
+    (comment-continuation sqlind-indent-comment-continuation)
+    (comment-start sqlind-indent-comment-start)
+    (toplevel 0)
+    (in-block +)
+    (in-begin-block +)
+    (block-start 0)
+    (block-end 0)
+    (declare-statement +)
+    (package ++)
+    (package-body 0)
+    (create-statement +)
+    (defun-start +)
+    (labeled-statement-start 0)
+    (statement-continuation +)
+    (nested-statement-open sqlind-use-anchor-indentation +)
+    (nested-statement-continuation sqlind-use-previous-line-indentation)
+    (nested-statement-close sqlind-use-anchor-indentation)
+    (with-clause sqlind-use-anchor-indentation)
+    (with-clause-cte +)
+    (with-clause-cte-cont ++)
+    (case-clause 0)
+    (case-clause-item sqlind-use-anchor-indentation +)
+    (case-clause-item-cont sqlind-right-justify-clause)
+    (select-clause 0)
+    (select-column sqlind-indent-select-column)
+    (select-column-continuation sqlind-indent-select-column +)
+    (select-join-condition ++)
+    (select-table sqlind-indent-select-table)
+    (select-table-continuation sqlind-indent-select-table +)
+    (in-select-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
+    (insert-clause 0)
+    (in-insert-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
+    (delete-clause 0)
+    (in-delete-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
+    (update-clause 0)
+    (in-update-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)))
+
+(defun renz/sql-indentation-offsets ()
+  (setq sqlind-indentation-offsets-alist
+        renz/sql-indentation-offsets-alist)
+  (setq sqlind-basic-offset 4))
+
+(add-hook 'sqlind-minor-mode-hook #'renz/sql-indentation-offsets)
+(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
+(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
+(add-hook 'sql-mode-hook 'sqlup-mode)
+(add-hook 'sql-mode-hook 'sqlind-minor-mode)
+(add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+
+;; TODO we've modified sqlformat for sql-formatter.  Need a way to pass in configuration values
+(use-package sqlformat
+  :load-path "packages/"
+  :after (sql))
+
+(use-package hive2
+  :load-path "packages/"
+  :after (sql))
+
+(use-package ob-sql-mode
+
+  :after (sql))
+;; SQL:1 ends here
+
+;; [[file:README.org::*Python][Python:1]]
+(with-eval-after-load 'compile
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
+  (add-to-list 'compilation-error-regexp-alist 'pyright))
+;; Python:1 ends here
+
+;; [[file:README.org::*Python][Python:2]]
+(with-eval-after-load 'python
+  (if (executable-find "mypy")
+      (setq python-check-command "mypy"))
+  (if (executable-find "pyright")
+      (setq python-check-command "pyright"))
+  (add-hook 'python-mode-hook #'blacken-mode))
+;; Python:2 ends here
+
+;; [[file:README.org::*Python][Python:6]]
+(put 'python-check-command 'safe-local-variable #'stringp)
+(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+;; Python:6 ends here
+
+;; [[file:README.org::*pyrightconfig.json, Tramp, and eglot][pyrightconfig.json, Tramp, and eglot:1]]
+(use-package pyrightconfig
+  :after (python))
+;; pyrightconfig.json, Tramp, and eglot:1 ends here
+
+;; [[file:README.org::*blacken][blacken:1]]
+(use-package blacken
+  :bind ("C-c p" . blacken-mode)
+  :after (python))
+;; blacken:1 ends here
+
+;; [[file:README.org::*Haskell][Haskell:1]]
+(use-package haskell-mode)
+;; Haskell:1 ends here
+
+;; [[file:README.org::*Golang][Golang:1]]
+(use-package go-mode)
+;; Golang:1 ends here
+
+;; [[file:README.org::*Lua][Lua:1]]
+(use-package lua-mode)
+;; Lua:1 ends here
+
+;; [[file:README.org::*yaml][yaml:1]]
+(use-package yaml-mode)
+;; yaml:1 ends here
+
+;; [[file:README.org::*Markdown][Markdown:1]]
+(defun renz/md-hook ()
+  (visual-fill-column-mode)
+  (setq-local fill-column 120))
+
+(use-package markdown-mode
+  :config
+  (add-hook 'markdown-mode-hook #'renz/md-hook))
+
+(use-package poly-markdown
+  :after (markdown-mode))
+;; Markdown:1 ends here
+
+;; [[file:README.org::*Code syntax in Markdown][Code syntax in Markdown:1]]
+(use-package poly-mode
+  :mode ("\\.md" . poly-markdown-mode))
+;; Code syntax in Markdown:1 ends here
+
+;; [[file:README.org::*Rust][Rust:1]]
+(use-package rust-mode)
+;; Rust:1 ends here
+
+;; [[file:README.org::*Scala][Scala:1]]
+(use-package scala-mode)
+;; Scala:1 ends here
+
+;; [[file:README.org::*ripgrep][ripgrep:1]]
+(use-package ripgrep)
+;; ripgrep:1 ends here
+
+;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
+(when (memq system-type '(windows-nt cygwin ms-dos))
+  ;; Set a better font on Windows
+  (set-face-attribute 'default nil :font "Hack NF-12")
+  ;; Alternate ispell when we've got msys on Windows
+  (setq ispell-program-name "aspell.exe")
+  ;; Set default shell to pwsh
+  ;; (setq explicit-shell-file-name "pwsh")
+  ;; Enable use of Winkey as super
+  (setq w32-pass-lwindow-to-system nil)
+  (setq w32-lwindow-modifier 'super) ; Left Windows key
+  (setq w32-pass-rwindow-to-system nil)
+  (setq w32-rwindow-modifier 'super) ; Right Windows key
+  ;; If we want to use a hotkey, we have to also register each
+  ;; combination specifically, like this:
+  (w32-register-hot-key [s-a])
+  (w32-register-hot-key [s-b])
+  (w32-register-hot-key [s-c])
+  (w32-register-hot-key [s-d])
+  (w32-register-hot-key [s-e])
+  (w32-register-hot-key [s-f])
+  (w32-register-hot-key [s-g])
+  (w32-register-hot-key [s-h])
+  (w32-register-hot-key [s-i])
+  (w32-register-hot-key [s-j])
+  (w32-register-hot-key [s-k])
+  ;; s-l can NEVER be registered as a key combination, since Windows
+  ;; handles it at a much lower level.
+  ;; (w32-register-hot-key [s-l])
+  (w32-register-hot-key [s-m])
+  (w32-register-hot-key [s-n])
+  (w32-register-hot-key [s-o])
+  (w32-register-hot-key [s-p])
+  (w32-register-hot-key [s-q])
+  (w32-register-hot-key [s-r])
+  (w32-register-hot-key [s-s])
+  (w32-register-hot-key [s-t])
+  (w32-register-hot-key [s-u])
+  (w32-register-hot-key [s-v])
+  (w32-register-hot-key [s-w])
+  (w32-register-hot-key [s-x])
+  (w32-register-hot-key [s-y])
+  (w32-register-hot-key [s-z]))
+;; Microsoft Windows:1 ends here
+
+;; [[file:README.org::*macOS][macOS:1]]
+(when (eq system-type 'darwin)
+  ;; Uncomment this if we can't install Hack Nerd font
+  ;; (set-face-attribute 'default nil :font "Menlo-14")
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
+  (exec-path-from-shell-initialize))
+;; macOS:1 ends here
+
+;; [[file:README.org::*Linux][Linux:1]]
+(when (eq system-type 'gnu/linux)
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
+;; Linux:1 ends here
+
+;; [[file:README.org::*Tramp][Tramp:1]]
+(setq vc-handled-backends '(Git))
+(setq file-name-inhibit-locks t)
+(setq tramp-inline-compress-start-size 1000)
+(setq tramp-copy-size-limit 10000)
+(setq tramp-verbose 1)
+;; Tramp:1 ends here
+
+;; [[file:README.org::*Tramp][Tramp:2]]
+(setq tramp-use-ssh-controlmaster-options nil)
+;; Tramp:2 ends here
+
+;; [[file:README.org::*Tramp][Tramp:4]]
+(with-eval-after-load 'tramp
+  (add-to-list 'tramp-remote-path "~/.local/bin")
+  (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
+  ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
+  )
+;; Tramp:4 ends here
+
+;; [[file:README.org::*Language server protocol (LSP) with =eglot=][Language server protocol (LSP) with =eglot=:1]]
+(use-package eglot)
+(use-package eglot
+  :bind (("C-c l c" . eglot-reconnect)
+         ("C-c l d" . flymake-show-buffer-diagnostics)
+         ("C-c l f f" . eglot-format)
+         ("C-c l f b" . eglot-format-buffer)
+         ("C-c l l" . eglot)
+         ("C-c l r n" . eglot-rename)
+         ("C-c l s" . eglot-shutdown)))
+;; Language server protocol (LSP) with =eglot=:1 ends here
 
 ;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]
 (use-package ahk-mode

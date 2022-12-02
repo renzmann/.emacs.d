@@ -910,17 +910,6 @@ Keep all backup files in a temporary folder.  At the moment I have some "file no
 #+end_src
 
 
-* Code syntax in Markdown
-Enable syntax highlighting within code fences for markdown
-
-#+begin_src emacs-lisp
-(use-package poly-mode
-  :after markdown
-  :config
-  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode)))
-#+end_src
-
-
 * Esup: startup time profiling
 [[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work around of a bug where esup tries to step into the byte-compiled version of `cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
 
@@ -1469,7 +1458,7 @@ A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
   (global-org-modern-mode))
 #+end_src
 
-cLooking into this: https://github.com/oantolin/embark
+Looking into this: https://github.com/oantolin/embark
 
 #+begin_src emacs-lisp :tangle no
 (use-package embark)
@@ -1487,6 +1476,445 @@ cLooking into this: https://github.com/oantolin/embark
          ("C-c l l" . eglot)
          ("C-c l r n" . eglot-rename)
          ("C-c l s" . eglot-shutdown)))
+#+end_src
+
+** Code block syntax highlighting for HTML export
+#+begin_src emacs-lisp
+(use-package htmlize
+  :after (org))
+#+end_src
+
+** Copying images out of org-babel
+Offers two functions:
++ ~ox-clip-formatted-copy~
++ ~ox-clip-image-to-clipboard~
+#+begin_src emacs-lisp
+(use-package ox-clip)
+#+end_src
+
+* SQL
+I'm not yet sure how to get Hive-SQL (~.hql~) recognized with the ~:mode~ keyword.  When I figure that out I'll move that part up.
+
+#+begin_src emacs-lisp
+(defun renz/sql-mode-hook ()
+  (setq tab-width 4)
+  (setq sqlformat-command 'sql-formatter))
+
+(defvar renz/sql-indentation-offsets-alist
+  '((syntax-error sqlind-report-sytax-error)
+    (in-string sqlind-report-runaway-string)
+    (comment-continuation sqlind-indent-comment-continuation)
+    (comment-start sqlind-indent-comment-start)
+    (toplevel 0)
+    (in-block +)
+    (in-begin-block +)
+    (block-start 0)
+    (block-end 0)
+    (declare-statement +)
+    (package ++)
+    (package-body 0)
+    (create-statement +)
+    (defun-start +)
+    (labeled-statement-start 0)
+    (statement-continuation +)
+    (nested-statement-open sqlind-use-anchor-indentation +)
+    (nested-statement-continuation sqlind-use-previous-line-indentation)
+    (nested-statement-close sqlind-use-anchor-indentation)
+    (with-clause sqlind-use-anchor-indentation)
+    (with-clause-cte +)
+    (with-clause-cte-cont ++)
+    (case-clause 0)
+    (case-clause-item sqlind-use-anchor-indentation +)
+    (case-clause-item-cont sqlind-right-justify-clause)
+    (select-clause 0)
+    (select-column sqlind-indent-select-column)
+    (select-column-continuation sqlind-indent-select-column +)
+    (select-join-condition ++)
+    (select-table sqlind-indent-select-table)
+    (select-table-continuation sqlind-indent-select-table +)
+    (in-select-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
+    (insert-clause 0)
+    (in-insert-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
+    (delete-clause 0)
+    (in-delete-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
+    (update-clause 0)
+    (in-update-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)))
+
+(defun renz/sql-indentation-offsets ()
+  (setq sqlind-indentation-offsets-alist
+        renz/sql-indentation-offsets-alist)
+  (setq sqlind-basic-offset 4))
+
+(add-hook 'sqlind-minor-mode-hook #'renz/sql-indentation-offsets)
+(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
+(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
+(add-hook 'sql-mode-hook 'sqlup-mode)
+(add-hook 'sql-mode-hook 'sqlind-minor-mode)
+(add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+
+;; TODO we've modified sqlformat for sql-formatter.  Need a way to pass in configuration values
+(use-package sqlformat
+  :load-path "packages/"
+  :after (sql))
+
+(use-package hive2
+  :load-path "packages/"
+  :after (sql))
+
+(use-package ob-sql-mode
+
+  :after (sql))
+#+end_src
+
+
+* Python
+
+The =M-x compile= feature does not recognize or parse ~pyright~ error messages out of the box, so I add that support myself.  Here's an example error message:
+
+#+begin_example
+/home/robb/tmp/errors.py/
+  /home/robb/tmp/errors.py:1:1 - error: "foo" is not defined (reportUndefinedVariable)
+  /home/robb/tmp/errors.py:1:1 - warning: Expression value is unused (reportUnusedExpression)
+  /home/robb/tmp/errors.py:4:12 - error: Operator "+" not supported for types "str" and "Literal[1]"
+    Operator "+" not supported for types "str" and "Literal[1]" (reportGeneralTypeIssues)
+2 errors, 1 warning, 0 informations
+#+end_example
+
+To get the basic =M-g M-n= and =M-g M-p= navigation working, we just need a regex to parse file name, line, and column number.
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'compile
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
+  (add-to-list 'compilation-error-regexp-alist 'pyright))
+#+end_src
+
+It would be nice if we could also capture the =\\(error\\|warning\\)= part as "KIND", but I'm struggling to get it working.
+
+Another nice vanilla feature of ~python-mode~ is =M-x python-check=, which runs a pre-specified linter.  Setting that to ~mypy~ or ~pyright~ if either of those programs exist is a small time saver.
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'python
+  (if (executable-find "mypy")
+      (setq python-check-command "mypy"))
+  (if (executable-find "pyright")
+      (setq python-check-command "pyright"))
+  (add-hook 'python-mode-hook #'blacken-mode))
+#+end_src
+
+At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The culprit was "App Execution Aliases" with python and python3 redirecting to the windows store.  Using this fixed it:
+
+#+begin_example
+     winkey -> Manage app execution aliases -> uncheck python and python3
+#+end_example
+
+Also on Windows - a `pip install` of `pyreadline3' is required to make tab-completion work at all. It provides the `readline' import symbol.
+
+Virtualenvs require ~.dir-locals.el~ to have something like:
+
+#+begin_src emacs-lisp :tangle no :eval never
+   ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
+#+end_src
+
+However, this only operates on `run-python' shells.
+
+~pyvenv~ solves the otherwise very annoying problem of getting external tools like `compile' and `eshell' to also use our virtual environment's python.  I may still use .dir-locals.el to set things like the python-check-command on a per-project basis, though.
+
+#+begin_src emacs-lisp :tangle no :eval never
+(when (package-installed-p 'pyvenv)
+  (pyvenv-mode)
+  ;; (add-hook 'pyvenv-post-activate-hooks 'pyvenv-restart-python)
+  ;; (pyvenv-tracking-mode)
+  ;; (setenv "WORKON_HOME" "~/.conda/envs")
+  )
+#+end_src
+
+I don't use ~pyvenv~ much now though, since the vast majority of my development time is spent over Tramp, which ~pyvenv~ does not support.
+
+For a while, it looks like Emacs was trying out something called [[https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html][semantic-mode]], which looks a lot like a precursor to what we now know as the [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]].  Enabling that mode would look like this:
+
+#+begin_src emacs-lisp :tangle no :eval never
+(add-hook 'python-mode-hook 'semantic-mode)
+#+end_src
+
+Don't mark the check command and virtualenv variables as unsafe.
+
+#+begin_src emacs-lisp
+(put 'python-check-command 'safe-local-variable #'stringp)
+(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+#+end_src
+
+To have ~eglot~ always start up for a python buffer, we would tangle this line into ~init.el~.  However, this can cause a significant loading delay over Tramp, and I would prefer snappy, simple access with LSP provided on an as-needed basis.
+
+#+begin_src emacs-lisp :tangle no :eval never
+(add-hook 'python-mode-hook 'eglot-ensure)
+#+end_src
+
+Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with Jupyter kernels from org-mode.
+
+** pyrightconfig.json, Tramp, and eglot
+
+The most consistent way to get =eglot= to properly configure the python virtual environment with =pyright= is to have a static file at the root of the project, called ~pyrightconfig.json~.  I wrote a short plugin that allows me to select a directory using =completing-read= and have emacs write the content of ~pyrightconfig.json~ based on what I selected, in the appropriate directory.
+
+#+begin_src emacs-lisp
+(use-package pyrightconfig
+  :after (python))
+#+end_src
+
+Configuring pyright this way rather than "activating" an environment through Emacs (ala =pythonic-activate= or similar) means we can be running the language server in more than one project at a time, each pointing to its respective virtual environment.
+
+** blacken
+Formatting a buffer with =black= has never been easier!
+
+#+begin_src emacs-lisp
+(use-package blacken
+  :bind ("C-c p" . blacken-mode)
+  :after (python))
+#+end_src
+
+* Haskell
+Enemy of the state.
+
+#+begin_src emacs-lisp
+(use-package haskell-mode)
+#+end_src
+
+
+* Golang
+Winner of "cutest language mascot" since 2009.
+
+#+begin_src emacs-lisp
+(use-package go-mode)
+#+end_src
+
+
+* Lua
+
+#+begin_src emacs-lisp
+(use-package lua-mode)
+#+end_src
+
+
+* yaml
+
+#+begin_src emacs-lisp
+(use-package yaml-mode)
+#+end_src
+
+
+* Markdown
+
+#+begin_src emacs-lisp
+(defun renz/md-hook ()
+  (visual-fill-column-mode)
+  (setq-local fill-column 120))
+
+(use-package markdown-mode
+  :config
+  (add-hook 'markdown-mode-hook #'renz/md-hook))
+
+(use-package poly-markdown
+  :after (markdown-mode))
+#+end_src
+
+
+** Code syntax in Markdown
+Enable syntax highlighting within code fences for markdown
+
+#+begin_src emacs-lisp
+(use-package poly-mode
+  :mode ("\\.md" . poly-markdown-mode))
+#+end_src
+
+
+* Rust
+Feeling crabby?
+
+#+begin_src emacs-lisp
+(use-package rust-mode)
+#+end_src
+
+
+* Scala
+
+#+begin_src emacs-lisp
+(use-package scala-mode)
+#+end_src
+
+
+* COMMENT Vim-mode
+In case we have to go to the dark place.
+
+#+begin_src emacs-lisp
+(use-package vimrc-mdoe)
+#+end_src
+
+
+* ripgrep
+
+#+begin_src emacs-lisp
+(use-package ripgrep)
+#+end_src
+
+
+* Microsoft Windows
+
+Windows, funnily enough, has some trouble registering the Windows key as a usable modifier for emacs.  In fact, =s-l= will /never/ be an option, since it's handled at the hardware level.  I also add a few nice-to-haves, like setting the default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always install with ~msys64~.
+
+#+begin_src emacs-lisp
+(when (memq system-type '(windows-nt cygwin ms-dos))
+  ;; Set a better font on Windows
+  (set-face-attribute 'default nil :font "Hack NF-12")
+  ;; Alternate ispell when we've got msys on Windows
+  (setq ispell-program-name "aspell.exe")
+  ;; Set default shell to pwsh
+  ;; (setq explicit-shell-file-name "pwsh")
+  ;; Enable use of Winkey as super
+  (setq w32-pass-lwindow-to-system nil)
+  (setq w32-lwindow-modifier 'super) ; Left Windows key
+  (setq w32-pass-rwindow-to-system nil)
+  (setq w32-rwindow-modifier 'super) ; Right Windows key
+  ;; If we want to use a hotkey, we have to also register each
+  ;; combination specifically, like this:
+  (w32-register-hot-key [s-a])
+  (w32-register-hot-key [s-b])
+  (w32-register-hot-key [s-c])
+  (w32-register-hot-key [s-d])
+  (w32-register-hot-key [s-e])
+  (w32-register-hot-key [s-f])
+  (w32-register-hot-key [s-g])
+  (w32-register-hot-key [s-h])
+  (w32-register-hot-key [s-i])
+  (w32-register-hot-key [s-j])
+  (w32-register-hot-key [s-k])
+  ;; s-l can NEVER be registered as a key combination, since Windows
+  ;; handles it at a much lower level.
+  ;; (w32-register-hot-key [s-l])
+  (w32-register-hot-key [s-m])
+  (w32-register-hot-key [s-n])
+  (w32-register-hot-key [s-o])
+  (w32-register-hot-key [s-p])
+  (w32-register-hot-key [s-q])
+  (w32-register-hot-key [s-r])
+  (w32-register-hot-key [s-s])
+  (w32-register-hot-key [s-t])
+  (w32-register-hot-key [s-u])
+  (w32-register-hot-key [s-v])
+  (w32-register-hot-key [s-w])
+  (w32-register-hot-key [s-x])
+  (w32-register-hot-key [s-y])
+  (w32-register-hot-key [s-z]))
+#+end_src
+
+
+* macOS
+Launching Emacs from the typical application launcher or command-space usually won't capture any modifications to =$PATH=, typically handled in a file like =~/.profile= or =~/.bashrc=. So, the main configuration included here is from [[https://github.com/purcell/exec-path-from-shell][exec-path-from-shell]].
+
+#+begin_src emacs-lisp
+(when (eq system-type 'darwin)
+  ;; Uncomment this if we can't install Hack Nerd font
+  ;; (set-face-attribute 'default nil :font "Menlo-14")
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
+  (exec-path-from-shell-initialize))
+#+end_src
+
+
+* Linux
+Very little to do here.  Emacs on on Linux seems to "just work".
+
+#+begin_src emacs-lisp
+(when (eq system-type 'gnu/linux)
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
+#+end_src
+
+
+* Tramp
+
+When using [[https://anaconda.org][conda]], I keep a special conda environment named ~robbmann~ for locally-installed and managed command line utilities.  Sometimes I link these over to ~.local/bin~, and other times I forget.  For the latter case, I tend to include it in a lot of my PATH-setting situations.
+
+#+begin_src emacs-lisp
+(setq vc-handled-backends '(Git))
+(setq file-name-inhibit-locks t)
+(setq tramp-inline-compress-start-size 1000)
+(setq tramp-copy-size-limit 10000)
+(setq tramp-verbose 1)
+#+end_src
+
+eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden reentrant call of Tramp" message and freezing.  In the meantime, this setting was recommended.
+
+#+begin_src emacs-lisp
+(setq tramp-use-ssh-controlmaster-options nil)
+#+end_src
+
+For some time I was having a lot of trouble with slowness over Tramp, and after careful scrutiny of the logs on (I belive) =tramp-verbose 6=, I found out that enabling remote dir-locals was causing a huge bottleneck.  On every operation it would trace up the filesystem tree back to the root directory, scanning for a ~.dir-locals~ file.  Since some of the drives were network-mounted, this caused thousands of network calls per file operation, obviously slowing things down a lot.  Because of this, I've opted to simply disable ~.dir-locals~ over Tramp entirely, since I don't really use it much, if at all.
+
+#+begin_src emacs-lisp :tangle no :eval never
+;; (setq enable-remote-dir-locals t)
+#+end_src
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'tramp
+  (add-to-list 'tramp-remote-path "~/.local/bin")
+  (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
+  ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
+  )
+#+end_src
+
+[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable thing to put in, since I so frequently use VC over tramp.  Fully disabling VC would include this snippet:
+
+#+begin_src emacs-lisp :tangle no :eval never
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+#+end_src
+
+Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs issues]], which I do not currently include.
+
+#+begin_src emacs-lisp :tangle no :eval never
+(setq tramp-default-method "scp")
+(setq projectile--mode-line "Projectile")
+#+begin_src emacs-lisp :tangle no
+(use-package embark)
+#+end_src
+
+I often need to set these in ~/.ssh/config for TRAMP to speed up
+
+#+begin_example
+Host *
+     ControlMaster auto
+     ControlPath ~/.ssh/master-%h:%p
+     ControlPersist 10m
+     ForwardAgent yes
+     ServerAliveInterval 60
+#+end_example
+
+
+* Language server protocol (LSP) with =eglot=
+In Emacs 29, =eglot= will be built-in.  Until then, we have to ensure it's installed explicitly.  Amazingly, I've required basically no configuration to this program in order for it to work in most scenarios.
+
+#+begin_src emacs-lisp
+(use-package eglot)
+(use-package eglot
+  :bind (("C-c l c" . eglot-reconnect)
+         ("C-c l d" . flymake-show-buffer-diagnostics)
+         ("C-c l f f" . eglot-format)
+         ("C-c l f b" . eglot-format-buffer)
+         ("C-c l l" . eglot)
+         ("C-c l r n" . eglot-rename)
+         ("C-c l s" . eglot-shutdown)))
+#+end_src
+
+* COMMENT TreeSitter
+I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /boy/ is it nice!  Nearly every major language has a tree-sitter parser that adds a lot of extra context, highlighting, and syntax-aware selection that old-school regexp simply cannot match.
+
+#+begin_src emacs-lisp
+(use-package tree-sitter
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs)
 #+end_src
 
 
