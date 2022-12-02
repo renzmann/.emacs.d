@@ -140,46 +140,46 @@ Emacs has [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindin
 Special utility functions that we'll bind to user keys.
 
 #+begin_src emacs-lisp
-  (defun renz/--jump-section (dirname prompt extension)
-    "For internal use: prompt for a file under `dirname' in the user
-  emacs config site with matching `extension' regexp"
-    (find-file
-     (concat dirname
-	     (completing-read prompt
-			      (directory-files dirname nil extension)))))
+(defun renz/--jump-section (dirname prompt extension)
+  "For internal use: prompt for a file under `dirname' in the user
+emacs config site with matching `extension' regexp"
+  (find-file
+   (concat dirname
+	   (completing-read prompt
+			    (directory-files dirname nil extension)))))
 
-  (setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
+(setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
 
-  (defun renz/jump-configuration ()
-    "Prompt for a .el file in my site-lisp folder, then go there."
-    (interactive)
-    (renz/--jump-section renz/site-lisp-dir
-			 "Elisp config files: "
-			 ".*\.el$"))
+(defun renz/jump-configuration ()
+  "Prompt for a .el file in my site-lisp folder, then go there."
+  (interactive)
+  (renz/--jump-section renz/site-lisp-dir
+		       "Elisp config files: "
+		       ".*\.el$"))
 
-  (defun renz/jump-org ()
-    "Prompt for an org file in my emacs directory, then go there."
-    (interactive)
-    (renz/--jump-section renz/org-home
-			 "Org files: "
-			 ".*\.org$"))
+(defun renz/jump-org ()
+  "Prompt for an org file in my emacs directory, then go there."
+  (interactive)
+  (renz/--jump-section renz/org-home
+		       "Org files: "
+		       ".*\.org$"))
 
-  (defun renz/jump-init ()
-    (interactive)
-    (find-file (expand-file-name "README.org" user-emacs-directory))
-    (consult-org-heading))
+(defun renz/jump-init ()
+  (interactive)
+  (find-file (expand-file-name "README.org" user-emacs-directory))
+  (consult-org-heading))
 
-  (defun renz/find-tag ()
-    "Use completing-read to navigate to a tag"
-    (interactive)
-    (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
+(defun renz/find-tag ()
+  "Use completing-read to navigate to a tag"
+  (interactive)
+  (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
 
-  (defun renz/consult-grep ()
-    "Live grep using `rg' if found, otherwise `grep'"
-    (interactive)
-    (if (executable-find "rg")
-	(consult-ripgrep)
-      (consult-grep)))
+(defun renz/consult-grep ()
+  "Live grep using `rg' if found, otherwise `grep'"
+  (interactive)
+  (if (executable-find "rg")
+      (consult-ripgrep)
+    (consult-grep)))
 #+end_src
 
 ** Expanded/better defaults
