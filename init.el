@@ -29,8 +29,11 @@
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:2 ends here
 
-;; [[file:README.org::*Theme][Theme:1]]
+;; [[file:README.org::*Theme: ~ef-themes~][Theme: ~ef-themes~:1]]
 (use-package ef-themes
+  :demand t
+  :bind ("C-c m" . ef-themes-toggle)
+
   :init
   (setq ef-themes-headings
         '((0 . (1.9))
@@ -43,9 +46,10 @@
           (7 . (1.2))
           (t . (1.1))))
   (setq ef-themes-to-toggle '(ef-cherie ef-light))
+
   :config
   (load-theme 'ef-cherie :no-confirm))
-;; Theme:1 ends here
+;; Theme: ~ef-themes~:1 ends here
 
 ;; [[file:README.org::*Keybound functions][Keybound functions:1]]
 (defun renz/--jump-section (dirname prompt extension)
@@ -157,51 +161,13 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c i l") #'renz/jump-configuration)
 ;; =C-c i= jump to a header in my configuration:1 ends here
 
-;; [[file:README.org::*=C-c j= imenu][=C-c j= imenu:1]]
-(global-set-key (kbd "C-c j") #'consult-imenu)  ; matches major modes that use C-c C-j
-;; =C-c j= imenu:1 ends here
-
 ;; [[file:README.org::*=C-c k= kill all but one space][=C-c k= kill all but one space:1]]
 (global-set-key (kbd "C-c k") #'just-one-space)
 ;; =C-c k= kill all but one space:1 ends here
 
-;; [[file:README.org::*=C-c l= Everything LSP (eglot)][=C-c l= Everything LSP (eglot):1]]
-(global-set-key (kbd "C-c l c") #'eglot-reconnect)
-(global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
-(global-set-key (kbd "C-c l f f") #'eglot-format)
-(global-set-key (kbd "C-c l f b") #'eglot-format-buffer)
-(global-set-key (kbd "C-c l l") #'eglot)
-(global-set-key (kbd "C-c l r n") #'eglot-rename)
-(global-set-key (kbd "C-c l s") #'eglot-shutdown)
-;; =C-c l= Everything LSP (eglot):1 ends here
-
-;; [[file:README.org::*=C-c m= toggle ef-theme][=C-c m= toggle ef-theme:1]]
-(global-set-key (kbd "C-c m") #'ef-themes-toggle)
-;; =C-c m= toggle ef-theme:1 ends here
-
-;; [[file:README.org::*=C-c n= toggle minimap][=C-c n= toggle minimap:1]]
-(global-set-key (kbd "C-c n") #'minimap-mode)
-;; =C-c n= toggle minimap:1 ends here
-
-;; [[file:README.org::*=C-c o= Org bindings][=C-c o= Org bindings:1]]
-(global-set-key (kbd "C-c o a") #'org-agenda)
-(global-set-key (kbd "C-c o b d") #'org-babel-detangle)
-(global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
-(global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
-(global-set-key (kbd "C-c o j") #'consult-org-heading)
-(global-set-key (kbd "C-c o k") #'org-babel-remove-result)
-(global-set-key (kbd "C-c o o") #'renz/jump-org)
-(global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
-(global-set-key (kbd "C-c o y") #'ox-clip-image-to-clipboard)
-;; =C-c o= Org bindings:1 ends here
-
 ;; [[file:README.org::*=C-c q= replace regexp][=C-c q= replace regexp:1]]
 (global-set-key (kbd "C-c q") #'replace-regexp)
 ;; =C-c q= replace regexp:1 ends here
-
-;; [[file:README.org::*=C-c r= recent files][=C-c r= recent files:1]]
-(global-set-key (kbd "C-c r") #'consult-recent-file)
-;; =C-c r= recent files:1 ends here
 
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
 (global-set-key (kbd "C-c s s") #'shell)
@@ -218,10 +184,6 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c u") #'renz/consult-grep)
 ;; =C-c u= Consult grep/rg:1 ends here
 
-;; [[file:README.org::*=C-c v= Consult line][=C-c v= Consult line:1]]
-(global-set-key (kbd "C-c v") #'consult-line)
-;; =C-c v= Consult line:1 ends here
-
 ;; [[file:README.org::*=C-c w=][=C-c w=:1]]
 (global-set-key (kbd "C-c w") #'whitespace-mode)
 ;; =C-c w=:1 ends here
@@ -229,11 +191,6 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*=C-c x=][=C-c x=:1]]
 ;; (global-set-key (kbd "C-c x") #')
 ;; =C-c x=:1 ends here
-
-;; [[file:README.org::*=C-c y= Yank inner/outer][=C-c y= Yank inner/outer:1]]
-(global-set-key (kbd "C-c y i") #'copy-inner)
-(global-set-key (kbd "C-c y o") #'copy-outer)
-;; =C-c y= Yank inner/outer:1 ends here
 
 ;; [[file:README.org::*=C-c z=][=C-c z=:1]]
 ;; (global-set-key (kbd "C-c z") #')
@@ -287,6 +244,7 @@ emacs config site with matching `extension' regexp"
         ;; Other custom bindings
         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
         ("<help> a" . consult-apropos)            ;; orig. apropos-command
+        ("C-c r" . consult-recent-file)
 
         ;; M-g bindings (goto-map)
         ("M-g e" . consult-compile-error)
@@ -344,6 +302,19 @@ emacs config site with matching `extension' regexp"
         xref-show-definitions-function #'consult-xref)
   )
 ;; Consult:1 ends here
+
+;; [[file:README.org::*Mode line][Mode line:1]]
+(setq column-number-mode t
+      mode-line-in-non-selected-windows t
+      display-battery-mode t
+      display-time-day-and-date t)
+
+(display-time)
+;; Mode line:1 ends here
+
+;; [[file:README.org::*=eldoc=][=eldoc=:1]]
+(setq eldoc-echo-area-use-multiline-p nil)
+;; =eldoc=:1 ends here
 
 ;; [[file:README.org::*Remember minibuffer history][Remember minibuffer history:1]]
 (setq history-length 25)
@@ -535,7 +506,10 @@ emacs config site with matching `extension' regexp"
 ;; Backup and auto-save files:1 ends here
 
 ;; [[file:README.org::*Code syntax in Markdown][Code syntax in Markdown:1]]
-(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
+(use-package poly-mode
+  :after markdown
+  :config
+  (add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode)))
 ;; Code syntax in Markdown:1 ends here
 
 ;; [[file:README.org::*Esup: startup time profiling][Esup: startup time profiling:1]]
@@ -549,19 +523,6 @@ emacs config site with matching `extension' regexp"
 (use-package restart-emacs
   :bind ("C-c x r" . restart-emacs))
 ;; Reloading Emacs:1 ends here
-
-;; [[file:README.org::*Mode line][Mode line:1]]
-(setq column-number-mode t
-      mode-line-in-non-selected-windows t
-      display-battery-mode t
-      display-time-day-and-date t)
-
-(display-time)
-;; Mode line:1 ends here
-
-;; [[file:README.org::*=eldoc=][=eldoc=:1]]
-(setq eldoc-echo-area-use-multiline-p nil)
-;; =eldoc=:1 ends here
 
 ;; [[file:README.org::*Magit][Magit:1]]
 (use-package magit)
@@ -757,10 +718,22 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Org-mode][Org-mode:7]]
 (use-package org
   :hook
-  (org-mode . (lambda () (progn
+  ((org-mode . (lambda () (progn
                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))))
-  :hook (org-mode . visual-line-mode)
+   (org-mode . visual-line-mode))
+
+  :bind
+  (("C-c o a" . org-agenda)
+   ("C-c o b d" . org-babel-detangle)
+   ("C-c o b o" . org-babel-tangle-jump-to-org)
+   ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
+   ("C-c o j" . consult-org-heading)
+   ("C-c o k" . org-babel-remove-result)
+   ("C-c o o" . renz/jump-org)
+   ("C-c o w" . renz/org-kill-src-block)
+   ("C-c o y" . ox-clip-image-to-clipboard))
+
   :config
   (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
@@ -807,6 +780,7 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
 (use-package org-modern
+  :after org
   :config
   (setq
    ;; Edit settings
@@ -834,243 +808,20 @@ Jumps at tangled code from org src block."
   (global-org-modern-mode))
 ;; =org-modern=:1 ends here
 
-;; [[file:README.org::*Code block syntax highlighting for HTML export][Code block syntax highlighting for HTML export:1]]
-(use-package htmlize
-  :after (org))
-;; Code block syntax highlighting for HTML export:1 ends here
-
-;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
-(use-package ox-clip)
-;; Copying images out of org-babel:1 ends here
-
-;; [[file:README.org::*SQL][SQL:1]]
-(defun renz/sql-mode-hook ()
-  (setq tab-width 4)
-  (setq sqlformat-command 'sql-formatter))
-
-(defvar renz/sql-indentation-offsets-alist
-  '((syntax-error sqlind-report-sytax-error)
-    (in-string sqlind-report-runaway-string)
-    (comment-continuation sqlind-indent-comment-continuation)
-    (comment-start sqlind-indent-comment-start)
-    (toplevel 0)
-    (in-block +)
-    (in-begin-block +)
-    (block-start 0)
-    (block-end 0)
-    (declare-statement +)
-    (package ++)
-    (package-body 0)
-    (create-statement +)
-    (defun-start +)
-    (labeled-statement-start 0)
-    (statement-continuation +)
-    (nested-statement-open sqlind-use-anchor-indentation +)
-    (nested-statement-continuation sqlind-use-previous-line-indentation)
-    (nested-statement-close sqlind-use-anchor-indentation)
-    (with-clause sqlind-use-anchor-indentation)
-    (with-clause-cte +)
-    (with-clause-cte-cont ++)
-    (case-clause 0)
-    (case-clause-item sqlind-use-anchor-indentation +)
-    (case-clause-item-cont sqlind-right-justify-clause)
-    (select-clause 0)
-    (select-column sqlind-indent-select-column)
-    (select-column-continuation sqlind-indent-select-column +)
-    (select-join-condition ++)
-    (select-table sqlind-indent-select-table)
-    (select-table-continuation sqlind-indent-select-table +)
-    (in-select-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
-    (insert-clause 0)
-    (in-insert-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
-    (delete-clause 0)
-    (in-delete-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
-    (update-clause 0)
-    (in-update-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)))
-
-(defun renz/sql-indentation-offsets ()
-  (setq sqlind-indentation-offsets-alist
-        renz/sql-indentation-offsets-alist)
-  (setq sqlind-basic-offset 4))
-
-(add-hook 'sqlind-minor-mode-hook #'renz/sql-indentation-offsets)
-(add-to-list 'auto-mode-alist '("\\.hql" . sql-mode))
-(add-hook 'sql-mode-hook #'renz/sql-mode-hook)
-(add-hook 'sql-mode-hook 'sqlup-mode)
-(add-hook 'sql-mode-hook 'sqlind-minor-mode)
-(add-hook 'sql-interactive-mode-hook 'sqlup-mode)
-
-;; TODO we've modified sqlformat for sql-formatter.  Need a way to pass in configuration values
-(use-package sqlformat
-  :load-path "packages/"
-  :after (sql))
-
-(use-package hive2
-  :load-path "packages/"
-  :after (sql))
-
-(use-package ob-sql-mode
-
-  :after (sql))
-;; SQL:1 ends here
-
-;; [[file:README.org::*Python][Python:1]]
-(with-eval-after-load 'compile
-  (add-to-list 'compilation-error-regexp-alist-alist
-               '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
-  (add-to-list 'compilation-error-regexp-alist 'pyright))
-;; Python:1 ends here
-
-;; [[file:README.org::*Python][Python:2]]
-(with-eval-after-load 'python
-  (if (executable-find "mypy")
-      (setq python-check-command "mypy"))
-  (if (executable-find "pyright")
-      (setq python-check-command "pyright"))
-  (add-hook 'python-mode-hook #'blacken-mode))
-;; Python:2 ends here
-
-;; [[file:README.org::*Python][Python:6]]
-(put 'python-check-command 'safe-local-variable #'stringp)
-(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
-;; Python:6 ends here
-
-;; [[file:README.org::*pyrightconfig.json, Tramp, and eglot][pyrightconfig.json, Tramp, and eglot:1]]
-(use-package pyrightconfig
-  :after (python))
-;; pyrightconfig.json, Tramp, and eglot:1 ends here
-
-;; [[file:README.org::*blacken][blacken:1]]
-(use-package blacken
-  :bind ("C-c p" . blacken-mode)
-  :after (python))
-;; blacken:1 ends here
-
-;; [[file:README.org::*Haskell][Haskell:1]]
-(use-package haskell-mode)
-;; Haskell:1 ends here
-
-;; [[file:README.org::*Golang][Golang:1]]
-(use-package go-mode)
-;; Golang:1 ends here
-
-;; [[file:README.org::*Lua][Lua:1]]
-(use-package lua-mode)
-;; Lua:1 ends here
-
-;; [[file:README.org::*yaml][yaml:1]]
-(use-package yaml-mode)
-;; yaml:1 ends here
-
-;; [[file:README.org::*Markdown][Markdown:1]]
-(defun renz/md-hook ()
-  (visual-fill-column-mode)
-  (setq-local fill-column 120))
-
-(use-package markdown-mode
-  :config
-  (add-hook 'markdown-mode-hook #'renz/md-hook))
-
-(use-package poly-markdown
-  :after (markdown-mode))
-;; Markdown:1 ends here
-
-;; [[file:README.org::*Rust][Rust:1]]
-(use-package rust-mode)
-;; Rust:1 ends here
-
-;; [[file:README.org::*Scala][Scala:1]]
-(use-package scala-mode)
-;; Scala:1 ends here
-
-;; [[file:README.org::*ripgrep][ripgrep:1]]
-(use-package ripgrep)
-;; ripgrep:1 ends here
-
-;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
-(when (memq system-type '(windows-nt cygwin ms-dos))
-  ;; Set a better font on Windows
-  (set-face-attribute 'default nil :font "Hack NF-12")
-  ;; Alternate ispell when we've got msys on Windows
-  (setq ispell-program-name "aspell.exe")
-  ;; Set default shell to pwsh
-  ;; (setq explicit-shell-file-name "pwsh")
-  ;; Enable use of Winkey as super
-  (setq w32-pass-lwindow-to-system nil)
-  (setq w32-lwindow-modifier 'super) ; Left Windows key
-  (setq w32-pass-rwindow-to-system nil)
-  (setq w32-rwindow-modifier 'super) ; Right Windows key
-  ;; If we want to use a hotkey, we have to also register each
-  ;; combination specifically, like this:
-  (w32-register-hot-key [s-a])
-  (w32-register-hot-key [s-b])
-  (w32-register-hot-key [s-c])
-  (w32-register-hot-key [s-d])
-  (w32-register-hot-key [s-e])
-  (w32-register-hot-key [s-f])
-  (w32-register-hot-key [s-g])
-  (w32-register-hot-key [s-h])
-  (w32-register-hot-key [s-i])
-  (w32-register-hot-key [s-j])
-  (w32-register-hot-key [s-k])
-  ;; s-l can NEVER be registered as a key combination, since Windows
-  ;; handles it at a much lower level.
-  ;; (w32-register-hot-key [s-l])
-  (w32-register-hot-key [s-m])
-  (w32-register-hot-key [s-n])
-  (w32-register-hot-key [s-o])
-  (w32-register-hot-key [s-p])
-  (w32-register-hot-key [s-q])
-  (w32-register-hot-key [s-r])
-  (w32-register-hot-key [s-s])
-  (w32-register-hot-key [s-t])
-  (w32-register-hot-key [s-u])
-  (w32-register-hot-key [s-v])
-  (w32-register-hot-key [s-w])
-  (w32-register-hot-key [s-x])
-  (w32-register-hot-key [s-y])
-  (w32-register-hot-key [s-z]))
-;; Microsoft Windows:1 ends here
-
-;; [[file:README.org::*macOS][macOS:1]]
-(when (eq system-type 'darwin)
-  ;; Uncomment this if we can't install Hack Nerd font
-  ;; (set-face-attribute 'default nil :font "Menlo-14")
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
-  (exec-path-from-shell-initialize))
-;; macOS:1 ends here
-
-;; [[file:README.org::*Linux][Linux:1]]
-(when (eq system-type 'gnu/linux)
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
-;; Linux:1 ends here
-
-;; [[file:README.org::*Tramp][Tramp:1]]
-(setq vc-handled-backends '(Git))
-(setq file-name-inhibit-locks t)
-(setq tramp-inline-compress-start-size 1000)
-(setq tramp-copy-size-limit 10000)
-(setq tramp-verbose 1)
-;; Tramp:1 ends here
-
-;; [[file:README.org::*Tramp][Tramp:2]]
-(setq tramp-use-ssh-controlmaster-options nil)
-;; Tramp:2 ends here
-
-;; [[file:README.org::*Tramp][Tramp:4]]
-(with-eval-after-load 'tramp
-  (add-to-list 'tramp-remote-path "~/.local/bin")
-  (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
-  ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
-  )
-;; Tramp:4 ends here
-
-;; [[file:README.org::*Language server protocol (LSP) with =eglot=][Language server protocol (LSP) with =eglot=:1]]
-(use-package eglot)
-;; Language server protocol (LSP) with =eglot=:1 ends here
+;; [[file:README.org::*Language Server Protocol (LSP) with ~eglot~][Language Server Protocol (LSP) with ~eglot~:1]]
+(use-package eglot
+  :bind (("C-c l c" . eglot-reconnect)
+         ("C-c l d" . flymake-show-buffer-diagnostics)
+         ("C-c l f f" . eglot-format)
+         ("C-c l f b" . eglot-format-buffer)
+         ("C-c l l" . eglot)
+         ("C-c l r n" . eglot-rename)
+         ("C-c l s" . eglot-shutdown)))
+;; Language Server Protocol (LSP) with ~eglot~:1 ends here
 
 ;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]
-(use-package ahk-mode)
+(use-package ahk-mode
+  :mode "\\.ahk\\'")
 ;; AutoHotkey:1 ends here
 
 ;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
@@ -1080,19 +831,26 @@ Jumps at tangled code from org src block."
 ;; eww - search engine and browser:1 ends here
 
 ;; [[file:README.org::*csv-mode][csv-mode:1]]
-(use-package csv-mode)
+(use-package csv-mode
+  :mode "\\.csv\\'")
 ;; csv-mode:1 ends here
 
 ;; [[file:README.org::*diff-hl][diff-hl:1]]
-(use-package diff-hl)
+(use-package diff-hl
+  :bind ("C-c v" . diff-hl-mode))
 ;; diff-hl:1 ends here
 
 ;; [[file:README.org::*GNU Plot][GNU Plot:1]]
-(use-package gnuplot)
+(use-package gnuplot
+  :after (org))
 ;; GNU Plot:1 ends here
 
 ;; [[file:README.org::*change-inner][change-inner:1]]
-(use-package change-inner)
+(use-package change-inner
+  :bind (("C-c c i" . change-inner)
+         ("C-c c o" . change-outer)
+         ("C-c y i" . yank-inner)
+         ("C-c y o" . yank-outer)))
 ;; change-inner:1 ends here
 
 (provide 'init.el)
