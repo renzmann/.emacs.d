@@ -29,8 +29,11 @@
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:2 ends here
 
-;; [[file:README.org::*Theme][Theme:1]]
+;; [[file:README.org::*Theme: ~ef-themes~][Theme: ~ef-themes~:1]]
 (use-package ef-themes
+  :demand t
+  :bind ("C-c m" . ef-themes-toggle)
+
   :init
   (setq ef-themes-headings
         '((0 . (1.9))
@@ -43,9 +46,10 @@
           (7 . (1.2))
           (t . (1.1))))
   (setq ef-themes-to-toggle '(ef-cherie ef-light))
+
   :config
   (load-theme 'ef-cherie :no-confirm))
-;; Theme:1 ends here
+;; Theme: ~ef-themes~:1 ends here
 
 ;; [[file:README.org::*Keybound functions][Keybound functions:1]]
 (defun renz/--jump-section (dirname prompt extension)
@@ -153,57 +157,17 @@ emacs config site with matching `extension' regexp"
 ;; =C-c h=:1 ends here
 
 ;; [[file:README.org::*=C-c i= jump to a header in my configuration][=C-c i= jump to a header in my configuration:1]]
-(global-set-key (kbd "C-c i") #'renz/jump-init)
+(global-set-key (kbd "C-c i i") #'renz/jump-init)
+(global-set-key (kbd "C-c i l") #'renz/jump-configuration)
 ;; =C-c i= jump to a header in my configuration:1 ends here
-
-;; [[file:README.org::*=C-c j= imenu][=C-c j= imenu:1]]
-(global-set-key (kbd "C-c j") #'consult-imenu)  ; matches major modes that use C-c C-j
-;; =C-c j= imenu:1 ends here
 
 ;; [[file:README.org::*=C-c k= kill all but one space][=C-c k= kill all but one space:1]]
 (global-set-key (kbd "C-c k") #'just-one-space)
 ;; =C-c k= kill all but one space:1 ends here
 
-;; [[file:README.org::*=C-c l= Everything LSP (eglot)][=C-c l= Everything LSP (eglot):1]]
-(global-set-key (kbd "C-c l d") #'flymake-show-buffer-diagnostics)
-(global-set-key (kbd "C-c l f f") #'eglot-format)
-(global-set-key (kbd "C-c l f b") #'eglot-format-buffer)
-(global-set-key (kbd "C-c l l") #'eglot)
-(global-set-key (kbd "C-c l r n") #'eglot-rename)
-(global-set-key (kbd "C-c l s") #'eglot-shutdown)
-;; =C-c l= Everything LSP (eglot):1 ends here
-
-;; [[file:README.org::*=C-c m= toggle ef-theme][=C-c m= toggle ef-theme:1]]
-(global-set-key (kbd "C-c m") #'ef-themes-toggle)
-;; =C-c m= toggle ef-theme:1 ends here
-
-;; [[file:README.org::*=C-c n= toggle minimap][=C-c n= toggle minimap:1]]
-(global-set-key (kbd "C-c n") #'minimap-mode)
-;; =C-c n= toggle minimap:1 ends here
-
-;; [[file:README.org::*=C-c o= Org bindings][=C-c o= Org bindings:1]]
-(global-set-key (kbd "C-c o a") #'org-agenda)
-(global-set-key (kbd "C-c o b d") #'org-babel-detangle)
-(global-set-key (kbd "C-c o b o") #'org-babel-tangle-jump-to-org)
-(global-set-key (kbd "C-c o b s") #'renz/org-babel-tangle-jump-to-src)
-(global-set-key (kbd "C-c o j") #'consult-org-heading)
-(global-set-key (kbd "C-c o k") #'org-babel-remove-result)
-(global-set-key (kbd "C-c o o") #'renz/jump-org)
-(global-set-key (kbd "C-c o w") #'renz/org-kill-src-block)
-(global-set-key (kbd "C-c o y") #'ox-clip-image-to-clipboard)
-;; =C-c o= Org bindings:1 ends here
-
-;; [[file:README.org::*=C-c p= blacken-mode][=C-c p= blacken-mode:1]]
-(global-set-key (kbd "C-c p") #'blacken-mode)
-;; =C-c p= blacken-mode:1 ends here
-
 ;; [[file:README.org::*=C-c q= replace regexp][=C-c q= replace regexp:1]]
 (global-set-key (kbd "C-c q") #'replace-regexp)
 ;; =C-c q= replace regexp:1 ends here
-
-;; [[file:README.org::*=C-c r= recent files][=C-c r= recent files:1]]
-(global-set-key (kbd "C-c r") #'consult-recent-file)
-;; =C-c r= recent files:1 ends here
 
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
 (global-set-key (kbd "C-c s s") #'shell)
@@ -220,10 +184,6 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c u") #'renz/consult-grep)
 ;; =C-c u= Consult grep/rg:1 ends here
 
-;; [[file:README.org::*=C-c v= Consult line][=C-c v= Consult line:1]]
-(global-set-key (kbd "C-c v") #'consult-line)
-;; =C-c v= Consult line:1 ends here
-
 ;; [[file:README.org::*=C-c w=][=C-c w=:1]]
 (global-set-key (kbd "C-c w") #'whitespace-mode)
 ;; =C-c w=:1 ends here
@@ -231,11 +191,6 @@ emacs config site with matching `extension' regexp"
 ;; [[file:README.org::*=C-c x=][=C-c x=:1]]
 ;; (global-set-key (kbd "C-c x") #')
 ;; =C-c x=:1 ends here
-
-;; [[file:README.org::*=C-c y= Yank inner/outer][=C-c y= Yank inner/outer:1]]
-(global-set-key (kbd "C-c y i") #'copy-inner)
-(global-set-key (kbd "C-c y o") #'copy-outer)
-;; =C-c y= Yank inner/outer:1 ends here
 
 ;; [[file:README.org::*=C-c z=][=C-c z=:1]]
 ;; (global-set-key (kbd "C-c z") #')
@@ -289,6 +244,7 @@ emacs config site with matching `extension' regexp"
         ;; Other custom bindings
         ("M-y" . consult-yank-pop)                ;; orig. yank-pop
         ("<help> a" . consult-apropos)            ;; orig. apropos-command
+        ("C-c r" . consult-recent-file)
 
         ;; M-g bindings (goto-map)
         ("M-g e" . consult-compile-error)
@@ -347,6 +303,24 @@ emacs config site with matching `extension' regexp"
   )
 ;; Consult:1 ends here
 
+;; [[file:README.org::*Mode line][Mode line:1]]
+(setq column-number-mode t
+      mode-line-in-non-selected-windows t
+      display-battery-mode t
+      display-time-day-and-date t)
+
+(display-time)
+;; Mode line:1 ends here
+
+;; [[file:README.org::*=eldoc=][=eldoc=:1]]
+(setq eldoc-echo-area-use-multiline-p nil)
+;; =eldoc=:1 ends here
+
+;; [[file:README.org::*Remember minibuffer history][Remember minibuffer history:1]]
+(setq history-length 25)
+(savehist-mode 1)
+;; Remember minibuffer history:1 ends here
+
 ;; [[file:README.org::*Use ~aspell~ by default for spell checking][Use ~aspell~ by default for spell checking:1]]
 (when (executable-find "aspell")
   (setq ispell-program-name "aspell"))
@@ -362,14 +336,15 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
 (use-package visual-fill-column
-
   :config
-  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode)
-  (setq-default fill-column 120))
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 ;; Fill-column:1 ends here
 
+;; [[file:README.org::*Fill-column][Fill-column:2]]
+(setq-default fill-column 80)
+;; Fill-column:2 ends here
+
 ;; [[file:README.org::*Scroll bar][Scroll bar:1]]
-;; Scroll bar
 (scroll-bar-mode -1)
 ;; Scroll bar:1 ends here
 
@@ -381,11 +356,13 @@ emacs config site with matching `extension' regexp"
 (modify-all-frames-parameters
  '((right-divider-width . 40)
    (internal-border-width . 40)))
+
 (dolist (face '(window-divider
                 window-divider-first-pixel
                 window-divider-last-pixel))
   (face-spec-reset-face face)
   (set-face-foreground face (face-attribute 'default :background)))
+
 (set-face-background 'fringe (face-attribute 'default :background))
 ;; Window margins and fringe:1 ends here
 
@@ -450,7 +427,6 @@ emacs config site with matching `extension' regexp"
 ;; Automatically create matching parens in programming modes:1 ends here
 
 ;; [[file:README.org::*Delete whitespace on save][Delete whitespace on save:1]]
-;; (add-hook 'prog-mode-hook 'whitespace-mode)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 ;; Delete whitespace on save:1 ends here
 
@@ -529,33 +505,17 @@ emacs config site with matching `extension' regexp"
       )
 ;; Backup and auto-save files:1 ends here
 
-;; [[file:README.org::*Code syntax in Markdown][Code syntax in Markdown:1]]
-(add-to-list 'auto-mode-alist '("\\.md" . poly-markdown-mode))
-;; Code syntax in Markdown:1 ends here
-
 ;; [[file:README.org::*Esup: startup time profiling][Esup: startup time profiling:1]]
 (use-package esup
+  :bind ("C-c x p")
   :config
   (setq esup-depth 0))
 ;; Esup: startup time profiling:1 ends here
 
 ;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
 (use-package restart-emacs
-  )
+  :bind ("C-c x r" . restart-emacs))
 ;; Reloading Emacs:1 ends here
-
-;; [[file:README.org::*Mode line][Mode line:1]]
-(setq column-number-mode t
-      mode-line-in-non-selected-windows t
-      display-battery-mode t
-      display-time-day-and-date t)
-
-(display-time)
-;; Mode line:1 ends here
-
-;; [[file:README.org::*=eldoc=][=eldoc=:1]]
-(setq eldoc-echo-area-use-multiline-p nil)
-;; =eldoc=:1 ends here
 
 ;; [[file:README.org::*Magit][Magit:1]]
 (use-package magit)
@@ -751,10 +711,22 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Org-mode][Org-mode:7]]
 (use-package org
   :hook
-  (org-mode . (lambda () (progn
+  ((org-mode . (lambda () (progn
                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))))
-  :hook (org-mode . visual-line-mode)
+   (org-mode . visual-line-mode))
+
+  :bind
+  (("C-c o a" . org-agenda)
+   ("C-c o b d" . org-babel-detangle)
+   ("C-c o b o" . org-babel-tangle-jump-to-org)
+   ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
+   ("C-c o j" . consult-org-heading)
+   ("C-c o k" . org-babel-remove-result)
+   ("C-c o o" . renz/jump-org)
+   ("C-c o w" . renz/org-kill-src-block)
+   ("C-c o y" . ox-clip-image-to-clipboard))
+
   :config
   (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
@@ -801,6 +773,7 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
 (use-package org-modern
+  :after org
   :config
   (setq
    ;; Edit settings
@@ -827,6 +800,17 @@ Jumps at tangled code from org src block."
 
   (global-org-modern-mode))
 ;; =org-modern=:1 ends here
+
+;; [[file:README.org::*Language Server Protocol (LSP) with ~eglot~][Language Server Protocol (LSP) with ~eglot~:1]]
+(use-package eglot
+  :bind (("C-c l c" . eglot-reconnect)
+         ("C-c l d" . flymake-show-buffer-diagnostics)
+         ("C-c l f f" . eglot-format)
+         ("C-c l f b" . eglot-format-buffer)
+         ("C-c l l" . eglot)
+         ("C-c l r n" . eglot-rename)
+         ("C-c l s" . eglot-shutdown)))
+;; Language Server Protocol (LSP) with ~eglot~:1 ends here
 
 ;; [[file:README.org::*Code block syntax highlighting for HTML export][Code block syntax highlighting for HTML export:1]]
 (use-package htmlize
@@ -936,6 +920,7 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*blacken][blacken:1]]
 (use-package blacken
+  :bind ("C-c p" . blacken-mode)
   :after (python))
 ;; blacken:1 ends here
 
@@ -967,6 +952,11 @@ Jumps at tangled code from org src block."
 (use-package poly-markdown
   :after (markdown-mode))
 ;; Markdown:1 ends here
+
+;; [[file:README.org::*Code syntax in Markdown][Code syntax in Markdown:1]]
+(use-package poly-mode
+  :mode ("\\.md" . poly-markdown-mode))
+;; Code syntax in Markdown:1 ends here
 
 ;; [[file:README.org::*Rust][Rust:1]]
 (use-package rust-mode)
@@ -1060,10 +1050,19 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*Language server protocol (LSP) with =eglot=][Language server protocol (LSP) with =eglot=:1]]
 (use-package eglot)
+(use-package eglot
+  :bind (("C-c l c" . eglot-reconnect)
+         ("C-c l d" . flymake-show-buffer-diagnostics)
+         ("C-c l f f" . eglot-format)
+         ("C-c l f b" . eglot-format-buffer)
+         ("C-c l l" . eglot)
+         ("C-c l r n" . eglot-rename)
+         ("C-c l s" . eglot-shutdown)))
 ;; Language server protocol (LSP) with =eglot=:1 ends here
 
 ;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]
-(use-package ahk-mode)
+(use-package ahk-mode
+  :mode "\\.ahk\\'")
 ;; AutoHotkey:1 ends here
 
 ;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
@@ -1073,19 +1072,26 @@ Jumps at tangled code from org src block."
 ;; eww - search engine and browser:1 ends here
 
 ;; [[file:README.org::*csv-mode][csv-mode:1]]
-(use-package csv-mode)
+(use-package csv-mode
+  :mode "\\.csv\\'")
 ;; csv-mode:1 ends here
 
 ;; [[file:README.org::*diff-hl][diff-hl:1]]
-(use-package diff-hl)
+(use-package diff-hl
+  :bind ("C-c v" . diff-hl-mode))
 ;; diff-hl:1 ends here
 
 ;; [[file:README.org::*GNU Plot][GNU Plot:1]]
-(use-package gnuplot)
+(use-package gnuplot
+  :after (org))
 ;; GNU Plot:1 ends here
 
 ;; [[file:README.org::*change-inner][change-inner:1]]
-(use-package change-inner)
+(use-package change-inner
+  :bind (("C-c c i" . change-inner)
+         ("C-c c o" . change-outer)
+         ("C-c y i" . yank-inner)
+         ("C-c y o" . yank-outer)))
 ;; change-inner:1 ends here
 
 (provide 'init.el)

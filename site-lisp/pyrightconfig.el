@@ -21,7 +21,8 @@
 ;; along with this program. If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;; Sets `pyrightconfig.json' in the git root directory.  Useful for using eglot + tramp + virtualenv + python
+;; Sets `pyrightconfig.json' in the git root directory.  Useful for
+;; using eglot + tramp + virtualenv + python
 
 ;;; Code:
 
@@ -39,7 +40,8 @@ select."
          (base-dir (vc-git-root default-directory))
          (out-file (expand-file-name "pyrightconfig.json" base-dir))
          (out-contents (json-encode (list :venvPath venvPath :venv venv))))
-    (with-temp-file out-file (insert out-contents))))
+    (with-temp-file out-file (insert out-contents))
+    (message (concat "Configured `" out-file "` to use environment `" venv-dir))))
 
 (provide 'pyrightconfig)
 
