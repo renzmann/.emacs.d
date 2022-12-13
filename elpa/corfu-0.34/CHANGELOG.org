@@ -1,0 +1,37 @@
+#+title: corfu.el - Changelog
+#+author: Daniel Mendler
+#+language: en
+
+* Version 0.34 (2022-12-03)
+
+- Bugfixes
+- Popup frame code updated for Emacs 29. Please report any issues.
+- =corfu-popupinfo-direction=: Variable must be a list of directions.
+- Support height adjustments of =corfu-default= face
+
+* Version 0.33 (2022-11-21)
+
+- =corfu-popupinfo=: Bugfixes
+
+* Version 0.31 (2022-11-20)
+
+- =corfu-echo=, =corfu-quick=: Bugfixes for interaction issue.
+
+* Version 0.30 (2022-11-19)
+
+- =corfu-popupinfo=: Bugfixes and improvements.
+
+* Version 0.29 (2022-11-19)
+
+- BREAKING: Extract the =corfu-echo= extension from =corfu.el=. In order to see echo
+  messages, enable =corfu-echo-mode=. You probably want to enable either
+  =corfu-echo-mode= or =corfu-popupinfo-mode=.
+- BREAKING: Rename =corfu-echo-documentation= to =corfu-echo-delay=.
+- Add =corfu-popupinfo= extension to display candidate documentation and location
+  in a small child frame next to the candidate menu. This extension has been
+  contributed by Yuwei Tian who assigned copyright to the FSF. The extension
+  supersedes Yuwei's =corfu-doc= package.
+
+* Version 0.28 (2022-10-16)
+
+- Start of changelog.
