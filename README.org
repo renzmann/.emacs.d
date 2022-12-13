@@ -528,6 +528,13 @@ My settings for base emacs.  Assuming I ran with /no/ plugins (ala ~emacs -Q~), 
 would still set most of these by hand at one point or another.
 
 
+** Allow for ~narrow-to-region~
+
+#+begin_src emacs-lisp
+(put 'narrow-to-region 'disabled nil)
+#+end_src
+
+
 ** Mode line
 
 #+begin_src emacs-lisp

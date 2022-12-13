@@ -303,6 +303,10 @@ emacs config site with matching `extension' regexp"
   )
 ;; Consult:1 ends here
 
+;; [[file:README.org::*Allow for ~narrow-to-region~][Allow for ~narrow-to-region~:1]]
+(put 'narrow-to-region 'disabled nil)
+;; Allow for ~narrow-to-region~:1 ends here
+
 ;; [[file:README.org::*Mode line][Mode line:1]]
 (setq column-number-mode t
       mode-line-in-non-selected-windows t
