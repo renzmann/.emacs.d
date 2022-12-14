@@ -47,3 +47,5 @@ elpa/ox-clip-20220117.1909/html-clip-w32.py
 org/
 pyrightconfig.json
 history
+*.ipynb_checkpoints*
+*.ipynb
