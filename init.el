@@ -718,7 +718,7 @@ Jumps at tangled code from org src block."
   ((org-mode . (lambda () (progn
                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))))
-   (org-mode . visual-line-mode))
+   )
 
   :bind
   (("C-c o a" . org-agenda)
@@ -947,11 +947,12 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Markdown][Markdown:1]]
 (defun renz/md-hook ()
   (visual-fill-column-mode)
-  (setq-local fill-column 120))
+  (setq-local fill-column 80))
 
 (use-package markdown-mode
   :config
-  (add-hook 'markdown-mode-hook #'renz/md-hook))
+  ;; (add-hook 'markdown-mode-hook #'renz/md-hook)
+  )
 
 (use-package poly-markdown
   :after (markdown-mode))

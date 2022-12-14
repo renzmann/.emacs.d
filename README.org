@@ -850,9 +850,8 @@ I usually leave the tool bar disabled
 (tool-bar-mode -1)
 #+end_src
 
-#+RESULTS:
-
-The MENU bar, on the other hand =(menu-bar-mode)=, is very handy, and I don't think I'll ever disable it.
+The MENU bar, on the other hand =(menu-bar-mode)=, is very handy, and I don't
+think I'll ever disable it.
 
 
 ** Ignore risky .dir-locals.el
@@ -907,7 +906,10 @@ Emacs 29 introduced smooth, pixel-level scrolling, which removes much of the
 
 
 ** Backup and auto-save files
-Keep all backup files in a temporary folder.  At the moment I have some "file not found" errors popping up during auto-save on Windows.  Once I debug that, I'll uncomment the second part.
+Keep all backup files in a temporary folder.  At the moment I have some "file
+not found" errors popping up during auto-save on Windows.  Once I debug that,
+I'll uncomment the second part.
+
 #+begin_src emacs-lisp
 (setq backup-directory-alist
       '(("." . "~/.emacs.d/backups/"))
@@ -918,7 +920,9 @@ Keep all backup files in a temporary folder.  At the moment I have some "file no
 
 
 * Esup: startup time profiling
-[[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work around of a bug where esup tries to step into the byte-compiled version of `cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
+[[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work
+around of a bug where esup tries to step into the byte-compiled version of
+`cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
 
 #+begin_src emacs-lisp
 (use-package esup
@@ -1359,7 +1363,7 @@ latter over the former, I've removed the =org-startup-indented= call.
   ((org-mode . (lambda () (progn
                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors))))
-   (org-mode . visual-line-mode))
+   )
 
   :bind
   (("C-c o a" . org-agenda)
@@ -1500,7 +1504,8 @@ Offers two functions:
 #+end_src
 
 * SQL
-I'm not yet sure how to get Hive-SQL (~.hql~) recognized with the ~:mode~ keyword.  When I figure that out I'll move that part up.
+I'm not yet sure how to get Hive-SQL (~.hql~) recognized with the ~:mode~ keyword.
+When I figure that out I'll move that part up.
 
 #+begin_src emacs-lisp
 (defun renz/sql-mode-hook ()
@@ -1576,7 +1581,8 @@ I'm not yet sure how to get Hive-SQL (~.hql~) recognized with the ~:mode~ keywor
 
 * Python
 
-The =M-x compile= feature does not recognize or parse ~pyright~ error messages out of the box, so I add that support myself.  Here's an example error message:
+The =M-x compile= feature does not recognize or parse ~pyright~ error messages out
+of the box, so I add that support myself.  Here's an example error message:
 
 #+begin_example
 /home/robb/tmp/errors.py/
@@ -1587,7 +1593,8 @@ The =M-x compile= feature does not recognize or parse ~pyright~ error messages o
 2 errors, 1 warning, 0 informations
 #+end_example
 
-To get the basic =M-g M-n= and =M-g M-p= navigation working, we just need a regex to parse file name, line, and column number.
+To get the basic =M-g M-n= and =M-g M-p= navigation working, we just need a regex to
+parse file name, line, and column number.
 
 #+begin_src emacs-lisp
 (with-eval-after-load 'compile
@@ -1596,9 +1603,12 @@ To get the basic =M-g M-n= and =M-g M-p= navigation working, we just need a rege
   (add-to-list 'compilation-error-regexp-alist 'pyright))
 #+end_src
 
-It would be nice if we could also capture the =\\(error\\|warning\\)= part as "KIND", but I'm struggling to get it working.
+It would be nice if we could also capture the =\\(error\\|warning\\)= part as
+"KIND", but I'm struggling to get it working.
 
-Another nice vanilla feature of ~python-mode~ is =M-x python-check=, which runs a pre-specified linter.  Setting that to ~mypy~ or ~pyright~ if either of those programs exist is a small time saver.
+Another nice vanilla feature of ~python-mode~ is =M-x python-check=, which runs a
+pre-specified linter.  Setting that to ~mypy~ or ~pyright~ if either of those
+programs exist is a small time saver.
 
 #+begin_src emacs-lisp
 (with-eval-after-load 'python
@@ -1609,13 +1619,16 @@ Another nice vanilla feature of ~python-mode~ is =M-x python-check=, which runs 
   (add-hook 'python-mode-hook #'blacken-mode))
 #+end_src
 
-At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The culprit was "App Execution Aliases" with python and python3 redirecting to the windows store.  Using this fixed it:
+At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The
+culprit was "App Execution Aliases" with python and python3 redirecting to the
+windows store.  Using this fixed it:
 
 #+begin_example
      winkey -> Manage app execution aliases -> uncheck python and python3
 #+end_example
 
-Also on Windows - a `pip install` of `pyreadline3' is required to make tab-completion work at all. It provides the `readline' import symbol.
+Also on Windows - a `pip install` of `pyreadline3' is required to make
+tab-completion work at all. It provides the `readline' import symbol.
 
 Virtualenvs require ~.dir-locals.el~ to have something like:
 
@@ -1625,7 +1638,10 @@ Virtualenvs require ~.dir-locals.el~ to have something like:
 
 However, this only operates on `run-python' shells.
 
-~pyvenv~ solves the otherwise very annoying problem of getting external tools like `compile' and `eshell' to also use our virtual environment's python.  I may still use .dir-locals.el to set things like the python-check-command on a per-project basis, though.
+~pyvenv~ solves the otherwise very annoying problem of getting external tools like
+`compile' and `eshell' to also use our virtual environment's python.  I may
+still use .dir-locals.el to set things like the python-check-command on a
+per-project basis, though.
 
 #+begin_src emacs-lisp :tangle no :eval never
 (when (package-installed-p 'pyvenv)
@@ -1636,9 +1652,12 @@ However, this only operates on `run-python' shells.
   )
 #+end_src
 
-I don't use ~pyvenv~ much now though, since the vast majority of my development time is spent over Tramp, which ~pyvenv~ does not support.
+I don't use ~pyvenv~ much now though, since the vast majority of my development
+time is spent over Tramp, which ~pyvenv~ does not support.
 
-For a while, it looks like Emacs was trying out something called [[https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html][semantic-mode]], which looks a lot like a precursor to what we now know as the [[https://microsoft.github.io/language-server-protocol/][Language Server Protocol]].  Enabling that mode would look like this:
+For a while, it looks like Emacs was trying out something called [[https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html][semantic-mode]],
+which looks a lot like a precursor to what we now know as the [[https://microsoft.github.io/language-server-protocol/][Language Server
+Protocol]].  Enabling that mode would look like this:
 
 #+begin_src emacs-lisp :tangle no :eval never
 (add-hook 'python-mode-hook 'semantic-mode)
@@ -1651,24 +1670,35 @@ Don't mark the check command and virtualenv variables as unsafe.
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
 #+end_src
 
-To have ~eglot~ always start up for a python buffer, we would tangle this line into ~init.el~.  However, this can cause a significant loading delay over Tramp, and I would prefer snappy, simple access with LSP provided on an as-needed basis.
+To have ~eglot~ always start up for a python buffer, we would tangle this line
+into ~init.el~.  However, this can cause a significant loading delay over Tramp,
+and I would prefer snappy, simple access with LSP provided on an as-needed
+basis.
 
 #+begin_src emacs-lisp :tangle no :eval never
 (add-hook 'python-mode-hook 'eglot-ensure)
 #+end_src
 
-Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with Jupyter kernels from org-mode.
+Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with
+Jupyter kernels from org-mode.
 
 ** pyrightconfig.json, Tramp, and eglot
 
-The most consistent way to get =eglot= to properly configure the python virtual environment with =pyright= is to have a static file at the root of the project, called ~pyrightconfig.json~.  I wrote a short plugin that allows me to select a directory using =completing-read= and have emacs write the content of ~pyrightconfig.json~ based on what I selected, in the appropriate directory.
+The most consistent way to get =eglot= to properly configure the python virtual
+environment with =pyright= is to have a static file at the root of the project,
+called ~pyrightconfig.json~.  I wrote a short plugin that allows me to select a
+directory using =completing-read= and have emacs write the content of
+~pyrightconfig.json~ based on what I selected, in the appropriate directory.
 
 #+begin_src emacs-lisp
 (use-package pyrightconfig
   :after (python))
 #+end_src
 
-Configuring pyright this way rather than "activating" an environment through Emacs (ala =pythonic-activate= or similar) means we can be running the language server in more than one project at a time, each pointing to its respective virtual environment.
+Configuring pyright this way rather than "activating" an environment through
+Emacs (ala =pythonic-activate= or similar) means we can be running the language
+server in more than one project at a time, each pointing to its respective
+virtual environment.
 
 ** blacken
 Formatting a buffer with =black= has never been easier!
@@ -1711,14 +1741,19 @@ Winner of "cutest language mascot" since 2009.
 
 * Markdown
 
+Some folks like to write markdown without hard line breaks.  When viewing those
+documents, I can use the ~renz/md-hook~ to view it as if there were line breaks in
+it.
+
 #+begin_src emacs-lisp
 (defun renz/md-hook ()
   (visual-fill-column-mode)
-  (setq-local fill-column 120))
+  (setq-local fill-column 80))
 
 (use-package markdown-mode
   :config
-  (add-hook 'markdown-mode-hook #'renz/md-hook))
+  ;; (add-hook 'markdown-mode-hook #'renz/md-hook)
+  )
 
 (use-package poly-markdown
   :after (markdown-mode))
