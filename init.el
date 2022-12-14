@@ -950,7 +950,7 @@ Jumps at tangled code from org src block."
   (setq-local fill-column 80))
 
 (use-package markdown-mode
-  :config
+  ;; :config
   ;; (add-hook 'markdown-mode-hook #'renz/md-hook)
   )
 
