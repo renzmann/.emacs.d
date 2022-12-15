@@ -149,10 +149,21 @@ I LOVE these themes from =ef-themes=:
   - =ef-winter=
 
 I've mostly settled on ~ef-cherie~, but sometimes switch to the others above.
+
+** Gave up on Nord
+
 It's worth mentioning that I've tried [[https://www.nordtheme.com/ports/emacs/][nord-theme]] a couple times and found that
 the legibility or contrast wasn't quite good enough in some modes.  Though I
 still employ Nord for my terminal config in Alacritty or Kitty, where it looks
-/excellent/.
+/excellent/.  I also still actively use the [[https://github.com/EdenEast/nightfox.nvim][nordfox]] theme in Neovim, which sports
+a beautiful TreeSitter integration.
+
+** Messed up colors in TTY mode
+
+In TTY mode, I use [[https://sw.kovidgoyal.net/kitty/][kitty]].  I have had trouble with dark blue or red themes in
+Alacritty, and on Windows terminal.  There is probably some hacking I could do
+on my ~$TERM~ variable to try and sort that out, but since it just kinda works in
+Kitty for me, I haven't spent too much time looking into it.
 
 
 * Keybindings
