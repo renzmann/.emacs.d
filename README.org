@@ -975,6 +975,7 @@ it with =$=.  The built-in `vc` is /synchronous/, and will block Emacs entirely
 until it's done.  So some of the performance hit from using Magit is well worth
 it in situations like that.
 
+
 * Autocompletion
 Emacs offers incredible depth and freedom when configuring methods that
 automatically complete text.  First, we set the "completion style", which is the
@@ -1515,6 +1516,7 @@ Offers two functions:
   :after org)
 #+end_src
 
+
 * SQL
 I'm not yet sure how to get Hive-SQL (~.hql~) recognized with the ~:mode~ keyword.
 When I figure that out I'll move that part up.
@@ -1592,6 +1594,7 @@ call it.
 (use-package sqlformat
   :after (sql))
 #+end_src
+
 
 * Python
 
@@ -1723,6 +1726,7 @@ Formatting a buffer with =black= has never been easier!
   :bind ("C-c p" . blacken-mode)
   :after (python))
 #+end_src
+
 
 * Haskell
 Enemy of the state.
@@ -1964,6 +1968,7 @@ this program in order for it to work in most scenarios.
          ("C-c l s" . eglot-shutdown)))
 #+end_src
 
+
 * COMMENT TreeSitter
 I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /boy/ is it nice!  Nearly
 every major language has a tree-sitter parser that adds a lot of extra context,
@@ -2051,11 +2056,13 @@ the source files.
 (add-hook 'after-init-hook #'global-emojify-mode)
 #+end_src
 
+
 * Start a server for =emacsclient=
 
 #+begin_src emacs-lisp
 (server-start)
 #+end_src
+
 
 * Don't forget about these
 There are several other interesting options that I haven't tried out yet, including:
