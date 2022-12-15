@@ -160,8 +160,10 @@ In the unlikely event that something below is loaded incorrectly and causes
 initialization to stop, I like to have my basic key command loaded early,
 especially so that navigating to the error can happen more quickly.
 
-Emacs has [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html][some standards]] about where user-configured keys should go.  Other
-non-standard modifications are marked as such.
+Emacs has
+[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html][some
+standards]] about where user-configured keys should go.  Other non-standard
+modifications are marked as such.
 
 
 ** Keybound functions
