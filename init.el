@@ -45,7 +45,7 @@
           (6 . (1.3))
           (7 . (1.2))
           (t . (1.1))))
-  (setq ef-themes-to-toggle '(ef-cherie ef-light))
+  (setq ef-themes-to-toggle '(ef-cherie ef-summer))
 
   :config
   (load-theme 'ef-cherie :no-confirm))
