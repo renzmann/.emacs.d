@@ -457,7 +457,6 @@ emacs config site with matching `extension' regexp"
 ;; Compilation:1 ends here
 
 ;; [[file:README.org::*Compilation][Compilation:2]]
-;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
 (defun renz/colorize-compilation-buffer ()
   "Enable colors in the *compilation* buffer."
   (require 'ansi-color)
@@ -475,10 +474,13 @@ emacs config site with matching `extension' regexp"
 (advice-add 'risky-local-variable-p :override #'ignore)
 ;; Ignore risky .dir-locals.el:1 ends here
 
-;; [[file:README.org::*Prefer =rg= over =grep=][Prefer =rg= over =grep=:1]]
+;; [[file:README.org::*Prefer =rg= and =fd= over =grep= and =find=][Prefer =rg= and =fd= over =grep= and =find=:1]]
 (when (executable-find "rg")
   (setq grep-program "rg"))
-;; Prefer =rg= over =grep=:1 ends here
+
+(when (executable-find "fd")
+  (setq find-program "fd"))
+;; Prefer =rg= and =fd= over =grep= and =find=:1 ends here
 
 ;; [[file:README.org::*Make ~dired~ human-readable][Make ~dired~ human-readable:1]]
 (setq dired-listing-switches "-alFh")
@@ -591,10 +593,10 @@ emacs config site with matching `extension' regexp"
 ;; Minibuffer completion with ~vertico~:2 ends here
 
 ;; [[file:README.org::*Completion at point with ~corfu~][Completion at point with ~corfu~:1]]
-(use-package corfu-terminal
-  :unless window-system
-  :config
-  (corfu-terminal-mode +1))
+(unless (display-graphic-p)
+  (use-package corfu-terminal
+    :config
+    (corfu-terminal-mode +1)))
 
 (use-package corfu
   :demand t
@@ -822,7 +824,8 @@ Jumps at tangled code from org src block."
 ;; Code block syntax highlighting for HTML export:1 ends here
 
 ;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
-(use-package ox-clip)
+(use-package ox-clip
+  :after org)
 ;; Copying images out of org-babel:1 ends here
 
 ;; [[file:README.org::*SQL][SQL:1]]
@@ -882,19 +885,17 @@ Jumps at tangled code from org src block."
 (add-hook 'sql-mode-hook 'sqlind-minor-mode)
 (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
 
-;; TODO we've modified sqlformat for sql-formatter.  Need a way to pass in configuration values
-(use-package sqlformat
-  :load-path "packages/"
-  :after (sql))
-
 (use-package hive2
-  :load-path "packages/"
   :after (sql))
 
 (use-package ob-sql-mode
-
   :after (sql))
 ;; SQL:1 ends here
+
+;; [[file:README.org::*sql-formatter][sql-formatter:1]]
+(use-package sqlformat
+  :after (sql))
+;; sql-formatter:1 ends here
 
 ;; [[file:README.org::*Python][Python:1]]
 (with-eval-after-load 'compile
@@ -904,7 +905,8 @@ Jumps at tangled code from org src block."
 ;; Python:1 ends here
 
 ;; [[file:README.org::*Python][Python:2]]
-(with-eval-after-load 'python
+(use-package python
+  :config
   (if (executable-find "mypy")
       (setq python-check-command "mypy"))
   (if (executable-find "pyright")

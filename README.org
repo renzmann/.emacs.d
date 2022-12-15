@@ -821,8 +821,8 @@ I just think that's a funny sentence.
 
 ** Compilation
 As new text appears, the default behavior is for it to spill off the bottom
-where we can't see it.  This causes the window to follow new text as it is
-printed.
+where we can't see it.  Instead, I prefer the window to scroll along with text
+as it appears
 
 #+begin_src emacs-lisp
 (setq compilation-scroll-output t)
@@ -832,7 +832,6 @@ Enable colors in the =*compilation*= buffer.  Provided by a [[https://stackoverf
 answer]].
 
 #+begin_src emacs-lisp
-;; Enable colors in *compilation* buffer: https://stackoverflow.com/a/3072831/13215205
 (defun renz/colorize-compilation-buffer ()
   "Enable colors in the *compilation* buffer."
   (require 'ansi-color)
@@ -862,11 +861,14 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 #+end_src
 
 
-** Prefer =rg= over =grep=
+** Prefer =rg= and =fd= over =grep= and =find=
 
 #+begin_src emacs-lisp
 (when (executable-find "rg")
   (setq grep-program "rg"))
+
+(when (executable-find "fd")
+  (setq find-program "fd"))
 #+end_src
 
 
@@ -1083,16 +1085,19 @@ stick as close as possible to the native Emacs internal API as possible, without
 reinventing the whell.  In my experience, this has meant far fewer integration
 troubles with other packages.  It uses child frames for displaying the
 completion candidates, however, which means we need a separate =corfu-terminal=
-extension for it to work in TTY mode.
+extension for it to work in TTY mode.  While ~use-package~ has the ~:unless~ and ~:if~
+keywords, I seem to have trouble getting them to actually work with
+~display-graphic-p~, and the official instructions with ~window-system~ wasn't
+working for me.  Hence, it's wrapped in an ~unless~ block.
 
 I've also enabled the TNG (Tab-n-go) style of completion, as laid out in corfu's
 [[https://github.com/minad/corfu#tab-and-go-completion][README]].
 
 #+begin_src emacs-lisp
-(use-package corfu-terminal
-  :unless window-system
-  :config
-  (corfu-terminal-mode +1))
+(unless (display-graphic-p)
+  (use-package corfu-terminal
+    :config
+    (corfu-terminal-mode +1)))
 
 (use-package corfu
   :demand t
@@ -1139,8 +1144,9 @@ I've also enabled the TNG (Tab-n-go) style of completion, as laid out in corfu's
 
 There are some cases over Tramp, however, where corfu will case some performance
 issues.  Especially in the case where some folders under the =/= root might be
-mounted over a network.  In that case, I sometimes add =renz/disable-corfu-remote=
-to select hooks, such as =shell-mode=.
+mounted over a network.  In that case, I sometimes call this
+=renz/disable-corfu-remote=, which only disables corfu in the current buffer if
+it's being handled by Tramp.
 
 #+begin_src emacs-lisp
 (defun renz/disable-corfu-remote ()
@@ -1225,7 +1231,7 @@ on Windows).  Maybe there's something we can do to address that, but maybe not
 worth the time.
 
 
-*** Obsolete: company-mode
+*** COMMENT Company mode
 For a while I was experimenting with ~company-mode~.  This section is obsolete and
 not tangled into the final ~init.el~, since I don't use company anymore.  I do
 keep it around for historical reasons, though, in case if I ever decide to go
@@ -1242,9 +1248,10 @@ back.
 (setq company-tooltip-margin 2)
 #+end_src
 
-Some things that also looked interesting:
+*** Live ~*Completions*~ buffer
 
-  * [[https://github.com/oantolin/live-completions][Live updating =*Completions*= buffer by oantolin]]
+[[https://github.com/oantolin/live-completions][An interesting idea by oantolin.]]  Given how modest in scope it is, and how close
+to Vanilla Emacs it stays, I might actually try it.
 
 
 *** In case of emergency: ~fzf~
@@ -1423,9 +1430,9 @@ latter over the former, I've removed the =org-startup-indented= call.
 #+end_src
 
 
-** Org Roam
+** COMMENT Org Roam
 
-#+begin_src emacs-lisp :tangle no :eval never
+#+begin_src emacs-lisp
 (use-package org-roam
   :after (org)
   :config
@@ -1500,7 +1507,8 @@ Offers two functions:
 + ~ox-clip-formatted-copy~
 + ~ox-clip-image-to-clipboard~
 #+begin_src emacs-lisp
-(use-package ox-clip)
+(use-package ox-clip
+  :after org)
 #+end_src
 
 * SQL
@@ -1564,20 +1572,22 @@ When I figure that out I'll move that part up.
 (add-hook 'sql-mode-hook 'sqlind-minor-mode)
 (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
 
-;; TODO we've modified sqlformat for sql-formatter.  Need a way to pass in configuration values
-(use-package sqlformat
-  :load-path "packages/"
-  :after (sql))
-
 (use-package hive2
-  :load-path "packages/"
   :after (sql))
 
 (use-package ob-sql-mode
-
   :after (sql))
 #+end_src
 
+*** TODO sql-formatter
+I've modified [[https://github.com/purcell/sqlformat][sqlformat]] for use with [[https://www.npmjs.com/package/sql-formatter][sql-formatter]], but I need to find a way to
+pass in a JSON of configuration values to the command line interface when we
+call it.
+
+#+begin_src emacs-lisp
+(use-package sqlformat
+  :after (sql))
+#+end_src
 
 * Python
 
@@ -1611,7 +1621,8 @@ pre-specified linter.  Setting that to ~mypy~ or ~pyright~ if either of those
 programs exist is a small time saver.
 
 #+begin_src emacs-lisp
-(with-eval-after-load 'python
+(use-package python
+  :config
   (if (executable-find "mypy")
       (setq python-check-command "mypy"))
   (if (executable-find "pyright")
@@ -1633,15 +1644,17 @@ tab-completion work at all. It provides the `readline' import symbol.
 Virtualenvs require ~.dir-locals.el~ to have something like:
 
 #+begin_src emacs-lisp :tangle no :eval never
-   ((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
+((python-mode . ((python-shell-virtualenv-root . "/path/to/my/.venv"))))
 #+end_src
 
 However, this only operates on `run-python' shells.
 
 ~pyvenv~ solves the otherwise very annoying problem of getting external tools like
 `compile' and `eshell' to also use our virtual environment's python.  I may
-still use .dir-locals.el to set things like the python-check-command on a
-per-project basis, though.
+still use ~.dir-locals.el~ to set things like the ~python-check-command~ on a
+per-project basis, though.  I don't use ~pyvenv~ much now though, since the vast
+majority of my development time is spent over Tramp, which ~pyvenv~ does not
+support.  When I did, the code looked a bit like this:
 
 #+begin_src emacs-lisp :tangle no :eval never
 (when (package-installed-p 'pyvenv)
@@ -1652,12 +1665,10 @@ per-project basis, though.
   )
 #+end_src
 
-I don't use ~pyvenv~ much now though, since the vast majority of my development
-time is spent over Tramp, which ~pyvenv~ does not support.
-
 For a while, it looks like Emacs was trying out something called [[https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html][semantic-mode]],
 which looks a lot like a precursor to what we now know as the [[https://microsoft.github.io/language-server-protocol/][Language Server
-Protocol]].  Enabling that mode would look like this:
+Protocol]].  Enabling it was done through adding the ~semantic-mode~ hook to your
+language's major mode hook:
 
 #+begin_src emacs-lisp :tangle no :eval never
 (add-hook 'python-mode-hook 'semantic-mode)
