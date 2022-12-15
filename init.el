@@ -1101,5 +1101,9 @@ Jumps at tangled code from org src block."
          ("C-c y o" . yank-outer)))
 ;; change-inner:1 ends here
 
+;; [[file:README.org::*Start a server for =emacsclient=][Start a server for =emacsclient=:1]]
+(server-start)
+;; Start a server for =emacsclient=:1 ends here
+
 (provide 'init.el)
 ;;; init.el ends here

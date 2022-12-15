@@ -2044,6 +2044,11 @@ the source files.
 (add-hook 'after-init-hook #'global-emojify-mode)
 #+end_src
 
+* Start a server for =emacsclient=
+
+#+begin_src emacs-lisp
+(server-start)
+#+end_src
 
 * Don't forget about these
 There are several other interesting options that I haven't tried out yet, including:
