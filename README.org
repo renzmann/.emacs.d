@@ -57,6 +57,17 @@ code, and so a change of medium felt prudent.  In my case, that's the vererable
 commentary and code together.
 
 
+* Inspirations
+Here's where I put the typical quote about standing on one form of shoulders or
+another.  I steal quite a lot from other, more qualified Emacs community
+contributors, such as:
+
+- [[https://protesilaos.com/][Protesilaos Stavrou]]
+- [[https://panadestein.github.io/emacsd/][Ramón Panadestein]]
+- [[https://www.masteringemacs.org/][Mickey Petersen]]
+
+
+
 * Header
 To comply with the Emacs [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][conventions for libraries]], the tangled init.el must
 have the following header and [[Footer][footer:]]
@@ -108,6 +119,80 @@ There are also a few hand-made packages I keep around in a special
 
 #+begin_src emacs-lisp
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
+#+end_src
+
+
+* OS-specific Configuration
+
+
+** Microsoft Windows
+
+Windows, funnily enough, has some trouble registering the Windows key as a usable modifier for emacs.  In fact, =s-l= will /never/ be an option, since it's handled at the hardware level.  I also add a few nice-to-haves, like setting the default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always install with ~msys64~.
+
+#+begin_src emacs-lisp
+(when (memq system-type '(windows-nt cygwin ms-dos))
+  ;; Set a better font on Windows
+  (set-face-attribute 'default nil :font "Hack NF-12")
+  ;; Alternate ispell when we've got msys on Windows
+  (setq ispell-program-name "aspell.exe")
+  ;; Set default shell to pwsh
+  ;; (setq explicit-shell-file-name "pwsh")
+  ;; Enable use of Winkey as super
+  (setq w32-pass-lwindow-to-system nil)
+  (setq w32-lwindow-modifier 'super) ; Left Windows key
+  (setq w32-pass-rwindow-to-system nil)
+  (setq w32-rwindow-modifier 'super) ; Right Windows key
+  ;; If we want to use a hotkey, we have to also register each
+  ;; combination specifically, like this:
+  (w32-register-hot-key [s-a])
+  (w32-register-hot-key [s-b])
+  (w32-register-hot-key [s-c])
+  (w32-register-hot-key [s-d])
+  (w32-register-hot-key [s-e])
+  (w32-register-hot-key [s-f])
+  (w32-register-hot-key [s-g])
+  (w32-register-hot-key [s-h])
+  (w32-register-hot-key [s-i])
+  (w32-register-hot-key [s-j])
+  (w32-register-hot-key [s-k])
+  ;; s-l can NEVER be registered as a key combination, since Windows
+  ;; handles it at a much lower level.
+  ;; (w32-register-hot-key [s-l])
+  (w32-register-hot-key [s-m])
+  (w32-register-hot-key [s-n])
+  (w32-register-hot-key [s-o])
+  (w32-register-hot-key [s-p])
+  (w32-register-hot-key [s-q])
+  (w32-register-hot-key [s-r])
+  (w32-register-hot-key [s-s])
+  (w32-register-hot-key [s-t])
+  (w32-register-hot-key [s-u])
+  (w32-register-hot-key [s-v])
+  (w32-register-hot-key [s-w])
+  (w32-register-hot-key [s-x])
+  (w32-register-hot-key [s-y])
+  (w32-register-hot-key [s-z]))
+#+end_src
+
+
+** macOS
+Launching Emacs from the typical application launcher or command-space usually won't capture any modifications to =$PATH=, typically handled in a file like =~/.profile= or =~/.bashrc=. So, the main configuration included here is from [[https://github.com/purcell/exec-path-from-shell][exec-path-from-shell]].
+
+#+begin_src emacs-lisp
+(when (eq system-type 'darwin)
+  ;; Uncomment this if we can't install Hack Nerd font
+  ;; (set-face-attribute 'default nil :font "Menlo-14")
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
+  (exec-path-from-shell-initialize))
+#+end_src
+
+
+** Linux
+Very little to do here.  Emacs on on Linux seems to "just work".
+
+#+begin_src emacs-lisp
+(when (eq system-type 'gnu/linux)
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
 #+end_src
 
 
@@ -166,381 +251,9 @@ on my ~$TERM~ variable to try and sort that out, but since it just kinda works i
 Kitty for me, I haven't spent too much time looking into it.
 
 
-* Keybindings
-In the unlikely event that something below is loaded incorrectly and causes
-initialization to stop, I like to have my basic key command loaded early,
-especially so that navigating to the error can happen more quickly.
-
-Emacs has
-[[https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html][some
-standards]] about where user-configured keys should go.  Other non-standard
-modifications are marked as such.
-
-
-** Keybound functions
-Special utility functions that we'll bind to user keys.
-
-#+begin_src emacs-lisp
-(defun renz/--jump-section (dirname prompt extension)
-  "For internal use: prompt for a file under `dirname' in the user
-emacs config site with matching `extension' regexp"
-  (find-file
-   (concat dirname
-	   (completing-read prompt
-			    (directory-files dirname nil extension)))))
-
-(setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
-
-(defun renz/jump-configuration ()
-  "Prompt for a .el file in my site-lisp folder, then go there."
-  (interactive)
-  (renz/--jump-section renz/site-lisp-dir
-		       "Elisp config files: "
-		       ".*\.el$"))
-
-(defun renz/jump-org ()
-  "Prompt for an org file in my emacs directory, then go there."
-  (interactive)
-  (renz/--jump-section renz/org-home
-		       "Org files: "
-		       ".*\.org$"))
-
-(defun renz/jump-init ()
-  (interactive)
-  (find-file (expand-file-name "README.org" user-emacs-directory))
-  (consult-org-heading))
-
-(defun renz/find-tag ()
-  "Use completing-read to navigate to a tag"
-  (interactive)
-  (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
-
-(defun renz/consult-grep ()
-  "Live grep using `rg' if found, otherwise `grep'"
-  (interactive)
-  (if (executable-find "rg")
-      (consult-ripgrep)
-    (consult-grep)))
-#+end_src
-
-
-** Expanded/better defaults
-These convenient chords allow for fast text replacement by holding =C-M-= and
-rapidly typing =k= and =h= in succession.
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
-(global-set-key (kbd "C-M-h") 'backward-kill-sexp)
-#+end_src
-
-The next line UNBINDS the suspend-frame keybinding.  Accidentally minimizing on
-the GUI was frustrating as hell, so now I use =C-x C-z= if I /really/ want to
-suspend the frame.
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-z") #'zap-up-to-char)
-#+end_src
-
-Hippie-expand [[https://www.masteringemacs.org/article/text-expansion-hippie-expand][is purported]] to be a better version of ~dabbrev~, but I rather like
-the default behavior of ~dabbrev~.  I typically have ~hippie-expand~ on a dedicated
-key, and sometimes re-bind the default =M-/= as well, depending on my current
-workflow.
-
-#+begin_src emacs-lisp
-(global-set-key [remap dabbrev-expand] 'hippie-expand)
-#+end_src
-
-~ibuffer~ is a strictly superior, built-in version of its counterpart.
-
-#+begin_src emacs-lisp
-(global-set-key [remap list-buffers] 'ibuffer)
-#+end_src
-
-The most common situation where I'm running ~flymake~ would be for spelling in
-prose, or diagnostics from a language server.  In either case, I like having
-next/previous on easy to reach chords.
-
-#+begin_src emacs-lisp
-(with-eval-after-load 'flymake
-  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
-  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
-#+end_src
-
-When using ~isearch~ to jump to things, it's sometimes convenient to re-position
-point on the opposite side of where the search would normally put it.  E.g. when
-using =C-r=, but we want point to be at the end of the word when we're done.
-Provided by a [[https://emacs.stackexchange.com/a/52554][stack overflow answer]].
-
-#+begin_src emacs-lisp
-(define-key isearch-mode-map (kbd "<C-return>")
-  (defun isearch-done-opposite (&optional nopush edit)
-    "End current search in the opposite side of the match."
-    (interactive)
-    (funcall #'isearch-done nopush edit)
-    (when isearch-other-end (goto-char isearch-other-end))))
-#+end_src
-
-
-** C-c bindings
-=C-c= <letter> is always free for users.  It may seem like overkill how I set a
-header for each possible =C-c= combination, but it's increcibly handy when I want
-to jump directly to one of these headings while in another buffer.  See
-e.g. =renz/jump-init=, which allows me to narrow in on a particular key I'd like
-to bind by leveraging =completing-read=.
-
-#+begin_src emacs-lisp
-;; (global-set-key (kbd "C-c a") #')
-(global-set-key (kbd "C-c b") #'scroll-bar-mode)
-#+end_src
-
-
-*** =C-c c= change inner/outer
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c c i") #'change-inner)
-(global-set-key (kbd "C-c c o") #'change-outer)
-#+end_src
-
-
-*** =C-c d= jump to a tag
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c d") #'renz/find-tag)
-#+end_src
-
-
-*** =C-c e=
-
-#+begin_src emacs-lisp
-;; (global-set-key (kbd "C-c e") #')
-#+end_src
-
-
-*** =C-c f= hippie-expand
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c f") #'hippie-expand)
-#+end_src
-
-
-*** =C-c g= find file at point
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c g") #'ffap)  ; inspired by vim `gf`
-#+end_src
-
-
-*** =C-c h=
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c h") #'consult-history)
-#+end_src
-
-
-*** =C-c i= jump to a header in my configuration
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c i i") #'renz/jump-init)
-(global-set-key (kbd "C-c i l") #'renz/jump-configuration)
-#+end_src
-
-
-*** =C-c k= kill all but one space
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c k") #'just-one-space)
-#+end_src
-
-
-*** =C-c q= replace regexp
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c q") #'replace-regexp)
-#+end_src
-
-
-*** =C-c s= shell
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c s s") #'shell)
-(global-set-key (kbd "C-c s e") #'eshell)
-(global-set-key (kbd "C-c s t") #'ansi-term)
-(global-set-key (kbd "C-c s v") #'vterm)
-#+end_src
-
-
-*** =C-c t=
-
-#+begin_src emacs-lisp
-;; (global-set-key (kbd "C-c t") #')
-#+end_src
-
-
-*** =C-c u= Consult grep/rg
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c u") #'renz/consult-grep)
-#+end_src
-
-
-*** =C-c w=
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c w") #'whitespace-mode)
-#+end_src
-
-
-*** =C-c x=
-
-#+begin_src emacs-lisp
-;; (global-set-key (kbd "C-c x") #')
-#+end_src
-
-
-*** =C-c z=
-
-#+begin_src emacs-lisp
-;; (global-set-key (kbd "C-c z") #')
-#+end_src
-
-
-*** =C-c= Other bindings
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c ;") #'comment-line)  ; TTY-friendly
-(global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
-(global-set-key (kbd "C-c <SPC>") #'mark-sexp)  ;; TTY-friendly
-#+end_src
-
-
-** Meta/Alt Modifications
-
-#+begin_src emacs-lisp
-(with-eval-after-load 'dired
-(define-key dired-mode-map (kbd "M-S-j") 'dired-goto-file))
-#+end_src
-
-
-** F5-F9
-Like the =C-c <letter>= bindings, these are reserved for users.  In practice, even
-though there are few of these keys, I tend to forget which is which.  So I wind
-up using things bound to my =C-c= keymaps instead, since they come from a natural,
-nested language.
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "<f5>") #'compile)
-(global-set-key (kbd "M-<f5>") #'recompile)
-;; (global-set-key (kbd "<f6>") #')
-;; (global-set-key (kbd "M-<f6>") #')
-;; (global-set-key (kbd "<f7>") #')
-;; (global-set-key (kbd "M-<f7>") #')
-;; (global-set-key (kbd "<f8>") #')
-;; (global-set-key (kbd "M-<f8>") #')
-;; (global-set-key (kbd "<f9>") #'vterm)
-(global-set-key (kbd "M-<f9>") #'eshell)
-(global-set-key (kbd "S-<f9>") #'ansi-term)
-(global-set-key (kbd "s-<f9>") #'shell)
-#+end_src
-
-
-** Super bindings
-See the [[Microsoft Windows][Microsoft Windows]] section for some hackery required to get these working
-on their operating system.
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "s-c") #'kill-ring-save)
-(global-set-key (kbd "s-q") #'save-buffers-kill-terminal)
-(global-set-key (kbd "s-s") #'save-buffer)
-(global-set-key (kbd "s-t") #'tab-new)
-(global-set-key (kbd "s-v") #'yank)
-#+end_src
-
-
-* Consult
-Forms a large foundation of my workflow.  [[https://github.com/minad/consult][This package]] provides a strictly
-superior experience switching between buffers, performing =grep= or =rg= with live
-results as you type, and scanning through a document for lines matching an
-expression with =consult-line=.
-
-#+begin_src emacs-lisp
-(use-package consult
-
-  :bind(
-        ;; C-x bindings (ctl-x-map)
-        ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-        ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-        ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-        ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-        ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-        ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-
-        ;; Other custom bindings
-        ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-        ("<help> a" . consult-apropos)            ;; orig. apropos-command
-        ("C-c r" . consult-recent-file)
-
-        ;; M-g bindings (goto-map)
-        ("M-g e" . consult-compile-error)
-        ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-        ("M-g g" . consult-goto-line)             ;; orig. goto-line
-        ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-        ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-        ("M-g m" . consult-mark)
-        ("M-g k" . consult-global-mark)
-        ("M-g i" . consult-imenu)
-        ("M-g I" . consult-imenu-multi)
-
-        ;; M-s bindings (search-map)
-        ("M-s d" . consult-find)
-        ("M-s D" . consult-locate)
-        ("M-s g" . consult-grep)
-        ("M-s G" . consult-git-grep)
-        ("M-s r" . consult-ripgrep)
-        ("M-s l" . consult-line)
-        ("M-s L" . consult-line-multi)
-        ("M-s m" . consult-multi-occur)
-        ("M-s k" . consult-keep-lines)
-        ("M-s u" . consult-focus-lines)
-
-        ;; Isearch integration
-        ("M-s e" . consult-isearch-history)
-        :map isearch-mode-map
-        ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-        ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-        ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-        ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-
-        ;; Minibuffer history
-        :map minibuffer-local-map
-        ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-        ("M-r" . consult-history))                ;; orig. previous-matching-history-element
-
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-
-  :init
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
-        register-preview-function #'consult-register-format)
-
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-  )
-#+end_src
-
-
-* Builtin Settings
+* Emacs' Built-in Settings
 My settings for base emacs.  Assuming I ran with /no/ plugins (ala ~emacs -Q~), I
 would still set most of these by hand at one point or another.
-
 
 ** Allow for ~narrow-to-region~
 
@@ -943,55 +656,373 @@ I'll uncomment the second part.
 #+end_src
 
 
-* Esup: startup time profiling
-[[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work
-around of a bug where esup tries to step into the byte-compiled version of
-`cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
+* Keybindings
+In the unlikely event that something below is loaded incorrectly and causes
+initialization to stop, I like to have my basic key command loaded early,
+especially so that navigating to the error can happen more quickly.
+
+Emacs has [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html][some standards]] about where user-configured keys should go.  Other
+non-standard modifications are marked as such.
+
+
+** Keybound functions
+Special utility functions that we'll bind to user keys.
 
 #+begin_src emacs-lisp
-(use-package esup
-  :bind ("C-c x p")
-  :config
-  (setq esup-depth 0))
+(defun renz/--jump-section (dirname prompt extension)
+  "For internal use: prompt for a file under `dirname' in the user
+emacs config site with matching `extension' regexp"
+  (find-file
+   (concat dirname
+	   (completing-read prompt
+			    (directory-files dirname nil extension)))))
+
+(setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
+
+(defun renz/jump-configuration ()
+  "Prompt for a .el file in my site-lisp folder, then go there."
+  (interactive)
+  (renz/--jump-section renz/site-lisp-dir
+		       "Elisp config files: "
+		       ".*\.el$"))
+
+(defun renz/jump-org ()
+  "Prompt for an org file in my emacs directory, then go there."
+  (interactive)
+  (renz/--jump-section renz/org-home
+		       "Org files: "
+		       ".*\.org$"))
+
+(defun renz/jump-init ()
+  (interactive)
+  (find-file (expand-file-name "README.org" user-emacs-directory))
+  (consult-org-heading))
+
+(defun renz/find-tag ()
+  "Use completing-read to navigate to a tag"
+  (interactive)
+  (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
+
+(defun renz/consult-grep ()
+  "Live grep using `rg' if found, otherwise `grep'"
+  (interactive)
+  (if (executable-find "rg")
+      (consult-ripgrep)
+    (consult-grep)))
 #+end_src
 
 
-* Reloading Emacs
-Often used when changing up my ~init.el~.
+** Expanded/better defaults
+These convenient chords allow for fast text replacement by holding =C-M-= and
+rapidly typing =k= and =h= in succession.
 
 #+begin_src emacs-lisp
-(use-package restart-emacs
-  :bind ("C-c x r" . restart-emacs))
+(global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
+(global-set-key (kbd "C-M-h") 'backward-kill-sexp)
 #+end_src
 
-
-* Minimap
-I have a love-hate relationship with the minimap.  Sometimes it feels great,
-especially when I'm doing a mouse-heavy demo for navigation.  Other times it
-blocks the echo area when the window is too small and it drives me crazy.
-
-#+begin_src emacs-lisp :tangle no
-(use-package minimap
-  :bind ("C-c n" . minimap-mode)
-
-  :config
-  (when (display-graphic-p)
-    (minimap-mode t)))
-#+end_src
-
-
-* Magit
-The one and only.
+The next line UNBINDS the suspend-frame keybinding.  Accidentally minimizing on
+the GUI was frustrating as hell, so now I use =C-x C-z= if I /really/ want to
+suspend the frame.
 
 #+begin_src emacs-lisp
-(use-package magit)
+(global-set-key (kbd "C-z") #'zap-up-to-char)
 #+end_src
 
-As a reminder - when using pre-commit hooks it may take a while for the hooks to
-install.  Magit will asynchronously kick off that process, and we can check on
-it with =$=.  The built-in `vc` is /synchronous/, and will block Emacs entirely
-until it's done.  So some of the performance hit from using Magit is well worth
-it in situations like that.
+Hippie-expand [[https://www.masteringemacs.org/article/text-expansion-hippie-expand][is purported]] to be a better version of ~dabbrev~, but I rather like
+the default behavior of ~dabbrev~.  I typically have ~hippie-expand~ on a dedicated
+key, and sometimes re-bind the default =M-/= as well, depending on my current
+workflow.
+
+#+begin_src emacs-lisp
+(global-set-key [remap dabbrev-expand] 'hippie-expand)
+#+end_src
+
+~ibuffer~ is a strictly superior, built-in version of its counterpart.
+
+#+begin_src emacs-lisp
+(global-set-key [remap list-buffers] 'ibuffer)
+#+end_src
+
+The most common situation where I'm running ~flymake~ would be for spelling in
+prose, or diagnostics from a language server.  In either case, I like having
+next/previous on easy to reach chords.
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'flymake
+  (define-key flymake-mode-map (kbd "M-n") 'flymake-goto-next-error)
+  (define-key flymake-mode-map (kbd "M-p") 'flymake-goto-prev-error))
+#+end_src
+
+When using ~isearch~ to jump to things, it's sometimes convenient to re-position
+point on the opposite side of where the search would normally put it.  E.g. when
+using =C-r=, but we want point to be at the end of the word when we're done.
+Provided by a [[https://emacs.stackexchange.com/a/52554][stack overflow answer]].
+
+#+begin_src emacs-lisp
+(define-key isearch-mode-map (kbd "<C-return>")
+  (defun isearch-done-opposite (&optional nopush edit)
+    "End current search in the opposite side of the match."
+    (interactive)
+    (funcall #'isearch-done nopush edit)
+    (when isearch-other-end (goto-char isearch-other-end))))
+#+end_src
+
+
+** C-c bindings
+=C-c= <letter> is always free for users.  It may seem like overkill how I set a
+header for each possible =C-c= combination, but it's increcibly handy when I want
+to jump directly to one of these headings while in another buffer.  See
+e.g. =renz/jump-init=, which allows me to narrow in on a particular key I'd like
+to bind by leveraging =completing-read=.
+
+#+begin_src emacs-lisp
+;; (global-set-key (kbd "C-c a") #')
+(global-set-key (kbd "C-c b") #'scroll-bar-mode)
+#+end_src
+
+
+*** =C-c c= change inner/outer
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c c i") #'change-inner)
+(global-set-key (kbd "C-c c o") #'change-outer)
+#+end_src
+
+
+*** =C-c d= jump to a tag
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c d") #'renz/find-tag)
+#+end_src
+
+
+*** =C-c e=
+
+#+begin_src emacs-lisp
+;; (global-set-key (kbd "C-c e") #')
+#+end_src
+
+
+*** =C-c f= hippie-expand
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c f") #'hippie-expand)
+#+end_src
+
+
+*** =C-c g= find file at point
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c g") #'ffap)  ; inspired by vim `gf`
+#+end_src
+
+
+*** =C-c h=
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c h") #'consult-history)
+#+end_src
+
+
+*** =C-c i= jump to a header in my configuration
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c i i") #'renz/jump-init)
+(global-set-key (kbd "C-c i l") #'renz/jump-configuration)
+#+end_src
+
+
+*** =C-c k= kill all but one space
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c k") #'just-one-space)
+#+end_src
+
+
+*** =C-c q= replace regexp
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c q") #'replace-regexp)
+#+end_src
+
+
+*** =C-c s= shell
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c s s") #'shell)
+(global-set-key (kbd "C-c s e") #'eshell)
+(global-set-key (kbd "C-c s t") #'ansi-term)
+(global-set-key (kbd "C-c s v") #'vterm)
+#+end_src
+
+
+*** =C-c t=
+
+#+begin_src emacs-lisp
+;; (global-set-key (kbd "C-c t") #')
+#+end_src
+
+
+*** =C-c u= Consult grep/rg
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c u") #'renz/consult-grep)
+#+end_src
+
+
+*** =C-c w=
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c w") #'whitespace-mode)
+#+end_src
+
+
+*** =C-c x=
+
+#+begin_src emacs-lisp
+;; (global-set-key (kbd "C-c x") #')
+#+end_src
+
+
+*** =C-c z=
+
+#+begin_src emacs-lisp
+;; (global-set-key (kbd "C-c z") #')
+#+end_src
+
+
+*** =C-c= Other bindings
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c ;") #'comment-line)  ; TTY-friendly
+(global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
+(global-set-key (kbd "C-c <SPC>") #'mark-sexp)  ;; TTY-friendly
+#+end_src
+
+
+** Meta/Alt Modifications
+
+#+begin_src emacs-lisp
+(with-eval-after-load 'dired
+(define-key dired-mode-map (kbd "M-S-j") 'dired-goto-file))
+#+end_src
+
+
+** F5-F9
+Like the =C-c <letter>= bindings, these are reserved for users.  In practice, even
+though there are few of these keys, I tend to forget which is which.  So I wind
+up using things bound to my =C-c= keymaps instead, since they come from a natural,
+nested language.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "<f5>") #'compile)
+(global-set-key (kbd "M-<f5>") #'recompile)
+;; (global-set-key (kbd "<f6>") #')
+;; (global-set-key (kbd "M-<f6>") #')
+;; (global-set-key (kbd "<f7>") #')
+;; (global-set-key (kbd "M-<f7>") #')
+;; (global-set-key (kbd "<f8>") #')
+;; (global-set-key (kbd "M-<f8>") #')
+;; (global-set-key (kbd "<f9>") #'vterm)
+(global-set-key (kbd "M-<f9>") #'eshell)
+(global-set-key (kbd "S-<f9>") #'ansi-term)
+(global-set-key (kbd "s-<f9>") #'shell)
+#+end_src
+
+
+** Super bindings
+See the [[Microsoft Windows][Microsoft Windows]] section for some hackery required to get these working
+on their operating system.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "s-c") #'kill-ring-save)
+(global-set-key (kbd "s-q") #'save-buffers-kill-terminal)
+(global-set-key (kbd "s-s") #'save-buffer)
+(global-set-key (kbd "s-t") #'tab-new)
+(global-set-key (kbd "s-v") #'yank)
+#+end_src
+
+
+* Consult
+Forms a large foundation of my workflow.  [[https://github.com/minad/consult][This package]] provides a strictly
+superior experience switching between buffers, performing =grep= or =rg= with live
+results as you type, and scanning through a document for lines matching an
+expression with =consult-line=.
+
+#+begin_src emacs-lisp
+(use-package consult
+
+  :bind(
+        ;; C-x bindings (ctl-x-map)
+        ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
+        ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
+        ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
+        ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
+        ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
+        ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
+
+        ;; Other custom bindings
+        ("M-y" . consult-yank-pop)                ;; orig. yank-pop
+        ("<help> a" . consult-apropos)            ;; orig. apropos-command
+        ("C-c r" . consult-recent-file)
+
+        ;; M-g bindings (goto-map)
+        ("M-g e" . consult-compile-error)
+        ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
+        ("M-g g" . consult-goto-line)             ;; orig. goto-line
+        ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
+        ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
+        ("M-g m" . consult-mark)
+        ("M-g k" . consult-global-mark)
+        ("M-g i" . consult-imenu)
+        ("M-g I" . consult-imenu-multi)
+
+        ;; M-s bindings (search-map)
+        ("M-s d" . consult-find)
+        ("M-s D" . consult-locate)
+        ("M-s g" . consult-grep)
+        ("M-s G" . consult-git-grep)
+        ("M-s r" . consult-ripgrep)
+        ("M-s l" . consult-line)
+        ("M-s L" . consult-line-multi)
+        ("M-s m" . consult-multi-occur)
+        ("M-s k" . consult-keep-lines)
+        ("M-s u" . consult-focus-lines)
+
+        ;; Isearch integration
+        ("M-s e" . consult-isearch-history)
+        :map isearch-mode-map
+        ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
+        ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
+        ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
+        ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
+
+        ;; Minibuffer history
+        :map minibuffer-local-map
+        ("M-s" . consult-history)                 ;; orig. next-matching-history-element
+        ("M-r" . consult-history))                ;; orig. previous-matching-history-element
+
+  ;; Enable automatic preview at point in the *Completions* buffer. This is
+  ;; relevant when you use the default completion UI.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+
+  :init
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+  )
+#+end_src
 
 
 * Autocompletion
@@ -1302,7 +1333,9 @@ important.
 Doesn't currently work over Tramp.
 
 
-* Org-mode
+* Language-specific major modes
+
+** Org-mode
 
 #+begin_src emacs-lisp
 (setq renz/org-home "~/org/")
@@ -1453,7 +1486,7 @@ latter over the former, I've removed the =org-startup-indented= call.
 #+end_src
 
 
-** COMMENT Org Roam
+*** COMMENT Org Roam
 
 #+begin_src emacs-lisp
 (use-package org-roam
@@ -1466,7 +1499,7 @@ latter over the former, I've removed the =org-startup-indented= call.
 #+end_src
 
 
-** =org-modern=
+*** =org-modern=
 A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
 
 #+begin_src emacs-lisp
@@ -1505,37 +1538,6 @@ Looking into this: https://github.com/oantolin/embark
 (use-package embark)
 #+end_src
 
-
-* Language Server Protocol (LSP) with ~eglot~
-
-#+begin_src emacs-lisp
-(use-package eglot
-  :bind (("C-c l c" . eglot-reconnect)
-         ("C-c l d" . flymake-show-buffer-diagnostics)
-         ("C-c l f f" . eglot-format)
-         ("C-c l f b" . eglot-format-buffer)
-         ("C-c l l" . eglot)
-         ("C-c l r n" . eglot-rename)
-         ("C-c l s" . eglot-shutdown)))
-#+end_src
-
-** Code block syntax highlighting for HTML export
-#+begin_src emacs-lisp
-(use-package htmlize
-  :after (org))
-#+end_src
-
-** Copying images out of org-babel
-Offers two functions:
-+ ~ox-clip-formatted-copy~
-+ ~ox-clip-image-to-clipboard~
-#+begin_src emacs-lisp
-(use-package ox-clip
-  :after org)
-#+end_src
-
-
-* Language-specific major modes
 
 ** SQL
 I'm not yet sure how to get Hive-SQL (~.hql~) recognized with the ~:mode~ keyword.
@@ -1748,36 +1750,6 @@ Formatting a buffer with =black= has never been easier!
 #+end_src
 
 
-** Haskell
-Enemy of the state.
-
-#+begin_src emacs-lisp
-(use-package haskell-mode)
-#+end_src
-
-
-** Golang
-Winner of "cutest language mascot" since 2009.
-
-#+begin_src emacs-lisp
-(use-package go-mode)
-#+end_src
-
-
-** Lua
-
-#+begin_src emacs-lisp
-(use-package lua-mode)
-#+end_src
-
-
-** yaml
-
-#+begin_src emacs-lisp
-(use-package yaml-mode)
-#+end_src
-
-
 ** Markdown
 
 Some folks like to write markdown without hard line breaks.  When viewing those
@@ -1805,6 +1777,36 @@ Enable syntax highlighting within code fences for markdown
 #+begin_src emacs-lisp
 (use-package poly-mode
   :mode ("\\.md" . poly-markdown-mode))
+#+end_src
+
+
+** yaml
+
+#+begin_src emacs-lisp
+(use-package yaml-mode)
+#+end_src
+
+
+** Haskell
+Enemy of the state.
+
+#+begin_src emacs-lisp
+(use-package haskell-mode)
+#+end_src
+
+
+** Golang
+Winner of "cutest language mascot" since 2009.
+
+#+begin_src emacs-lisp
+(use-package go-mode)
+#+end_src
+
+
+** Lua
+
+#+begin_src emacs-lisp
+(use-package lua-mode)
 #+end_src
 
 
@@ -1848,82 +1850,12 @@ Handy for viewing data quickly.
 #+end_src
 
 
-* OS-specific configuration
-
-** Microsoft Windows
-
-Windows, funnily enough, has some trouble registering the Windows key as a usable modifier for emacs.  In fact, =s-l= will /never/ be an option, since it's handled at the hardware level.  I also add a few nice-to-haves, like setting the default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always install with ~msys64~.
-
-#+begin_src emacs-lisp
-(when (memq system-type '(windows-nt cygwin ms-dos))
-  ;; Set a better font on Windows
-  (set-face-attribute 'default nil :font "Hack NF-12")
-  ;; Alternate ispell when we've got msys on Windows
-  (setq ispell-program-name "aspell.exe")
-  ;; Set default shell to pwsh
-  ;; (setq explicit-shell-file-name "pwsh")
-  ;; Enable use of Winkey as super
-  (setq w32-pass-lwindow-to-system nil)
-  (setq w32-lwindow-modifier 'super) ; Left Windows key
-  (setq w32-pass-rwindow-to-system nil)
-  (setq w32-rwindow-modifier 'super) ; Right Windows key
-  ;; If we want to use a hotkey, we have to also register each
-  ;; combination specifically, like this:
-  (w32-register-hot-key [s-a])
-  (w32-register-hot-key [s-b])
-  (w32-register-hot-key [s-c])
-  (w32-register-hot-key [s-d])
-  (w32-register-hot-key [s-e])
-  (w32-register-hot-key [s-f])
-  (w32-register-hot-key [s-g])
-  (w32-register-hot-key [s-h])
-  (w32-register-hot-key [s-i])
-  (w32-register-hot-key [s-j])
-  (w32-register-hot-key [s-k])
-  ;; s-l can NEVER be registered as a key combination, since Windows
-  ;; handles it at a much lower level.
-  ;; (w32-register-hot-key [s-l])
-  (w32-register-hot-key [s-m])
-  (w32-register-hot-key [s-n])
-  (w32-register-hot-key [s-o])
-  (w32-register-hot-key [s-p])
-  (w32-register-hot-key [s-q])
-  (w32-register-hot-key [s-r])
-  (w32-register-hot-key [s-s])
-  (w32-register-hot-key [s-t])
-  (w32-register-hot-key [s-u])
-  (w32-register-hot-key [s-v])
-  (w32-register-hot-key [s-w])
-  (w32-register-hot-key [s-x])
-  (w32-register-hot-key [s-y])
-  (w32-register-hot-key [s-z]))
-#+end_src
-
-
-** macOS
-Launching Emacs from the typical application launcher or command-space usually won't capture any modifications to =$PATH=, typically handled in a file like =~/.profile= or =~/.bashrc=. So, the main configuration included here is from [[https://github.com/purcell/exec-path-from-shell][exec-path-from-shell]].
-
-#+begin_src emacs-lisp
-(when (eq system-type 'darwin)
-  ;; Uncomment this if we can't install Hack Nerd font
-  ;; (set-face-attribute 'default nil :font "Menlo-14")
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
-  (exec-path-from-shell-initialize))
-#+end_src
-
-
-** Linux
-Very little to do here.  Emacs on on Linux seems to "just work".
-
-#+begin_src emacs-lisp
-(when (eq system-type 'gnu/linux)
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
-#+end_src
-
-
 * Tramp
 
-When using [[https://anaconda.org][conda]], I keep a special conda environment named ~robbmann~ for locally-installed and managed command line utilities.  Sometimes I link these over to ~.local/bin~, and other times I forget.  For the latter case, I tend to include it in a lot of my PATH-setting situations.
+When using [[https://anaconda.org][conda]], I keep a special conda environment named ~robbmann~ for
+locally-installed and managed command line utilities.  Sometimes I link these
+over to ~.local/bin~, and other times I forget.  For the latter case, I tend to
+include it in a lot of my PATH-setting situations.
 
 #+begin_src emacs-lisp
 (setq vc-handled-backends '(Git))
@@ -1933,13 +1865,22 @@ When using [[https://anaconda.org][conda]], I keep a special conda environment n
 (setq tramp-verbose 1)
 #+end_src
 
-eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden reentrant call of Tramp" message and freezing.  In the meantime, this setting was recommended.
+eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden
+reentrant call of Tramp" message and freezing.  In the meantime, this setting
+was recommended.
 
 #+begin_src emacs-lisp
 (setq tramp-use-ssh-controlmaster-options nil)
 #+end_src
 
-For some time I was having a lot of trouble with slowness over Tramp, and after careful scrutiny of the logs on (I belive) =tramp-verbose 6=, I found out that enabling remote dir-locals was causing a huge bottleneck.  On every operation it would trace up the filesystem tree back to the root directory, scanning for a ~.dir-locals~ file.  Since some of the drives were network-mounted, this caused thousands of network calls per file operation, obviously slowing things down a lot.  Because of this, I've opted to simply disable ~.dir-locals~ over Tramp entirely, since I don't really use it much, if at all.
+For some time I was having a lot of trouble with slowness over Tramp, and after
+careful scrutiny of the logs on (I belive) =tramp-verbose 6=, I found out that
+enabling remote dir-locals was causing a huge bottleneck.  On every operation it
+would trace up the filesystem tree back to the root directory, scanning for a
+~.dir-locals~ file.  Since some of the drives were network-mounted, this caused
+thousands of network calls per file operation, obviously slowing things down a
+lot.  Because of this, I've opted to simply disable ~.dir-locals~ over Tramp
+entirely, since I don't really use it much, if at all.
 
 #+begin_src emacs-lisp :tangle no :eval never
 ;; (setq enable-remote-dir-locals t)
@@ -1953,7 +1894,9 @@ For some time I was having a lot of trouble with slowness over Tramp, and after 
   )
 #+end_src
 
-[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable thing to put in, since I so frequently use VC over tramp.  Fully disabling VC would include this snippet:
+[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable
+thing to put in, since I so frequently use VC over tramp.  Fully disabling VC
+would include this snippet:
 
 #+begin_src emacs-lisp :tangle no :eval never
 (setq vc-ignore-dir-regexp
@@ -1962,7 +1905,8 @@ For some time I was having a lot of trouble with slowness over Tramp, and after 
               tramp-file-name-regexp))
 #+end_src
 
-Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs issues]], which I do not currently include.
+Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs
+issues]], which I do not currently include.
 
 #+begin_src emacs-lisp :tangle no :eval never
 (setq tramp-default-method "scp")
@@ -1983,23 +1927,25 @@ Host *
 #+end_example
 
 
-* COMMENT TreeSitter
-I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /boy/ is it nice!  Nearly
-every major language has a tree-sitter parser that adds a lot of extra context,
-highlighting, and syntax-aware selection that old-school regexp simply cannot
-match.
+* Small tool configuration
+Most of these are third party installs that require little to no configuration,
+and don't warrent a big top-level header.
+
+** Magit
+The one and only.
 
 #+begin_src emacs-lisp
-(use-package tree-sitter
-  :config
-  (global-tree-sitter-mode)
-  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
-
-(use-package tree-sitter-langs)
+(use-package magit)
 #+end_src
 
+As a reminder - when using pre-commit hooks it may take a while for the hooks to
+install.  Magit will asynchronously kick off that process, and we can check on
+it with =$=.  The built-in `vc` is /synchronous/, and will block Emacs entirely
+until it's done.  So some of the performance hit from using Magit is well worth
+it in situations like that.
 
-* eww - search engine and browser
+
+** eww - search engine and browser
 Ecosia requires Javascript, unfortunately.
 
 #+begin_src emacs-lisp
@@ -2009,7 +1955,7 @@ Ecosia requires Javascript, unfortunately.
 #+end_src
 
 
-* diff-hl
+** diff-hl
 Adds highlighting to the fringe to see what's been added, deleted, or modified
 from =git='s perspective.
 
@@ -2021,7 +1967,7 @@ from =git='s perspective.
 Another option (which I haven't really looked at) is ~git-gutter-fringe~.
 
 
-* GNU Plot
+** GNU Plot
 Scientific plotting - the old fashioned way!
 
 #+begin_src emacs-lisp
@@ -2030,7 +1976,7 @@ Scientific plotting - the old fashioned way!
 #+end_src
 
 
-* change-inner
+** change-inner
 Modeled after Vim's =ci=, =ca=, =yi=, and =ya= commands, these let us yank or kill text
 within a "surrounding" delimiter, such as "" or ().
 
@@ -2043,7 +1989,7 @@ within a "surrounding" delimiter, such as "" or ().
 #+end_src
 
 
-* COMMENT Inline emojis
+** COMMENT Inline emojis
 I tried this for a while but boy did it consume a lot of space in the =elpa/=
 directory!  If I go back to it I might re-install it but have to ensure I ignore
 the source files.
@@ -2051,6 +1997,88 @@ the source files.
 #+begin_src emacs-lisp :tangle no :eval never
 ;; Emojis inline 👍
 (add-hook 'after-init-hook #'global-emojify-mode)
+#+end_src
+
+
+** Esup: startup time profiling
+[[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work
+around of a bug where esup tries to step into the byte-compiled version of
+`cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
+
+#+begin_src emacs-lisp
+(use-package esup
+  :bind ("C-c x p")
+  :config
+  (setq esup-depth 0))
+#+end_src
+
+
+** Minimap
+I have a love-hate relationship with the minimap.  Sometimes it feels great,
+especially when I'm doing a mouse-heavy demo for navigation.  Other times it
+blocks the echo area when the window is too small and it drives me crazy.
+
+#+begin_src emacs-lisp :tangle no
+(use-package minimap
+  :bind ("C-c n" . minimap-mode)
+
+  :config
+  (when (display-graphic-p)
+    (minimap-mode t)))
+#+end_src
+
+
+** Reloading Emacs
+Often used when changing up my ~init.el~.
+
+#+begin_src emacs-lisp
+(use-package restart-emacs
+  :bind ("C-c x r" . restart-emacs))
+#+end_src
+
+
+** Language Server Protocol (LSP) with ~eglot~
+
+#+begin_src emacs-lisp
+(use-package eglot
+  :bind (("C-c l c" . eglot-reconnect)
+         ("C-c l d" . flymake-show-buffer-diagnostics)
+         ("C-c l f f" . eglot-format)
+         ("C-c l f b" . eglot-format-buffer)
+         ("C-c l l" . eglot)
+         ("C-c l r n" . eglot-rename)
+         ("C-c l s" . eglot-shutdown)))
+#+end_src
+
+*** Code block syntax highlighting for HTML export
+#+begin_src emacs-lisp
+(use-package htmlize
+  :after (org))
+#+end_src
+
+*** Copying images out of org-babel
+Offers two functions:
++ ~ox-clip-formatted-copy~
++ ~ox-clip-image-to-clipboard~
+#+begin_src emacs-lisp
+(use-package ox-clip
+  :after org)
+#+end_src
+
+
+** COMMENT TreeSitter
+I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /boy/ is it nice!  Nearly
+every major language has a tree-sitter parser that adds a lot of extra context,
+highlighting, and syntax-aware selection that old-school regexp simply cannot
+match.
+
+#+begin_src emacs-lisp
+(use-package tree-sitter
+  :config
+  (global-tree-sitter-mode)
+  (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+
+(use-package tree-sitter-langs)
 #+end_src
 
 
@@ -2069,16 +2097,6 @@ There are several other interesting options that I haven't tried out yet, includ
 + [X] [[https://github.com/emacs-eaf/emacs-application-framework][emacs-eaf/emacs-application-framework]] <--- big hassle
 + [X] [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 + [ ] [[https://notmuchmail.org/notmuch-emacs/][notmuch for email]]
-
-
-* Inspirations
-Here's where I put the typical quote about standing on one form of shoulders or
-another.  I steal quite a lot from other, more qualified Emacs community
-contributors, such as:
-
-- [[https://protesilaos.com/][Protesilaos Stavrou]]
-- [[https://panadestein.github.io/emacsd/][Ramón Panadestein]]
-- [[https://www.masteringemacs.org/][Mickey Petersen]]
 
 
 * Footer

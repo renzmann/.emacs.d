@@ -29,6 +29,64 @@
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:2 ends here
 
+;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
+(when (memq system-type '(windows-nt cygwin ms-dos))
+  ;; Set a better font on Windows
+  (set-face-attribute 'default nil :font "Hack NF-12")
+  ;; Alternate ispell when we've got msys on Windows
+  (setq ispell-program-name "aspell.exe")
+  ;; Set default shell to pwsh
+  ;; (setq explicit-shell-file-name "pwsh")
+  ;; Enable use of Winkey as super
+  (setq w32-pass-lwindow-to-system nil)
+  (setq w32-lwindow-modifier 'super) ; Left Windows key
+  (setq w32-pass-rwindow-to-system nil)
+  (setq w32-rwindow-modifier 'super) ; Right Windows key
+  ;; If we want to use a hotkey, we have to also register each
+  ;; combination specifically, like this:
+  (w32-register-hot-key [s-a])
+  (w32-register-hot-key [s-b])
+  (w32-register-hot-key [s-c])
+  (w32-register-hot-key [s-d])
+  (w32-register-hot-key [s-e])
+  (w32-register-hot-key [s-f])
+  (w32-register-hot-key [s-g])
+  (w32-register-hot-key [s-h])
+  (w32-register-hot-key [s-i])
+  (w32-register-hot-key [s-j])
+  (w32-register-hot-key [s-k])
+  ;; s-l can NEVER be registered as a key combination, since Windows
+  ;; handles it at a much lower level.
+  ;; (w32-register-hot-key [s-l])
+  (w32-register-hot-key [s-m])
+  (w32-register-hot-key [s-n])
+  (w32-register-hot-key [s-o])
+  (w32-register-hot-key [s-p])
+  (w32-register-hot-key [s-q])
+  (w32-register-hot-key [s-r])
+  (w32-register-hot-key [s-s])
+  (w32-register-hot-key [s-t])
+  (w32-register-hot-key [s-u])
+  (w32-register-hot-key [s-v])
+  (w32-register-hot-key [s-w])
+  (w32-register-hot-key [s-x])
+  (w32-register-hot-key [s-y])
+  (w32-register-hot-key [s-z]))
+;; Microsoft Windows:1 ends here
+
+;; [[file:README.org::*macOS][macOS:1]]
+(when (eq system-type 'darwin)
+  ;; Uncomment this if we can't install Hack Nerd font
+  ;; (set-face-attribute 'default nil :font "Menlo-14")
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
+  (exec-path-from-shell-initialize))
+;; macOS:1 ends here
+
+;; [[file:README.org::*Linux][Linux:1]]
+(when (eq system-type 'gnu/linux)
+  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
+;; Linux:1 ends here
+
 ;; [[file:README.org::*Theme: ~ef-themes~][Theme: ~ef-themes~:1]]
 (use-package ef-themes
   :demand t
@@ -50,6 +108,220 @@
   :config
   (load-theme 'ef-cherie :no-confirm))
 ;; Theme: ~ef-themes~:1 ends here
+
+;; [[file:README.org::*Allow for ~narrow-to-region~][Allow for ~narrow-to-region~:1]]
+(put 'narrow-to-region 'disabled nil)
+;; Allow for ~narrow-to-region~:1 ends here
+
+;; [[file:README.org::*Mode line][Mode line:1]]
+(setq column-number-mode t
+      mode-line-in-non-selected-windows t
+      display-battery-mode t
+      display-time-day-and-date t)
+
+(display-time)
+;; Mode line:1 ends here
+
+;; [[file:README.org::*=eldoc=][=eldoc=:1]]
+(setq eldoc-echo-area-use-multiline-p nil)
+;; =eldoc=:1 ends here
+
+;; [[file:README.org::*Remember minibuffer history][Remember minibuffer history:1]]
+(setq history-length 25)
+(savehist-mode 1)
+;; Remember minibuffer history:1 ends here
+
+;; [[file:README.org::*Use ~aspell~ by default for spell checking][Use ~aspell~ by default for spell checking:1]]
+(when (executable-find "aspell")
+  (setq ispell-program-name "aspell"))
+;; Use ~aspell~ by default for spell checking:1 ends here
+
+;; [[file:README.org::*Colored output in ~eshell~][Colored output in ~eshell~:1]]
+(add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
+;; Colored output in ~eshell~:1 ends here
+
+;; [[file:README.org::*Recent files menu][Recent files menu:1]]
+(recentf-mode t)
+;; Recent files menu:1 ends here
+
+;; [[file:README.org::*Fill-column][Fill-column:1]]
+(use-package visual-fill-column
+  :config
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
+;; Fill-column:1 ends here
+
+;; [[file:README.org::*Fill-column][Fill-column:2]]
+(setq-default fill-column 80)
+;; Fill-column:2 ends here
+
+;; [[file:README.org::*Scroll bar][Scroll bar:1]]
+(scroll-bar-mode -1)
+;; Scroll bar:1 ends here
+
+;; [[file:README.org::*Inihibit splash screen][Inihibit splash screen:1]]
+(setq inhibit-splash-screen t)
+;; Inihibit splash screen:1 ends here
+
+;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
+(modify-all-frames-parameters
+ '((right-divider-width . 40)
+   (internal-border-width . 40)))
+
+(dolist (face '(window-divider
+                window-divider-first-pixel
+                window-divider-last-pixel))
+  (face-spec-reset-face face)
+  (set-face-foreground face (face-attribute 'default :background)))
+
+(set-face-background 'fringe (face-attribute 'default :background))
+;; Window margins and fringe:1 ends here
+
+;; [[file:README.org::*Automatically visit symlink sources][Automatically visit symlink sources:1]]
+(setq find-file-visit-truename t)
+(setq vc-follow-symlinks t)
+;; Automatically visit symlink sources:1 ends here
+
+;; [[file:README.org::*Indent with spaces][Indent with spaces:1]]
+(setq-default indent-tabs-mode nil)
+;; Indent with spaces:1 ends here
+
+;; [[file:README.org::*Render ASCII color escape codes][Render ASCII color escape codes:1]]
+(defun renz/display-ansi-colors ()
+  (interactive)
+  (require 'ansi-color)
+  (ansi-color-apply-on-region (point-min) (point-max)))
+;; Render ASCII color escape codes:1 ends here
+
+;; [[file:README.org::*Enable horizontal scrolling with mouse][Enable horizontal scrolling with mouse:1]]
+(setq mouse-wheel-tilt-scroll t)
+;; Enable horizontal scrolling with mouse:1 ends here
+
+;; [[file:README.org::*Window management][Window management:1]]
+(unless (version< emacs-version "27.1")
+  (setq switch-to-buffer-obey-display-actions t))
+;; Window management:1 ends here
+
+;; [[file:README.org::*Enable up/downcase-region][Enable up/downcase-region:1]]
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+;; Enable up/downcase-region:1 ends here
+
+;; [[file:README.org::*Automatically update buffers when contents change on disk][Automatically update buffers when contents change on disk:1]]
+(global-auto-revert-mode)
+;; Automatically update buffers when contents change on disk:1 ends here
+
+;; [[file:README.org::*Marginalia][Marginalia:1]]
+(use-package marginalia
+
+  :config (marginalia-mode))
+;; Marginalia:1 ends here
+
+;; [[file:README.org::*Highlight the line point is on][Highlight the line point is on:1]]
+(add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'text-mode-hook #'hl-line-mode)
+(add-hook 'org-mode-hook #'hl-line-mode)
+;; Highlight the line point is on:1 ends here
+
+;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
+;; Stop stupid bell
+(setq ring-bell-function 'ignore)
+;; Stop stupid bell:1 ends here
+
+;; [[file:README.org::*Enable split-window dired copying][Enable split-window dired copying:1]]
+(setq dired-dwim-target t)
+;; Enable split-window dired copying:1 ends here
+
+;; [[file:README.org::*Automatically create matching parens in programming modes][Automatically create matching parens in programming modes:1]]
+(add-hook 'prog-mode-hook (electric-pair-mode t))
+(add-hook 'prog-mode-hook (show-paren-mode t))
+;; Automatically create matching parens in programming modes:1 ends here
+
+;; [[file:README.org::*Delete whitespace on save][Delete whitespace on save:1]]
+(add-hook 'before-save-hook 'delete-trailing-whitespace)
+;; Delete whitespace on save:1 ends here
+
+;; [[file:README.org::*Don't wrap lines][Don't wrap lines:1]]
+(setq-default truncate-lines t)
+(add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
+;; Don't wrap lines:1 ends here
+
+;; [[file:README.org::*Relative line numbers][Relative line numbers:1]]
+(add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
+(add-hook 'yaml-mode-hook (lambda () (setq display-line-numbers 'relative)))
+(unless (display-graphic-p)
+  (add-hook 'text-mode-hook (lambda () (setq display-line-numbers 'relative))))
+;; Relative line numbers:1 ends here
+
+;; [[file:README.org::*Delete region when we yank on top of it][Delete region when we yank on top of it:1]]
+(delete-selection-mode t)
+;; Delete region when we yank on top of it:1 ends here
+
+;; [[file:README.org::*Enable mouse in terminal/TTY][Enable mouse in terminal/TTY:1]]
+(xterm-mouse-mode 1)
+;; Enable mouse in terminal/TTY:1 ends here
+
+;; [[file:README.org::*Compilation][Compilation:1]]
+(setq compilation-scroll-output t)
+;; Compilation:1 ends here
+
+;; [[file:README.org::*Compilation][Compilation:2]]
+(defun renz/colorize-compilation-buffer ()
+  "Enable colors in the *compilation* buffer."
+  (require 'ansi-color)
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+
+(add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
+;; Compilation:2 ends here
+
+;; [[file:README.org::*Tool bar][Tool bar:1]]
+(tool-bar-mode -1)
+;; Tool bar:1 ends here
+
+;; [[file:README.org::*Ignore risky .dir-locals.el][Ignore risky .dir-locals.el:1]]
+(advice-add 'risky-local-variable-p :override #'ignore)
+;; Ignore risky .dir-locals.el:1 ends here
+
+;; [[file:README.org::*Prefer =rg= and =fd= over =grep= and =find=][Prefer =rg= and =fd= over =grep= and =find=:1]]
+(when (executable-find "rg")
+  (setq grep-program "rg"))
+
+(when (executable-find "fd")
+  (setq find-program "fd"))
+;; Prefer =rg= and =fd= over =grep= and =find=:1 ends here
+
+;; [[file:README.org::*Prefer =rg= and =fd= over =grep= and =find=][Prefer =rg= and =fd= over =grep= and =find=:2]]
+(use-package ripgrep)
+;; Prefer =rg= and =fd= over =grep= and =find=:2 ends here
+
+;; [[file:README.org::*Make ~dired~ human-readable][Make ~dired~ human-readable:1]]
+(setq dired-listing-switches "-alFh")
+;; (setq-default dired-hide-details-mode t)
+;; Make ~dired~ human-readable:1 ends here
+
+;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
+(setq confirm-kill-emacs 'yes-or-no-p)
+;; Confirm when exiting Emacs:1 ends here
+
+;; [[file:README.org::*Prefer ~aspell~ over ~ispell~][Prefer ~aspell~ over ~ispell~:1]]
+(when (executable-find "aspell")
+  (setq ispell-program-name "aspell"))
+;; Prefer ~aspell~ over ~ispell~:1 ends here
+
+;; [[file:README.org::*Smooth scrolling][Smooth scrolling:1]]
+(if (version< emacs-version "29.0")
+    (pixel-scroll-mode)
+  (pixel-scroll-precision-mode 1)
+  (setq pixel-scroll-precision-large-scroll-height 35.0))
+;; Smooth scrolling:1 ends here
+
+;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
+(setq backup-directory-alist
+      '(("." . "~/.emacs.d/backups/"))
+      ;; auto-save-file-name-transforms
+      ;; '(("." ,temporary-file-directory t))
+      )
+;; Backup and auto-save files:1 ends here
 
 ;; [[file:README.org::*Keybound functions][Keybound functions:1]]
 (defun renz/--jump-section (dirname prompt extension)
@@ -303,236 +575,6 @@ emacs config site with matching `extension' regexp"
         xref-show-definitions-function #'consult-xref)
   )
 ;; Consult:1 ends here
-
-;; [[file:README.org::*Allow for ~narrow-to-region~][Allow for ~narrow-to-region~:1]]
-(put 'narrow-to-region 'disabled nil)
-;; Allow for ~narrow-to-region~:1 ends here
-
-;; [[file:README.org::*Mode line][Mode line:1]]
-(setq column-number-mode t
-      mode-line-in-non-selected-windows t
-      display-battery-mode t
-      display-time-day-and-date t)
-
-(display-time)
-;; Mode line:1 ends here
-
-;; [[file:README.org::*=eldoc=][=eldoc=:1]]
-(setq eldoc-echo-area-use-multiline-p nil)
-;; =eldoc=:1 ends here
-
-;; [[file:README.org::*Remember minibuffer history][Remember minibuffer history:1]]
-(setq history-length 25)
-(savehist-mode 1)
-;; Remember minibuffer history:1 ends here
-
-;; [[file:README.org::*Use ~aspell~ by default for spell checking][Use ~aspell~ by default for spell checking:1]]
-(when (executable-find "aspell")
-  (setq ispell-program-name "aspell"))
-;; Use ~aspell~ by default for spell checking:1 ends here
-
-;; [[file:README.org::*Colored output in ~eshell~][Colored output in ~eshell~:1]]
-(add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
-;; Colored output in ~eshell~:1 ends here
-
-;; [[file:README.org::*Recent files menu][Recent files menu:1]]
-(recentf-mode t)
-;; Recent files menu:1 ends here
-
-;; [[file:README.org::*Fill-column][Fill-column:1]]
-(use-package visual-fill-column
-  :config
-  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
-;; Fill-column:1 ends here
-
-;; [[file:README.org::*Fill-column][Fill-column:2]]
-(setq-default fill-column 80)
-;; Fill-column:2 ends here
-
-;; [[file:README.org::*Scroll bar][Scroll bar:1]]
-(scroll-bar-mode -1)
-;; Scroll bar:1 ends here
-
-;; [[file:README.org::*Inihibit splash screen][Inihibit splash screen:1]]
-(setq inhibit-splash-screen t)
-;; Inihibit splash screen:1 ends here
-
-;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
-(modify-all-frames-parameters
- '((right-divider-width . 40)
-   (internal-border-width . 40)))
-
-(dolist (face '(window-divider
-                window-divider-first-pixel
-                window-divider-last-pixel))
-  (face-spec-reset-face face)
-  (set-face-foreground face (face-attribute 'default :background)))
-
-(set-face-background 'fringe (face-attribute 'default :background))
-;; Window margins and fringe:1 ends here
-
-;; [[file:README.org::*Automatically visit symlink sources][Automatically visit symlink sources:1]]
-(setq find-file-visit-truename t)
-(setq vc-follow-symlinks t)
-;; Automatically visit symlink sources:1 ends here
-
-;; [[file:README.org::*Indent with spaces][Indent with spaces:1]]
-(setq-default indent-tabs-mode nil)
-;; Indent with spaces:1 ends here
-
-;; [[file:README.org::*Render ASCII color escape codes][Render ASCII color escape codes:1]]
-(defun renz/display-ansi-colors ()
-  (interactive)
-  (require 'ansi-color)
-  (ansi-color-apply-on-region (point-min) (point-max)))
-;; Render ASCII color escape codes:1 ends here
-
-;; [[file:README.org::*Enable horizontal scrolling with mouse][Enable horizontal scrolling with mouse:1]]
-(setq mouse-wheel-tilt-scroll t)
-;; Enable horizontal scrolling with mouse:1 ends here
-
-;; [[file:README.org::*Window management][Window management:1]]
-(unless (version< emacs-version "27.1")
-  (setq switch-to-buffer-obey-display-actions t))
-;; Window management:1 ends here
-
-;; [[file:README.org::*Enable up/downcase-region][Enable up/downcase-region:1]]
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-;; Enable up/downcase-region:1 ends here
-
-;; [[file:README.org::*Automatically update buffers when contents change on disk][Automatically update buffers when contents change on disk:1]]
-(global-auto-revert-mode)
-;; Automatically update buffers when contents change on disk:1 ends here
-
-;; [[file:README.org::*Marginalia][Marginalia:1]]
-(use-package marginalia
-
-  :config (marginalia-mode))
-;; Marginalia:1 ends here
-
-;; [[file:README.org::*Highlight the line point is on][Highlight the line point is on:1]]
-(add-hook 'prog-mode-hook #'hl-line-mode)
-(add-hook 'text-mode-hook #'hl-line-mode)
-(add-hook 'org-mode-hook #'hl-line-mode)
-;; Highlight the line point is on:1 ends here
-
-;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
-;; Stop stupid bell
-(setq ring-bell-function 'ignore)
-;; Stop stupid bell:1 ends here
-
-;; [[file:README.org::*Enable split-window dired copying][Enable split-window dired copying:1]]
-(setq dired-dwim-target t)
-;; Enable split-window dired copying:1 ends here
-
-;; [[file:README.org::*Automatically create matching parens in programming modes][Automatically create matching parens in programming modes:1]]
-(add-hook 'prog-mode-hook (electric-pair-mode t))
-(add-hook 'prog-mode-hook (show-paren-mode t))
-;; Automatically create matching parens in programming modes:1 ends here
-
-;; [[file:README.org::*Delete whitespace on save][Delete whitespace on save:1]]
-(add-hook 'before-save-hook 'delete-trailing-whitespace)
-;; Delete whitespace on save:1 ends here
-
-;; [[file:README.org::*Don't wrap lines][Don't wrap lines:1]]
-(setq-default truncate-lines t)
-(add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
-;; Don't wrap lines:1 ends here
-
-;; [[file:README.org::*Relative line numbers][Relative line numbers:1]]
-(add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
-(add-hook 'yaml-mode-hook (lambda () (setq display-line-numbers 'relative)))
-(unless (display-graphic-p)
-  (add-hook 'text-mode-hook (lambda () (setq display-line-numbers 'relative))))
-;; Relative line numbers:1 ends here
-
-;; [[file:README.org::*Delete region when we yank on top of it][Delete region when we yank on top of it:1]]
-(delete-selection-mode t)
-;; Delete region when we yank on top of it:1 ends here
-
-;; [[file:README.org::*Enable mouse in terminal/TTY][Enable mouse in terminal/TTY:1]]
-(xterm-mouse-mode 1)
-;; Enable mouse in terminal/TTY:1 ends here
-
-;; [[file:README.org::*Compilation][Compilation:1]]
-(setq compilation-scroll-output t)
-;; Compilation:1 ends here
-
-;; [[file:README.org::*Compilation][Compilation:2]]
-(defun renz/colorize-compilation-buffer ()
-  "Enable colors in the *compilation* buffer."
-  (require 'ansi-color)
-  (let ((inhibit-read-only t))
-    (ansi-color-apply-on-region (point-min) (point-max))))
-
-(add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
-;; Compilation:2 ends here
-
-;; [[file:README.org::*Tool bar][Tool bar:1]]
-(tool-bar-mode -1)
-;; Tool bar:1 ends here
-
-;; [[file:README.org::*Ignore risky .dir-locals.el][Ignore risky .dir-locals.el:1]]
-(advice-add 'risky-local-variable-p :override #'ignore)
-;; Ignore risky .dir-locals.el:1 ends here
-
-;; [[file:README.org::*Prefer =rg= and =fd= over =grep= and =find=][Prefer =rg= and =fd= over =grep= and =find=:1]]
-(when (executable-find "rg")
-  (setq grep-program "rg"))
-
-(when (executable-find "fd")
-  (setq find-program "fd"))
-;; Prefer =rg= and =fd= over =grep= and =find=:1 ends here
-
-;; [[file:README.org::*Prefer =rg= and =fd= over =grep= and =find=][Prefer =rg= and =fd= over =grep= and =find=:2]]
-(use-package ripgrep)
-;; Prefer =rg= and =fd= over =grep= and =find=:2 ends here
-
-;; [[file:README.org::*Make ~dired~ human-readable][Make ~dired~ human-readable:1]]
-(setq dired-listing-switches "-alFh")
-;; (setq-default dired-hide-details-mode t)
-;; Make ~dired~ human-readable:1 ends here
-
-;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
-(setq confirm-kill-emacs 'yes-or-no-p)
-;; Confirm when exiting Emacs:1 ends here
-
-;; [[file:README.org::*Prefer ~aspell~ over ~ispell~][Prefer ~aspell~ over ~ispell~:1]]
-(when (executable-find "aspell")
-  (setq ispell-program-name "aspell"))
-;; Prefer ~aspell~ over ~ispell~:1 ends here
-
-;; [[file:README.org::*Smooth scrolling][Smooth scrolling:1]]
-(if (version< emacs-version "29.0")
-    (pixel-scroll-mode)
-  (pixel-scroll-precision-mode 1)
-  (setq pixel-scroll-precision-large-scroll-height 35.0))
-;; Smooth scrolling:1 ends here
-
-;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
-(setq backup-directory-alist
-      '(("." . "~/.emacs.d/backups/"))
-      ;; auto-save-file-name-transforms
-      ;; '(("." ,temporary-file-directory t))
-      )
-;; Backup and auto-save files:1 ends here
-
-;; [[file:README.org::*Esup: startup time profiling][Esup: startup time profiling:1]]
-(use-package esup
-  :bind ("C-c x p")
-  :config
-  (setq esup-depth 0))
-;; Esup: startup time profiling:1 ends here
-
-;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
-(use-package restart-emacs
-  :bind ("C-c x r" . restart-emacs))
-;; Reloading Emacs:1 ends here
-
-;; [[file:README.org::*Magit][Magit:1]]
-(use-package magit)
-;; Magit:1 ends here
 
 ;; [[file:README.org::*Autocompletion][Autocompletion:1]]
 (setq completion-styles '(flex basic partial-completion emacs22))
@@ -814,27 +856,6 @@ Jumps at tangled code from org src block."
   (global-org-modern-mode))
 ;; =org-modern=:1 ends here
 
-;; [[file:README.org::*Language Server Protocol (LSP) with ~eglot~][Language Server Protocol (LSP) with ~eglot~:1]]
-(use-package eglot
-  :bind (("C-c l c" . eglot-reconnect)
-         ("C-c l d" . flymake-show-buffer-diagnostics)
-         ("C-c l f f" . eglot-format)
-         ("C-c l f b" . eglot-format-buffer)
-         ("C-c l l" . eglot)
-         ("C-c l r n" . eglot-rename)
-         ("C-c l s" . eglot-shutdown)))
-;; Language Server Protocol (LSP) with ~eglot~:1 ends here
-
-;; [[file:README.org::*Code block syntax highlighting for HTML export][Code block syntax highlighting for HTML export:1]]
-(use-package htmlize
-  :after (org))
-;; Code block syntax highlighting for HTML export:1 ends here
-
-;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
-(use-package ox-clip
-  :after org)
-;; Copying images out of org-babel:1 ends here
-
 ;; [[file:README.org::*SQL][SQL:1]]
 (defun renz/sql-mode-hook ()
   (setq tab-width 4)
@@ -937,22 +958,6 @@ Jumps at tangled code from org src block."
   :after (python))
 ;; blacken:1 ends here
 
-;; [[file:README.org::*Haskell][Haskell:1]]
-(use-package haskell-mode)
-;; Haskell:1 ends here
-
-;; [[file:README.org::*Golang][Golang:1]]
-(use-package go-mode)
-;; Golang:1 ends here
-
-;; [[file:README.org::*Lua][Lua:1]]
-(use-package lua-mode)
-;; Lua:1 ends here
-
-;; [[file:README.org::*yaml][yaml:1]]
-(use-package yaml-mode)
-;; yaml:1 ends here
-
 ;; [[file:README.org::*Markdown][Markdown:1]]
 (defun renz/md-hook ()
   (visual-fill-column-mode)
@@ -972,6 +977,22 @@ Jumps at tangled code from org src block."
   :mode ("\\.md" . poly-markdown-mode))
 ;; Code syntax in Markdown:1 ends here
 
+;; [[file:README.org::*yaml][yaml:1]]
+(use-package yaml-mode)
+;; yaml:1 ends here
+
+;; [[file:README.org::*Haskell][Haskell:1]]
+(use-package haskell-mode)
+;; Haskell:1 ends here
+
+;; [[file:README.org::*Golang][Golang:1]]
+(use-package go-mode)
+;; Golang:1 ends here
+
+;; [[file:README.org::*Lua][Lua:1]]
+(use-package lua-mode)
+;; Lua:1 ends here
+
 ;; [[file:README.org::*Rust][Rust:1]]
 (use-package rust-mode)
 ;; Rust:1 ends here
@@ -989,64 +1010,6 @@ Jumps at tangled code from org src block."
 (use-package csv-mode
   :mode "\\.csv\\'")
 ;; csv-mode:1 ends here
-
-;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
-(when (memq system-type '(windows-nt cygwin ms-dos))
-  ;; Set a better font on Windows
-  (set-face-attribute 'default nil :font "Hack NF-12")
-  ;; Alternate ispell when we've got msys on Windows
-  (setq ispell-program-name "aspell.exe")
-  ;; Set default shell to pwsh
-  ;; (setq explicit-shell-file-name "pwsh")
-  ;; Enable use of Winkey as super
-  (setq w32-pass-lwindow-to-system nil)
-  (setq w32-lwindow-modifier 'super) ; Left Windows key
-  (setq w32-pass-rwindow-to-system nil)
-  (setq w32-rwindow-modifier 'super) ; Right Windows key
-  ;; If we want to use a hotkey, we have to also register each
-  ;; combination specifically, like this:
-  (w32-register-hot-key [s-a])
-  (w32-register-hot-key [s-b])
-  (w32-register-hot-key [s-c])
-  (w32-register-hot-key [s-d])
-  (w32-register-hot-key [s-e])
-  (w32-register-hot-key [s-f])
-  (w32-register-hot-key [s-g])
-  (w32-register-hot-key [s-h])
-  (w32-register-hot-key [s-i])
-  (w32-register-hot-key [s-j])
-  (w32-register-hot-key [s-k])
-  ;; s-l can NEVER be registered as a key combination, since Windows
-  ;; handles it at a much lower level.
-  ;; (w32-register-hot-key [s-l])
-  (w32-register-hot-key [s-m])
-  (w32-register-hot-key [s-n])
-  (w32-register-hot-key [s-o])
-  (w32-register-hot-key [s-p])
-  (w32-register-hot-key [s-q])
-  (w32-register-hot-key [s-r])
-  (w32-register-hot-key [s-s])
-  (w32-register-hot-key [s-t])
-  (w32-register-hot-key [s-u])
-  (w32-register-hot-key [s-v])
-  (w32-register-hot-key [s-w])
-  (w32-register-hot-key [s-x])
-  (w32-register-hot-key [s-y])
-  (w32-register-hot-key [s-z]))
-;; Microsoft Windows:1 ends here
-
-;; [[file:README.org::*macOS][macOS:1]]
-(when (eq system-type 'darwin)
-  ;; Uncomment this if we can't install Hack Nerd font
-  ;; (set-face-attribute 'default nil :font "Menlo-14")
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
-  (exec-path-from-shell-initialize))
-;; macOS:1 ends here
-
-;; [[file:README.org::*Linux][Linux:1]]
-(when (eq system-type 'gnu/linux)
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11"))
-;; Linux:1 ends here
 
 ;; [[file:README.org::*Tramp][Tramp:1]]
 (setq vc-handled-backends '(Git))
@@ -1067,6 +1030,10 @@ Jumps at tangled code from org src block."
   ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
   )
 ;; Tramp:4 ends here
+
+;; [[file:README.org::*Magit][Magit:1]]
+(use-package magit)
+;; Magit:1 ends here
 
 ;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
 (use-package eww
@@ -1091,6 +1058,39 @@ Jumps at tangled code from org src block."
          ("C-c y i" . yank-inner)
          ("C-c y o" . yank-outer)))
 ;; change-inner:1 ends here
+
+;; [[file:README.org::*Esup: startup time profiling][Esup: startup time profiling:1]]
+(use-package esup
+  :bind ("C-c x p")
+  :config
+  (setq esup-depth 0))
+;; Esup: startup time profiling:1 ends here
+
+;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
+(use-package restart-emacs
+  :bind ("C-c x r" . restart-emacs))
+;; Reloading Emacs:1 ends here
+
+;; [[file:README.org::*Language Server Protocol (LSP) with ~eglot~][Language Server Protocol (LSP) with ~eglot~:1]]
+(use-package eglot
+  :bind (("C-c l c" . eglot-reconnect)
+         ("C-c l d" . flymake-show-buffer-diagnostics)
+         ("C-c l f f" . eglot-format)
+         ("C-c l f b" . eglot-format-buffer)
+         ("C-c l l" . eglot)
+         ("C-c l r n" . eglot-rename)
+         ("C-c l s" . eglot-shutdown)))
+;; Language Server Protocol (LSP) with ~eglot~:1 ends here
+
+;; [[file:README.org::*Code block syntax highlighting for HTML export][Code block syntax highlighting for HTML export:1]]
+(use-package htmlize
+  :after (org))
+;; Code block syntax highlighting for HTML export:1 ends here
+
+;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
+(use-package ox-clip
+  :after org)
+;; Copying images out of org-babel:1 ends here
 
 ;; [[file:README.org::*Start a server for =emacsclient=][Start a server for =emacsclient=:1]]
 (server-start)
