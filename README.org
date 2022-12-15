@@ -34,7 +34,6 @@ this config is designed to work equally well for:
 | macOS    | ✅       | ✅  | ✅        | ✅    |
 | Windows  | ❌       | ✅  | ❌        | ✅    |
 |----------+----------+-----+-----------+-------|
-
 Once I figure out how to get colors working in Windows terminal, I'll
 update this table.  For now though, the 16 bit colors don't react to
 my color theme, and so on Windows I rely singularly on GUI mode,
@@ -804,6 +803,8 @@ blocks I can always use =C-c '= to edit in ~prog-mode~, where I /do/ get line nu
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
 (add-hook 'yaml-mode-hook (lambda () (setq display-line-numbers 'relative)))
+(unless (display-graphic-p)
+  (add-hook 'text-mode-hook (lambda () (setq display-line-numbers 'relative))))
 #+end_src
 
 
@@ -1947,7 +1948,9 @@ Host *
 
 
 * Language server protocol (LSP) with =eglot=
-In Emacs 29, =eglot= will be built-in.  Until then, we have to ensure it's installed explicitly.  Amazingly, I've required basically no configuration to this program in order for it to work in most scenarios.
+In Emacs 29, =eglot= will be built-in.  Until then, we have to ensure it's
+installed explicitly.  Amazingly, I've required basically no configuration to
+this program in order for it to work in most scenarios.
 
 #+begin_src emacs-lisp
 (use-package eglot)
@@ -1962,7 +1965,10 @@ In Emacs 29, =eglot= will be built-in.  Until then, we have to ensure it's insta
 #+end_src
 
 * COMMENT TreeSitter
-I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /boy/ is it nice!  Nearly every major language has a tree-sitter parser that adds a lot of extra context, highlighting, and syntax-aware selection that old-school regexp simply cannot match.
+I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /boy/ is it nice!  Nearly
+every major language has a tree-sitter parser that adds a lot of extra context,
+highlighting, and syntax-aware selection that old-school regexp simply cannot
+match.
 
 #+begin_src emacs-lisp
 (use-package tree-sitter
