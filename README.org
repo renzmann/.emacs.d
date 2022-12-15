@@ -875,6 +875,12 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
   (setq find-program "fd"))
 #+end_src
 
+Some packages also require the ~ripgrep~ dependency.
+
+#+begin_src emacs-lisp
+(use-package ripgrep)
+#+end_src
+
 
 ** Make ~dired~ human-readable
 
@@ -1517,7 +1523,9 @@ Offers two functions:
 #+end_src
 
 
-* SQL
+* Language-specific major modes
+
+** SQL
 I'm not yet sure how to get Hive-SQL (~.hql~) recognized with the ~:mode~ keyword.
 When I figure that out I'll move that part up.
 
@@ -1585,7 +1593,7 @@ When I figure that out I'll move that part up.
   :after (sql))
 #+end_src
 
-*** TODO sql-formatter
+**** TODO sql-formatter
 I've modified [[https://github.com/purcell/sqlformat][sqlformat]] for use with [[https://www.npmjs.com/package/sql-formatter][sql-formatter]], but I need to find a way to
 pass in a JSON of configuration values to the command line interface when we
 call it.
@@ -1596,7 +1604,7 @@ call it.
 #+end_src
 
 
-* Python
+** Python
 
 The =M-x compile= feature does not recognize or parse ~pyright~ error messages out
 of the box, so I add that support myself.  Here's an example error message:
@@ -1700,7 +1708,7 @@ basis.
 Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with
 Jupyter kernels from org-mode.
 
-** pyrightconfig.json, Tramp, and eglot
+*** pyrightconfig.json, Tramp, and eglot
 
 The most consistent way to get =eglot= to properly configure the python virtual
 environment with =pyright= is to have a static file at the root of the project,
@@ -1718,7 +1726,7 @@ Emacs (ala =pythonic-activate= or similar) means we can be running the language
 server in more than one project at a time, each pointing to its respective
 virtual environment.
 
-** blacken
+*** blacken
 Formatting a buffer with =black= has never been easier!
 
 #+begin_src emacs-lisp
@@ -1728,7 +1736,7 @@ Formatting a buffer with =black= has never been easier!
 #+end_src
 
 
-* Haskell
+** Haskell
 Enemy of the state.
 
 #+begin_src emacs-lisp
@@ -1736,7 +1744,7 @@ Enemy of the state.
 #+end_src
 
 
-* Golang
+** Golang
 Winner of "cutest language mascot" since 2009.
 
 #+begin_src emacs-lisp
@@ -1744,21 +1752,21 @@ Winner of "cutest language mascot" since 2009.
 #+end_src
 
 
-* Lua
+** Lua
 
 #+begin_src emacs-lisp
 (use-package lua-mode)
 #+end_src
 
 
-* yaml
+** yaml
 
 #+begin_src emacs-lisp
 (use-package yaml-mode)
 #+end_src
 
 
-* Markdown
+** Markdown
 
 Some folks like to write markdown without hard line breaks.  When viewing those
 documents, I can use the ~renz/md-hook~ to view it as if there were line breaks in
@@ -1779,7 +1787,7 @@ it.
 #+end_src
 
 
-** Code syntax in Markdown
+*** Code syntax in Markdown
 Enable syntax highlighting within code fences for markdown
 
 #+begin_src emacs-lisp
@@ -1788,7 +1796,7 @@ Enable syntax highlighting within code fences for markdown
 #+end_src
 
 
-* Rust
+** Rust
 Feeling crabby?
 
 #+begin_src emacs-lisp
@@ -1796,14 +1804,14 @@ Feeling crabby?
 #+end_src
 
 
-* Scala
+** Scala
 
 #+begin_src emacs-lisp
 (use-package scala-mode)
 #+end_src
 
 
-* COMMENT Vim-mode
+** COMMENT Vim-mode
 In case we have to go to the dark place.
 
 #+begin_src emacs-lisp
@@ -1811,14 +1819,26 @@ In case we have to go to the dark place.
 #+end_src
 
 
-* ripgrep
+** AutoHotkey
 
 #+begin_src emacs-lisp
-(use-package ripgrep)
+(use-package ahk-mode
+  :mode "\\.ahk\\'")
 #+end_src
 
 
-* Microsoft Windows
+** csv-mode
+Handy for viewing data quickly.
+
+#+begin_src emacs-lisp
+(use-package csv-mode
+  :mode "\\.csv\\'")
+#+end_src
+
+
+* OS-specific configuration
+
+** Microsoft Windows
 
 Windows, funnily enough, has some trouble registering the Windows key as a usable modifier for emacs.  In fact, =s-l= will /never/ be an option, since it's handled at the hardware level.  I also add a few nice-to-haves, like setting the default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always install with ~msys64~.
 
@@ -1868,7 +1888,7 @@ Windows, funnily enough, has some trouble registering the Windows key as a usabl
 #+end_src
 
 
-* macOS
+** macOS
 Launching Emacs from the typical application launcher or command-space usually won't capture any modifications to =$PATH=, typically handled in a file like =~/.profile= or =~/.bashrc=. So, the main configuration included here is from [[https://github.com/purcell/exec-path-from-shell][exec-path-from-shell]].
 
 #+begin_src emacs-lisp
@@ -1880,7 +1900,7 @@ Launching Emacs from the typical application launcher or command-space usually w
 #+end_src
 
 
-* Linux
+** Linux
 Very little to do here.  Emacs on on Linux seems to "just work".
 
 #+begin_src emacs-lisp
@@ -1951,24 +1971,6 @@ Host *
 #+end_example
 
 
-* Language server protocol (LSP) with =eglot=
-In Emacs 29, =eglot= will be built-in.  Until then, we have to ensure it's
-installed explicitly.  Amazingly, I've required basically no configuration to
-this program in order for it to work in most scenarios.
-
-#+begin_src emacs-lisp
-(use-package eglot)
-(use-package eglot
-  :bind (("C-c l c" . eglot-reconnect)
-         ("C-c l d" . flymake-show-buffer-diagnostics)
-         ("C-c l f f" . eglot-format)
-         ("C-c l f b" . eglot-format-buffer)
-         ("C-c l l" . eglot)
-         ("C-c l r n" . eglot-rename)
-         ("C-c l s" . eglot-shutdown)))
-#+end_src
-
-
 * COMMENT TreeSitter
 I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /boy/ is it nice!  Nearly
 every major language has a tree-sitter parser that adds a lot of extra context,
@@ -1985,14 +1987,6 @@ match.
 #+end_src
 
 
-* AutoHotkey
-
-#+begin_src emacs-lisp
-(use-package ahk-mode
-  :mode "\\.ahk\\'")
-#+end_src
-
-
 * eww - search engine and browser
 Ecosia requires Javascript, unfortunately.
 
@@ -2000,15 +1994,6 @@ Ecosia requires Javascript, unfortunately.
 (use-package eww
   :config
   (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
-#+end_src
-
-
-* csv-mode
-Handy for viewing data quickly.
-
-#+begin_src emacs-lisp
-(use-package csv-mode
-  :mode "\\.csv\\'")
 #+end_src
 
 

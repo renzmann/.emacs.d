@@ -485,6 +485,10 @@ emacs config site with matching `extension' regexp"
   (setq find-program "fd"))
 ;; Prefer =rg= and =fd= over =grep= and =find=:1 ends here
 
+;; [[file:README.org::*Prefer =rg= and =fd= over =grep= and =find=][Prefer =rg= and =fd= over =grep= and =find=:2]]
+(use-package ripgrep)
+;; Prefer =rg= and =fd= over =grep= and =find=:2 ends here
+
 ;; [[file:README.org::*Make ~dired~ human-readable][Make ~dired~ human-readable:1]]
 (setq dired-listing-switches "-alFh")
 ;; (setq-default dired-hide-details-mode t)
@@ -976,9 +980,15 @@ Jumps at tangled code from org src block."
 (use-package scala-mode)
 ;; Scala:1 ends here
 
-;; [[file:README.org::*ripgrep][ripgrep:1]]
-(use-package ripgrep)
-;; ripgrep:1 ends here
+;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]
+(use-package ahk-mode
+  :mode "\\.ahk\\'")
+;; AutoHotkey:1 ends here
+
+;; [[file:README.org::*csv-mode][csv-mode:1]]
+(use-package csv-mode
+  :mode "\\.csv\\'")
+;; csv-mode:1 ends here
 
 ;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
 (when (memq system-type '(windows-nt cygwin ms-dos))
@@ -1058,33 +1068,11 @@ Jumps at tangled code from org src block."
   )
 ;; Tramp:4 ends here
 
-;; [[file:README.org::*Language server protocol (LSP) with =eglot=][Language server protocol (LSP) with =eglot=:1]]
-(use-package eglot)
-(use-package eglot
-  :bind (("C-c l c" . eglot-reconnect)
-         ("C-c l d" . flymake-show-buffer-diagnostics)
-         ("C-c l f f" . eglot-format)
-         ("C-c l f b" . eglot-format-buffer)
-         ("C-c l l" . eglot)
-         ("C-c l r n" . eglot-rename)
-         ("C-c l s" . eglot-shutdown)))
-;; Language server protocol (LSP) with =eglot=:1 ends here
-
-;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]
-(use-package ahk-mode
-  :mode "\\.ahk\\'")
-;; AutoHotkey:1 ends here
-
 ;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
 (use-package eww
   :config
   (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
 ;; eww - search engine and browser:1 ends here
-
-;; [[file:README.org::*csv-mode][csv-mode:1]]
-(use-package csv-mode
-  :mode "\\.csv\\'")
-;; csv-mode:1 ends here
 
 ;; [[file:README.org::*diff-hl][diff-hl:1]]
 (use-package diff-hl
