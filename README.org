@@ -21,7 +21,8 @@ configuration looks like so:
 #+attr_html: :width 800px
 [[https://user-images.githubusercontent.com/32076780/201825125-aa94bfa3-0d1a-47d4-b451-be3718850da2.jpg]]
 
-If you prefer a prettier reading experience, check out this same document weaved into [[https://robbmann.io/emacsd/][my website.]]
+If you prefer a prettier reading experience, check out this same document weaved
+into [[https://robbmann.io/emacsd/][my website.]]
 
 * Goals
 I use all three of the major platforms, in both GUI and TTY mode.  So
