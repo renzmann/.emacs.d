@@ -109,18 +109,20 @@
   (load-theme 'ef-cherie :no-confirm))
 ;; Theme: ~ef-themes~:1 ends here
 
-;; [[file:README.org::*Allow for ~narrow-to-region~][Allow for ~narrow-to-region~:1]]
-(put 'narrow-to-region 'disabled nil)
-;; Allow for ~narrow-to-region~:1 ends here
+;; [[file:README.org::*~dabbrev~: swap ~M-/~ and ~C-M-/~][~dabbrev~: swap ~M-/~ and ~C-M-/~:1]]
+(use-package dabbrev
+  ;; Swap M-/ and C-M-/
+  :bind (("M-/" . dabbrev-completion)
+         ("C-M-/" . dabbrev-expand))
+  ;; Other useful Dabbrev configurations.
+  :custom
+  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
+;; ~dabbrev~: swap ~M-/~ and ~C-M-/~:1 ends here
 
-;; [[file:README.org::*Mode line][Mode line:1]]
+;; [[file:README.org::*Mode line][Mode line:2]]
 (setq column-number-mode t
-      mode-line-in-non-selected-windows t
-      display-battery-mode t
-      display-time-day-and-date t)
-
-(display-time)
-;; Mode line:1 ends here
+      mode-line-in-non-selected-windows t)
+;; Mode line:2 ends here
 
 ;; [[file:README.org::*=eldoc=][=eldoc=:1]]
 (setq eldoc-echo-area-use-multiline-p nil)
@@ -131,11 +133,6 @@
 (savehist-mode 1)
 ;; Remember minibuffer history:1 ends here
 
-;; [[file:README.org::*Use ~aspell~ by default for spell checking][Use ~aspell~ by default for spell checking:1]]
-(when (executable-find "aspell")
-  (setq ispell-program-name "aspell"))
-;; Use ~aspell~ by default for spell checking:1 ends here
-
 ;; [[file:README.org::*Colored output in ~eshell~][Colored output in ~eshell~:1]]
 (add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
 ;; Colored output in ~eshell~:1 ends here
@@ -145,14 +142,8 @@
 ;; Recent files menu:1 ends here
 
 ;; [[file:README.org::*Fill-column][Fill-column:1]]
-(use-package visual-fill-column
-  :config
-  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
-;; Fill-column:1 ends here
-
-;; [[file:README.org::*Fill-column][Fill-column:2]]
 (setq-default fill-column 80)
-;; Fill-column:2 ends here
+;; Fill-column:1 ends here
 
 ;; [[file:README.org::*Scroll bar][Scroll bar:1]]
 (scroll-bar-mode -1)
@@ -181,9 +172,9 @@
 (setq vc-follow-symlinks t)
 ;; Automatically visit symlink sources:1 ends here
 
-;; [[file:README.org::*Indent with spaces][Indent with spaces:1]]
+;; [[file:README.org::*Indent with spaces by default][Indent with spaces by default:1]]
 (setq-default indent-tabs-mode nil)
-;; Indent with spaces:1 ends here
+;; Indent with spaces by default:1 ends here
 
 ;; [[file:README.org::*Render ASCII color escape codes][Render ASCII color escape codes:1]]
 (defun renz/display-ansi-colors ()
@@ -201,20 +192,9 @@
   (setq switch-to-buffer-obey-display-actions t))
 ;; Window management:1 ends here
 
-;; [[file:README.org::*Enable up/downcase-region][Enable up/downcase-region:1]]
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-;; Enable up/downcase-region:1 ends here
-
 ;; [[file:README.org::*Automatically update buffers when contents change on disk][Automatically update buffers when contents change on disk:1]]
 (global-auto-revert-mode)
 ;; Automatically update buffers when contents change on disk:1 ends here
-
-;; [[file:README.org::*Marginalia][Marginalia:1]]
-(use-package marginalia
-
-  :config (marginalia-mode))
-;; Marginalia:1 ends here
 
 ;; [[file:README.org::*Highlight the line point is on][Highlight the line point is on:1]]
 (add-hook 'prog-mode-hook #'hl-line-mode)
@@ -290,10 +270,6 @@
   (setq find-program "fd"))
 ;; Prefer =rg= and =fd= over =grep= and =find=:1 ends here
 
-;; [[file:README.org::*Prefer =rg= and =fd= over =grep= and =find=][Prefer =rg= and =fd= over =grep= and =find=:2]]
-(use-package ripgrep)
-;; Prefer =rg= and =fd= over =grep= and =find=:2 ends here
-
 ;; [[file:README.org::*Make ~dired~ human-readable][Make ~dired~ human-readable:1]]
 (setq dired-listing-switches "-alFh")
 ;; (setq-default dired-hide-details-mode t)
@@ -303,17 +279,17 @@
 (setq confirm-kill-emacs 'yes-or-no-p)
 ;; Confirm when exiting Emacs:1 ends here
 
-;; [[file:README.org::*Prefer ~aspell~ over ~ispell~][Prefer ~aspell~ over ~ispell~:1]]
-(when (executable-find "aspell")
-  (setq ispell-program-name "aspell"))
-;; Prefer ~aspell~ over ~ispell~:1 ends here
-
 ;; [[file:README.org::*Smooth scrolling][Smooth scrolling:1]]
 (if (version< emacs-version "29.0")
     (pixel-scroll-mode)
   (pixel-scroll-precision-mode 1)
   (setq pixel-scroll-precision-large-scroll-height 35.0))
 ;; Smooth scrolling:1 ends here
+
+;; [[file:README.org::*Prefer ~aspell~ over ~ispell~][Prefer ~aspell~ over ~ispell~:1]]
+(when (executable-find "aspell")
+  (setq ispell-program-name "aspell"))
+;; Prefer ~aspell~ over ~ispell~:1 ends here
 
 ;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
 (setq backup-directory-alist
@@ -322,6 +298,15 @@
       ;; '(("." ,temporary-file-directory t))
       )
 ;; Backup and auto-save files:1 ends here
+
+;; [[file:README.org::*Enable ~narrow-to-region~][Enable ~narrow-to-region~:1]]
+(put 'narrow-to-region 'disabled nil)
+;; Enable ~narrow-to-region~:1 ends here
+
+;; [[file:README.org::*Enable up/downcase-region][Enable up/downcase-region:1]]
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+;; Enable up/downcase-region:1 ends here
 
 ;; [[file:README.org::*Keybound functions][Keybound functions:1]]
 (defun renz/--jump-section (dirname prompt extension)
@@ -571,29 +556,29 @@ emacs config site with matching `extension' regexp"
   )
 ;; Consult:1 ends here
 
-;; [[file:README.org::*Autocompletion][Autocompletion:1]]
+;; [[file:README.org::*Completion style: Orderless][Completion style: Orderless:1]]
 (setq completion-styles '(flex basic partial-completion emacs22))
-;; Autocompletion:1 ends here
+;; Completion style: Orderless:1 ends here
 
-;; [[file:README.org::*Autocompletion][Autocompletion:2]]
-(temp-buffer-resize-mode)
-(setq temp-buffer-max-height 20)
-;; Autocompletion:2 ends here
-
-;; [[file:README.org::*Autocompletion][Autocompletion:3]]
+;; [[file:README.org::*Completion style: Orderless][Completion style: Orderless:2]]
 (use-package orderless
   :config
   (add-to-list 'completion-styles 'orderless)
 
   :custom
   (completion-category-overrides '((file (styles basic partial-completion)))))
-;; Autocompletion:3 ends here
+;; Completion style: Orderless:2 ends here
 
-;; [[file:README.org::*Autocompletion][Autocompletion:4]]
+;; [[file:README.org::*Nicer display of ~*Completions*~][Nicer display of ~*Completions*~:1]]
 (setq completions-format 'one-column)
-;; Autocompletion:4 ends here
+;; Nicer display of ~*Completions*~:1 ends here
 
-;; [[file:README.org::*Autocompletion][Autocompletion:5]]
+;; [[file:README.org::*Nicer display of ~*Completions*~][Nicer display of ~*Completions*~:2]]
+(temp-buffer-resize-mode)
+(setq temp-buffer-max-height 20)
+;; Nicer display of ~*Completions*~:2 ends here
+
+;; [[file:README.org::*Keybindings to interact with ~*Completions*~][Keybindings to interact with ~*Completions*~:1]]
 (defun renz/completion-accept ()
   "Expand current text to first completion result"
   (interactive)
@@ -613,28 +598,28 @@ emacs config site with matching `extension' regexp"
   "Close the *Completions* buffer without switching to it"
   (interactive)
   (kill-buffer "*Completions*"))
-;; Autocompletion:5 ends here
+;; Keybindings to interact with ~*Completions*~:1 ends here
 
-;; [[file:README.org::*Autocompletion][Autocompletion:6]]
+;; [[file:README.org::*Keybindings to interact with ~*Completions*~][Keybindings to interact with ~*Completions*~:2]]
 (define-key completion-in-region-mode-map (kbd "C-n") 'renz/jump-completion)
 (define-key completion-list-mode-map (kbd "C-n") 'next-completion)
 (define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
-;; Autocompletion:6 ends here
+;; Keybindings to interact with ~*Completions*~:2 ends here
 
-;; [[file:README.org::*Autocompletion][Autocompletion:7]]
+;; [[file:README.org::*Keybindings to interact with ~*Completions*~][Keybindings to interact with ~*Completions*~:3]]
 (define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
-;; Autocompletion:7 ends here
+;; Keybindings to interact with ~*Completions*~:3 ends here
 
-;; [[file:README.org::*Minibuffer completion with ~vertico~][Minibuffer completion with ~vertico~:1]]
+;; [[file:README.org::*Minibuffer completion with ~vertico~ and ~marginalia~][Minibuffer completion with ~vertico~ and ~marginalia~:1]]
 (use-package vertico
-  :config
-  (vertico-mode))
-;; Minibuffer completion with ~vertico~:1 ends here
+  :config (vertico-mode))
+;; Minibuffer completion with ~vertico~ and ~marginalia~:1 ends here
 
-;; [[file:README.org::*Minibuffer completion with ~vertico~][Minibuffer completion with ~vertico~:2]]
-(setq tab-always-indent 'complete)
-;; Minibuffer completion with ~vertico~:2 ends here
+;; [[file:README.org::*Minibuffer completion with ~vertico~ and ~marginalia~][Minibuffer completion with ~vertico~ and ~marginalia~:2]]
+(use-package marginalia
+  :config (marginalia-mode))
+;; Minibuffer completion with ~vertico~ and ~marginalia~:2 ends here
 
 ;; [[file:README.org::*Completion at point with ~corfu~][Completion at point with ~corfu~:1]]
 (unless (display-graphic-p)
@@ -692,32 +677,9 @@ emacs config site with matching `extension' regexp"
     (corfu-mode -1)))
 ;; Completion at point with ~corfu~:2 ends here
 
-;; [[file:README.org::*~dabbrev~ adjustments for corfu][~dabbrev~ adjustments for corfu:1]]
-(use-package dabbrev
-  ;; Swap M-/ and C-M-/
-  :bind (("M-/" . dabbrev-completion)
-         ("C-M-/" . dabbrev-expand))
-  ;; Other useful Dabbrev configurations.
-  :custom
-  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
-;; ~dabbrev~ adjustments for corfu:1 ends here
-
-;; [[file:README.org::*In case of emergency: ~fzf~][In case of emergency: ~fzf~:1]]
-(use-package fzf
-  :bind (("C-c f" . fzf))
-  :config
-  ;; (setq fzf/args "-x --color bw --print-query --margin=1,0 --no-hscroll"
-  (setq fzf/args "-x --print-query --margin=1,0 --no-hscroll"
-        fzf/executable "fzf"
-        fzf/git-grep-args "-i --line-number %s"
-        ;; command used for `fzf-grep-*` functions
-        ;; example usage for ripgrep:
-        ;; fzf/grep-command "rg --no-heading -nH"
-        fzf/grep-command "grep -nrH"
-        ;; If nil, the fzf buffer will appear at the top of the window
-        fzf/position-bottom t
-        fzf/window-height 15))
-;; In case of emergency: ~fzf~:1 ends here
+;; [[file:README.org::*Completion at point with ~corfu~][Completion at point with ~corfu~:3]]
+(setq tab-always-indent 'complete)
+;; Completion at point with ~corfu~:3 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:1]]
 (setq renz/org-home "~/org/")
@@ -1022,6 +984,12 @@ Jumps at tangled code from org src block."
 (add-to-list 'tramp-remote-path "~/.local/bin")
 (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
 ;; Tramp:4 ends here
+
+;; [[file:README.org::*Visual fill column][Visual fill column:1]]
+(use-package visual-fill-column
+  :config
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
+;; Visual fill column:1 ends here
 
 ;; [[file:README.org::*Magit][Magit:1]]
 (use-package magit)

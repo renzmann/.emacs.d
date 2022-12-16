@@ -198,8 +198,10 @@ Very little to do here.  Emacs on on Linux seems to "just work".
 
 * Theme: ~ef-themes~
 [[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with
-his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too!  First, the =ef-themes-headings= variable
-creates larger, bolder headings when in [[Org-mode]].
+his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too! The =ef-themes-headings= variable creates
+larger, bolder headings when in [[Org-mode]], and ~ef-themes-to-toggle~ allows me to
+quickly switch between preset light and dark themes depending on the ambient
+light of the room I'm in.
 
 #+begin_src emacs-lisp
 (use-package ef-themes
@@ -225,13 +227,14 @@ creates larger, bolder headings when in [[Org-mode]].
 
 I LOVE these themes from =ef-themes=:
 
-- *Light*
-  - =ef-frost=
-  - =ef-light=
-- *Dark*
-  - =ef-cherie=
-  - =ef-trio-dark=
-  - =ef-winter=
+ * *Light*
+   + =ef-frost=
+   + =ef-light=
+   + =ef-summer=
+ * *Dark*
+   + =ef-cherie=
+   + =ef-trio-dark=
+   + =ef-winter=
 
 I've mostly settled on ~ef-cherie~, but sometimes switch to the others above.
 
@@ -239,7 +242,7 @@ I've mostly settled on ~ef-cherie~, but sometimes switch to the others above.
 
 It's worth mentioning that I've tried [[https://www.nordtheme.com/ports/emacs/][nord-theme]] a couple times and found that
 the legibility or contrast wasn't quite good enough in some modes.  Though I
-still employ Nord for my terminal config in Alacritty or Kitty, where it looks
+still employ Nord for my terminal config in Alacritty and Kitty, where it looks
 /excellent/.  I also still actively use the [[https://github.com/EdenEast/nightfox.nvim][nordfox]] theme in Neovim, which sports
 a beautiful TreeSitter integration.
 
@@ -255,24 +258,38 @@ Kitty for me, I haven't spent too much time looking into it.
 My settings for base emacs.  Assuming I ran with /no/ plugins (ala ~emacs -Q~), I
 would still set most of these by hand at one point or another.
 
-** Allow for ~narrow-to-region~
+** ~dabbrev~: swap ~M-/~ and ~C-M-/~
 
 #+begin_src emacs-lisp
-(put 'narrow-to-region 'disabled nil)
-#+end_src
-
+(use-package dabbrev
+  ;; Swap M-/ and C-M-/
+  :bind (("M-/" . dabbrev-completion)
+         ("C-M-/" . dabbrev-expand))
+  ;; Other useful Dabbrev configurations.
+  :custom
+  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
+  #+end_src
 
 ** Mode line
+It's easy for the mode line to get cluttered once things like Flymake and eglot
+kick in.  When I was starting out, I used to have these two settings:
 
-#+begin_src emacs-lisp
-(setq column-number-mode t
-      mode-line-in-non-selected-windows t
-      display-battery-mode t
+#+begin_src emacs-lisp :tangle no :eval never
+(setq display-battery-mode t
       display-time-day-and-date t)
 
 (display-time)
 #+end_src
 
+After a while I noticed that I'm almost never running emacs in a full screen
+where I can't see the battery or date in the corner of my window manager, so
+they were just wasting mode line space.  Nowadays I simply opt for column mode
+and a dimmed mode line in non-selected windows.
+
+#+begin_src emacs-lisp
+(setq column-number-mode t
+      mode-line-in-non-selected-windows t)
+#+end_src
 
 ** =eldoc=
 I find it very distracting when =eldoc= suddenly pops up and consumes a large part
@@ -282,7 +299,6 @@ of the screen for docstrings in python.
 (setq eldoc-echo-area-use-multiline-p nil)
 #+end_src
 
-
 ** Remember minibuffer history
 Found this on a [[https://www.youtube.com/watch?v=51eSeqcaikM][System Crafters video]].
 
@@ -291,22 +307,12 @@ Found this on a [[https://www.youtube.com/watch?v=51eSeqcaikM][System Crafters v
 (savehist-mode 1)
 #+end_src
 
-
-** Use ~aspell~ by default for spell checking
-
-#+begin_src emacs-lisp
-(when (executable-find "aspell")
-  (setq ispell-program-name "aspell"))
-#+end_src
-
-
 ** Colored output in ~eshell~
 Copy-pasted from a [[https://emacs.stackexchange.com/questions/9517/colored-git-output-in-eshell][stack overflow question]].
 
 #+begin_src emacs-lisp
 (add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
 #+end_src
-
 
 ** Recent files menu
 This enables "File -> Open Recent" from the menu bar, and ~consult-recent-file~.
@@ -315,18 +321,7 @@ This enables "File -> Open Recent" from the menu bar, and ~consult-recent-file~.
 (recentf-mode t)
 #+end_src
 
-
 ** Fill-column
-For visual lines, this adds line breaks at the fill-column value.  Especially
-useful for prose that is meant to be copied to other mediums, such as email or
-word.
-
-#+begin_src emacs-lisp
-(use-package visual-fill-column
-  :config
-  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
-#+end_src
-
 Regardless of whether we're doing visual fill or hard fill, I like the default
 at around 80 characters, and I'll manually change it per buffer if I want
 something different
@@ -334,7 +329,6 @@ something different
 #+begin_src emacs-lisp
 (setq-default fill-column 80)
 #+end_src
-
 
 ** Scroll bar
 I toggle this one on/off sometimes depending on how I feel and which OS I'm
@@ -344,14 +338,14 @@ currently on.
 (scroll-bar-mode -1)
 #+end_src
 
-
 ** Inihibit splash screen
-I can always get back to the OG GNU Spash with =C-h C-a=
+When I was starting out, the OG GNU Spash was a /super/ helpful screen.  Lately I
+haven't needed the reminder links as often, but I sometimes get back to it to
+with =C-h C-a=.
 
 #+begin_src emacs-lisp
 (setq inhibit-splash-screen t)
 #+end_src
-
 
 ** Window margins and fringe
 This hunk adds some space around all sides of each window so that we get a clear
@@ -372,21 +366,22 @@ clean and well delineated for [[=org-modern=][org-modern]].
 (set-face-background 'fringe (face-attribute 'default :background))
 #+end_src
 
-
 ** Automatically visit symlink sources
+When navigating to a file that is a symlink, this automatically redirects us to
+the source file it's pointing to.
 
 #+begin_src emacs-lisp
 (setq find-file-visit-truename t)
 (setq vc-follow-symlinks t)
 #+end_src
 
-
-** Indent with spaces
+** Indent with spaces by default
+For the most part I edit Python, SQL, Markdown, Org, and shell scripts.  All of
+these favor spaces over tabs, so I prefer this as the default.
 
 #+begin_src emacs-lisp
 (setq-default indent-tabs-mode nil)
 #+end_src
-
 
 ** Render ASCII color escape codes
 For files containing color escape codes, this provides a way to render the
@@ -399,7 +394,6 @@ colors in-buffer.
   (ansi-color-apply-on-region (point-min) (point-max)))
 #+end_src
 
-
 ** Enable horizontal scrolling with mouse
 From a helpful [[https://stackoverflow.com/a/67758169][stackoverflow answer.]]
 
@@ -407,69 +401,35 @@ From a helpful [[https://stackoverflow.com/a/67758169][stackoverflow answer.]]
 (setq mouse-wheel-tilt-scroll t)
 #+end_src
 
-
 ** Window management
-I need to give the [[https://www.masteringemacs.org/article/demystifying-emacs-window-manager][article]] another read about what's going on, but it seems
-helpful.
+From a Mickey Petersen [[https://www.masteringemacs.org/article/demystifying-emacs-window-manager][article]], this causes ~switch-to-buffer~ to open the
+selected buffer in the current window rather than switching windows, assuming
+both are open in the current frame.  This is more frequently the behavior I
+intend when I'm trying to get a window to display a specific buffer.
 
 #+begin_src emacs-lisp
 (unless (version< emacs-version "27.1")
   (setq switch-to-buffer-obey-display-actions t))
 #+end_src
 
-
-** Enable up/downcase-region
-
-#+begin_src emacs-lisp
-(put 'upcase-region 'disabled nil)
-(put 'downcase-region 'disabled nil)
-#+end_src
-
-
 ** Automatically update buffers when contents change on disk
+Without setting ~global-auto-revert-mode~, we have to remember to issue a
+~revert-buffer~ or ~revert-buffer-quick~ (=C-x x g= by default) in case a file
+changed.  Over Tramp, we still have to manually revert files when they've
+changed on disk.
 
 #+begin_src emacs-lisp
 (global-auto-revert-mode)
 #+end_src
 
-
-** COMMENT Initial frame size for GUI
-This kind of assumes that startup is fast.  Add this back in once we get a
-snappy startup again.
-
-#+begin_src emacs-lisp
-(setq renz/frame-default-alist
-      '(
-        (tool-bar-lines . 0)
-        (width . 180) ; chars
-        (height . 60) ; lines
-        (left . 125)
-        (top . 125)))
-
-(when (display-graphic-p)
-  (setq initial-frame-alist renz/frame-default-alist)
-  (setq default-frame-alist renz/frame-default-alist))
-#+end_src
-
-
-** Marginalia
-Adds helpful information in the margin when using the minibuffer
-
-#+begin_src emacs-lisp
-(use-package marginalia
-
-  :config (marginalia-mode))
-#+end_src
-
-
 ** Highlight the line point is on
+Add a faint background highlight to the line we're editing.
 
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook #'hl-line-mode)
 (add-hook 'text-mode-hook #'hl-line-mode)
 (add-hook 'org-mode-hook #'hl-line-mode)
 #+end_src
-
 
 ** Stop stupid bell
 This snippet has a special place in my heart, because it was the first two lines
@@ -480,13 +440,17 @@ of elisp I wrote when first learning Emacs.
 (setq ring-bell-function 'ignore)
 #+end_src
 
+The bell is really, /really/ annoying.
 
 ** Enable split-window dired copying
+Do-What-I-Mean (DWIM) copying is for when two dired windows are open, and we
+want to copy something from one location to the other.  By enabling
+~dired-dwim-target~, it auto-populates the minibuffer with the other dired
+window's path when issuing a copy command with ~C~.
 
 #+begin_src emacs-lisp
 (setq dired-dwim-target t)
 #+end_src
-
 
 ** Automatically create matching parens in programming modes
 
@@ -494,7 +458,6 @@ of elisp I wrote when first learning Emacs.
 (add-hook 'prog-mode-hook (electric-pair-mode t))
 (add-hook 'prog-mode-hook (show-paren-mode t))
 #+end_src
-
 
 ** Delete whitespace on save
 I would also like to have a good-looking display for trailing whitespace and
@@ -506,14 +469,12 @@ check for mixed tabs, spaces, and line endings.
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 #+end_src
 
-
 ** Don't wrap lines
 
 #+begin_src emacs-lisp
 (setq-default truncate-lines t)
 (add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
 #+end_src
-
 
 ** Relative line numbers
 For programming and prose/writing modes.
@@ -532,21 +493,21 @@ blocks I can always use =C-c '= to edit in ~prog-mode~, where I /do/ get line nu
   (add-hook 'text-mode-hook (lambda () (setq display-line-numbers 'relative))))
 #+end_src
 
-
 ** Delete region when we yank on top of it
-I just think that's a funny sentence.
+I just think that's a funny sentence.  Normally when yanking text with an active
+region, the region will remain and the yanked text is just inserted at point.  I
+prefer the modern word processor behavior of replacing the selected text with
+the yanked content.
 
 #+begin_src emacs-lisp
 (delete-selection-mode t)
 #+end_src
-
 
 ** Enable mouse in terminal/TTY
 
 #+begin_src emacs-lisp
 (xterm-mouse-mode 1)
 #+end_src
-
 
 ** Compilation
 As new text appears, the default behavior is for it to spill off the bottom
@@ -570,7 +531,6 @@ answer]].
 (add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
 #+end_src
 
-
 ** Tool bar
 I usually leave the tool bar disabled
 
@@ -578,9 +538,8 @@ I usually leave the tool bar disabled
 (tool-bar-mode -1)
 #+end_src
 
-The MENU bar, on the other hand =(menu-bar-mode)=, is very handy, and I don't
+The /menu/ bar, on the other hand =(menu-bar-mode)=, is very handy, and I don't
 think I'll ever disable it.
-
 
 ** Ignore risky .dir-locals.el
 From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
@@ -588,7 +547,6 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 #+begin_src emacs-lisp
 (advice-add 'risky-local-variable-p :override #'ignore)
 #+end_src
-
 
 ** Prefer =rg= and =fd= over =grep= and =find=
 
@@ -600,35 +558,21 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
   (setq find-program "fd"))
 #+end_src
 
-Some packages also require the ~ripgrep~ dependency.
-
-#+begin_src emacs-lisp
-(use-package ripgrep)
-#+end_src
-
-
 ** Make ~dired~ human-readable
+By default, ~dired~ uses bytes instead of "K", "Mb", or "G" for file sizes.
 
 #+begin_src emacs-lisp
 (setq dired-listing-switches "-alFh")
 ;; (setq-default dired-hide-details-mode t)
 #+end_src
 
-
 ** Confirm when exiting Emacs
+It's very annoying when I'm working and suddenly I meant to do ~C-c C-x~, but
+instead hit ~C-x C-c~.  This helps prevent that.
 
 #+begin_src emacs-lisp
 (setq confirm-kill-emacs 'yes-or-no-p)
 #+end_src
-
-
-** Prefer ~aspell~ over ~ispell~
-
-#+begin_src emacs-lisp
-(when (executable-find "aspell")
-  (setq ispell-program-name "aspell"))
-#+end_src
-
 
 ** Smooth scrolling
 Emacs 29 introduced smooth, pixel-level scrolling, which removes much of the
@@ -641,6 +585,12 @@ Emacs 29 introduced smooth, pixel-level scrolling, which removes much of the
   (setq pixel-scroll-precision-large-scroll-height 35.0))
 #+end_src
 
+** Prefer ~aspell~ over ~ispell~
+
+#+begin_src emacs-lisp
+(when (executable-find "aspell")
+  (setq ispell-program-name "aspell"))
+#+end_src
 
 ** Backup and auto-save files
 Keep all backup files in a temporary folder.  At the moment I have some "file
@@ -653,6 +603,39 @@ I'll uncomment the second part.
       ;; auto-save-file-name-transforms
       ;; '(("." ,temporary-file-directory t))
       )
+#+end_src
+
+** COMMENT Initial frame size for GUI
+This kind of assumes that startup is fast.  Originally I was annoyed at how
+small the initial frame is when starting emacs, but I've come to not care after
+getting used to it.  Back when I /did/ care, I used this to make the frame a bit
+bigger at launch.
+
+#+begin_src emacs-lisp
+(setq renz/frame-default-alist
+      '(
+        (tool-bar-lines . 0)
+        (width . 180) ; chars
+        (height . 60) ; lines
+        (left . 125)
+        (top . 125)))
+
+(when (display-graphic-p)
+  (setq initial-frame-alist renz/frame-default-alist)
+  (setq default-frame-alist renz/frame-default-alist))
+#+end_src
+
+** Enable ~narrow-to-region~
+
+#+begin_src emacs-lisp
+(put 'narrow-to-region 'disabled nil)
+#+end_src
+
+** Enable up/downcase-region
+
+#+begin_src emacs-lisp
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
 #+end_src
 
 
@@ -774,9 +757,8 @@ Provided by a [[https://emacs.stackexchange.com/a/52554][stack overflow answer]]
 header for each possible =C-c= combination, but it's increcibly handy when I want
 to jump directly to one of these headings while in another buffer.  See
 e.g. =renz/jump-init=, which allows me to narrow in on a particular key I'd like
-to bind by leveraging =completing-read=.  If a =C-c <letter>= combination is missing
-as a header, then I'm probably using it in a ~:bind~ statement with ~use-package~
-somewhere else.
+to bind by leveraging =completing-read=.  If a =C-c <letter>= combination is missing as a header, then I'm probably using it
+in a ~:bind~ statement with ~use-package~ somewhere else.
 
 *** =C-c b= scroll-bar-mode
 
@@ -1023,25 +1005,41 @@ expression with =consult-line=.
 
 * Autocompletion
 Emacs offers incredible depth and freedom when configuring methods that
-automatically complete text.  First, we set the "completion style", which is the
-method of assigning completion candidates to a given input string.  "flex" is
-the built-in "fuzzy" completion style, familiar to us from command prompts in
-IDEs and VSCode's command palette.
+automatically complete text.  There are actually two things that
+"autocompletion" can refer to in Emacs:
+
+1. [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Completion.html][Minibuffer completion]]
+2. [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Completion-in-Buffers.html][Completion at point]]
+
+Emacs on its own does not have a nice pop-up-menu like Vim for completing text
+at point.  For both the minibuffer and ~completion-at-point~ it uses a special
+buffer called ~*Completions*~, from which we can see (and optionally select) a
+completion from potential candidates.  It only updates when issuing a command,
+such as hitting TAB, rather than updating live as we type, which makes it a bit
+clunky compared to what we see in modern editors.  We will lean on some external
+packages to remedy this, but before getting to that we have two orders of
+business:
+
+1. Setting the /completion style/
+2. Ehancing the behavior of the default ~*Completions*~ buffer and how we can
+   interact with it.
+
+** Completion style: Orderless
+For both the minibuffer and ~completion-at-point~, I use the same /completion
+style/.  Completion style is the method of assigning completion candidates to a
+given input string.  ~flex~ is the built-in "fuzzy" completion style, familiar to
+us from symbol completion in IDEs and VSCode's command palette.  ~basic~ functions
+much like your default TAB-complete at a Bash shell.
 
 #+begin_src emacs-lisp
 (setq completion-styles '(flex basic partial-completion emacs22))
 #+end_src
 
-When using the default, built-in completion-at-point, the buffer can sometimes
-take up the whole screen when there are a lot of candidates.  [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Temporary-Displays.html][Setting this]]
-prevents that:
-
-#+begin_src emacs-lisp
-(temp-buffer-resize-mode)
-(setq temp-buffer-max-height 20)
-#+end_src
-
-I've found the [[https://github.com/oantolin/orderless][orderless]] completion style especially well-suited to Emacs.
+I've found the [[https://github.com/oantolin/orderless][orderless]] completion style especially well-suited to Emacs.  It
+allows me to type short strings that can match the symbol I'm looking for in any
+order.  In emacs, I may not know if I'm looking for ~package-list~ or
+~list-packages~.  In either case, I can just type "=pack lis=" in the minibuffer to find
+the correct one.
 
 #+begin_src emacs-lisp
 (use-package orderless
@@ -1052,6 +1050,7 @@ I've found the [[https://github.com/oantolin/orderless][orderless]] completion s
   (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
+** Nicer display of ~*Completions*~
 With the /completion style/ set, we have to now configure the interfaces for
 /displaying/ candidates as we type.  The natural place to start would be the
 built-in ~*Completions*~ buffer.  First, I want candidates displayed as a single,
@@ -1061,10 +1060,25 @@ vertical list.
 (setq completions-format 'one-column)
 #+end_src
 
-If there is a convenient way to interact with this buffer from default key
-bindings, I am not aware of it.  Because of this, I set a few convenience
-functions for navigating to, selecting, and closing the ~*Completions*~ buffer in
-the case I do need to use it.
+Also, when using the built-in completion-at-point, the ~*Completions*~ buffer can
+sometimes take up the whole screen when there are a lot of candidates.  [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Temporary-Displays.html][Setting
+this]] prevents that:
+
+#+begin_src emacs-lisp
+(temp-buffer-resize-mode)
+(setq temp-buffer-max-height 20)
+#+end_src
+
+*** Live ~*Completions*~ buffer
+
+[[https://github.com/oantolin/live-completions][An interesting idea by oantolin.]]  Given how modest in scope it is, and how close
+to Vanilla Emacs it stays, I might actually try it sometime.
+
+** Keybindings to interact with ~*Completions*~
+If there is a convenient way to interact with the ~*Completions*~ buffer from a
+buffer with default key bindings, I am not aware of it.  Because of this, I set
+a few convenience functions for navigating to, selecting, and closing the buffer
+in the case I do need to use it.
 
 #+begin_src emacs-lisp
 (defun renz/completion-accept ()
@@ -1107,8 +1121,7 @@ minibuffer, and related modes.  So, instead, I opt for the similar =C-j=.
 (define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
 #+end_src
 
-
-*** Minibuffer completion with ~vertico~
+** Minibuffer completion with ~vertico~ and ~marginalia~
 It's worth noting that the ~fido-vertical~ built-in is pretty good, but I had
 issues with micro-freezes in some situations.  [[https://github.com/minad/vertico][vertico]], on the other hand, has
 been lightning quick, and has intuitive keybindings that don't require any
@@ -1117,22 +1130,26 @@ futzing.  /Especially/ in the case where I'm looking to tab-complete things like
 
 #+begin_src emacs-lisp
 (use-package vertico
-  :config
-  (vertico-mode))
+  :config (vertico-mode))
 #+end_src
 
-Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd much
-prefer to just use the easier and more intuitive =TAB=.
+Combining ~vertico~'s forces with [[https://github.com/minad/marginalia][marginalia]] creates a lovely minibuffer
+completion experience that rivals (or even beats) modern IDE and VSCode command
+palettes.  ~marginalia~ adds a short, context-aware description next to completion
+candidates in the minibuffer.  For instance, using ~C-h f~ will show me if a
+function is already bound to a key, and give me the top-level description of the
+function, without requiring me to actually open the ~*Help*~ buffer.
 
 #+begin_src emacs-lisp
-(setq tab-always-indent 'complete)
+(use-package marginalia
+  :config (marginalia-mode))
 #+end_src
 
 
-*** Completion at point with ~corfu~
+** Completion at point with ~corfu~
 For =completion-at-=point= suggestions, I like =corfu= a lot.  It's philosophy is to
 stick as close as possible to the native Emacs internal API as possible, without
-reinventing the whell.  In my experience, this has meant far fewer integration
+reinventing the wheel.  In my experience, this has meant far fewer integration
 troubles with other packages.  It uses child frames for displaying the
 completion candidates, however, which means we need a separate =corfu-terminal=
 extension for it to work in TTY mode.  While ~use-package~ has the ~:unless~ and ~:if~
@@ -1205,22 +1222,15 @@ it's being handled by Tramp.
     (corfu-mode -1)))
 #+end_src
 
-
-*** ~dabbrev~ adjustments for corfu
+Finally, Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd much
+prefer to just use the easier and more intuitive =TAB=.
 
 #+begin_src emacs-lisp
-(use-package dabbrev
-  ;; Swap M-/ and C-M-/
-  :bind (("M-/" . dabbrev-completion)
-         ("C-M-/" . dabbrev-expand))
-  ;; Other useful Dabbrev configurations.
-  :custom
-  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
-  #+end_src
+(setq tab-always-indent 'complete)
+#+end_src
 
-
-*** TODO COMMENT Corfu expansions with ~cape~
-Still not totally sure how/if I should work this in.  Put it on the reading
+** TODO COMMENT Corfu extensions with ~cape~
+Still not totally sure how/if I should work [[https://github.com/minad/cape][this]] in.  Put it on the reading
 list!
 
 #+begin_src emacs-lisp
@@ -1260,8 +1270,7 @@ list!
 )
 #+end_src
 
-
-*** COMMENT Fancy icons for ~corfu~ completions using ~kind-icon~
+** COMMENT Fancy icons for ~corfu~ completions using ~kind-icon~
 If Emacs is compiled with SVG support, this will use them.  I may or may not
 have disabled warnings from popping up when Emacs /isn't/ built with SVG, such as
 from [[https://emacsformacosx.com/][emacsforosx]].
@@ -1280,8 +1289,7 @@ For now, this is causing some completions to not fit on the pop up menu (tested
 on Windows).  Maybe there's something we can do to address that, but maybe not
 worth the time.
 
-
-*** COMMENT Company mode
+** COMMENT Company mode
 For a while I was experimenting with ~company-mode~.  This section is obsolete and
 not tangled into the final ~init.el~, since I don't use company anymore.  I do
 keep it around for historical reasons, though, in case if I ever decide to go
@@ -1298,13 +1306,7 @@ back.
 (setq company-tooltip-margin 2)
 #+end_src
 
-*** Live ~*Completions*~ buffer
-
-[[https://github.com/oantolin/live-completions][An interesting idea by oantolin.]]  Given how modest in scope it is, and how close
-to Vanilla Emacs it stays, I might actually try it.
-
-
-*** In case of emergency: ~fzf~
+** COMMENT In case of emergency: ~fzf~
 Some cases don't seem to be covered well by the existing file searching tools,
 such as looking for files that are ignored by ~.gitignore~, but are still
 important.
@@ -1931,8 +1933,19 @@ Host *
 
 
 * Small tool configuration
-Most of these are third party installs that require little to no configuration,
+Most of these are third party installs that require only a little configuration,
 and don't warrent a big top-level header.
+
+** Visual fill column
+For visual lines, this adds line breaks at the fill-column value.  Especially
+useful for prose that is meant to be copied to other mediums, such as email or
+word.
+
+#+begin_src emacs-lisp
+(use-package visual-fill-column
+  :config
+  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
+#+end_src
 
 ** Magit
 The one and only.
@@ -2018,20 +2031,6 @@ around of a bug where esup tries to step into the byte-compiled version of
   :bind ("C-c x p")
   :config
   (setq esup-depth 0))
-#+end_src
-
-** Minimap
-I have a love-hate relationship with the minimap.  Sometimes it feels great,
-especially when I'm doing a mouse-heavy demo for navigation.  Other times it
-blocks the echo area when the window is too small and it drives me crazy.
-
-#+begin_src emacs-lisp :tangle no
-(use-package minimap
-  :bind ("C-c n" . minimap-mode)
-
-  :config
-  (when (display-graphic-p)
-    (minimap-mode t)))
 #+end_src
 
 ** Reloading Emacs
