@@ -52,8 +52,8 @@ view this document in Emacs itself.
 Why use a literate document for my configuration?  Basically, as I added more
 comments and reminders about what some line of code was doing, where I got it
 from, and why it might be commented out, the prose grew longer than the actual
-code, and so a change of medium felt prudent.  In my case, that's the vererable
-[[https://orgmode.org/][Org mode]], which comes with Emacs and serves as as way to seamlessly weave
+code, and so a change of medium felt prudent.  In my case, that's the venerable
+[[https://orgmode.org/][Org mode]], which comes with Emacs and serves as a way to seamlessly weave
 commentary and code together.
 
 
@@ -127,7 +127,11 @@ There are also a few hand-made packages I keep around in a special
 
 ** Microsoft Windows
 
-Windows, funnily enough, has some trouble registering the Windows key as a usable modifier for emacs.  In fact, =s-l= will /never/ be an option, since it's handled at the hardware level.  I also add a few nice-to-haves, like setting the default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always install with ~msys64~.
+Windows, funnily enough, has some trouble registering the Windows key as a
+usable modifier for Emacs.  In fact, =s-l= will /never/ be an option, since it's
+handled at the hardware level.  I also add a few nice-to-haves, like setting the
+default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always install
+with ~msys64~.
 
 #+begin_src emacs-lisp
 (when (memq system-type '(windows-nt cygwin ms-dos))
@@ -188,7 +192,7 @@ Launching Emacs from the typical application launcher or command-space usually w
 
 
 ** Linux
-Very little to do here.  Emacs on on Linux seems to "just work".
+Very little to do here.  Emacs on Linux seems to "just work".
 
 #+begin_src emacs-lisp
 (when (eq system-type 'gnu/linux)
@@ -255,7 +259,7 @@ Kitty for me, I haven't spent too much time looking into it.
 
 
 * Emacs' Built-in Settings
-My settings for base emacs.  Assuming I ran with /no/ plugins (ala ~emacs -Q~), I
+My settings for base Emacs.  Assuming I ran with /no/ plugins (ala ~emacs -Q~), I
 would still set most of these by hand at one point or another.
 
 ** ~dabbrev~: swap ~M-/~ and ~C-M-/~
@@ -281,7 +285,7 @@ kick in.  When I was starting out, I used to have these two settings:
 (display-time)
 #+end_src
 
-After a while I noticed that I'm almost never running emacs in a full screen
+After a while I noticed that I'm almost never running Emacs in a full screen
 where I can't see the battery or date in the corner of my window manager, so
 they were just wasting mode line space.  Nowadays I simply opt for column mode
 and a dimmed mode line in non-selected windows.
@@ -338,8 +342,8 @@ currently on.
 (scroll-bar-mode -1)
 #+end_src
 
-** Inihibit splash screen
-When I was starting out, the OG GNU Spash was a /super/ helpful screen.  Lately I
+** Inhibit splash screen
+When I was starting out, the OG GNU Splash was a /super/ helpful screen.  Lately I
 haven't needed the reminder links as often, but I sometimes get back to it to
 with =C-h C-a=.
 
@@ -607,7 +611,7 @@ I'll uncomment the second part.
 
 ** COMMENT Initial frame size for GUI
 This kind of assumes that startup is fast.  Originally I was annoyed at how
-small the initial frame is when starting emacs, but I've come to not care after
+small the initial frame is when starting Emacs, but I've come to not care after
 getting used to it.  Back when I /did/ care, I used this to make the frame a bit
 bigger at launch.
 
@@ -754,7 +758,7 @@ Provided by a [[https://emacs.stackexchange.com/a/52554][stack overflow answer]]
 
 ** C-c bindings
 =C-c= <letter> is always free for users.  It may seem like overkill how I set a
-header for each possible =C-c= combination, but it's increcibly handy when I want
+header for each possible =C-c= combination, but it's incredibly handy when I want
 to jump directly to one of these headings while in another buffer.  See
 e.g. =renz/jump-init=, which allows me to narrow in on a particular key I'd like
 to bind by leveraging =completing-read=.  If a =C-c <letter>= combination is missing as a header, then I'm probably using it
@@ -1021,7 +1025,7 @@ packages to remedy this, but before getting to that we have two orders of
 business:
 
 1. Setting the /completion style/
-2. Ehancing the behavior of the default ~*Completions*~ buffer and how we can
+2. Enhancing the behavior of the default ~*Completions*~ buffer and how we can
    interact with it.
 
 ** Completion style: Orderless
@@ -1037,7 +1041,7 @@ much like your default TAB-complete at a Bash shell.
 
 I've found the [[https://github.com/oantolin/orderless][orderless]] completion style especially well-suited to Emacs.  It
 allows me to type short strings that can match the symbol I'm looking for in any
-order.  In emacs, I may not know if I'm looking for ~package-list~ or
+order.  In Emacs, I may not know if I'm looking for ~package-list~ or
 ~list-packages~.  In either case, I can just type "=pack lis=" in the minibuffer to find
 the correct one.
 
@@ -1665,8 +1669,8 @@ windows store.  Using this fixed it:
      winkey -> Manage app execution aliases -> uncheck python and python3
 #+end_example
 
-Also on Windows - a `pip install` of `pyreadline3' is required to make
-tab-completion work at all. It provides the `readline' import symbol.
+Also on Windows - a =pip install= of =pyreadline3= is required to make
+tab-completion work at all. It provides the =readline= import symbol.
 
 Virtualenvs require ~.dir-locals.el~ to have something like:
 
@@ -1725,7 +1729,7 @@ Jupyter kernels from org-mode.
 The most consistent way to get =eglot= to properly configure the python virtual
 environment with =pyright= is to have a static file at the root of the project,
 called ~pyrightconfig.json~.  I wrote a short plugin that allows me to select a
-directory using =completing-read= and have emacs write the content of
+directory using =completing-read= and have Emacs write the content of
 ~pyrightconfig.json~ based on what I selected, in the appropriate directory.
 
 #+begin_src emacs-lisp
@@ -1876,7 +1880,7 @@ was recommended.
 #+end_src
 
 For some time I was having a lot of trouble with prohibitive slowness over
-Tramp, and after careful scrutiny of the logs on (I belive) =tramp-verbose 6=, I
+Tramp, and after careful scrutiny of the logs on (I believe) =tramp-verbose 6=, I
 found out that enabling remote dir-locals was causing a huge bottleneck.  On
 every operation it would trace up the filesystem tree back to the root
 directory, scanning for a ~.dir-locals~ file.  Since some of the drives were
@@ -1934,7 +1938,7 @@ Host *
 
 * Small tool configuration
 Most of these are third party installs that require only a little configuration,
-and don't warrent a big top-level header.
+and don't warrant a big top-level header.
 
 ** Visual fill column
 For visual lines, this adds line breaks at the fill-column value.  Especially
@@ -1972,7 +1976,7 @@ it in situations like that.
 
 ** eww - search engine and browser
 
-Ecosia requires Javascript, unfortunately.
+Ecosia requires JavaScript, unfortunately.
 
 #+begin_src emacs-lisp
 (use-package eww
@@ -2022,7 +2026,7 @@ the source files.
 #+end_src
 
 ** Esup: startup time profiling
-[[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work
+[[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of Emacs.  This snippet is a work
 around of a bug where esup tries to step into the byte-compiled version of
 `cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
 
