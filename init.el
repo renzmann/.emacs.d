@@ -149,9 +149,9 @@
 (scroll-bar-mode -1)
 ;; Scroll bar:1 ends here
 
-;; [[file:README.org::*Inihibit splash screen][Inihibit splash screen:1]]
+;; [[file:README.org::*Inhibit splash screen][Inhibit splash screen:1]]
 (setq inhibit-splash-screen t)
-;; Inihibit splash screen:1 ends here
+;; Inhibit splash screen:1 ends here
 
 ;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
 (modify-all-frames-parameters
