@@ -774,19 +774,15 @@ Provided by a [[https://emacs.stackexchange.com/a/52554][stack overflow answer]]
 header for each possible =C-c= combination, but it's increcibly handy when I want
 to jump directly to one of these headings while in another buffer.  See
 e.g. =renz/jump-init=, which allows me to narrow in on a particular key I'd like
-to bind by leveraging =completing-read=.
+to bind by leveraging =completing-read=.  If a =C-c <letter>= combination is missing
+as a header, then I'm probably using it in a ~:bind~ statement with ~use-package~
+somewhere else.
+
+*** =C-c b= scroll-bar-mode
 
 #+begin_src emacs-lisp
 ;; (global-set-key (kbd "C-c a") #')
 (global-set-key (kbd "C-c b") #'scroll-bar-mode)
-#+end_src
-
-
-*** =C-c c= change inner/outer
-
-#+begin_src emacs-lisp
-(global-set-key (kbd "C-c c i") #'change-inner)
-(global-set-key (kbd "C-c c o") #'change-outer)
 #+end_src
 
 
@@ -1951,8 +1947,18 @@ it with =$=.  The built-in `vc` is /synchronous/, and will block Emacs entirely
 until it's done.  So some of the performance hit from using Magit is well worth
 it in situations like that.
 
+** Change or copy inner/outer
+
+#+begin_src emacs-lisp
+(use-package change-inner
+  :bind (("C-c c i" . change-inner)
+         ("C-c c o" . change-outer)
+         ("C-c y i" . copy-inner)
+         ("C-c y o" . copy-outer)))
+#+end_src
 
 ** eww - search engine and browser
+
 Ecosia requires Javascript, unfortunately.
 
 #+begin_src emacs-lisp
@@ -1960,7 +1966,6 @@ Ecosia requires Javascript, unfortunately.
   :config
   (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
 #+end_src
-
 
 ** diff-hl
 Adds highlighting to the fringe to see what's been added, deleted, or modified
@@ -1973,7 +1978,6 @@ from =git='s perspective.
 
 Another option (which I haven't really looked at) is ~git-gutter-fringe~.
 
-
 ** GNU Plot
 Scientific plotting - the old fashioned way!
 
@@ -1981,7 +1985,6 @@ Scientific plotting - the old fashioned way!
 (use-package gnuplot
   :after (org))
 #+end_src
-
 
 ** change-inner
 Modeled after Vim's =ci=, =ca=, =yi=, and =ya= commands, these let us yank or kill text
@@ -1995,7 +1998,6 @@ within a "surrounding" delimiter, such as "" or ().
          ("C-c y o" . yank-outer)))
 #+end_src
 
-
 ** COMMENT Inline emojis
 I tried this for a while but boy did it consume a lot of space in the =elpa/=
 directory!  If I go back to it I might re-install it but have to ensure I ignore
@@ -2005,7 +2007,6 @@ the source files.
 ;; Emojis inline 👍
 (add-hook 'after-init-hook #'global-emojify-mode)
 #+end_src
-
 
 ** Esup: startup time profiling
 [[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of emacs.  This snippet is a work
@@ -2018,7 +2019,6 @@ around of a bug where esup tries to step into the byte-compiled version of
   :config
   (setq esup-depth 0))
 #+end_src
-
 
 ** Minimap
 I have a love-hate relationship with the minimap.  Sometimes it feels great,
@@ -2034,7 +2034,6 @@ blocks the echo area when the window is too small and it drives me crazy.
     (minimap-mode t)))
 #+end_src
 
-
 ** Reloading Emacs
 Often used when changing up my ~init.el~.
 
@@ -2042,7 +2041,6 @@ Often used when changing up my ~init.el~.
 (use-package restart-emacs
   :bind ("C-c x r" . restart-emacs))
 #+end_src
-
 
 ** Language Server Protocol (LSP) with ~eglot~
 
@@ -2071,7 +2069,6 @@ Offers two functions:
 (use-package ox-clip
   :after org)
 #+end_src
-
 
 ** COMMENT TreeSitter
 I don't know how [[https://tree-sitter.github.io/tree-sitter/][this magic piece of software]] works but /boy/ is it nice!  Nearly

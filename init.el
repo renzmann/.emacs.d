@@ -398,15 +398,10 @@ emacs config site with matching `extension' regexp"
     (when isearch-other-end (goto-char isearch-other-end))))
 ;; Expanded/better defaults:6 ends here
 
-;; [[file:README.org::*C-c bindings][C-c bindings:1]]
+;; [[file:README.org::*=C-c b= scroll-bar-mode][=C-c b= scroll-bar-mode:1]]
 ;; (global-set-key (kbd "C-c a") #')
 (global-set-key (kbd "C-c b") #'scroll-bar-mode)
-;; C-c bindings:1 ends here
-
-;; [[file:README.org::*=C-c c= change inner/outer][=C-c c= change inner/outer:1]]
-(global-set-key (kbd "C-c c i") #'change-inner)
-(global-set-key (kbd "C-c c o") #'change-outer)
-;; =C-c c= change inner/outer:1 ends here
+;; =C-c b= scroll-bar-mode:1 ends here
 
 ;; [[file:README.org::*=C-c d= jump to a tag][=C-c d= jump to a tag:1]]
 (global-set-key (kbd "C-c d") #'renz/find-tag)
@@ -1031,6 +1026,14 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Magit][Magit:1]]
 (use-package magit)
 ;; Magit:1 ends here
+
+;; [[file:README.org::*Change or copy inner/outer][Change or copy inner/outer:1]]
+(use-package change-inner
+  :bind (("C-c c i" . change-inner)
+         ("C-c c o" . change-outer)
+         ("C-c y i" . copy-inner)
+         ("C-c y o" . copy-outer)))
+;; Change or copy inner/outer:1 ends here
 
 ;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
 (use-package eww
