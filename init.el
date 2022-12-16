@@ -1024,11 +1024,8 @@ Jumps at tangled code from org src block."
 ;; Tramp:2 ends here
 
 ;; [[file:README.org::*Tramp][Tramp:4]]
-(with-eval-after-load 'tramp
-  (add-to-list 'tramp-remote-path "~/.local/bin")
-  (add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
-  ;; (remove-hook 'find-file-hook 'vc-find-file-hook)
-  )
+(add-to-list 'tramp-remote-path "~/.local/bin")
+(add-to-list 'tramp-remote-path "~/.conda/envs/robbmann/bin")
 ;; Tramp:4 ends here
 
 ;; [[file:README.org::*Magit][Magit:1]]
