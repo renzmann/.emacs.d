@@ -227,14 +227,14 @@
 	   ("Steve Purcell" . "steve@sanityinc.com"))
 	  (:commit . "700ded1d6c245e01fca7f364db1561ad1e1bb595"))])
  (clojure-mode .
-	       [(5 15 1)
+	       [(5 16 0)
 		((emacs
 		  (25 1)))
 		"Major mode for Clojure code" tar
 		((:url . "http://github.com/clojure-emacs/clojure-mode")
 		 (:keywords "languages" "clojure" "clojurescript" "lisp")
 		 (:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
-		 (:commit . "ad322e989e56c10c05bb286e5b55a82b1e031d62"))])
+		 (:commit . "3453cd229b412227aaffd1dc2870fa8fa213c5b1"))])
  (coffee-mode .
 	      [(0 6 3)
 	       ((emacs
@@ -373,7 +373,7 @@
 		 ("Arne Jørgensen" . "arne@arnested.dk"))
 		(:commit . "ed90b0c4d808365e9ae9f16cc8a96eff17815621"))])
  (eat .
-      [(0 2 2)
+      [(0 3)
        ((emacs
 	 (28 1)))
        "Emulate A Terminal, in a region, in a buffer and in Eshell" tar
@@ -382,7 +382,7 @@
 	(:maintainer "Akib Azmain Turja" . "akib@disroot.org")
 	(:authors
 	 ("Akib Azmain Turja" . "akib@disroot.org"))
-	(:commit . "6756e72d88327a25ab993d69a3e4573bdbb162ff"))])
+	(:commit . "d87392e571b6cb19f794bacffb510e7828a8db4b"))])
  (edit-indirect .
 		[(0 1 10)
 		 ((emacs
@@ -1156,20 +1156,21 @@
 		(:url . "https://elpa.nongnu.org/nongnu/kotlin-mode.html")
 		(:commit . "d92c3b773473e9fe15f61f6177e4fbf097aadd05"))])
  (lorem-ipsum .
-	      [(0 3)
+	      [(0 4)
 	       nil "Insert dummy pseudo Latin text" tar
 	       ((:url . "https://github.com/jschaf/emacs-lorem-ipsum")
 		(:keywords "tools" "language" "convenience")
 		(:maintainer "Joe Schafer" . "joe@jschaf.com")
 		(:authors
 		 ("Jean-Philippe Theberge" . "jphil21@sourceforge.net"))
-		(:commit . "63e5e5f21c2ed41bfa7c921ee3a0aff159dd5a3c"))])
+		(:commit . "4e87a899868e908a7a9e1812831d76c8d072f885"))])
  (lua-mode .
-	   [(20210802)
+	   [(20221027)
 	    ((emacs
 	      (24 3)))
 	    "a major-mode for editing Lua scripts" tar
-	    ((:url . "http://immerrr.github.com/lua-mode")
+	    ((:url . "https://immerrr.github.io/lua-mode")
+	     (:keywords "languages" "processes" "tools")
 	     (:maintainer "2011-2013 immerrr" . "immerrr+lua@gmail.com")
 	     (:authors
 	      ("2011-2013 immerrr" . "immerrr+lua@gmail.com")
@@ -1182,7 +1183,7 @@
 	      ("with tons of assistance from")
 	      ("Paul Du Bois" . "pld-lua@gelatinous.com")
 	      ("Aaron Smith" . "aaron-lua@gelatinous.com"))
-	     (:keywords "languages" "processes" "tools"))])
+	     (:commit . "1cb83e691627fb92290d452cb08b6c5f73fe19b6"))])
  (macrostep .
 	    [(0 9)
 	     ((cl-lib
@@ -1370,7 +1371,7 @@
 		     ("Yilkal Argaw" . "yilkalargawworkneh@gmail.com"))
 		    (:commit . "2494a6f78c9db5311123abc7cad119851a29a55c"))])
  (org-contrib .
-	      [(0 4)
+	      [(0 4 1)
 	       ((emacs
 		 (25 1))
 		(org
@@ -1381,7 +1382,7 @@
 		(:maintainer "Bastien Guerry" . "bzg@gnu.org")
 		(:authors
 		 ("Bastien Guerry" . "bzg@gnu.org"))
-		(:commit . "c6aef31ccfc7c4418c3b51e98f7c3bd8e255f5e6"))])
+		(:commit . "d0cebebb301b5de93e9c5228a91e3e4f5d41902b"))])
  (org-drill .
 	    [(2 7 0)
 	     ((emacs
@@ -1614,7 +1615,7 @@
 	       ("David Christiansen" . "david@davidchristiansen.dk"))
 	      (:keywords "convenience"))])
  (racket-mode .
-	      [(1 0 20221210 113935)
+	      [(1 0 20221216 121840)
 	       ((emacs
 		 (25 1)))
 	       "Racket editing, REPL, and more" tar
@@ -1838,7 +1839,7 @@
 		     ("John Olsson" . "john@cryon.se"))
 		    (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed .
-	[(1 0 26)
+	[(1 0 27)
 	 ((emacs
 	   (25 1)))
 	 "A major mode for editing subtitles" tar
@@ -1847,9 +1848,9 @@
 	  (:maintainer "Sacha Chua" . "sacha@sachachua.com")
 	  (:authors
 	   ("Random User"))
-	  (:commit . "7563c61b7e152e0c7e06387edf98809c08cb134f"))])
+	  (:commit . "d99f7516df82a58171700a9749f4ff0d05e06146"))])
  (sweeprolog .
-	     [(0 9 5)
+	     [(0 9 6)
 	      ((emacs
 		(28 1)))
 	      "Embedded SWI-Prolog" tar
@@ -1858,7 +1859,7 @@
 	       (:maintainer "Eshel Yaron" . "~eshel/dev@lists.sr.ht")
 	       (:authors
 		("Eshel Yaron" . "me@eshelyaron.com"))
-	       (:commit . "6eab93747210a3cdb21a20789db157ac61312b86"))])
+	       (:commit . "52cfcd1884fdd54cad647023300428d033f1a5a6"))])
  (swift-mode .
 	     [(8 6 0)
 	      ((emacs

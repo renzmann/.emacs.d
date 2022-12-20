@@ -720,15 +720,15 @@
 	    (:maintainer "Phil Sainty" . "psainty@orcon.net.nz")
 	    (:url . "https://savannah.nongnu.org/projects/delight"))])
  (denote .
-	 [(1 1 0)
+	 [(1 2 0)
 	  ((emacs
-	    (27 2)))
+	    (28 1)))
 	  "Simple notes with an efficient file-naming scheme" tar
 	  ((:url . "https://git.sr.ht/~protesilaos/denote")
 	   (:maintainer "Denote Development" . "~protesilaos/denote@lists.sr.ht")
 	   (:authors
 	    ("Protesilaos Stavrou" . "info@protesilaos.com"))
-	   (:commit . "d9a1b0c0b801b4f841fab412b8318cb66ca55134"))])
+	   (:commit . "7c425a2d0988f3fae603434c1f8044be8293d517"))])
  (detached .
 	   [(0 10 1)
 	    ((emacs
@@ -968,28 +968,30 @@
 	       ("Protesilaos Stavrou" . "info@protesilaos.com"))
 	      (:commit . "35201e49e8c3f5d1a2d6c17cb1697a9e18529a9a"))])
  (eglot .
-	[(1 9)
+	[(1 10)
 	 ((emacs
-	   (26 1))
+	   (26 3))
 	  (jsonrpc
-	   (1 0 14))
+	   (1 0 16))
 	  (flymake
 	   (1 2 1))
 	  (project
-	   (0 3 0))
+	   (0 9 3))
 	  (xref
 	   (1 0 1))
 	  (eldoc
 	   (1 11 0))
 	  (seq
-	   (2 23)))
-	 "Client for Language Server Protocol (LSP) servers" tar
+	   (2 23))
+	  (external-completion
+	   (0 1)))
+	 "The Emacs Client for LSP servers" tar
 	 ((:url . "https://github.com/joaotavora/eglot")
 	  (:keywords "convenience" "languages")
 	  (:maintainer "João Távora" . "joaotavora@gmail.com")
 	  (:authors
 	   ("João Távora" . "joaotavora@gmail.com"))
-	  (:commit . "d1159172c9d436d7e649207565c606e9e572a8db"))])
+	  (:commit . "7575c85efd27f3a4e8e968d0bef1c63d6a2b8d84"))])
  (el-search .
 	    [(1 12 6 1)
 	     ((emacs
@@ -1721,7 +1723,7 @@
 	       ("Simen Heggestøyl" . "simenheg@gmail.com"))
 	      (:maintainer "Simen Heggestøyl" . "simenheg@gmail.com"))])
  (jsonrpc .
-	  [(1 0 15)
+	  [(1 0 16)
 	   ((emacs
 	     (25 2)))
 	   "JSON-RPC library" tar
@@ -1730,7 +1732,7 @@
 	    (:authors
 	     ("João Távora" . "joaotavora@gmail.com"))
 	    (:url . "https://elpa.gnu.org/packages/jsonrpc.html")
-	    (:commit . "50654cf0b1bf6210fc8f46d8e7ae13bbeeccecb5"))])
+	    (:commit . "8bf4cdcf79bc3254a9169f28f68922ab83bd4e78"))])
  (jumpc .
 	[(3 0)
 	 nil "jump to previous insertion points" single
@@ -2518,7 +2520,7 @@
 	   ("Mario Lang" . "mlang@delysid.org"))
 	  (:maintainer "Mario Lang" . "mlang@delysid.org"))])
  (posframe .
-	   [(1 2 0)
+	   [(1 3 1)
 	    ((emacs
 	      (26 1)))
 	    "Pop a posframe (just a frame) at point" tar
@@ -2527,7 +2529,7 @@
 	     (:maintainer "Feng Shu" . "tumashu@163.com")
 	     (:authors
 	      ("Feng Shu" . "tumashu@163.com"))
-	     (:commit . "48b7130ca3b5c98bdb21bf99b64a3536acf2b0eb"))])
+	     (:commit . "030a63bc8d8023386998ea9a1ee0eb041330a80d"))])
  (project .
 	  [(0 9 3)
 	   ((emacs
@@ -3185,6 +3187,16 @@
 	   (:authors
 	    ("Oleh Krehel" . "ohwoeowho@gmail.com"))
 	   (:keywords "matching"))])
+ (sxhkdrc-mode .
+	       [(0 1 4)
+		((emacs
+		  (27 1)))
+		"Major mode for sxhkdrc files (Simple X Hot Key Daemon)" tar
+		((:url . "https://git.sr.ht/~protesilaos/sxhkdrc-mode")
+		 (:maintainer "Protesilaos Stavrou General Issues" . "~protesilaos/general-issues@lists.sr.ht")
+		 (:authors
+		  ("Protesilaos Stavrou" . "info@protesilaos.com"))
+		 (:commit . "95b2c324f8ab66f1ca9eaee89fda54a535e06d6a"))])
  (system-packages .
 		  [(1 0 11)
 		   ((emacs
@@ -3555,7 +3567,7 @@
 	   ("Justin Burkett" . "justin@burkett.cc"))
 	  (:keywords "diff"))])
  (verilog-mode .
-	       [(2021 10 14 127365406)
+	       [(2022 12 18 181110314)
 		nil "major mode for editing verilog source in Emacs" tar
 		((:url . "https://www.veripool.org")
 		 (:keywords "languages")
@@ -3563,7 +3575,7 @@
 		 (:authors
 		  ("Michael McNamara" . "mac@verilog.com")
 		  ("Wilson Snyder" . "wsnyder@wsnyder.org"))
-		 (:commit . "86f08fb377e2b8f2df0614c48783bdce347f3758"))])
+		 (:commit . "2c2ecb46b0ad3e841ac9551e3a80d02893cdf6ec"))])
  (vertico .
 	  [(0 29)
 	   ((emacs
@@ -3575,7 +3587,7 @@
 	     ("Daniel Mendler" . "mail@daniel-mendler.de"))
 	    (:commit . "cacb0bd76153790ba6ecc67921deed236c96371e"))])
  (vertico-posframe .
-		   [(0 5 5)
+		   [(0 5 9)
 		    ((emacs
 		      (26 0))
 		     (posframe
@@ -3588,7 +3600,7 @@
 		     (:maintainer "Feng Shu" . "tumashu@163.com")
 		     (:authors
 		      ("Feng Shu" . "tumashu@163.com"))
-		     (:commit . "61a88aec07669d0399bbc6699740975d0d5ff721"))])
+		     (:commit . "33760e6ca54c30d1eb56a84771d4ad9ccb3e2234"))])
  (vigenere .
 	   [(1 0)
 	    ((emacs
