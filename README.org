@@ -24,8 +24,8 @@ If you prefer a prettier reading experience, check out this same document weaved
 into [[https://robbmann.io/emacsd/][my website.]]
 
 * Goals
-I use all three of the major platforms, in both GUI and TTY mode.  So this
-config is designed to work equally well for:
+I use Emacs 28+ all three of the major platforms, in both GUI and TTY mode.  So
+this config is designed to work equally well for:
 
 |----------+----------+-----+-----------+-------|
 | platform | terminal | GUI | ssh + TTY | Tramp |
@@ -1639,16 +1639,6 @@ Adds the ability to use TUI programs in shell mode.
   (coterm-mode))
 #+end_src
 
-** COMMENT Multiple cursors
-A bit like multi-cursor for Jupyter or VSCode, but with a lot of configurable flexibility.
-
-#+begin_src emacs-lisp
-(use-package multiple-cursors
-  :config
-  (global-unset-key (kbd "M-<down-mouse-1>"))
-  (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click))
-#+end_src
-
 ** Visual fill column
 For visual lines, this adds line breaks at the fill-column value.  Especially
 useful for prose that is meant to be copied to other mediums, such as email or
@@ -1663,7 +1653,7 @@ word.
 ** Magit
 The one and only.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
 (use-package magit
   :bind ("C-c g" . magit-status))
 #+end_src
