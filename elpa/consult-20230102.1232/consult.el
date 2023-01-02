@@ -1,11 +1,11 @@
 ;;; consult.el --- Consulting completing-read -*- lexical-binding: t -*-
 
-;; Copyright (C) 2021, 2022  Free Software Foundation, Inc.
+;; Copyright (C) 2021-2023 Free Software Foundation, Inc.
 
 ;; Author: Daniel Mendler and Consult contributors
 ;; Maintainer: Daniel Mendler <mail@daniel-mendler.de>
 ;; Created: 2020
-;; Version: 0.29
+;; Version: 0.30
 ;; Package-Requires: ((emacs "27.1") (compat "28.1"))
 ;; Homepage: https://github.com/minad/consult
 
@@ -139,18 +139,19 @@ This applies to asynchronous commands, e.g., `consult-grep'."
   :type '(alist :key-type symbol :value-type plist))
 
 (defcustom consult-mode-histories
-  '((eshell-mode eshell-history-ring eshell-history-index)
-    (comint-mode comint-input-ring   comint-input-ring-index)
-    (term-mode   term-input-ring     term-input-ring-index))
-  "Alist of mode histories as (mode . history) or (mode history index).
-The histories can be rings or lists. INDEX, if provided, is a
+  '((eshell-mode eshell-history-ring eshell-history-index    eshell-bol)
+    (comint-mode comint-input-ring   comint-input-ring-index comint-bol)
+    (term-mode   term-input-ring     term-input-ring-index   term-bol))
+  "Alist of mode histories (mode history index bol).
+The histories can be rings or lists. Index, if provided, is a
 variable to set to the index of the selection within the ring or
-list."
+list. Bol, if provided is a function which jumps to the beginning
+of the line after the prompt."
   :type '(alist :key-type symbol
-                :value-type (choice (symbol :tag "List or Ring Name")
-                                    (group :tag "Include Index"
-                                           (symbol :tag "List/Ring")
-                                           (symbol :tag "Index Variable")))))
+                :value-type (group :tag "Include Index"
+                                   (symbol :tag "List/Ring")
+                                   (symbol :tag "Index Variable")
+                                   (symbol :tag "Bol Function"))))
 
 (defcustom consult-themes nil
   "List of themes (symbols or regexps) to be presented for selection.
@@ -1346,7 +1347,7 @@ ORIG is the original function, HOOKS the arguments."
 See `isearch-open-necessary-overlays' and `isearch-open-overlay-temporary'."
   (if (and (derived-mode-p #'org-mode) (fboundp 'org-fold-show-set-visibility))
       ;; New Org 9.6 fold-core API
-      (org-fold-show-set-visibility 'lineage)
+      (org-fold-show-set-visibility 'canonical)
     (dolist (ov (let ((inhibit-field-text-motion t))
                   (overlays-in (line-beginning-position) (line-end-position))))
       (when-let (fun (overlay-get ov 'isearch-open-invisible))
@@ -1364,7 +1365,7 @@ See `isearch-open-necessary-overlays' and `isearch-open-overlay-temporary'."
       ;; modifications such that we can restore the ones which got modified.
       (let ((regions (delq nil (org-fold-core-get-regions
                                 :with-markers t :from (point-min) :to (point-max)))))
-        (org-fold-show-set-visibility 'lineage)
+        (org-fold-show-set-visibility 'canonical)
         (list (lambda ()
                 (pcase-dolist (`(,beg ,end ,spec) regions)
                   (org-fold-core-region beg end t spec)
@@ -3804,18 +3805,20 @@ otherwise the history corresponding to the mode. There is a
 special case for `repeat-complex-command', for which the command
 history is used."
   (cond
-   ;; If pressing "C-x M-:", i.e., `repeat-complex-command',
-   ;; we are instead querying the `command-history' and get a full s-expression.
-   ;; Alternatively you might want to use `consult-complex-command',
-   ;; which can also be bound to "C-x M-:"!
-   ((eq last-command 'repeat-complex-command)
-    (list (mapcar #'prin1-to-string command-history)))
    ;; In the minibuffer we use the current minibuffer history,
    ;; which can be configured by setting `minibuffer-history-variable'.
    ((minibufferp)
     (when (eq minibuffer-history-variable t)
       (user-error "Minibuffer history is disabled for `%s'" this-command))
-    (list (mapcar #'consult--tofu-hide (symbol-value minibuffer-history-variable))))
+    (list (mapcar #'consult--tofu-hide
+                  (if (eq minibuffer-history-variable 'command-history)
+                      ;; If pressing "C-x M-:", i.e., `repeat-complex-command',
+                      ;; we are instead querying the `command-history' and get a
+                      ;; full s-expression. Alternatively you might want to use
+                      ;; `consult-complex-command', which can also be bound to
+                      ;; "C-x M-:"!
+                      (mapcar #'prin1-to-string command-history)
+                    (symbol-value minibuffer-history-variable)))))
    ;; Otherwise we use a mode-specific history, see `consult-mode-histories'.
    (t (let ((found (seq-find (lambda (h)
                                (and (derived-mode-p (car h))
@@ -3824,39 +3827,52 @@ history is used."
         (unless found
           (user-error "No history configured for `%s', see `consult-mode-histories'"
                       major-mode))
-        (if (consp (cdr found))
-            (cons (symbol-value (cadr found)) (caddr found))
-          (list (symbol-value (cdr found))))))))
+        (unless (consp (cdr found))
+          (user-error "Obsolete mode history entry: %S" found))
+        (cons (symbol-value (cadr found)) (cddr found))))))
 
 ;;;###autoload
-(defun consult-history (&optional history index)
+(defun consult-history (&optional history index bol)
   "Insert string from HISTORY of current buffer.
-In order to select from a specific HISTORY, pass the history variable
-as argument. INDEX is the name of the index variable to update, if any.
-See also `cape-history' from the Cape package."
+In order to select from a specific HISTORY, pass the history
+variable as argument. INDEX is the name of the index variable to
+update, if any. BOL is the function which jumps to the beginning
+of the prompt. See also `cape-history' from the Cape package."
   (interactive)
-  (let* ((pair (if history (cons history index) (consult--current-history)))
-         (history (if (ring-p (car pair)) (ring-elements (car pair)) (car pair)))
-         (index (cdr pair))
-         (str (consult--local-let ((enable-recursive-minibuffers t))
-                (consult--read
-                 (or (consult--remove-dups history)
-                     (user-error "History is empty"))
-                 :prompt "History: "
-                 :history t ;; disable history
-                 :category ;; Report category depending on history variable
-                 (and (minibufferp)
-                      (pcase minibuffer-history-variable
-                        ('extended-command-history 'command)
-                        ('buffer-name-history 'buffer)
-                        ('face-name-history 'face)
-                        ('read-envvar-name-history 'environment-variable)
-                        ('bookmark-history 'bookmark)
-                        ('file-name-history 'file)))
-                 :sort nil
-                 :state (consult--insertion-preview (point) (point))))))
-    (when (minibufferp)
-      (delete-minibuffer-contents))
+  (pcase-let* ((`(,history ,index ,bol) (if history
+                                            (list history index bol)
+                                          (consult--current-history)))
+               (history (if (ring-p history) (ring-elements history) history))
+               (`(,beg . ,end)
+                (if (minibufferp)
+                    (cons (minibuffer-prompt-end) (point-max))
+                  (if bol
+                      (save-excursion
+                        (funcall bol)
+                        (cons
+                         (point)
+                         (let ((inhibit-field-text-motion t))
+                           (line-end-position))))
+                    (cons (point) (point)))))
+               (str (consult--local-let ((enable-recursive-minibuffers t))
+                      (consult--read
+                       (or (consult--remove-dups history)
+                           (user-error "History is empty"))
+                       :prompt "History: "
+                       :history t ;; disable history
+                       :category ;; Report category depending on history variable
+                       (and (minibufferp)
+                            (pcase minibuffer-history-variable
+                              ('extended-command-history 'command)
+                              ('buffer-name-history 'buffer)
+                              ('face-name-history 'face)
+                              ('read-envvar-name-history 'environment-variable)
+                              ('bookmark-history 'bookmark)
+                              ('file-name-history 'file)))
+                       :sort nil
+                       :initial (buffer-substring-no-properties beg end)
+                       :state (consult--insertion-preview beg end)))))
+    (delete-region beg end)
     (when index
       (set index (seq-position history str)))
     (insert (substring-no-properties str))))
@@ -4425,22 +4441,28 @@ outside a project. See `consult-buffer' for more details."
 
 ;;;;; Command: consult-kmacro
 
+(declare-function kmacro--keys "kmacro")
+(declare-function kmacro--counter "kmacro")
+(declare-function kmacro--format "kmacro")
+
 (defun consult--kmacro-candidates ()
   "Return alist of kmacros and indices."
   (thread-last
     ;; List of macros
-    (append (when last-kbd-macro
-              `((,last-kbd-macro ,kmacro-counter ,kmacro-counter-format)))
-            kmacro-ring)
-    ;; Add indices
-    (seq-map-indexed #'cons)
+    (append (and last-kbd-macro (list (kmacro-ring-head))) kmacro-ring)
+    ;; Emacs 29 uses OClosures. I like OClosures but it would have been better
+    ;; if public APIs wouldn't change like that.
+    (mapcar (lambda (x)
+              (if (> emacs-major-version 28)
+                  (list (kmacro--keys x) (kmacro--counter x) (kmacro--format x) x)
+                `(,@x ,x))))
     ;; Filter mouse clicks
-    (seq-remove (lambda (x) (seq-some #'mouse-event-p (caar x))))
+    (seq-remove (lambda (x) (seq-some #'mouse-event-p (car x))))
     ;; Format macros
-    (mapcar (pcase-lambda (`((,keys ,counter ,format) . ,index))
+    (mapcar (pcase-lambda (`(,keys ,counter ,format ,km))
               (propertize
                (format-kbd-macro keys 1)
-               'consult--candidate index
+               'consult--candidate km
                'consult--kmacro-annotation
                ;; If the counter is 0 and the counter format is its default,
                ;; then there is a good chance that the counter isn't actually
@@ -4461,36 +4483,23 @@ outside a project. See `consult-buffer' for more details."
 With prefix ARG, run the macro that many times.
 Macros containing mouse clicks are omitted."
   (interactive "p")
-  (let ((selected (consult--read
-                   (or (consult--kmacro-candidates)
-                       (user-error "No keyboard macros defined"))
-                   :prompt "Keyboard macro: "
-                   :category 'consult-kmacro
-                   :require-match t
-                   :sort nil
-                   :history 'consult--kmacro-history
-                   :annotate
-                   (lambda (cand)
-                     (get-text-property 0 'consult--kmacro-annotation cand))
-                   :lookup #'consult--lookup-candidate)))
-    (if (= 0 selected)
-        ;; If the first element has been selected, just run the last macro.
-        (kmacro-call-macro (or arg 1) t nil)
-      ;; Otherwise, run a kmacro from the ring.
-      (let* ((selected (1- selected))
-             (kmacro (nth selected kmacro-ring))
-             ;; Temporarily change the variables to retrieve the correct
-             ;; settings.  Mainly, we want the macro counter to persist, which
-             ;; automatically happens when cycling the ring.
-             (last-kbd-macro (car kmacro))
-             (kmacro-counter (cadr kmacro))
-             (kmacro-counter-format (caddr kmacro)))
-        (kmacro-call-macro (or arg 1) t)
-        ;; Once done, put updated variables back into the ring.
-        (setf (nth selected kmacro-ring)
-              (list last-kbd-macro
-                    kmacro-counter
-                    kmacro-counter-format))))))
+  (let ((km (consult--read
+             (or (consult--kmacro-candidates)
+                 (user-error "No keyboard macros defined"))
+             :prompt "Keyboard macro: "
+             :category 'consult-kmacro
+             :require-match t
+             :sort nil
+             :history 'consult--kmacro-history
+             :annotate
+             (lambda (cand)
+               (get-text-property 0 'consult--kmacro-annotation cand))
+             :lookup #'consult--lookup-candidate)))
+    (unless km (user-error "No kmacro selected"))
+    (funcall
+     ;; Kmacros are lambdas (oclosures) on Emacs 29
+     (if (fboundp 'kmacro-lambda-form) (kmacro-lambda-form km) km)
+     arg)))
 
 ;;;;; Command: consult-grep
 
@@ -4855,64 +4864,6 @@ the asynchronous search."
         :initial (consult--async-split-initial initial)
         :add-history (consult--async-split-thingatpt 'symbol)
         :history '(:input consult--man-history))))
-
-;;;; Obsolete commands
-
-;;;###autoload
-(defun consult-apropos ()
-  "Select pattern and call `apropos'.
-
-The default value of the completion is the symbol at point. As a better
-alternative, you can run `embark-export' from commands like `M-x' and
-`describe-symbol'."
-  (interactive)
-  (let ((pattern
-         (consult--read
-          obarray
-          :prompt "consult-apropos (obsolete): "
-          :predicate (lambda (x) (or (fboundp x) (boundp x) (facep x) (symbol-plist x)))
-          :category 'symbol
-          :default (thing-at-point 'symbol))))
-    (when (string= pattern "")
-      (user-error "No pattern given"))
-    (apropos pattern)))
-
-(make-obsolete
- 'consult-apropos
- "consult-apropos has been deprecated in favor of Embark actions:
-M-x describe-symbol <regexp> M-x embark-export
-M-x describe-symbol <regexp> M-x embark-act a"
-               "0.20")
-
-;;;###autoload
-(defun consult-file-externally (file)
-  "Open FILE externally using the default application of the system."
-  (interactive "fOpen externally: ")
-  (if (and (eq system-type 'windows-nt)
-           (fboundp 'w32-shell-execute))
-      (w32-shell-execute "open" file)
-    (call-process (pcase system-type
-                    ('darwin "open")
-                    ('cygwin "cygstart")
-                    (_ "xdg-open"))
-                  nil 0 nil
-                  (expand-file-name file))))
-
-(make-obsolete 'consult-file-externally 'embark-open-externally "0.29")
-
-;;;###autoload
-(defun consult-multi-occur (bufs regexp &optional nlines)
-  "Improved version of `multi-occur' based on `completing-read-multiple'.
-
-See `multi-occur' for the meaning of the arguments BUFS, REGEXP and NLINES."
-  (interactive (cons
-                (mapcar #'get-buffer
-                        (completing-read-multiple "Buffer: "
-                                                  #'internal-complete-buffer))
-                (occur-read-primary-args)))
-  (occur-1 regexp nlines bufs))
-
-(make-obsolete 'consult-multi-occur 'consult-line-multi "0.29")
 
 ;;;; Preview at point in completions buffers
 

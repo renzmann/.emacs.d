@@ -172,11 +172,12 @@ This command can act as a drop-in replacement for `repeat-complex-command'." t n
 
 (autoload 'consult-history "consult" "\
 Insert string from HISTORY of current buffer.
-In order to select from a specific HISTORY, pass the history variable
-as argument. INDEX is the name of the index variable to update, if any.
-See also `cape-history' from the Cape package.
+In order to select from a specific HISTORY, pass the history
+variable as argument. INDEX is the name of the index variable to
+update, if any. BOL is the function which jumps to the beginning
+of the prompt. See also `cape-history' from the Cape package.
 
-\(fn &optional HISTORY INDEX)" t nil)
+\(fn &optional HISTORY INDEX BOL)" t nil)
 
 (autoload 'consult-isearch-history "consult" "\
 Read a search string with completion from the Isearch history.
@@ -310,25 +311,6 @@ similar to `consult-grep'. See `consult-grep' for more details regarding
 the asynchronous search.
 
 \(fn &optional INITIAL)" t nil)
-
-(autoload 'consult-apropos "consult" "\
-Select pattern and call `apropos'.
-
-The default value of the completion is the symbol at point. As a better
-alternative, you can run `embark-export' from commands like `M-x' and
-`describe-symbol'." t nil)
-
-(autoload 'consult-file-externally "consult" "\
-Open FILE externally using the default application of the system.
-
-\(fn FILE)" t nil)
-
-(autoload 'consult-multi-occur "consult" "\
-Improved version of `multi-occur' based on `completing-read-multiple'.
-
-See `multi-occur' for the meaning of the arguments BUFS, REGEXP and NLINES.
-
-\(fn BUFS REGEXP &optional NLINES)" t nil)
 
 (register-definition-prefixes "consult" '("consult-"))
 
