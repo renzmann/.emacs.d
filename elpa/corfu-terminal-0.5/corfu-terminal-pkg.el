@@ -1,0 +1,2 @@
+;; Generated package description from corfu-terminal.el  -*- no-byte-compile: t -*-
+(define-package "corfu-terminal" "0.5" "Corfu popup on terminal" '((emacs "26.1") (corfu "0.24") (popon "0.1")) :commit "1a15a01e2e1464daadfa4973cb695802e5c23a25" :authors '(("Akib Azmain Turja" . "akib@disroot.org")) :maintainer '("Akib Azmain Turja" . "akib@disroot.org") :keywords '("convenience") :url "https://codeberg.org/akib/emacs-corfu-terminal")

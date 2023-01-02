@@ -413,6 +413,65 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 (define-key completion-in-region-mode-map (kbd "C-p") #'minibuffer-previous-completion)
 (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion)
 
+(use-package vertico
+  :config
+  (vertico-mode)
+  (vertico-buffer-mode -1)
+  (define-key vertico-map "\M-q" #'vertico-quick-insert)
+  (define-key vertico-map "\C-q" #'vertico-quick-exit)
+
+  (vertico-multiform-mode)
+  (setq vertico-multiform-categories
+        '((consult-grep buffer))))
+
+(use-package corfu-terminal
+  :unless (display-graphic-p)
+  :config
+  (corfu-terminal-mode +1))
+
+(use-package corfu
+  :demand t
+
+  :custom
+  (corfu-cycle t)             ;; Enable cycling for `corfu-next/previous'
+  (corfu-preselect-first nil) ;; Disable candidate preselection
+
+  :bind
+  (:map corfu-map
+        ("M-SPC" . corfu-insert-separator)
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+
+  :config
+  (defun corfu-enable-always-in-minibuffer ()
+    "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+    (unless (or (bound-and-true-p mct--active)
+                (bound-and-true-p vertico--input)
+                (eq (current-local-map) read-passwd-map))
+      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay nil)
+      (corfu-mode 1)))
+
+  (defun corfu-send-shell (&rest _)
+    "Send completion candidate when inside comint/eshell."
+    (cond
+     ((and (derived-mode-p 'eshell-mode) (fboundp 'eshell-send-input))
+      (eshell-send-input))
+     ((and (derived-mode-p 'comint-mode)  (fboundp 'comint-send-input))
+      (comint-send-input))))
+
+  (setq corfu-auto t
+        corfu-auto-delay 0.0
+        corfu-quit-no-match 'separator)
+
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+  (advice-add #'corfu-insert :after #'corfu-send-shell)
+
+  (global-corfu-mode))
+
 (use-package tramp
   :defer t
   :config
@@ -718,6 +777,9 @@ Jumps at tangled code from org src block."
 (use-package visual-fill-column
   :config
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
+
+(use-package magit
+  :bind ("C-c g" . magit-status))
 
 (use-package change-inner
   :bind (("C-c c i" . change-inner)

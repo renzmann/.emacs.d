@@ -1039,6 +1039,95 @@ candidates.
 (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion)
 #+end_src
 
+** Minibuffer completion with vertico
+
+[[https://github.com/minad/vertico][Vertico]] is lightning quick, and has intuitive keybindings that don’t require any
+futzing. Especially in the case where I’m looking to tab-complete things like
+C-x C-f /ssh:<thing>.
+
+#+begin_src emacs-lisp
+(use-package vertico
+  :config
+  (vertico-mode)
+  (vertico-buffer-mode -1)
+  (define-key vertico-map "\M-q" #'vertico-quick-insert)
+  (define-key vertico-map "\C-q" #'vertico-quick-exit)
+
+  (vertico-multiform-mode)
+  (setq vertico-multiform-categories
+        '((consult-grep buffer))))
+#+end_src
+
+Combining vertico’s forces with [[https://github.com/minad/marginalia][marginalia]] creates a lovely minibuffer
+completion experience that rivals (or even beats) modern IDE and VSCode command
+palettes. marginalia adds a short, context-aware description next to completion
+candidates in the minibuffer. For instance, using C-h f will show me if a
+function is already bound to a key, and give me the top-level description of the
+function, without requiring me to actually open the *Help* buffer.
+
+** corfu
+For completion-at-point suggestions, I like [[https://github.com/minad/corfu][corfu]] a lot. It’s philosophy is to
+stick as close as possible to the native Emacs internal API as possible, without
+reinventing the wheel. In my experience, this has meant far fewer integration
+troubles with other packages. It uses child frames for displaying the completion
+candidates, however, which means we need a separate corfu-terminal extension for
+it to work in TTY mode. While use-package has the :unless and :if keywords, I
+seem to have trouble getting them to actually work with display-graphic-p, and
+the official instructions with window-system wasn’t working for me. Hence, it’s
+wrapped in an unless block.
+
+I’ve also enabled the TNG (Tab-n-go) style of completion, as laid out in corfu’s
+[[https://github.com/minad/corfu#tab-and-go-completion][README]].
+
+#+begin_src emacs-lisp
+(use-package corfu-terminal
+  :unless (display-graphic-p)
+  :config
+  (corfu-terminal-mode +1))
+
+(use-package corfu
+  :demand t
+
+  :custom
+  (corfu-cycle t)             ;; Enable cycling for `corfu-next/previous'
+  (corfu-preselect-first nil) ;; Disable candidate preselection
+
+  :bind
+  (:map corfu-map
+        ("M-SPC" . corfu-insert-separator)
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+
+  :config
+  (defun corfu-enable-always-in-minibuffer ()
+    "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+    (unless (or (bound-and-true-p mct--active)
+                (bound-and-true-p vertico--input)
+                (eq (current-local-map) read-passwd-map))
+      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay nil)
+      (corfu-mode 1)))
+
+  (defun corfu-send-shell (&rest _)
+    "Send completion candidate when inside comint/eshell."
+    (cond
+     ((and (derived-mode-p 'eshell-mode) (fboundp 'eshell-send-input))
+      (eshell-send-input))
+     ((and (derived-mode-p 'comint-mode)  (fboundp 'comint-send-input))
+      (comint-send-input))))
+
+  (setq corfu-auto t
+        corfu-auto-delay 0.0
+        corfu-quit-no-match 'separator)
+
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
+  (advice-add #'corfu-insert :after #'corfu-send-shell)
+
+  (global-corfu-mode))
+#+end_src
 
 * Tramp
 Tramp (Transparent Remote Access Multiple Protocol) allows us to access files on
@@ -1653,7 +1742,7 @@ word.
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 #+end_src
 
-** COMMENT Magit
+** Magit
 The one and only.
 
 #+begin_src emacs-lisp

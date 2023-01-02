@@ -1,0 +1,12 @@
+#+title: vertico.el - Changelog
+#+author: Daniel Mendler
+#+language: en
+
+* Version 1.0 (2022-12-22)
+
+- Emacs 29: Add support for =REQUIRE-MATCH= functions
+- =vertico-directory-enter=: Handle selection of ./ and ../ candidates specially.
+
+* Version 0.29 (2022-11-22)
+
+- Start of changelog.
