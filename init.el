@@ -356,63 +356,6 @@ emacs config site with matching `extension' regexp"
   :custom
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
-(setq completions-format 'one-column)
-
-(unless (version< emacs-version "29.0")
-  (setq completions-max-height 15))
-
-(unless (version< emacs-version "29.0")
-  (setq completion-auto-help 'visible
-        completion-auto-select 'second-tab
-        completion-show-help nil
-        completions-sort nil
-        completions-header-format nil))
-
-(defun renz/sort-by-alpha-length (elems)
-  "Sort ELEMS first alphabetically, then by length."
-  (sort elems (lambda (c1 c2)
-                (or (string-version-lessp c1 c2)
-                    (< (length c1) (length c2))))))
-
-(defun renz/sort-by-history (elems)
-  "Sort ELEMS by minibuffer history.
-Use `mct-sort-sort-by-alpha-length' if no history is available."
-  (if-let ((hist (and (not (eq minibuffer-history-variable t))
-                      (symbol-value minibuffer-history-variable))))
-      (minibuffer--sort-by-position hist elems)
-    (renz/sort-by-alpha-length elems)))
-
-(defun renz/completion-category ()
-  "Return completion category."
-  (when-let ((window (active-minibuffer-window)))
-    (with-current-buffer (window-buffer window)
-      (completion-metadata-get
-       (completion-metadata (buffer-substring-no-properties
-                             (minibuffer-prompt-end)
-                             (max (minibuffer-prompt-end) (point)))
-                            minibuffer-completion-table
-                            minibuffer-completion-predicate)
-       'category))))
-
-(defun renz/sort-multi-category (elems)
-  "Sort ELEMS per completion category."
-  (pcase (renz/completion-category)
-    ('nil elems) ; no sorting
-    ('kill-ring elems)
-    ('project-file (renz/sort-by-alpha-length elems))
-    (_ (renz/sort-by-history elems))))
-
-(unless (version< emacs-version "29.0")
-  (setq completions-sort #'renz/sort-multi-category))
-
-(define-key minibuffer-local-map (kbd "C-p") #'minibuffer-previous-completion)
-(define-key minibuffer-local-map (kbd "C-n") #'minibuffer-next-completion)
-
-(setq tab-always-indent 'complete)
-
-(define-key completion-in-region-mode-map (kbd "C-p") #'minibuffer-previous-completion)
-(define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion)
-
 (use-package vertico
   :config
   (vertico-mode)
@@ -695,7 +638,6 @@ Jumps at tangled code from org src block."
   (add-to-list 'compilation-error-regexp-alist 'pyright))
 
 (use-package python
-  :mode ("\\.py" . python-ts-mode)
   :config
   (if (executable-find "mypy")
       (setq python-check-command "mypy"))

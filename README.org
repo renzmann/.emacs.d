@@ -933,7 +933,7 @@ find the correct one.
   (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
-** Nicer Display and Behavior of ~*Completions*~
+** COMMENT Nicer Display and Behavior of ~*Completions*~
 With the /completion style/ set, we now have to configure the interface for
 /displaying/ candidates as we type.  First, I want candidates displayed as a
 single, vertical list.
@@ -1019,11 +1019,12 @@ actively selecting candidates, ~C-n~ and ~C-p~ are much more convenient than the
 default ~M-<up>~ and ~M-<down>~ bindings.
 
 #+begin_src emacs-lisp
-(define-key minibuffer-local-map (kbd "C-p") #'minibuffer-previous-completion)
-(define-key minibuffer-local-map (kbd "C-n") #'minibuffer-next-completion)
+(unless (version< emacs-version "29.0")
+  (define-key minibuffer-local-map (kbd "C-p") #'minibuffer-previous-completion)
+  (define-key minibuffer-local-map (kbd "C-n") #'minibuffer-next-completion))
 #+end_src
 
-** Completion at point
+** COMMENT Completion at point
 By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.
 I'd much prefer to use the easier and more intuitive =TAB=.
 
@@ -1035,8 +1036,9 @@ Again, we set ~C-n~ and ~C-p~ when completion-in-region is active for selecting
 candidates.
 
 #+begin_src emacs-lisp
-(define-key completion-in-region-mode-map (kbd "C-p") #'minibuffer-previous-completion)
-(define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion)
+(unless (version< emacs-version "29.0")
+  (define-key completion-in-region-mode-map (kbd "C-p") #'minibuffer-previous-completion)
+  (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion))
 #+end_src
 
 ** Minibuffer completion with vertico
@@ -1551,7 +1553,6 @@ programs exist is a small time saver.
 
 #+begin_src emacs-lisp
 (use-package python
-  :mode ("\\.py" . python-ts-mode)
   :config
   (if (executable-find "mypy")
       (setq python-check-command "mypy"))
