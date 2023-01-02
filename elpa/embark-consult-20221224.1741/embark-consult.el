@@ -5,8 +5,8 @@
 ;; Author: Omar Antolín Camarena <omar@matem.unam.mx>
 ;; Maintainer: Omar Antolín Camarena <omar@matem.unam.mx>
 ;; Keywords: convenience
-;; Package-Version: 20221223.2215
-;; Package-Commit: 81113d559a0204f33c344087a21f58c4be76098a
+;; Package-Version: 20221224.1741
+;; Package-Commit: ee014d5f3c86eafae673a947b492fa03ffbacb4e
 ;; Version: 0.6
 ;; Homepage: https://github.com/oantolin/embark
 ;; Package-Requires: ((emacs "27.1") (embark "0.17") (consult "0.17"))
@@ -361,7 +361,7 @@ for any action that is a Consult async command."
 
 (map-keymap
  (lambda (_key cmd)
-   (cl-pushnew #'embark--cd (alist-get cmd embark-pre-action-hooks))
+   (cl-pushnew #'embark--cd (alist-get cmd embark-around-action-hooks))
    (cl-pushnew #'embark-consult--prep-async
                (alist-get cmd embark-target-injection-hooks)))
  embark-consult-async-search-map)
