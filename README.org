@@ -1650,7 +1650,7 @@ word.
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 #+end_src
 
-** Magit
+** COMMENT Magit
 The one and only.
 
 #+begin_src emacs-lisp

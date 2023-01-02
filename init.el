@@ -716,9 +716,6 @@ Jumps at tangled code from org src block."
   :config
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 
-(use-package magit
-  :bind ("C-c g" . magit-status))
-
 (use-package change-inner
   :bind (("C-c c i" . change-inner)
          ("C-c c o" . change-outer)
