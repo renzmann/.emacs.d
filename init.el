@@ -358,13 +358,15 @@ emacs config site with matching `extension' regexp"
 
 (setq completions-format 'one-column)
 
-(setq completions-max-height 15)
+(unless (version< emacs-version "29.0")
+  (setq completions-max-height 15))
 
-(setq completion-auto-help 'visible
-      completion-auto-select 'second-tab
-      completion-show-help nil
-      completions-sort nil
-      completions-header-format nil)
+(unless (version< emacs-version "29.0")
+  (setq completion-auto-help 'visible
+        completion-auto-select 'second-tab
+        completion-show-help nil
+        completions-sort nil
+        completions-header-format nil))
 
 (defun renz/sort-by-alpha-length (elems)
   "Sort ELEMS first alphabetically, then by length."
@@ -400,7 +402,8 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
     ('project-file (renz/sort-by-alpha-length elems))
     (_ (renz/sort-by-history elems))))
 
-(setq completions-sort #'renz/sort-multi-category)
+(unless (version< emacs-version "29.0")
+  (setq completions-sort #'renz/sort-multi-category))
 
 (define-key minibuffer-local-map (kbd "C-p") #'minibuffer-previous-completion)
 (define-key minibuffer-local-map (kbd "C-n") #'minibuffer-next-completion)

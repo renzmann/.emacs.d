@@ -946,7 +946,8 @@ Also, when using the built-in completion-at-point, the ~*Completions*~ buffer ca
 sometimes take up the whole screen when there are a lot of candidates.
 
 #+begin_src emacs-lisp
-(setq completions-max-height 15)
+(unless (version< emacs-version "29.0")
+  (setq completions-max-height 15))
 #+end_src
 
 Some time ago, Prot wrote a package called [[https://github.com/protesilaos/mct/blob/main/mct.el][MCT]] (Minibuffer and Completions in
@@ -957,11 +958,12 @@ going to include similar behavior as a configurable option.  These are the
 options in question.
 
 #+begin_src emacs-lisp
-(setq completion-auto-help 'visible
-      completion-auto-select 'second-tab
-      completion-show-help nil
-      completions-sort nil
-      completions-header-format nil)
+(unless (version< emacs-version "29.0")
+  (setq completion-auto-help 'visible
+        completion-auto-select 'second-tab
+        completion-show-help nil
+        completions-sort nil
+        completions-header-format nil))
 #+end_src
 
 Another nice addition to Emacs 29 is the option to sort completion candidates
@@ -1003,7 +1005,8 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
     ('project-file (renz/sort-by-alpha-length elems))
     (_ (renz/sort-by-history elems))))
 
-(setq completions-sort #'renz/sort-multi-category)
+(unless (version< emacs-version "29.0")
+  (setq completions-sort #'renz/sort-multi-category))
 #+end_src
 
 Ideally, I would have a function that prioritizes based on /relevance/, which is
