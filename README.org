@@ -1656,7 +1656,7 @@ Handy for viewing data quickly.
 These are tweaks for both third party packages and those bundled with emacs that
 require little configuration and don't warrant a top-level header.
 
-** Git gutter
+** COMMENT Git gutter
 Shows a little icon outside the fringe when working version has changes.
 
 #+begin_src emacs-lisp

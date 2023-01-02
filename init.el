@@ -671,11 +671,6 @@ Jumps at tangled code from org src block."
 (use-package csv-mode
   :mode "\\.csv\\'")
 
-(use-package git-gutter
-  :demand t
-  :bind ("C-c v s" . git-gutter:stage-hunk)
-  :config (global-git-gutter-mode))
-
 (use-package dabbrev
   ;; Swap M-/ and C-M-/
   :bind (("M-/" . dabbrev-completion)
