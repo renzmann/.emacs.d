@@ -8,8 +8,8 @@
 
 ;; Author: The go-mode Authors
 ;; Version: 1.6.0
-;; Package-Version: 20220727.115
-;; Package-Commit: 08aa90d52f0e7d2ad02f961b554e13329672d7cb
+;; Package-Version: 20221228.1706
+;; Package-Commit: 166dfb1e090233c4609a50c2ec9f57f113c1da72
 ;; Keywords: languages go
 ;; Package-Requires: ((emacs "26.1"))
 ;; URL: https://github.com/dominikh/go-mode.el
@@ -216,11 +216,12 @@ look like others."
   :type '(repeat function)
   :group 'go)
 
+(make-obsolete-variable 'go-guess-gopath-functions "GOPATH has been deprecated in favour of Go modules." "1.7.0")
+
 (defcustom go-confirm-playground-uploads t
   "Ask before uploading code to the public Go Playground.
 
-Set this to nil to upload without prompting.
-"
+Set this to nil to upload without prompting."
   :type 'boolean
   :group 'go)
 
@@ -545,7 +546,6 @@ statements."
     ["Jump to Definition"    godef-jump t]
     "---"
     ["Add Import"            go-import-add t]
-    ["Remove Unused Imports" go-remove-unused-imports t]
     ["Go to Imports"         go-goto-imports t]
     "---"
     ("Playground"
@@ -1026,8 +1026,7 @@ open paren, the next line will have an additional indent.
 For example:
 foo ||
   foo && // this continuation line opens another indent
-    foo
-"
+    foo"
   (save-excursion
     (let (prev-op (all-tighter t))
 
@@ -1242,8 +1241,18 @@ INDENT is the normal indent of this line, i.e. that of the case body."
           (goto-char (- (point-max) pos))))))
 
 (defun go-beginning-of-defun (&optional count)
-  (unless (bolp)
-    (end-of-line))
+  (when (and (not (go-in-string-or-comment-p))
+			 (not (bolp))
+			 (save-excursion
+			   (beginning-of-line)
+			   (looking-at go-func-meth-regexp)))
+	;; Point is already somewhere on the function definition. Move to the end of line so that searching backwards finds
+	;; it. We don't go to the end of line unconditionally because that confuses evil-mode
+	;; (https://github.com/dominikh/go-mode.el/issues/186)
+	;;
+	;; If point is already at the beginning of line and looking at a function, then we want go-beginning-of-defun to
+	;; jump to the previous function instead.
+	(end-of-line))
   (setq count (or count 1))
   (let (first failure)
     (dotimes (i (abs count))
@@ -1309,8 +1318,7 @@ until you see the end. For example:
 func foo(int, string) {}
 
 // names and types (don't know so until you see the \"int\").
-func foo(i, j int) {}
-"
+func foo(i, j int) {}"
   (setq go--fontify-param-has-name (eq
                                     (go--parameter-list-type (point-max))
                                     'present))
@@ -1339,8 +1347,7 @@ func foo(i, j int) {}
 
 This is used as an anchored font lock keyword POST-MATCH-FORM. We
 move point back to the opening \"(\" so we find nested param
-lists.
-"
+lists."
   (goto-char go--fontify-param-beg))
 
 (defun go--match-param-start (end)
@@ -1733,7 +1740,6 @@ The following extra functions are defined:
 - `gofmt'
 - `godoc' and `godoc-at-point'
 - `go-import-add'
-- `go-remove-unused-imports'
 - `go-goto-arguments'
 - `go-goto-docstring'
 - `go-goto-function'
@@ -1745,11 +1751,9 @@ The following extra functions are defined:
 - `go-download-play'
 - `godef-describe' and `godef-jump'
 - `go-coverage'
-- `go-set-project'
-- `go-reset-gopath'
 
 If you want to automatically run `gofmt' before saving a file,
-add the following hook to your emacs configuration:
+add the following hook to your Emacs configuration:
 
 \(add-hook 'before-save-hook #'gofmt-before-save)
 
@@ -2118,8 +2122,7 @@ Playground URL.
 
 By default this function will prompt to confirm you want to upload
 code to the Playground. You can disable the confirmation by setting
-`go-confirm-playground-uploads' to nil.
-"
+`go-confirm-playground-uploads' to nil."
   (interactive "r")
   (if (and go-confirm-playground-uploads
            (not (yes-or-no-p "Upload to public Go Playground? ")))
@@ -2198,18 +2201,18 @@ uncommented, otherwise a new import will be added."
       (if (re-search-forward (concat "^[[:space:]]*//[[:space:]]*import " line "$") nil t)
           (uncomment-region (line-beginning-position) (line-end-position))
         (cl-case (go-goto-imports)
-          ('fail (message "Could not find a place to add import."))
-          ('block-empty
+          (fail (message "Could not find a place to add import."))
+          (block-empty
            (insert "\n\t" line "\n"))
-          ('block
+          (block
               (save-excursion
                 (re-search-backward "^import (")
                 (setq import-start (point)))
             (if (re-search-backward (concat "^[[:space:]]*//[[:space:]]*" line "$")  import-start t)
                 (uncomment-region (line-beginning-position) (line-end-position))
               (insert "\n\t" line)))
-          ('single (insert "import " line "\n"))
-          ('none (insert "\nimport (\n\t" line "\n)\n")))))))
+          (single (insert "import " line "\n"))
+          (none (insert "\nimport (\n\t" line "\n)\n")))))))
 
 (defun go-root-and-paths ()
   (let* ((output (process-lines go-command "env" "GOROOT" "GOPATH"))
@@ -2245,11 +2248,8 @@ If IGNORE-CASE is non-nil, the comparison is case-insensitive."
   (funcall go-packages-function))
 
 (defun go-packages-native ()
-  "Return a list of all installed Go packages. Obsolete.
-It looks for archive files in /pkg/. This strategy does not work
-well with the Go build cache or Go modules.
-
-You should use `go-packages-go-list' instead."
+  "Return a list of all installed Go packages."
+  (declare (obsolete "this function does not work well with modern versions of Go. You should use `go-packages-go-list' instead." "1.7.0"))
   (sort
    (delete-dups
     (cl-mapcan
@@ -2293,6 +2293,7 @@ You should use `go-packages-go-list' instead."
   "Remove all unused imports.
 If ARG is non-nil, unused imports will be commented, otherwise
 they will be removed completely."
+  (declare (obsolete "set `gofmt-command' to goimports instead, or use LSP and gopls's \"Organize Imports\" code action." "1.7.0"))
   (interactive "P")
   (save-excursion
     (let ((cur-buffer (current-buffer)) flymake-state lines)
@@ -2467,7 +2468,7 @@ divisor for FILE-NAME."
       (insert-file-contents coverage-file)
       (go--goto-line 2) ;; Skip over mode
       (while (not (eobp))
-        (let* ((parts (split-string (buffer-substring (point-at-bol) (point-at-eol)) ":"))
+        (let* ((parts (split-string (buffer-substring (line-beginning-position) (line-end-position)) ":"))
                (file (car parts))
                (rest (split-string (nth 1 parts) "[., ]")))
 
@@ -2757,6 +2758,7 @@ returned."
 
 (defun go-guess-gopath (&optional buffer)
   "Determine a suitable GOPATH for BUFFER, or the current buffer if BUFFER is nil."
+  (declare (obsolete "GOPATH has been deprecated in favour of Go modules." "1.7.0"))
   (with-current-buffer (or buffer (current-buffer))
     (let ((gopath (cl-some (lambda (el) (funcall el))
                            go-guess-gopath-functions)))
@@ -2769,6 +2771,7 @@ returned."
 (defun go-plain-gopath ()
   "Detect a normal GOPATH, by looking for the first `src'
 directory up the directory tree."
+  (declare (obsolete "GOPATH has been deprecated in favour of Go modules." "1.7.0"))
   (let ((d (locate-dominating-file buffer-file-name "src")))
     (if d
         (list d))))
@@ -2784,6 +2787,7 @@ of when Emacs was started.
 This function can for example be used as a
 projectile-switch-project-hook, or simply be called manually when
 switching projects."
+  (declare (obsolete "GOPATH has been deprecated in favour of Go modules." "1.7.0"))
   (interactive)
   (let ((gopath (or (go-guess-gopath buffer)
                     (go-original-gopath))))
@@ -2792,6 +2796,7 @@ switching projects."
 
 (defun go-reset-gopath ()
   "Reset GOPATH to the value it had when Emacs started."
+  (declare (obsolete "GOPATH has been deprecated in favour of Go modules." "1.7.0"))
   (interactive)
   (let ((gopath (go-original-gopath)))
     (setenv "GOPATH" gopath)
@@ -2799,6 +2804,7 @@ switching projects."
 
 (defun go-original-gopath ()
   "Return the original value of GOPATH from when Emacs was started."
+  (declare (obsolete "GOPATH has been deprecated in favour of Go modules." "1.7.0"))
   (let ((process-environment initial-environment)) (getenv "GOPATH")))
 
 (defun go--insert-modified-files ()
