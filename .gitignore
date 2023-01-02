@@ -1,0 +1,53 @@
+# Compiled
+*.elc
+*.so
+
+# Packaging
+.cask
+
+# Backup files
+*~
+*#
+.#*
+\#*
+
+# Undo-tree save-files
+*.~undo-tree
+
+# Misc.
+recentf
+network-security.data
+server/
+transient/
+/.lsp-session-v1
+/ido.last
+/tramp
+*/.venv/
+*/venv/
+eshell/
+projects
+url/
+semanticdb/
+ede-projects.el
+errors.py
+.emacs.desktop
+elpa/tsc-20220212.1632/tsc-dyn.dll
+elpa/vterm-*
+bookmarks
+packages/conda.el.org
+packages/conda.el.md
+.org-id-locations
+projectile-bookmarks.eld
+backups/
+*.png
+*.svg
+eaf/
+README.html
+elpa/ox-clip-20220117.1909/html-clip-w32.py
+org/
+pyrightconfig.json
+history
+*.ipynb_checkpoints*
+*.ipynb
+/.mc-lists.el
+/eln-cache/

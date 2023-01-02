@@ -1,0 +1,2 @@
+;; Generated package description from coterm.el  -*- no-byte-compile: t -*-
+(define-package "coterm" "1.6" "Terminal emulation for comint" '((emacs "26.1") (compat "28.1.2.0")) :commit "d8e1b04cd359d9f27ab7c6dbf8cae90dde834085" :authors '(("jakanakaevangeli" . "jakanakaevangeli@chiru.no")) :maintainer '("jakanakaevangeli" . "jakanakaevangeli@chiru.no") :keywords '("processes") :url "https://repo.or.cz/emacs-coterm.git")

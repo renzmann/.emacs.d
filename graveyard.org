@@ -1,0 +1,541 @@
+* Keybindings to interact with ~*Completions*~
+If there is a convenient way to interact with the ~*Completions*~ buffer from a
+buffer with default key bindings, I am not aware of it.  Because of this, I set
+a few convenience functions for navigating to, selecting, and closing the buffer
+in the case I do need to use it.
+
+#+begin_src emacs-lisp
+(defun renz/completion-accept ()
+  "Expand current text to first completion result"
+  (interactive)
+  (switch-to-completions)
+  (choose-completion))
+
+(defun renz/jump-completion ()
+  "Jump to second completion."
+  (interactive)
+  (switch-to-completions)
+  (next-completion 1))
+
+(defun renz/completion-kill-completion-buffer ()
+  "Close the *Completions* buffer without switching to it"
+  (interactive)
+  (kill-buffer "*Completions*"))
+#+end_src
+
+#+RESULTS:
+: renz/completion-kill-completion-buffer
+
+Much like Vim's built-in completion with the pop-up menu, I set =C-n= and =C-p= as a
+way to select completion candidates out of the ~*Completions*~ buffer.
+
+#+begin_src emacs-lisp
+(define-key completion-in-region-mode-map (kbd "C-n") 'renz/jump-completion)
+(define-key completion-list-mode-map (kbd "C-n") 'next-completion)
+(define-key completion-list-mode-map (kbd "C-p") 'previous-completion)
+#+end_src
+
+#+RESULTS:
+: previous-completion
+
+For a while, I thought keys like =RET=, =TAB=, and similar would be intuitive
+candidates for accepting completion candidates.  That turned out to be a problem
+because there's a good chance you'll mess up required functionality in shell,
+minibuffer, and related modes.  So, instead, I opt for the similar =C-j=.
+
+#+begin_src emacs-lisp
+(define-key completion-in-region-mode-map (kbd "C-j") 'renz/completion-accept)
+(define-key completion-list-mode-map (kbd "C-j") 'choose-completion)
+#+end_src
+
+#+RESULTS:
+: choose-completion
+
+
+* Minibuffer completion with ~vertico~ and ~marginalia~
+It's worth noting that the ~fido-vertical~ built-in is pretty good, but I had
+issues with micro-freezes in some situations.  [[https://github.com/minad/vertico][vertico]], on the other hand, has
+been lightning quick, and has intuitive keybindings that don't require any
+futzing.  /Especially/ in the case where I'm looking to tab-complete things like
+=C-x C-f /ssh:<thing>=.
+
+#+begin_src emacs-lisp
+(use-package vertico
+  :disabled t
+  :config
+  (vertico-mode)
+  (vertico-buffer-mode -1)
+  (define-key vertico-map "\M-q" #'vertico-quick-insert)
+  (define-key vertico-map "\C-q" #'vertico-quick-exit)
+
+  (vertico-multiform-mode)
+  (setq vertico-multiform-categories
+        '((consult-grep buffer))))
+#+end_src
+
+#+RESULTS:
+
+Combining ~vertico~'s forces with [[https://github.com/minad/marginalia][marginalia]] creates a lovely minibuffer
+completion experience that rivals (or even beats) modern IDE and VSCode command
+palettes.  ~marginalia~ adds a short, context-aware description next to completion
+candidates in the minibuffer.  For instance, using ~C-h f~ will show me if a
+function is already bound to a key, and give me the top-level description of the
+function, without requiring me to actually open the ~*Help*~ buffer.
+
+#+begin_src emacs-lisp
+(use-package marginalia
+  :config (marginalia-mode))
+#+end_src
+
+#+RESULTS:
+: t
+
+For some eye candy, I /could/ add some all-the-icons goodies as well.
+
+#+begin_src emacs-lisp :tangle no
+(use-package all-the-icons-completion
+  :if (display-graphic-p)
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
+#+end_src
+
+#+RESULTS:
+
+* LSP :ARCHIVE:
+
+Another section that's totally obsolete, but kept in case I need references to it.  Since =eglot= will be a built-in package for future emacs, I'm going to stick to it.
+
+#+begin_src emacs-lisp :tangle no :eval never
+(require 'lsp-mode)
+
+(setq lsp-keymap-prefix "s-p")
+(lsp-register-client
+    (make-lsp-client :new-connection (lsp-tramp-connection "pylsp")
+                     :major-modes '(python-mode)
+                     :remote? t
+                     :server-id 'pylsp-remote))
+
+(lsp-register-client
+    (make-lsp-client :new-connection (lsp-tramp-connection '("pyright-langserver" "--stdio"))
+                     :major-modes '(python-mode)
+                     :remote? t
+                     :server-id 'pyright-remote))
+
+(defun lsp-tramp-connection (local-command &optional generate-error-file-fn)
+    "Create LSP stdio connection named name.
+LOCAL-COMMAND is either list of strings, string or function which
+returns the command to execute."
+    (defvar tramp-connection-properties)
+    ;; Force a direct asynchronous process.
+    (when (file-remote-p default-directory)
+      (add-to-list 'tramp-connection-properties
+                   (list (regexp-quote (file-remote-p default-directory))
+                         "direct-async-process" t)))
+    (list :connect (lambda (filter sentinel name environment-fn)
+                     (let* ((final-command (lsp-resolve-final-function
+                                            local-command))
+                            (_stderr (or (when generate-error-file-fn
+                                           (funcall generate-error-file-fn name))
+                                         (format "/tmp/%s-%s-stderr" name
+                                                 (cl-incf lsp--stderr-index))))
+                            (process-name (generate-new-buffer-name name))
+                            (process-environment
+                             (lsp--compute-process-environment environment-fn))
+                            (proc (make-process
+                                   :name process-name
+                                   :buffer (format "*%s*" process-name)
+                                   :command final-command
+                                   :connection-type 'pipe
+                                   :coding 'no-conversion
+                                   :noquery t
+                                   :filter filter
+                                   :sentinel sentinel
+                                   :file-handler t)))
+                       (cons proc proc)))
+          :test? (lambda () (-> local-command lsp-resolve-final-function
+                           lsp-server-present?))))
+
+(setq lsp-completion-provider :none)
+
+(defun renz/corfu-lsp-setup ()
+  (setq-local completion-styles '(flex basic partial-completion emacs22)
+              completion-category-defaults nil))
+
+(add-hook 'lsp-mode-hook #'renz/corfu-lsp-setup)
+
+#+end_src
+
+
+
+** Displaying remote images
+Leaving this one out for a while too, as I'm not yet sure how useful it will be.  Taken from a blog post related to an issue I had running remote python from a local Org file: http://kychoi.org/blog/2014/11/02/Org-Display-Inline-Remote-Images
+
+#+begin_src emacs-lisp :tangle no
+(defun org-display-inline-images (&optional include-linked refresh beg end)
+  "Display inline images.
+
+An inline image is a link which follows either of these
+conventions:
+
+  1. Its path is a file with an extension matching return value
+     from `image-file-name-regexp' and it has no contents.
+
+  2. Its description consists in a single link of the previous
+     type.
+
+When optional argument INCLUDE-LINKED is non-nil, also links with
+a text description part will be inlined.  This can be nice for
+a quick look at those images, but it does not reflect what
+exported files will look like.
+
+When optional argument REFRESH is non-nil, refresh existing
+images between BEG and END.  This will create new image displays
+only if necessary.  BEG and END default to the buffer
+boundaries."
+  (interactive "P")
+  (when (display-graphic-p)
+    (unless refresh
+      (org-remove-inline-images)
+      (when (fboundp 'clear-image-cache) (clear-image-cache)))
+    (org-with-wide-buffer
+     (goto-char (or beg (point-min)))
+     (let ((case-fold-search t)
+	   (file-extension-re (org-image-file-name-regexp)))
+       (while (re-search-forward "[][]\\[\\(?:file\\|[./~]\\)" end t)
+	 (let ((link (save-match-data (org-element-context))))
+	   ;; Check if we're at an inline image.
+	   (when (and (equal (org-element-property :type link) "file")
+		      (or include-linked
+			  (not (org-element-property :contents-begin link)))
+		      (let ((parent (org-element-property :parent link)))
+			(or (not (eq (org-element-type parent) 'link))
+			    (not (cdr (org-element-contents parent)))))
+		      (org-string-match-p file-extension-re
+					  (org-element-property :path link)))
+	     (let ((file (substitute-in-file-name (expand-file-name (org-element-property :path link)))))
+	       (when (file-exists-p file)
+		 (let ((width
+			;; Apply `org-image-actual-width' specifications.
+			(cond
+			 ((not (image-type-available-p 'imagemagick)) nil)
+			 ((eq org-image-actual-width t) nil)
+			 ((listp org-image-actual-width)
+			  (or
+			   ;; First try to find a width among
+			   ;; attributes associated to the paragraph
+			   ;; containing link.
+			   (let ((paragraph
+				  (let ((e link))
+				    (while (and (setq e (org-element-property
+							 :parent e))
+						(not (eq (org-element-type e)
+							 'paragraph))))
+				    e)))
+			     (when paragraph
+			       (save-excursion
+				 (goto-char (org-element-property :begin paragraph))
+				   (when
+				       (re-search-forward
+					"^[ \t]*#\\+attr_.*?: +.*?:width +\\(\\S-+\\)"
+					(org-element-property
+					 :post-affiliated paragraph)
+					t)
+				     (string-to-number (match-string 1))))))
+			   ;; Otherwise, fall-back to provided number.
+			   (car org-image-actual-width)))
+			 ((numberp org-image-actual-width)
+			  org-image-actual-width)))
+		       (old (get-char-property-and-overlay
+			     (org-element-property :begin link)
+			     'org-image-overlay)))
+		   (if (and (car-safe old) refresh)
+		       (image-refresh (overlay-get (cdr old) 'display))
+		     (let ((image
+			    (create-image (if (org-file-remote-p file)
+					      (let* ((tramp-tmpdir (concat
+								    (if (featurep 'xemacs)
+									(temp-directory)
+								      temporary-file-directory)
+								    "/tramp"
+								    (file-name-directory (expand-file-name file))))
+						     (newname (concat
+							       tramp-tmpdir
+							       (file-name-nondirectory (expand-file-name file)))))
+						(make-directory tramp-tmpdir t)
+						(if (file-newer-than-file-p file newname)
+						    (copy-file file newname t t))
+						newname)
+					    file)
+					  (and width 'imagemagick)
+					  nil
+					  :width width)))
+		       (when image
+			 (let* ((link
+				 ;; If inline image is the description
+				 ;; of another link, be sure to
+				 ;; consider the latter as the one to
+				 ;; apply the overlay on.
+				 (let ((parent
+					(org-element-property :parent link)))
+				   (if (eq (org-element-type parent) 'link)
+				       parent
+				     link)))
+				(ov (make-overlay
+				     (org-element-property :begin link)
+				     (progn
+				       (goto-char
+					(org-element-property :end link))
+				       (skip-chars-backward " \t")
+				       (point)))))
+			   (overlay-put ov 'display image)
+			   (overlay-put ov 'face 'default)
+			   (overlay-put ov 'org-image-overlay t)
+			   (overlay-put
+			    ov 'modification-hooks
+			    (list 'org-display-inline-remove-overlay))
+			   (push ov org-inline-image-overlays)))))))))))))))
+#+end_src
+
+#+RESULTS:
+: org-display-inline-images
+
+* COMMENT Emacs Application Framework (eaf)
+
+For a while I was trying this out, but it seems like way too much of a hassle without any real benifits over just using other web-based apps like a browser of pdf viewer.
+
+#+begin_src emacs-lisp
+(use-package eaf
+  :load-path "~/.emacs.d/site-lisp/emacs-application-framework/"
+  :custom ; See https://github.com/emacs-eaf/emacs-application-framework/wiki/Customization
+  (eaf-browser-continue-where-left-off t)
+  (eaf-browser-enable-adblocker t)
+  (browse-url-browser-function 'eaf-open-browser)
+  :config
+  (defalias 'browse-web #'eaf-open-browser))
+  ;; (eaf-bind-key nil "M-q" eaf-browser-keybinding)) ;; unbind, see more in the Wiki
+
+(use-package eaf-jupyter)
+(use-package eaf-browser)
+(use-package eaf-demo)
+(use-package eaf-file-manager)
+(use-package eaf-git)
+(use-package eaf-image-viewer)
+(use-package eaf-markdown-previewer)
+(use-package eaf-system-monitor)
+(use-package eaf-terminal)
+(use-package eaf-vue-demo)
+(use-package eaf-pdf-viewer
+  :config
+  (eaf-bind-key scroll_up "C-n" eaf-pdf-viewer-keybinding)
+  (eaf-bind-key scroll_down "C-p" eaf-pdf-viewer-keybinding))
+
+(use-package eaf-org-previewer)
+#+end_src
+
+#+RESULTS:
+: t
+
+** COMMENT Fancy icons for ~corfu~ completions using ~kind-icon~
+If Emacs is compiled with SVG support, this will use them.  I may or may not
+have disabled warnings from popping up when Emacs /isn't/ built with SVG, such as
+from [[https://emacsformacosx.com/][emacsforosx]].
+
+#+begin_src emacs-lisp
+(use-package kind-icon
+  :ensure t
+  :after corfu
+  :custom
+  (kind-icon-default-face 'corfu-default) ; to compute blended backgrounds correctly
+  :config
+  (add-to-list 'corfu-margin-formatters #'kind-icon-margin-formatter))
+#+end_src
+
+For now, this is causing some completions to not fit on the pop up menu (tested
+on Windows).  Maybe there's something we can do to address that, but maybe not
+worth the time.
+
+** COMMENT Company mode
+For a while I was experimenting with ~company-mode~.  This section is obsolete and
+not tangled into the final ~init.el~, since I don't use company anymore.  I do
+keep it around for historical reasons, though, in case if I ever decide to go
+back.
+
+#+begin_src emacs-lisp :tangle no :eval never
+(add-hook 'after-init-hook 'global-company-mode)
+(add-hook 'shell-mode-hook 'renz/disable-company-remote-shell)
+(setq company-minimum-prefix-length 2)
+(setq company-idle-delay
+      (lambda () (if (company-in-string-or-comment) nil 0.0)))
+(setq company-tooltip-align-annotations t)
+(setq company-tooltip-flip-when-above t)
+(setq company-tooltip-margin 2)
+#+end_src
+
+** COMMENT In case of emergency: ~fzf~
+Some cases don't seem to be covered well by the existing file searching tools,
+such as looking for files that are ignored by ~.gitignore~, but are still
+important.
+
+#+begin_src emacs-lisp
+(use-package fzf
+  :bind (("C-c f" . fzf))
+  :config
+  ;; (setq fzf/args "-x --color bw --print-query --margin=1,0 --no-hscroll"
+  (setq fzf/args "-x --print-query --margin=1,0 --no-hscroll"
+        fzf/executable "fzf"
+        fzf/git-grep-args "-i --line-number %s"
+        ;; command used for `fzf-grep-*` functions
+        ;; example usage for ripgrep:
+        ;; fzf/grep-command "rg --no-heading -nH"
+        fzf/grep-command "grep -nrH"
+        ;; If nil, the fzf buffer will appear at the top of the window
+        fzf/position-bottom t
+        fzf/window-height 15))
+#+end_src
+
+Doesn't currently work over Tramp.
+
+** Super bindings
+See the [[Microsoft Windows][Microsoft Windows]] section for some hackery required to get these working
+on their operating system.
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "s-c") #'kill-ring-save)
+(global-set-key (kbd "s-q") #'save-buffers-kill-terminal)
+(global-set-key (kbd "s-s") #'save-buffer)
+(global-set-key (kbd "s-t") #'tab-new)
+(global-set-key (kbd "s-v") #'yank)
+#+end_src
+
+** COMMENT Initial frame size for GUI
+This kind of assumes that startup is fast.  Originally I was annoyed at how
+small the initial frame is when starting Emacs, but I've come to not care after
+getting used to it.  Back when I /did/ care, I used this to make the frame a bit
+bigger at launch.
+
+#+begin_src emacs-lisp
+(setq renz/frame-default-alist
+      '(
+        (tool-bar-lines . 0)
+        (width . 180) ; chars
+        (height . 60) ; lines
+        (left . 125)
+        (top . 125)))
+
+(when (display-graphic-p)
+  (setq initial-frame-alist renz/frame-default-alist)
+  (setq default-frame-alist renz/frame-default-alist))
+#+end_src
+
+** Completion at point with ~corfu~
+For =completion-at-=point= suggestions, I like =corfu= a lot.  It's philosophy is to
+stick as close as possible to the native Emacs internal API as possible, without
+reinventing the wheel.  In my experience, this has meant far fewer integration
+troubles with other packages.  It uses child frames for displaying the
+completion candidates, however, which means we need a separate =corfu-terminal=
+extension for it to work in TTY mode.  While ~use-package~ has the ~:unless~ and ~:if~
+keywords, I seem to have trouble getting them to actually work with
+~display-graphic-p~, and the official instructions with ~window-system~ wasn't
+working for me.  Hence, it's wrapped in an ~unless~ block.
+
+I've also enabled the TNG (Tab-n-go) style of completion, as laid out in corfu's
+[[https://github.com/minad/corfu#tab-and-go-completion][README]].
+
+#+begin_src emacs-lisp
+(unless (display-graphic-p)
+  (use-package corfu-terminal
+    :config
+    (corfu-terminal-mode +1)))
+
+(use-package corfu
+  :demand t
+
+  :custom
+  (corfu-cycle t)             ;; Enable cycling for `corfu-next/previous'
+  (corfu-preselect-first nil) ;; Disable candidate preselection
+
+  :bind
+  (:map corfu-map
+        ("M-SPC" . corfu-insert-separator)
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
+
+  :config
+  (defun corfu-send-shell (&rest _)
+    "Send completion candidate when inside comint/eshell."
+    (cond
+     ((and (derived-mode-p 'eshell-mode) (fboundp 'eshell-send-input))
+      (eshell-send-input))
+     ((and (derived-mode-p 'comint-mode)  (fboundp 'comint-send-input))
+      (comint-send-input))))
+
+  (setq corfu-auto t
+        corfu-auto-delay 0.0
+        corfu-quit-no-match 'separator)
+
+  (advice-add #'corfu-insert :after #'corfu-send-shell)
+  (global-corfu-mode))
+#+end_src
+
+There are some cases over Tramp, however, where corfu will case some performance
+issues.  Especially in the case where some folders under the =/= root might be
+mounted over a network.  In that case, I sometimes call this
+=renz/disable-corfu-remote=, which only disables corfu in the current buffer if
+it's being handled by Tramp.
+
+#+begin_src emacs-lisp
+(defun renz/disable-corfu-remote ()
+  (when (and (fboundp 'corfu-mode)
+             (file-remote-p default-directory))
+    (corfu-mode -1)))
+#+end_src
+
+Finally, Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.  I'd much
+prefer to just use the easier and more intuitive =TAB=.
+
+#+begin_src emacs-lisp
+(setq tab-always-indent 'complete)
+#+end_src
+
+*** Corfu Extensions With ~cape~
+
+#+begin_src emacs-lisp
+(use-package cape
+  ;; Bind dedicated completion commands
+  ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+  :bind (("C-c t p" . completion-at-point) ;; capf
+         ("C-c t t" . complete-tag)        ;; etags
+         ("C-c t d" . cape-dabbrev)        ;; or dabbrev-completion
+         ("C-c t h" . cape-history)
+         ("C-c t f" . cape-file)
+         ("C-c t k" . cape-keyword)
+         ("C-c t s" . cape-symbol)
+         ("C-c t a" . cape-abbrev)
+         ("C-c t i" . cape-ispell)
+         ("C-c t l" . cape-line)
+         ("C-c t w" . cape-dict)
+         ("C-c t \\" . cape-tex)
+         ("C-c t _" . cape-tex)
+         ("C-c t ^" . cape-tex)
+         ("C-c t &" . cape-sgml)
+         ("C-c t r" . cape-rfc1345))
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  (add-to-list 'completion-at-point-functions #'cape-file)
+  (add-to-list 'completion-at-point-functions #'cape-history)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  ;;(add-to-list 'completion-at-point-functions #'cape-tex)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  (add-to-list 'completion-at-point-functions #'cape-abbrev)
+  (add-to-list 'completion-at-point-functions #'cape-ispell)
+  (add-to-list 'completion-at-point-functions #'cape-dict)
+  (add-to-list 'completion-at-point-functions #'cape-symbol)
+  ;;(add-to-list 'completion-at-point-functions #'cape-line)
+)
+#+end_src
