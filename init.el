@@ -712,11 +712,6 @@ Jumps at tangled code from org src block."
   :config
   (coterm-mode))
 
-(use-package multiple-cursors
-  :config
-  (global-unset-key (kbd "M-<down-mouse-1>"))
-  (global-set-key (kbd "M-<mouse-1>") 'mc/add-cursor-on-click))
-
 (use-package visual-fill-column
   :config
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))

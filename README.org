@@ -1639,7 +1639,7 @@ Adds the ability to use TUI programs in shell mode.
   (coterm-mode))
 #+end_src
 
-** Multiple cursors
+** COMMENT Multiple cursors
 A bit like multi-cursor for Jupyter or VSCode, but with a lot of configurable flexibility.
 
 #+begin_src emacs-lisp
