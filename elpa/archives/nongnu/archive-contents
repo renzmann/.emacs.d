@@ -313,16 +313,18 @@
 	       ("https://github.com/bradyt/dart-mode/issues"))
 	      (:keywords "languages"))])
  (denote-refs .
-	      [(0 1)
+	      [(0 1 1)
 	       ((emacs
-		 (28 1)))
+		 (28 1))
+		(denote
+		 (1 1 0)))
 	       "Show links and backlinks in Denote notes" tar
 	       ((:url . "https://codeberg.org/akib/emacs-denote-refs")
 		(:keywords "hypermedia" "outlines" "files")
 		(:maintainer "Akib Azmain Turja" . "akib@disroot.org")
 		(:authors
 		 ("Akib Azmain Turja" . "akib@disroot.org"))
-		(:commit . "c41007596ec4f8fa665ee8dd7437faddbc0f1b34"))])
+		(:commit . "92bef1bc0086bc1cd8db24ec659792638fd7ecf3"))])
  (devhelp .
 	  [(1 0)
 	   ((emacs
@@ -384,7 +386,7 @@
 		 ("Arne Jørgensen" . "arne@arnested.dk"))
 		(:commit . "ed90b0c4d808365e9ae9f16cc8a96eff17815621"))])
  (eat .
-      [(0 3 1)
+      [(0 4)
        ((emacs
 	 (28 1)))
        "Emulate A Terminal, in a region, in a buffer and in Eshell" tar
@@ -393,7 +395,7 @@
 	(:maintainer "Akib Azmain Turja" . "akib@disroot.org")
 	(:authors
 	 ("Akib Azmain Turja" . "akib@disroot.org"))
-	(:commit . "fcc02df1050a67fd6233d326e117b3e3684d31cf"))])
+	(:commit . "9a432eef114ecc4f78b6e49dd1c25d11e1143571"))])
  (edit-indirect .
 		[(0 1 10)
 		 ((emacs
@@ -1288,6 +1290,17 @@
 	   (:authors
 	    ("Stefan Kangas" . "stefankangas@gmail.com"))
 	   (:commit . "480602f2ec5467aa2418ee98b328fb85d3b58d0c"))])
+ (meow .
+       [(1 4 2)
+	((emacs
+	  (27 1)))
+	"Yet Another modal editing" tar
+	((:url . "https://www.github.com/DogLooksGood/meow")
+	 (:keywords "convenience" "modal-editing")
+	 (:maintainer "Shi Tianshu")
+	 (:authors
+	  ("Shi Tianshu"))
+	 (:commit . "57656a69d3c29ddb0d18697491f80674e1097eaf"))])
  (minibar .
 	  [(0 2)
 	   ((emacs
@@ -1728,7 +1741,7 @@
 	       ("Natalie Weizenbaum"))
 	      (:keywords "markup" "language" "css"))])
  (scad-mode .
-	    [(93 1)
+	    [(93 2)
 	     ((emacs
 	       (27 1)))
 	     "A major mode for editing OpenSCAD code" tar
@@ -1737,7 +1750,7 @@
 	      (:maintainer "Len Trigg <lenbok@gmail.com>, Daniel Mendler" . "mail@daniel-mendler.de")
 	      (:authors
 	       ("Len Trigg, Łukasz Stelmach, zk_phi, Daniel Mendler"))
-	      (:commit . "3076e240bf4d0d754599592c9b4ee828e2271959"))])
+	      (:commit . "749b11df1d3041aa0a90542cba0fe5d9563c3a1f"))])
  (scala-mode .
 	     [(0 23)
 	      nil "Major mode for editing Scala" tar
@@ -1860,7 +1873,7 @@
 		     ("John Olsson" . "john@cryon.se"))
 		    (:commit . "2d5acd143a153e16372d59000e57d76291ab81dd"))])
  (subed .
-	[(1 0 28)
+	[(1 0 29)
 	 ((emacs
 	   (25 1)))
 	 "A major mode for editing subtitles" tar
@@ -1869,9 +1882,9 @@
 	  (:maintainer "Sacha Chua" . "sacha@sachachua.com")
 	  (:authors
 	   ("Random User"))
-	  (:commit . "ba0e4635eec59ad5408d1e913b0daafe4c42b1cd"))])
+	  (:commit . "28a75a6f6803e5c5d121c4d36ef403e8832fbf1f"))])
  (sweeprolog .
-	     [(0 10 0)
+	     [(0 10 1)
 	      ((emacs
 		(28 1)))
 	      "Embedded SWI-Prolog" tar
@@ -1880,7 +1893,7 @@
 	       (:maintainer "Eshel Yaron" . "~eshel/dev@lists.sr.ht")
 	       (:authors
 		("Eshel Yaron" . "me@eshelyaron.com"))
-	       (:commit . "6d0e54d68b1e901beb0233ee342a8f279d11afa0"))])
+	       (:commit . "803e3ea346780bff045bac128204d48cfcfe6f76"))])
  (swift-mode .
 	     [(8 6 0)
 	      ((emacs
@@ -2186,7 +2199,7 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(22 3 20221211131110)
+	       [(22 5 20230101184908)
 		((emacs
 		  (24 1)))
 		"ergonomic modal keybinding minor mode." tar
@@ -2195,7 +2208,7 @@
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
 		 (:authors
 		  ("Xah Lee ( http://xahlee.info/ )"))
-		 (:commit . "e5ac096b1585c2c28e8d4ce543aec6ae840cac14"))])
+		 (:commit . "529393f56daff086eb518d53e0b3d8a2b9ee4ca8"))])
  (xkcd .
        [(1 1)
 	((json
