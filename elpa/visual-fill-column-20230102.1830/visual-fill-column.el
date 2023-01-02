@@ -1,16 +1,16 @@
 ;;; visual-fill-column.el --- fill-column for visual-line-mode  -*- lexical-binding: t -*-
 
-;; Copyright (C) 2015-2022 Joost Kremers
+;; Copyright (C) 2015-2023 Joost Kremers
 ;; Copyright (C) 2016 Martin Rudalics
 ;; All rights reserved.
 
 ;; Author: Joost Kremers <joostkremers@fastmail.fm>
 ;; Maintainer: Joost Kremers <joostkremers@fastmail.fm>
 ;; URL: https://codeberg.org/joostkremers/visual-fill-column
-;; Package-Version: 20220519.1959
-;; Package-Commit: 453d698d7fc243a547665f8ba43c55eee574e0db
+;; Package-Version: 20230102.1830
+;; Package-Commit: 695a59789209c42fa08a5bce92963ee32f4455be
 ;; Created: 2015
-;; Version: 2.5
+;; Version: 2.5.1
 ;; Package-Requires: ((emacs "25.1"))
 
 ;; This file is NOT part of GNU Emacs.
