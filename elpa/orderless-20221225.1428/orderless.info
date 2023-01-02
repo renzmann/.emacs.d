@@ -37,6 +37,7 @@ Component matching styles
 Integration with other completion UIs
 
 * Ivy::
+* Helm::
 * Selectrum::
 * Company::
 
@@ -400,11 +401,12 @@ from your effort.  The functions ‘orderless-filter’,
 * Menu:
 
 * Ivy::
+* Helm::
 * Selectrum::
 * Company::
 
 
-File: orderless.info,  Node: Ivy,  Next: Selectrum,  Up: Integration with other completion UIs
+File: orderless.info,  Node: Ivy,  Next: Helm,  Up: Integration with other completion UIs
 
 3.1 Ivy
 =======
@@ -415,9 +417,21 @@ To use ‘orderless’ from Ivy add this to your Ivy configuration:
      (add-to-list 'ivy-highlight-functions-alist '(orderless-ivy-re-builder . orderless-ivy-highlight))
 
 
-File: orderless.info,  Node: Selectrum,  Next: Company,  Prev: Ivy,  Up: Integration with other completion UIs
+File: orderless.info,  Node: Helm,  Next: Selectrum,  Prev: Ivy,  Up: Integration with other completion UIs
 
-3.2 Selectrum
+3.2 Helm
+========
+
+To use ‘orderless’ from Helm, simply configure ‘orderless’ as you would
+for completion UIs that use Emacs completion stlyes and add this to your
+Helm configuration:
+
+     (setq helm-completion-style 'emacs)
+
+
+File: orderless.info,  Node: Selectrum,  Next: Company,  Prev: Helm,  Up: Integration with other completion UIs
+
+3.3 Selectrum
 =============
 
 Recent versions of Selectrum default to using whatever completion styles
@@ -431,10 +445,12 @@ Alternatively, you can use this configuration:
    If you use the above configuration, only the visible candidates are
 highlighted, which is a litte more efficient.
 
+   Note that Selectrum has been deprecated in favor of Vertico.
+
 
 File: orderless.info,  Node: Company,  Prev: Selectrum,  Up: Integration with other completion UIs
 
-3.3 Company
+3.4 Company
 ===========
 
 Company comes with a ‘company-capf’ backend that uses the
@@ -449,9 +465,9 @@ This means that the ‘company-capf’ backend will automatically use
      fix this add a separator that is allowed to occur in identifiers,
      for example, for Emacs Lisp code you could use an ampersand:
 
-          (setq orderless-component-separator "[ &]")
+     (setq orderless-component-separator "[ &]")
 
-  2. The matching portions of candidates aren’t highlighted.  That’s
+  1. The matching portions of candidates aren’t highlighted.  That’s
      because ‘company-capf’ is hard-coded to look for the
      ‘completions-common-part’ face, and it only use one face,
      ‘company-echo-common’ to highlight candidates.
@@ -460,13 +476,13 @@ This means that the ‘company-capf’ backend will automatically use
      you can at least get the matches highlighted in the sole available
      face with this configuration:
 
-          (defun just-one-face (fn &rest args)
-            (let ((orderless-match-faces [completions-common-part]))
-              (apply fn args)))
+     (defun just-one-face (fn &rest args)
+       (let ((orderless-match-faces [completions-common-part]))
+         (apply fn args)))
 
-          (advice-add 'company-capf--candidates :around #'just-one-face)
+     (advice-add 'company-capf--candidates :around #'just-one-face)
 
-     (Aren’t dynamically scoped variables and the advice system nifty?)
+   (Aren’t dynamically scoped variables and the advice system nifty?)
 
    If you would like to use different ‘completion-styles’ with
 ‘company-capf’ instead, you can add this to your config:
@@ -530,16 +546,15 @@ File: orderless.info,  Node: Prescient,  Next: Restricting to current matches in
 =============
 
 The prescient.el (https://github.com/raxod502/prescient.el) library also
-provides matching of space-separated components in any order and it can
-be used with either the Selectrum
-(https://github.com/raxod502/selectrum) or Ivy
-(https://github.com/abo-abo/swiper) completion UIs (it does not offer a
-completion-style that could be used with Emacs’ default completion UI,
-Mct, Vertico or with Icomplete).  The components can be matched
-literally, as regexps, as initialisms or in the flex style (called
-“fuzzy” in prescient).  In addition to matching, ‘prescient.el’ also
-supports sorting of candidates (‘orderless’ leaves that up to the
-candidate source and the completion UI).
+provides matching of space-separated components in any order.  It offers
+a completion-style that can be used with Emacs’ default completion UI,
+Mct, Vertico or with Icomplete.  Furthermore Selectrum and Ivy are
+supported.  The components can be matched literally, as regexps, as
+initialisms or in the flex style (called “fuzzy” in prescient).
+Prescient does not offer the same flexibility as Orderless with its
+style dispatchers.  However in addition to matching, Prescient supports
+sorting of candidates, while Orderless leaves that up to the candidate
+source and the completion UI.
 
 
 File: orderless.info,  Node: Restricting to current matches in Icicles Ido and Ivy,  Prev: Prescient,  Up: Related packages
@@ -568,23 +583,24 @@ out of order matching!
 
 Tag Table:
 Node: Top235
-Node: Overview960
-Node: Customization4997
-Node: Component matching styles5355
-Node: Style dispatchers7465
-Node: Component separator regexp9716
-Node: Defining custom orderless styles10953
-Node: Faces for component matches12845
-Node: Pattern compiler13649
-Node: Interactively changing the configuration14251
-Node: Integration with other completion UIs15714
-Node: Ivy16505
-Node: Selectrum16862
-Node: Company17536
-Node: Related packages19513
-Node: Ivy and Helm19811
-Node: Prescient21156
-Node: Restricting to current matches in Icicles Ido and Ivy22024
+Node: Overview969
+Node: Customization5006
+Node: Component matching styles5364
+Node: Style dispatchers7474
+Node: Component separator regexp9725
+Node: Defining custom orderless styles10962
+Node: Faces for component matches12854
+Node: Pattern compiler13658
+Node: Interactively changing the configuration14260
+Node: Integration with other completion UIs15723
+Node: Ivy16523
+Node: Helm16875
+Node: Selectrum17221
+Node: Company17961
+Node: Related packages19911
+Node: Ivy and Helm20209
+Node: Prescient21554
+Node: Restricting to current matches in Icicles Ido and Ivy22395
 
 End Tag Table
 
