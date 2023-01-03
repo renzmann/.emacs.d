@@ -353,6 +353,7 @@ emacs config site with matching `extension' regexp"
 (use-package orderless
   :config
   (add-to-list 'completion-styles 'orderless)
+  (setq orderless-component-separator "[ &]")
 
   :custom
   (completion-category-overrides '((file (styles basic partial-completion)))))
@@ -413,6 +414,7 @@ emacs config site with matching `extension' regexp"
   (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
   (advice-add #'corfu-insert :after #'corfu-send-shell)
   (add-hook 'comint-mode-hook (lambda () (setq corfu-auto nil)))
+  (add-hook 'minibuffer-mode-hook (lambda () (setq corfu-auto nil)))
 
   (global-corfu-mode))
 
