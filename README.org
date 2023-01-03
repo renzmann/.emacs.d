@@ -42,21 +42,25 @@ Alacritty.
 
 If I had to sum up the theme of my configuration, it would be "vanilla extract".
 In only a few instances do I change overt behavior of Emacs, the most noticiable
-departure of course being the color theme and [[https://github.com/minad/corfu][corfu]] completion-at-point.  Even
-with those, though, I want a configuration that fits my hands in such a way that
-I remain comfortable using =emacs -Q= with very little disruption to my normal
-muscle memory and workflow.
+departures of course being the color theme, vertico minibuffer, and [[https://github.com/minad/corfu][corfu]]
+completion-at-point.  Even with those, though, I want a configuration that fits
+my hands in such a way that I remain comfortable using =emacs -Q= with very little
+disruption to my normal muscle memory and workflow.
 
 I do make changes to things that I feel "should have been included."  Some
-examples of this would be error message support for =pyright= in a =*Compilation*=
-buffer, reasonable indentation behavior for SQL files, updating buffers
-automatically if their contents change on disk, and syntax highlighting for
-source blocks in Markdown.  You may notice that despite the laudable goal of
-intentded minimalism, this document is is still quite long, as I have found many
-(ever increasing) quirky behaviors of Emacs that I tweak.
+examples of this are:
 
-Most of my time is spent in Org, SQL, Python, and Bash, so the majority of
-configuration lies around these sections.
+1. Additional major modes for languages like Markdown, go, and rust
+2. Error message support for =pyright= in a =*Compilation*= buffer
+3. Reasonable indentation behavior for SQL files
+4. Updating buffers automatically if their contents change on disk
+5. Syntax highlighting for Source blocks in Markdown.
+
+
+You may notice that despite the laudable goal of intended minimalism, this
+document is is still quite long, as I have found many (ever increasing) quirky
+behaviors of Emacs that I tweak.  Most of my time is spent in Org, SQL, Python,
+Bash, and Markdown, so the majority of configuration lies around these sections.
 
 * Tangling
 My configuration is a single literate programming document, which is tangled
