@@ -73,9 +73,6 @@
 
 (setq eldoc-echo-area-use-multiline-p nil)
 
-(setq history-length 25)
-(savehist-mode 1)
-
 (add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
 
 (recentf-mode t)
@@ -395,8 +392,7 @@ emacs config site with matching `extension' regexp"
   :config
   (defun corfu-enable-always-in-minibuffer ()
     "Enable Corfu in the minibuffer if Vertico/Mct are not active."
-    (unless (or (bound-and-true-p mct--active)
-                (bound-and-true-p vertico--input)
+    (unless (or (bound-and-true-p vertico--input)
                 (eq (current-local-map) read-passwd-map))
       ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
       (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
@@ -417,6 +413,7 @@ emacs config site with matching `extension' regexp"
 
   (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
   (advice-add #'corfu-insert :after #'corfu-send-shell)
+  (add-hook 'comint-mode-hook (lambda () (setq corfu-auto nil)))
 
   (global-corfu-mode))
 
