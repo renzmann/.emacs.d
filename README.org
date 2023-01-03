@@ -322,7 +322,7 @@ of the screen for docstrings in python.
 (setq eldoc-echo-area-use-multiline-p nil)
 #+end_src
 
-** Remember minibuffer history
+** COMMENT Remember minibuffer history
 Found this on a [[https://www.youtube.com/watch?v=51eSeqcaikM][System Crafters video]].
 
 #+begin_src emacs-lisp
@@ -1022,15 +1022,7 @@ not always a trivial algorithm.
 
 What all of the above form isn't /quite/ the live-updating version that [[https://github.com/oantolin/live-completions][Oantolnin]],
 MCT, or vertico offer, but it's pretty close.  The ~*Completions*~ buffer updates
-after every ~<SPC>~, which is the natural filtering mechanism for =orderless=.  When
-actively selecting candidates, ~C-n~ and ~C-p~ are much more convenient than the
-default ~M-<up>~ and ~M-<down>~ bindings.
-
-#+begin_src emacs-lisp
-(unless (version< emacs-version "29.0")
-  (define-key minibuffer-local-map (kbd "C-p") #'minibuffer-previous-completion)
-  (define-key minibuffer-local-map (kbd "C-n") #'minibuffer-next-completion))
-#+end_src
+after every ~<SPC>~, which is the natural filtering mechanism for =orderless=.
 
 ** COMMENT Completion at point
 By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.
@@ -1087,7 +1079,9 @@ the official instructions with window-system wasn’t working for me. Hence, it�
 wrapped in an unless block.
 
 I’ve also enabled the TNG (Tab-n-go) style of completion, as laid out in corfu’s
-[[https://github.com/minad/corfu#tab-and-go-completion][README]].
+[[https://github.com/minad/corfu#tab-and-go-completion][README]].  In ~comint-mode~, we switch to manual completion (instead of
+autocomplete), since eager buffering of candidates can cause freezes or
+stuttering in large directories, like ~/usr/bin~.
 
 #+begin_src emacs-lisp
 (use-package corfu-terminal
@@ -1113,8 +1107,7 @@ I’ve also enabled the TNG (Tab-n-go) style of completion, as laid out in corfu
   :config
   (defun corfu-enable-always-in-minibuffer ()
     "Enable Corfu in the minibuffer if Vertico/Mct are not active."
-    (unless (or (bound-and-true-p mct--active)
-                (bound-and-true-p vertico--input)
+    (unless (or (bound-and-true-p vertico--input)
                 (eq (current-local-map) read-passwd-map))
       ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
       (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
@@ -1135,6 +1128,7 @@ I’ve also enabled the TNG (Tab-n-go) style of completion, as laid out in corfu
 
   (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
   (advice-add #'corfu-insert :after #'corfu-send-shell)
+  (add-hook 'comint-mode-hook (lambda () (setq corfu-auto nil)))
 
   (global-corfu-mode))
 #+end_src
