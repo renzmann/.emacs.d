@@ -356,6 +356,7 @@ emacs config site with matching `extension' regexp"
 (use-package orderless
   :config
   (add-to-list 'completion-styles 'orderless)
+  (setq orderless-component-separator "[ &]")
 
   :custom
   (completion-category-overrides '((file (styles basic partial-completion)))))
