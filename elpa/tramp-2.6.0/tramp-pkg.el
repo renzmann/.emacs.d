@@ -1,2 +1,0 @@
-;; Generated package description from tramp.el  -*- no-byte-compile: t -*-
-(define-package "tramp" "2.6.0" "Transparent Remote Access, Multiple Protocol" '((emacs "26.1")) :commit "f1e00a4adb4de8f322f48cceec7e5c8bd3b298b6" :authors '(("Kai Großjohann" . "kai.grossjohann@gmx.net")) :maintainer '("Michael Albinus" . "michael.albinus@gmx.de") :keywords '("comm" "processes") :url "https://www.gnu.org/software/tramp/")
