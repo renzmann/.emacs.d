@@ -27,7 +27,11 @@
 
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 
-(when (memq system-type '(windows-nt cygwin ms-dos))
+(defun renz/windowsp ()
+  "Are we on Microsoft Windows?"
+  (memq system-type '(windows-nt cygwin ms-dos)))
+
+(when (renz/windowsp)
   ;; Set a better font on Windows
   (set-face-attribute 'default nil :font "Hack NF-12")
 
@@ -708,6 +712,7 @@ Jumps at tangled code from org src block."
   (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package coterm
+  :unless (renz/windowsp)
   :config
   (coterm-mode))
 

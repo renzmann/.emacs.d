@@ -171,7 +171,11 @@ default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always inst
 with ~msys64~.
 
 #+begin_src emacs-lisp
-(when (memq system-type '(windows-nt cygwin ms-dos))
+(defun renz/windowsp ()
+  "Are we on Microsoft Windows?"
+  (memq system-type '(windows-nt cygwin ms-dos)))
+
+(when (renz/windowsp)
   ;; Set a better font on Windows
   (set-face-attribute 'default nil :font "Hack NF-12")
 
@@ -1728,6 +1732,7 @@ Adds the ability to use TUI programs in shell mode.
 
 #+begin_src emacs-lisp
 (use-package coterm
+  :unless (renz/windowsp)
   :config
   (coterm-mode))
 #+end_src
