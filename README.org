@@ -322,7 +322,7 @@ of the screen for docstrings in python.
 (setq eldoc-echo-area-use-multiline-p nil)
 #+end_src
 
-** COMMENT Remember minibuffer history
+** Remember minibuffer history
 Found this on a [[https://www.youtube.com/watch?v=51eSeqcaikM][System Crafters video]].
 
 #+begin_src emacs-lisp

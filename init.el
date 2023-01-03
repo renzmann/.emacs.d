@@ -73,6 +73,9 @@
 
 (setq eldoc-echo-area-use-multiline-p nil)
 
+(setq history-length 25)
+(savehist-mode 1)
+
 (add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
 
 (recentf-mode t)
