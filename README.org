@@ -24,8 +24,25 @@ If you prefer a prettier reading experience, check out this same document weaved
 into [[https://robbmann.io/emacsd/][my website.]]
 
 * Goals
-I use Emacs 28+ all three of the major platforms, in both GUI and TTY mode.  So
-this config is designed to work equally well for:
+If I had to sum up the theme of my configuration, it would be "vanilla extract".
+In only a few instances do I change overt behavior of Emacs, the most noticeable
+departure of course being the color theme with org-modern.  Even with those,
+though, I want a configuration that fits my hands in such a way that I remain
+comfortable using =emacs -Q= with very little disruption to my normal muscle
+memory and workflow.
+
+Aside from these aesthetic and philosophical reasons, there are practical
+concerns this configuration needs to address.  I spend my time on Windows for
+games, macOS or Linux with remote machines for work, and desktop Linux for
+personal projects like building my website.  Some of these situations enforce a
+very slow internet connection and tight security measures for Tramp, which can
+cause modern, "live updating" features like =corfu= and =consult= to hang Emacs.  In
+other cases, I have no access to the outside internet at all (so no ELPA or
+MELPA updates).  Hence, keeping only a small number of external dependencies
+under =elpa/= maximizes portability and maintainability between systems.
+
+Altogether, I wind up using Emacs 28+ on all three of the major platforms, in both
+GUI and TTY mode.  So this config is designed to work equally well for:
 
 |----------+----------+-----+-----------+-------|
 | platform | terminal | GUI | ssh + TTY | Tramp |
@@ -40,26 +57,23 @@ this table.  For now though, the 16 bit colors don't react to my color theme,
 and so on Windows I rely singularly on GUI mode, rather than WSL or Emacs inside
 Alacritty.
 
-If I had to sum up the theme of my configuration, it would be "vanilla extract".
-In only a few instances do I change overt behavior of Emacs, the most noticeable
-departure of course being the color theme with org-modern.  Even with those,
-though, I want a configuration that fits my hands in such a way that I remain
-comfortable using =emacs -Q= with very little disruption to my normal muscle
-memory and workflow.
-
-I do make changes to things that I feel "should have been included."  Some
-examples of this are:
-
-1. Additional major modes for languages like Markdown, go, and rust
-2. Error message support for =pyright= in a =*Compilation*= buffer
-3. Reasonable indentation behavior for SQL files
-4. Updating buffers automatically if their contents change on disk
-5. Syntax highlighting for Source blocks in Markdown
-
+* Notable Features
 You may notice that despite the laudable goal of intended minimalism, this
 document is is still quite long, as I have found many (ever increasing) quirky
 behaviors of Emacs that I tweak.  Most of my time is spent in Org, SQL, Python,
 Bash, and Markdown, so the majority of configuration lies around these sections.
+
+I do make changes to things that I feel "should have been included."  Some
+examples of this are:
+
+1. Additional major modes for languages like Markdown, Go, and Rust
+2. Error message support for =pyright= in a =*Compilation*= buffer
+3. Reasonable indentation behavior for SQL files
+4. Updating buffers automatically if their contents change on disk
+5. Syntax highlighting for Source blocks in Markdown
+6. Handling ANSI color escape codes in shell output, compilation, and VC buffers
+7. Ability to run TUI interfaces in comint-mode (shell, eshell) on Linux and
+   macOS
 
 * Tangling
 My configuration is a single literate programming document, which is tangled
@@ -242,6 +256,7 @@ light of the room I'm in.
 
 #+begin_src emacs-lisp
 (use-package ef-themes
+  :if (display-graphic-p)
   :demand t
   :bind ("C-c m" . ef-themes-toggle)
 
@@ -321,7 +336,7 @@ of the screen for docstrings in python.
 (setq eldoc-echo-area-use-multiline-p nil)
 #+end_src
 
-** COMMENT Remember minibuffer history
+** Remember minibuffer history
 Found this on a [[https://www.youtube.com/watch?v=51eSeqcaikM][System Crafters video]].
 
 #+begin_src emacs-lisp
@@ -1184,18 +1199,19 @@ latter over the former, I've removed the =org-startup-indented= call.
      (python . t)
      (sql . t)
      (shell . t)
-     (fortran . t)
-     (julia . t)
+     ;; (fortran . t)
+     ;; (julia . t)
      ;; (jupyter . t)
-     (scheme . t)
-     (haskell . t)
+     ;; (scheme . t)
+     ;; (haskell . t)
      (lisp . t)
-     (clojure . t)
-     (C . t)
-     (org . t)
-     (gnuplot . t)
-     (awk . t)
-     (latex . t)))
+     ;; (clojure . t)
+     ;; (C . t)
+     ;; (org . t)
+     ;; (gnuplot . t)
+     ;; (awk . t)
+     ;; (latex . t)
+     ))
 
   (setq org-agenda-files '("~/.emacs.d/org/work.org")
         org-hugo-front-matter-format "yaml"))
@@ -1518,16 +1534,6 @@ Handy for viewing data quickly.
 These are tweaks for both third party packages and those bundled with emacs that
 require little configuration and don't warrant a top-level header.
 
-** COMMENT Git gutter
-Shows a little icon outside the fringe when working version has changes.
-
-#+begin_src emacs-lisp
-(use-package git-gutter
-  :demand t
-  :bind ("C-c v s" . git-gutter:stage-hunk)
-  :config (global-git-gutter-mode))
-#+end_src
-
 ** ~dabbrev~: swap ~M-/~ and ~C-M-/~
 
 #+begin_src emacs-lisp
@@ -1557,32 +1563,6 @@ Also enabled above is Do-What-I-Mean (DWIM) copying.  This is for when two dired
 windows are open, and we want to copy something from one location to the other.
 By enabling ~dired-dwim-target~, it auto-populates the minibuffer with the other
 dired window's path when issuing a copy command with ~C~.
-
-** Embark
-https://github.com/oantolin/embark
-
-#+begin_src emacs-lisp
-(use-package embark
-  :bind (("C-." . embark-act)
-         ("C-\\" . embark-dwim)
-         ("C-h B" . embark-bindings))
-
-  :init
-  ;; Optionally replace the key help with a completing-read interface
-  ;; (setq prefix-help-command #'embark-prefix-help-command)
-
-  :config
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
-
-
-(use-package embark-consult
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
-#+end_src
 
 ** Coterm mode
 Adds the ability to use TUI programs in shell mode.

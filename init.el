@@ -49,6 +49,7 @@
   (exec-path-from-shell-initialize))
 
 (use-package ef-themes
+  :if (display-graphic-p)
   :demand t
   :bind ("C-c m" . ef-themes-toggle)
 
@@ -72,6 +73,9 @@
       mode-line-in-non-selected-windows t)
 
 (setq eldoc-echo-area-use-multiline-p nil)
+
+(setq history-length 25)
+(savehist-mode 1)
 
 (add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
 
@@ -426,18 +430,19 @@ Jumps at tangled code from org src block."
      (python . t)
      (sql . t)
      (shell . t)
-     (fortran . t)
-     (julia . t)
+     ;; (fortran . t)
+     ;; (julia . t)
      ;; (jupyter . t)
-     (scheme . t)
-     (haskell . t)
+     ;; (scheme . t)
+     ;; (haskell . t)
      (lisp . t)
-     (clojure . t)
-     (C . t)
-     (org . t)
-     (gnuplot . t)
-     (awk . t)
-     (latex . t)))
+     ;; (clojure . t)
+     ;; (C . t)
+     ;; (org . t)
+     ;; (gnuplot . t)
+     ;; (awk . t)
+     ;; (latex . t)
+     ))
 
   (setq org-agenda-files '("~/.emacs.d/org/work.org")
         org-hugo-front-matter-format "yaml"))
@@ -624,27 +629,6 @@ Jumps at tangled code from org src block."
   :config
   (setq dired-listing-switches "-alFh")
   (setq dired-dwim-target t))
-
-(use-package embark
-  :bind (("C-." . embark-act)
-         ("C-\\" . embark-dwim)
-         ("C-h B" . embark-bindings))
-
-  :init
-  ;; Optionally replace the key help with a completing-read interface
-  ;; (setq prefix-help-command #'embark-prefix-help-command)
-
-  :config
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
-
-
-(use-package embark-consult
-  :hook
-  (embark-collect-mode . consult-preview-at-point-mode))
 
 (use-package coterm
   :unless (renz/windowsp)
