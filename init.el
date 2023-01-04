@@ -55,14 +55,14 @@
   :init
   (setq ef-themes-headings
         '((0 . (1.9))
-          (1 . (1.8))
-          (2 . (1.7))
-          (3 . (1.6))
-          (4 . (1.5))
-          (5 . (1.4)) ; absence of weight means `bold'
-          (6 . (1.3))
-          (7 . (1.2))
-          (t . (1.1))))
+          (1 . (1.3))
+          (2 . (1.2))
+          (3 . (1.1))
+          (4 . (1.0))
+          (5 . (1.0)) ; absence of weight means `bold'
+          (6 . (1.0))
+          (7 . (1.0))
+          (t . (1.0))))
   (setq ef-themes-to-toggle '(ef-cherie ef-summer))
 
   :config
@@ -413,8 +413,8 @@ emacs config site with matching `extension' regexp"
 
   (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
   (advice-add #'corfu-insert :after #'corfu-send-shell)
-  (add-hook 'comint-mode-hook (lambda () (setq corfu-auto nil)))
-  (add-hook 'minibuffer-mode-hook (lambda () (setq corfu-auto nil)))
+  (add-hook 'comint-mode-hook (lambda () (setq-local corfu-auto nil)))
+  (add-hook 'minibuffer-mode-hook (lambda () (setq-local corfu-auto nil)))
 
   (global-corfu-mode))
 
@@ -642,11 +642,9 @@ Jumps at tangled code from org src block."
 
 (use-package python
   :config
-  (if (executable-find "mypy")
-      (setq python-check-command "mypy"))
-  (if (executable-find "pyright")
-      (setq python-check-command "pyright"))
-  (add-hook 'python-mode-hook #'blacken-mode))
+  (setq python-check-command "ruff")
+  (add-hook 'python-mode-hook #'blacken-mode)
+  (add-hook 'python-mode-hook #'flymake-mode))
 
 (put 'python-check-command 'safe-local-variable #'stringp)
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
@@ -663,6 +661,8 @@ Jumps at tangled code from org src block."
   (interactive)
   (visual-fill-column-mode)
   (setq-local fill-column 80))
+
+(add-hook 'text-mode-hook 'flyspell-mode)
 
 (use-package poly-markdown
   :after (markdown-mode)
