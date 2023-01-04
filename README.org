@@ -746,8 +746,7 @@ somewhere else.
 
 (defun renz/jump-init ()
   (interactive)
-  (find-file (expand-file-name "README.org" user-emacs-directory))
-  (consult-org-heading))
+  (find-file (expand-file-name "README.org" user-emacs-directory)))
 
 (global-set-key (kbd "C-c i i") #'renz/jump-init)
 (global-set-key (kbd "C-c i l") #'renz/jump-configuration)
@@ -1051,7 +1050,6 @@ candidates.
   (define-key completion-in-region-mode-map (kbd "C-p") #'minibuffer-previous-completion)
   (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion))
 #+end_src
-
 ** COMMENT Minibuffer completion with vertico
 
 [[https://github.com/minad/vertico][Vertico]] is lightning quick, and has intuitive keybindings that don’t require any
@@ -1222,13 +1220,15 @@ Host *
      ServerAliveInterval 60
 #+end_example
 
-* TreeSitter
+* TODO TreeSitter
 Emacs 29 added native [[https://tree-sitter.github.io/tree-sitter/][TreeSitter]] support.  TreeSitter is a new way of
 incrementally parsing source code that offers superior navigation and syntax
 highlighting.  To fully realize this benefit, however, it requires that we
 install =tree-sitter= grammars independently from Emacs.  Right now, I'm using
 [[https://github.com/casouri/tree-sitter-module][casouri's modules]], which I build and install under =~/.emacs.d/tree-sitter=, if
 they don't already exist under =/usr/local/lib/= or =~/.local/lib=.
+
+*REMINDER:* We could just use a little lisp here to download the module if on linux or mac...
 
 #+begin_src shell
 git clone git@github.com:casouri/tree-sitter-module.git
@@ -1259,6 +1259,13 @@ Enabling TreeSitter is done on a per-language basis to override the default
 major mode with the corresponding TreeSitter version.
 
 * Language-specific major modes
+** TOML
+
+#+begin_src emacs-lisp
+(use-package conf-mode
+  :mode ("\\.toml\\'" . conf-toml-mode))
+#+end_src
+
 ** Org-mode
 
 #+begin_src emacs-lisp
@@ -1626,6 +1633,15 @@ Formatting a buffer with =black= has never been easier!
 (use-package blacken
   :bind ("C-c p" . blacken-mode)
   :after (python))
+#+end_src
+
+*** Activating Virtual Environments Over Tramp
+
+#+begin_src emacs-lisp
+(use-package tramp-venv
+  :bind
+  (("C-c t v a" . tramp-venv-activate)
+   ("C-c t v d" . tramp-venv-deactivate)))
 #+end_src
 
 ** Markdown

@@ -234,8 +234,7 @@ emacs config site with matching `extension' regexp"
 
 (defun renz/jump-init ()
   (interactive)
-  (find-file (expand-file-name "README.org" user-emacs-directory))
-  (consult-org-heading))
+  (find-file (expand-file-name "README.org" user-emacs-directory)))
 
 (global-set-key (kbd "C-c i i") #'renz/jump-init)
 (global-set-key (kbd "C-c i l") #'renz/jump-configuration)
@@ -363,6 +362,9 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 (when (boundp 'treesit-extra-load-path)
   (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
   (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
+
+(use-package conf-mode
+  :mode ("\\.toml\\'" . conf-toml-mode))
 
 (setq renz/org-home "~/org/")
 (setq org-confirm-babel-evaluate nil)
@@ -585,6 +587,11 @@ Jumps at tangled code from org src block."
 (use-package blacken
   :bind ("C-c p" . blacken-mode)
   :after (python))
+
+(use-package tramp-venv
+  :bind
+  (("C-c t v a" . tramp-venv-activate)
+   ("C-c t v d" . tramp-venv-deactivate)))
 
 (defun renz/md-hook ()
   "View buffer in visual fill mode with 80 character width."
