@@ -37,15 +37,15 @@ this config is designed to work equally well for:
 
 Once I figure out how to get colors working in Windows terminal, I'll update
 this table.  For now though, the 16 bit colors don't react to my color theme,
-and so on Windows I rely singularly on GUI mode, rather than WSL or emacs inside
+and so on Windows I rely singularly on GUI mode, rather than WSL or Emacs inside
 Alacritty.
 
 If I had to sum up the theme of my configuration, it would be "vanilla extract".
-In only a few instances do I change overt behavior of Emacs, the most noticiable
-departures of course being the color theme, vertico minibuffer, and [[https://github.com/minad/corfu][corfu]]
-completion-at-point.  Even with those, though, I want a configuration that fits
-my hands in such a way that I remain comfortable using =emacs -Q= with very little
-disruption to my normal muscle memory and workflow.
+In only a few instances do I change overt behavior of Emacs, the most noticeable
+departure of course being the color theme with org-modern.  Even with those,
+though, I want a configuration that fits my hands in such a way that I remain
+comfortable using =emacs -Q= with very little disruption to my normal muscle
+memory and workflow.
 
 I do make changes to things that I feel "should have been included."  Some
 examples of this are:
@@ -54,8 +54,7 @@ examples of this are:
 2. Error message support for =pyright= in a =*Compilation*= buffer
 3. Reasonable indentation behavior for SQL files
 4. Updating buffers automatically if their contents change on disk
-5. Syntax highlighting for Source blocks in Markdown.
-
+5. Syntax highlighting for Source blocks in Markdown
 
 You may notice that despite the laudable goal of intended minimalism, this
 document is is still quite long, as I have found many (ever increasing) quirky
@@ -481,7 +480,7 @@ check for mixed tabs, spaces, and line endings.
 
 #+begin_src emacs-lisp
 (setq-default truncate-lines t)
-(add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
+(add-hook 'eshell-mode-hook (lambda () (setq-local truncate-lines nil)))
 #+end_src
 
 ** Relative line numbers
@@ -831,86 +830,7 @@ up using things bound to my =C-c= keymaps instead.  The =C-c= kyes from a more
 natural, nested language in my head, so it feels more like I'm "speaking Emacs"
 that way.
 
-* COMMENT Consulting =completing-read=
-[[https://github.com/minad/consult][Consult]] forms a large foundation of my workflow.  It provides a strictly
-superior experience switching between buffers, performing =grep= or =rg= with live
-results as you type, and scanning through a document for lines matching an
-expression with =consult-line=.
-
-#+begin_src emacs-lisp
-(use-package consult
-  :bind(
-        ;; C-x bindings (ctl-x-map)
-        ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-        ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-        ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-        ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-        ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-        ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-
-        ;; Other custom bindings
-        ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-        ("<help> a" . consult-apropos)            ;; orig. apropos-command
-        ("C-c r" . consult-recent-file)
-
-        ;; M-g bindings (goto-map)
-        ("M-g e" . consult-compile-error)
-        ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-        ("M-g g" . consult-goto-line)             ;; orig. goto-line
-        ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-        ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-        ("M-g m" . consult-mark)
-        ("M-g k" . consult-global-mark)
-        ("M-g i" . consult-imenu)
-        ("M-g I" . consult-imenu-multi)
-
-        ;; M-s bindings (search-map)
-        ("M-s d" . consult-find)
-        ("M-s D" . consult-locate)
-        ("M-s g" . consult-grep)
-        ("M-s G" . consult-git-grep)
-        ("M-s r" . consult-ripgrep)
-        ("M-s l" . consult-line)
-        ("M-s L" . consult-line-multi)
-        ("M-s m" . consult-multi-occur)
-        ("M-s k" . consult-keep-lines)
-        ("M-s u" . consult-focus-lines)
-
-        ;; Isearch integration
-        ("M-s e" . consult-isearch-history)
-        :map isearch-mode-map
-        ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-        ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-        ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-        ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-
-        ;; Minibuffer history
-        :map minibuffer-local-map
-        ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-        ("M-r" . consult-history))                ;; orig. previous-matching-history-element
-
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-
-  :init
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
-        register-preview-function #'consult-register-format)
-
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-  )
-#+end_src
-
-* Autocompletion
+* Text Completion
 Emacs offers incredible depth and freedom when configuring methods that
 automatically complete text.  There are actually two things that
 "autocompletion" can refer to in Emacs:
@@ -1049,98 +969,6 @@ candidates.
 (unless (version< emacs-version "29.0")
   (define-key completion-in-region-mode-map (kbd "C-p") #'minibuffer-previous-completion)
   (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion))
-#+end_src
-** COMMENT Minibuffer completion with vertico
-
-[[https://github.com/minad/vertico][Vertico]] is lightning quick, and has intuitive keybindings that don’t require any
-futzing. Especially in the case where I’m looking to tab-complete things like
-C-x C-f /ssh:<thing>.
-
-#+begin_src emacs-lisp
-(use-package vertico
-  :config
-  (vertico-mode)
-  (vertico-buffer-mode -1)
-  (define-key vertico-map "\M-q" #'vertico-quick-insert)
-  (define-key vertico-map "\C-q" #'vertico-quick-exit)
-
-  (vertico-multiform-mode)
-  (setq vertico-multiform-categories
-        '((consult-grep buffer))))
-#+end_src
-
-Combining vertico’s forces with [[https://github.com/minad/marginalia][marginalia]] creates a lovely minibuffer
-completion experience that rivals (or even beats) modern IDE and VSCode command
-palettes. marginalia adds a short, context-aware description next to completion
-candidates in the minibuffer. For instance, using C-h f will show me if a
-function is already bound to a key, and give me the top-level description of the
-function, without requiring me to actually open the *Help* buffer.
-
-** COMMENT corfu
-For completion-at-point suggestions, I like [[https://github.com/minad/corfu][corfu]] a lot. It’s philosophy is to
-stick as close as possible to the native Emacs internal API as possible, without
-reinventing the wheel. In my experience, this has meant far fewer integration
-troubles with other packages. It uses child frames for displaying the completion
-candidates, however, which means we need a separate corfu-terminal extension for
-it to work in TTY mode. While use-package has the :unless and :if keywords, I
-seem to have trouble getting them to actually work with display-graphic-p, and
-the official instructions with window-system wasn’t working for me. Hence, it’s
-wrapped in an unless block.
-
-I’ve also enabled the TNG (Tab-n-go) style of completion, as laid out in corfu’s
-[[https://github.com/minad/corfu#tab-and-go-completion][README]].  In ~comint-mode~, we switch to manual completion (instead of
-autocomplete), since eager buffering of candidates can cause freezes or
-stuttering in large directories, like ~/usr/bin~.
-
-#+begin_src emacs-lisp
-(use-package corfu-terminal
-  :unless (display-graphic-p)
-  :config
-  (corfu-terminal-mode +1))
-
-(use-package corfu
-  :demand t
-
-  :custom
-  (corfu-cycle t)             ;; Enable cycling for `corfu-next/previous'
-  (corfu-preselect-first nil) ;; Disable candidate preselection
-
-  :bind
-  (:map corfu-map
-        ("M-SPC" . corfu-insert-separator)
-        ("TAB" . corfu-next)
-        ([tab] . corfu-next)
-        ("S-TAB" . corfu-previous)
-        ([backtab] . corfu-previous))
-
-  :config
-  (defun corfu-enable-always-in-minibuffer ()
-    "Enable Corfu in the minibuffer if Vertico/Mct are not active."
-    (unless (or (bound-and-true-p vertico--input)
-                (eq (current-local-map) read-passwd-map))
-      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
-      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-                  corfu-popupinfo-delay nil)
-      (corfu-mode 1)))
-
-  (defun corfu-send-shell (&rest _)
-    "Send completion candidate when inside comint/eshell."
-    (cond
-     ((and (derived-mode-p 'eshell-mode) (fboundp 'eshell-send-input))
-      (eshell-send-input))
-     ((and (derived-mode-p 'comint-mode)  (fboundp 'comint-send-input))
-      (comint-send-input))))
-
-  (setq corfu-auto t
-        corfu-auto-delay 0.0
-        corfu-quit-no-match 'separator)
-
-  (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
-  (advice-add #'corfu-insert :after #'corfu-send-shell)
-  (add-hook 'comint-mode-hook (lambda () (setq-local corfu-auto nil)))
-  (add-hook 'minibuffer-mode-hook (lambda () (setq-local corfu-auto nil)))
-
-  (global-corfu-mode))
 #+end_src
 
 * Tramp
@@ -1735,10 +1563,9 @@ https://github.com/oantolin/embark
 
 #+begin_src emacs-lisp
 (use-package embark
-  :bind
-  (("C-." . embark-act)
-   ("C-\\" . embark-dwim)
-   ("C-h B" . embark-bindings))
+  :bind (("C-." . embark-act)
+         ("C-\\" . embark-dwim)
+         ("C-h B" . embark-bindings))
 
   :init
   ;; Optionally replace the key help with a completing-read interface
@@ -1808,8 +1635,7 @@ Ecosia requires JavaScript, unfortunately.
 
 #+begin_src emacs-lisp
 (use-package eww
-  :config
-  (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
+  :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
 #+end_src
 
 ** change-inner

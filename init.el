@@ -127,7 +127,7 @@
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
 (setq-default truncate-lines t)
-(add-hook 'eshell-mode-hook (toggle-truncate-lines nil))
+(add-hook 'eshell-mode-hook (lambda () (setq-local truncate-lines nil)))
 
 (add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
 (add-hook 'yaml-mode-hook (lambda () (setq display-line-numbers 'relative)))
@@ -626,10 +626,9 @@ Jumps at tangled code from org src block."
   (setq dired-dwim-target t))
 
 (use-package embark
-  :bind
-  (("C-." . embark-act)
-   ("C-\\" . embark-dwim)
-   ("C-h B" . embark-bindings))
+  :bind (("C-." . embark-act)
+         ("C-\\" . embark-dwim)
+         ("C-h B" . embark-bindings))
 
   :init
   ;; Optionally replace the key help with a completing-read interface
@@ -666,8 +665,7 @@ Jumps at tangled code from org src block."
          ("C-c y o" . copy-outer)))
 
 (use-package eww
-  :config
-  (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
+  :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
 
 (use-package change-inner
   :bind (("C-c c i" . change-inner)
