@@ -21,7 +21,8 @@ my configuration looks like so:
 [[https://user-images.githubusercontent.com/32076780/209576965-0c428bff-bea2-4b06-8373-37dfa4e4d86d.png]]
 
 If you prefer a prettier reading experience, check out this same document weaved
-into [[https://robbmann.io/emacsd/][my website.]]
+into [[https://robbmann.io/emacsd/][my website.]]  Or, if you're already reading this on my website, check out
+the [[https://github.com/renzmann/.emacs.d/][source code on GitHub]].
 
 * Goals
 If I had to sum up the theme of my configuration, it would be "vanilla extract".
@@ -100,6 +101,7 @@ contributors, such as:
 - [[https://www.masteringemacs.org/][Mickey Petersen]]
 - [[https://github.com/minad][Daniel Mendler]]
 - [[https://github.com/oantolin][Omar Antolín Camarena]]
+- [[https://www.lucacambiaghi.com/vanilla-emacs/readme.html][Luca's Literate Config]]
 
 * Header
 To comply with the Emacs [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][conventions for libraries]], the tangled init.el must
