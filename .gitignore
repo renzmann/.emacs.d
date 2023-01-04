@@ -51,3 +51,4 @@ history
 *.ipynb
 /.mc-lists.el
 /eln-cache/
+tree-sitter/
