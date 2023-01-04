@@ -8,7 +8,7 @@
  '(org-agenda-files nil)
  '(org-hugo-front-matter-format "yaml")
  '(package-selected-packages
-   '(git-gutter magit embark-consult embark coterm marginalia vimrc-mdoe ahk-mode ox-clip htmlize org use-package visual-fill-column ef-themes org-modern poly-markdown diff-hl ox-hugo restart-emacs esup consult ob-async sqlup-mode sql-indent blacken reformatter change-inner orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode markdown-mode))
+   '(magit embark-consult embark coterm marginalia vimrc-mdoe ahk-mode ox-clip htmlize org use-package visual-fill-column ef-themes org-modern poly-markdown diff-hl ox-hugo restart-emacs esup consult ob-async sqlup-mode sql-indent blacken reformatter change-inner orderless ob-sql-mode yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode julia-mode lua-mode go-mode scala-mode rust-mode markdown-mode))
  '(safe-local-variable-values
    '((vc-prepare-patches-separately)
      (diff-add-log-use-relative-names . t)
