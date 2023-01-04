@@ -77,6 +77,10 @@
 
 (recentf-mode t)
 
+(defun renz/find-recent-file ()
+  (interactive)
+  (find-file (completing-read "Find recent file: " recentf-list nil t)))
+
 (setq-default fill-column 80)
 
 (scroll-bar-mode -1)
@@ -267,6 +271,8 @@ emacs config site with matching `extension' regexp"
 
 (global-set-key (kbd "C-c q") #'replace-regexp)
 
+(global-set-key (kbd "C-c r") #'renz/find-recent-file)
+
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s e") #'eshell)
 (global-set-key (kbd "C-c s t") #'term)
@@ -276,77 +282,6 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c ;") #'comment-line)  ; TTY-friendly
 (global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
 (global-set-key (kbd "C-c <SPC>") #'mark-sexp)  ;; TTY-friendly
-
-(use-package consult
-  :bind(
-        ;; C-x bindings (ctl-x-map)
-        ("C-x M-:" . consult-complex-command)     ;; orig. repeat-complex-command
-        ("C-x b" . consult-buffer)                ;; orig. switch-to-buffer
-        ("C-x 4 b" . consult-buffer-other-window) ;; orig. switch-to-buffer-other-window
-        ("C-x 5 b" . consult-buffer-other-frame)  ;; orig. switch-to-buffer-other-frame
-        ("C-x r b" . consult-bookmark)            ;; orig. bookmark-jump
-        ("C-x p b" . consult-project-buffer)      ;; orig. project-switch-to-buffer
-
-        ;; Other custom bindings
-        ("M-y" . consult-yank-pop)                ;; orig. yank-pop
-        ("<help> a" . consult-apropos)            ;; orig. apropos-command
-        ("C-c r" . consult-recent-file)
-
-        ;; M-g bindings (goto-map)
-        ("M-g e" . consult-compile-error)
-        ("M-g f" . consult-flymake)               ;; Alternative: consult-flycheck
-        ("M-g g" . consult-goto-line)             ;; orig. goto-line
-        ("M-g M-g" . consult-goto-line)           ;; orig. goto-line
-        ("M-g o" . consult-outline)               ;; Alternative: consult-org-heading
-        ("M-g m" . consult-mark)
-        ("M-g k" . consult-global-mark)
-        ("M-g i" . consult-imenu)
-        ("M-g I" . consult-imenu-multi)
-
-        ;; M-s bindings (search-map)
-        ("M-s d" . consult-find)
-        ("M-s D" . consult-locate)
-        ("M-s g" . consult-grep)
-        ("M-s G" . consult-git-grep)
-        ("M-s r" . consult-ripgrep)
-        ("M-s l" . consult-line)
-        ("M-s L" . consult-line-multi)
-        ("M-s m" . consult-multi-occur)
-        ("M-s k" . consult-keep-lines)
-        ("M-s u" . consult-focus-lines)
-
-        ;; Isearch integration
-        ("M-s e" . consult-isearch-history)
-        :map isearch-mode-map
-        ("M-e" . consult-isearch-history)         ;; orig. isearch-edit-string
-        ("M-s e" . consult-isearch-history)       ;; orig. isearch-edit-string
-        ("M-s l" . consult-line)                  ;; needed by consult-line to detect isearch
-        ("M-s L" . consult-line-multi)            ;; needed by consult-line to detect isearch
-
-        ;; Minibuffer history
-        :map minibuffer-local-map
-        ("M-s" . consult-history)                 ;; orig. next-matching-history-element
-        ("M-r" . consult-history))                ;; orig. previous-matching-history-element
-
-  ;; Enable automatic preview at point in the *Completions* buffer. This is
-  ;; relevant when you use the default completion UI.
-  :hook (completion-list-mode . consult-preview-at-point-mode)
-
-  :init
-  ;; Optionally configure the register formatting. This improves the register
-  ;; preview for `consult-register', `consult-register-load',
-  ;; `consult-register-store' and the Emacs built-ins.
-  (setq register-preview-delay 0.5
-        register-preview-function #'consult-register-format)
-
-  ;; Optionally tweak the register preview window.
-  ;; This adds thin lines, sorting and hides the mode line of the window.
-  (advice-add #'register-preview :override #'consult-register-window)
-
-  ;; Use Consult to select xref locations with preview
-  (setq xref-show-xrefs-function #'consult-xref
-        xref-show-definitions-function #'consult-xref)
-  )
 
 (setq completion-styles '(flex basic partial-completion emacs22))
 
@@ -358,65 +293,60 @@ emacs config site with matching `extension' regexp"
   :custom
   (completion-category-overrides '((file (styles basic partial-completion)))))
 
-(use-package vertico
-  :config
-  (vertico-mode)
-  (vertico-buffer-mode -1)
-  (define-key vertico-map "\M-q" #'vertico-quick-insert)
-  (define-key vertico-map "\C-q" #'vertico-quick-exit)
+(setq completions-format 'one-column)
 
-  (vertico-multiform-mode)
-  (setq vertico-multiform-categories
-        '((consult-grep buffer))))
+(unless (version< emacs-version "29.0")
+  (setq completions-max-height 15))
 
-(use-package corfu-terminal
-  :unless (display-graphic-p)
-  :config
-  (corfu-terminal-mode +1))
+(unless (version< emacs-version "29.0")
+  (setq completion-auto-help 'visible
+        completion-auto-select 'second-tab
+        completion-show-help nil
+        completions-sort nil
+        completions-header-format nil))
 
-(use-package corfu
-  :demand t
+(defun renz/sort-by-alpha-length (elems)
+  "Sort ELEMS first alphabetically, then by length."
+  (sort elems (lambda (c1 c2)
+                (or (string-version-lessp c1 c2)
+                    (< (length c1) (length c2))))))
 
-  :custom
-  (corfu-cycle t)             ;; Enable cycling for `corfu-next/previous'
-  (corfu-preselect-first nil) ;; Disable candidate preselection
+(defun renz/sort-by-history (elems)
+  "Sort ELEMS by minibuffer history.
+Use `mct-sort-sort-by-alpha-length' if no history is available."
+  (if-let ((hist (and (not (eq minibuffer-history-variable t))
+                      (symbol-value minibuffer-history-variable))))
+      (minibuffer--sort-by-position hist elems)
+    (renz/sort-by-alpha-length elems)))
 
-  :bind
-  (:map corfu-map
-        ("M-SPC" . corfu-insert-separator)
-        ("TAB" . corfu-next)
-        ([tab] . corfu-next)
-        ("S-TAB" . corfu-previous)
-        ([backtab] . corfu-previous))
+(defun renz/completion-category ()
+  "Return completion category."
+  (when-let ((window (active-minibuffer-window)))
+    (with-current-buffer (window-buffer window)
+      (completion-metadata-get
+       (completion-metadata (buffer-substring-no-properties
+                             (minibuffer-prompt-end)
+                             (max (minibuffer-prompt-end) (point)))
+                            minibuffer-completion-table
+                            minibuffer-completion-predicate)
+       'category))))
 
-  :config
-  (defun corfu-enable-always-in-minibuffer ()
-    "Enable Corfu in the minibuffer if Vertico/Mct are not active."
-    (unless (or (bound-and-true-p vertico--input)
-                (eq (current-local-map) read-passwd-map))
-      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
-      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-                  corfu-popupinfo-delay nil)
-      (corfu-mode 1)))
+(defun renz/sort-multi-category (elems)
+  "Sort ELEMS per completion category."
+  (pcase (renz/completion-category)
+    ('nil elems) ; no sorting
+    ('kill-ring elems)
+    ('project-file (renz/sort-by-alpha-length elems))
+    (_ (renz/sort-by-history elems))))
 
-  (defun corfu-send-shell (&rest _)
-    "Send completion candidate when inside comint/eshell."
-    (cond
-     ((and (derived-mode-p 'eshell-mode) (fboundp 'eshell-send-input))
-      (eshell-send-input))
-     ((and (derived-mode-p 'comint-mode)  (fboundp 'comint-send-input))
-      (comint-send-input))))
+(unless (version< emacs-version "29.0")
+  (setq completions-sort #'renz/sort-multi-category))
 
-  (setq corfu-auto t
-        corfu-auto-delay 0.0
-        corfu-quit-no-match 'separator)
+(setq tab-always-indent 'complete)
 
-  (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
-  (advice-add #'corfu-insert :after #'corfu-send-shell)
-  (add-hook 'comint-mode-hook (lambda () (setq-local corfu-auto nil)))
-  (add-hook 'minibuffer-mode-hook (lambda () (setq-local corfu-auto nil)))
-
-  (global-corfu-mode))
+(unless (version< emacs-version "29.0")
+  (define-key completion-in-region-mode-map (kbd "C-p") #'minibuffer-previous-completion)
+  (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion))
 
 (use-package tramp
   :defer t
@@ -480,7 +410,7 @@ Jumps at tangled code from org src block."
    ("C-c o b d" . org-babel-detangle)
    ("C-c o b o" . org-babel-tangle-jump-to-org)
    ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
-   ("C-c o j" . consult-org-heading)
+   ;; ("C-c o j" . consult-org-heading)
    ("C-c o k" . org-babel-remove-result)
    ("C-c o o" . renz/jump-org)
    ("C-c o w" . renz/org-kill-src-block)

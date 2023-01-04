@@ -342,6 +342,10 @@ This enables "File -> Open Recent" from the menu bar, and ~consult-recent-file~.
 
 #+begin_src emacs-lisp
 (recentf-mode t)
+
+(defun renz/find-recent-file ()
+  (interactive)
+  (find-file (completing-read "Find recent file: " recentf-list nil t)))
 #+end_src
 
 ** Fill-column
@@ -793,6 +797,12 @@ somewhere else.
 (global-set-key (kbd "C-c q") #'replace-regexp)
 #+end_src
 
+*** =C-c r= find recent files
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c r") #'renz/find-recent-file)
+#+end_src
+
 *** =C-c s= shell
 
 #+begin_src emacs-lisp
@@ -822,7 +832,7 @@ up using things bound to my =C-c= keymaps instead.  The =C-c= kyes from a more
 natural, nested language in my head, so it feels more like I'm "speaking Emacs"
 that way.
 
-* Consulting =completing-read=
+* COMMENT Consulting =completing-read=
 [[https://github.com/minad/consult][Consult]] forms a large foundation of my workflow.  It provides a strictly
 superior experience switching between buffers, performing =grep= or =rg= with live
 results as you type, and scanning through a document for lines matching an
@@ -942,7 +952,7 @@ find the correct one.
   (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
-** COMMENT Nicer Display and Behavior of ~*Completions*~
+** Nicer Display and Behavior of ~*Completions*~
 With the /completion style/ set, we now have to configure the interface for
 /displaying/ candidates as we type.  First, I want candidates displayed as a
 single, vertical list.
@@ -1025,7 +1035,7 @@ What all of the above form isn't /quite/ the live-updating version that [[https:
 MCT, or vertico offer, but it's pretty close.  The ~*Completions*~ buffer updates
 after every ~<SPC>~, which is the natural filtering mechanism for =orderless=.
 
-** COMMENT Completion at point
+** Completion at point
 By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.
 I'd much prefer to use the easier and more intuitive =TAB=.
 
@@ -1042,7 +1052,7 @@ candidates.
   (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion))
 #+end_src
 
-** Minibuffer completion with vertico
+** COMMENT Minibuffer completion with vertico
 
 [[https://github.com/minad/vertico][Vertico]] is lightning quick, and has intuitive keybindings that don’t require any
 futzing. Especially in the case where I’m looking to tab-complete things like
@@ -1068,7 +1078,7 @@ candidates in the minibuffer. For instance, using C-h f will show me if a
 function is already bound to a key, and give me the top-level description of the
 function, without requiring me to actually open the *Help* buffer.
 
-** corfu
+** COMMENT corfu
 For completion-at-point suggestions, I like [[https://github.com/minad/corfu][corfu]] a lot. It’s philosophy is to
 stick as close as possible to the native Emacs internal API as possible, without
 reinventing the wheel. In my experience, this has meant far fewer integration
@@ -1325,7 +1335,7 @@ latter over the former, I've removed the =org-startup-indented= call.
    ("C-c o b d" . org-babel-detangle)
    ("C-c o b o" . org-babel-tangle-jump-to-org)
    ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
-   ("C-c o j" . consult-org-heading)
+   ;; ("C-c o j" . consult-org-heading)
    ("C-c o k" . org-babel-remove-result)
    ("C-c o o" . renz/jump-org)
    ("C-c o w" . renz/org-kill-src-block)
