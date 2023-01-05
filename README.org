@@ -183,6 +183,99 @@ There are also a few hand-made packages I keep around in a special
 
 ** Microsoft Windows
 
+*** Compiling Emacs
+
+Compiling Emacs on Windows can be a bit of a pain, but it's /mostly/ the same as
+on *nix.  First, I use [[https://www.msys2.org/][MSYS2-MinGW]] to compile everything.  From the MinGW
+terminal (NOT the plain MSYS2 one), I install all of these dependencies
+
+#+begin_example
+pacman -Su \
+        autoconf \
+        autogen \
+        automake \
+        automake-wrapper \
+        diffutils \
+        git \
+        guile \
+        libgc \
+        libguile \
+        libltdl \
+        libunistring \
+        make \
+        texinfo \
+        mingw-w64-x86_64-binutils \
+        mingw-w64-x86_64-bzip2 \
+        mingw-w64-x86_64-cairo \
+        mingw-w64-x86_64-crt-git \
+        mingw-w64-x86_64-dbus \
+        mingw-w64-x86_64-expat \
+        mingw-w64-x86_64-fontconfig \
+        mingw-w64-x86_64-freetype \
+        mingw-w64-x86_64-gcc \
+        mingw-w64-x86_64-gcc-libs \
+        mingw-w64-x86_64-gdk-pixbuf2 \
+        mingw-w64-x86_64-gettext \
+        mingw-w64-x86_64-giflib \
+        mingw-w64-x86_64-glib2 \
+        mingw-w64-x86_64-gmp \
+        mingw-w64-x86_64-gnutls \
+        mingw-w64-x86_64-harfbuzz \
+        mingw-w64-x86_64-headers-git \
+        mingw-w64-x86_64-imagemagick \
+        mingw-w64-x86_64-isl \
+        mingw-w64-x86_64-libffi \
+        mingw-w64-x86_64-libgccjit \
+        mingw-w64-x86_64-libiconv \
+        mingw-w64-x86_64-libjpeg-turbo \
+        mingw-w64-x86_64-libpng \
+        mingw-w64-x86_64-librsvg \
+        mingw-w64-x86_64-libtiff \
+        mingw-w64-x86_64-libwinpthread-git \
+        mingw-w64-x86_64-libxml2 \
+        mingw-w64-x86_64-mpc \
+        mingw-w64-x86_64-mpfr \
+        mingw-w64-x86_64-pango \
+        mingw-w64-x86_64-pixman \
+        mingw-w64-x86_64-winpthreads \
+        mingw-w64-x86_64-xpm-nox \
+        mingw-w64-x86_64-lcms2 \
+        mingw-w64-x86_64-xz \
+        mingw-w64-x86_64-zlib \
+        tar \
+        wget
+#+end_example
+
+Then, the configure scripts:
+
+#+begin_example
+./autogen.sh
+./configure \
+    --prefix=/c/emacs-29 \
+    --with-native-compilation \
+    --with-gnutls \
+    --with-jpeg \
+    --with-png \
+    --with-rsvg \
+    --with-tiff \
+    --with-wide-int \
+    --with-xft \
+    --with-xml2 \
+    --with-xpm \
+    --without-dbus \
+    --with-imagemagick \
+    --without-pop
+#+end_example
+
+And finally the command to compile:
+
+#+begin_example
+make --jobs=$(NPROC)
+sudo make install
+#+end_example
+
+*** Configuration
+
 Windows, funnily enough, has some trouble registering the Windows key as a
 usable modifier for Emacs.  In fact, =s-l= will /never/ be an option, since it's
 handled at the hardware level.  I also add a few nice-to-haves, like setting the
@@ -199,11 +292,17 @@ with ~msys64~.
   (set-face-attribute 'default nil :font "Hack NF-12")
 
   ;; Alternate ispell when we've got msys on Windows
+
   (setq ispell-program-name "aspell.exe")
 
   ;; Set default shell to pwsh
-  (setq explicit-shell-file-name "pwsh")
-  )
+  (if (not (file-exists-p "C:/msys64/usr/bin/bash.exe"))
+      (setq explicit-shell-file-name "pwsh")
+    (setq explicit-shell-file-name "C:/msys64/usr/bin/bash.exe")
+    (setq shell-file-name "bash")
+    (setq explicit-bash.exe-args '("--login"))
+    (setenv "SHELL" shell-file-name)
+    (add-hook 'comint-output-filter-functions 'comint-strip-ctrl-m)))
 #+end_src
 
 For a time I considered enabling the use of the winkey like this:
@@ -542,8 +641,8 @@ as it appears
 (setq compilation-scroll-output t)
 #+end_src
 
-Enable colors in the =*compilation*= buffer.  Provided by a [[https://stackoverflow.com/a/3072831/13215205][helpful stackoverflow
-answer]].
+Enable colors in the =*compilation*= buffer.  Provided by a
+[[https://stackoverflow.com/a/3072831/13215205][helpful stackoverflow answer]].
 
 #+begin_src emacs-lisp
 (defun renz/colorize-compilation-buffer ()
@@ -562,8 +661,16 @@ I usually leave the tool bar disabled
 (tool-bar-mode -1)
 #+end_src
 
-The /menu/ bar, on the other hand =(menu-bar-mode)=, is very handy, and I don't
-think I'll ever disable it.
+The /menu/ bar, on the other hand =(menu-bar-mode)=, is very handy, and I only
+disable it on Windows where it looks hideous.
+
+#+begin_src emacs-lisp
+(when (renz/windowsp)
+  (menu-bar-mode -1))
+#+end_src
+
+For newcomers to Emacs, I would strongly discourage disabling either of these,
+since they lend a lot to discovering all its wonderful built-in features.
 
 ** Ignore risky .dir-locals.el
 From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
