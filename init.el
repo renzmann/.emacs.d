@@ -368,6 +368,9 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
 
 (use-package conf-mode
+  :if (or (renz/windowsp)
+          (and (not (file-exists-p (expand-file-name "tree-sitter/libtree-sitter-toml.dylib" user-emacs-directory)))
+               (not (file-exists-p (expand-file-name "tree-sitter/libtree-sitter-toml.so" user-emacs-directory)))))
   :mode ("\\.toml\\'" . conf-toml-mode))
 
 (setq renz/org-home "~/org/")

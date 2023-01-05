@@ -1105,9 +1105,15 @@ major mode with the corresponding TreeSitter version.
 
 * Language-specific major modes
 ** TOML
+It looks like Emacs 29 will use tree-sitter parsing by default for TOML.  If I
+haven't grabbed those modules yet though, that can cause problems.  In that
+case, I just fall back to =conf-toml-mode=.
 
 #+begin_src emacs-lisp
 (use-package conf-mode
+  :if (or (renz/windowsp)
+          (and (not (file-exists-p (expand-file-name "tree-sitter/libtree-sitter-toml.dylib" user-emacs-directory)))
+               (not (file-exists-p (expand-file-name "tree-sitter/libtree-sitter-toml.so" user-emacs-directory)))))
   :mode ("\\.toml\\'" . conf-toml-mode))
 #+end_src
 
