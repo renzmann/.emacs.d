@@ -225,7 +225,7 @@ emacs config site with matching `extension' regexp"
 
 (global-set-key (kbd "C-c d") #'renz/find-tag)
 
-(global-set-key (kbd "C-c f") #'hippie-expand)
+(global-set-key (kbd "C-c f") #'ffap)
 
 (setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
 
@@ -279,6 +279,8 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s e") #'eshell)
 (global-set-key (kbd "C-c s t") #'term)
+
+(global-set-key (kbd "C-c v") #'browse-url-at-point)
 
 (global-set-key (kbd "C-c w") #'whitespace-mode)
 
@@ -366,6 +368,9 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 (when (boundp 'treesit-extra-load-path)
   (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
   (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
+
+(use-package web-mode
+  :disabled)
 
 (use-package conf-mode
   :if (or (renz/windowsp)

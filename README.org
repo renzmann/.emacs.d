@@ -742,10 +742,10 @@ somewhere else.
 (global-set-key (kbd "C-c d") #'renz/find-tag)
 #+end_src
 
-*** =C-c f= hippie-expand
+*** =C-c f= find file at point (ffap)
 
 #+begin_src emacs-lisp
-(global-set-key (kbd "C-c f") #'hippie-expand)
+(global-set-key (kbd "C-c f") #'ffap)
 #+end_src
 
 *** =C-c i= jump to a header in my configuration
@@ -824,6 +824,12 @@ somewhere else.
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s e") #'eshell)
 (global-set-key (kbd "C-c s t") #'term)
+#+end_src
+
+*** =C-c v= open thing at point in browser
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c v") #'browse-url-at-point)
 #+end_src
 
 *** =C-c w= whitespace mode
@@ -1104,6 +1110,13 @@ Enabling TreeSitter is done on a per-language basis to override the default
 major mode with the corresponding TreeSitter version.
 
 * Language-specific major modes
+** Web (HTML/CSS/JS)
+
+#+begin_src emacs-lisp
+(use-package web-mode
+  :disabled)
+#+end_src
+
 ** TOML
 It looks like Emacs 29 will use tree-sitter parsing by default for TOML.  If I
 haven't grabbed those modules yet though, that can cause problems.  In that
