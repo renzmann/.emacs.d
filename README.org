@@ -1189,89 +1189,87 @@ interfering with the beautification features from ~org-modern~.  Preferring the
 latter over the former, I've removed the =org-startup-indented= call.
 
 #+begin_src emacs-lisp
-(use-package org
-  :hook
-  ((org-mode . (lambda () (progn
-                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
-                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)))))
+  (use-package org
+    :hook
+    ((org-mode . (lambda () (progn
+                              (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                              (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)))))
 
-  :init
-  (defun renz/jump-org ()
-    "Prompt for an org file in my emacs directory, then go there."
-    (interactive)
-    (renz/--jump-section renz/org-home "Org files: " ".*\.org$"))
+    :init
+    (defun renz/jump-org ()
+      "Prompt for an org file in my emacs directory, then go there."
+      (interactive)
+      (renz/--jump-section renz/org-home "Org files: " ".*\.org$"))
 
-  :bind
-  (("C-c o a" . org-agenda)
-   ("C-c o b d" . org-babel-detangle)
-   ("C-c o b o" . org-babel-tangle-jump-to-org)
-   ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
-   ("C-c o k" . org-babel-remove-result)
-   ("C-c o o" . renz/jump-org)
-   ("C-c o w" . renz/org-kill-src-block)
-   ("C-c o y" . ox-clip-image-to-clipboard))
+    :bind
+    (("C-c o a" . org-agenda)
+     ("C-c o b d" . org-babel-detangle)
+     ("C-c o b o" . org-babel-tangle-jump-to-org)
+     ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
+     ("C-c o k" . org-babel-remove-result)
+     ("C-c o o" . renz/jump-org)
+     ("C-c o w" . renz/org-kill-src-block)
+     ("C-c o y" . ox-clip-image-to-clipboard))
 
-  :config
-  (add-to-list 'org-modules 'org-tempo)
-  (org-babel-do-load-languages
-   'org-babel-load-languages
-   '((emacs-lisp . t)
-     (python . t)
-     (sql . t)
-     (shell . t)
-     ;; (fortran . t)
-     ;; (julia . t)
-     ;; (jupyter . t)
-     ;; (scheme . t)
-     ;; (haskell . t)
-     (lisp . t)
-     ;; (clojure . t)
-     ;; (C . t)
-     ;; (org . t)
-     ;; (gnuplot . t)
-     ;; (awk . t)
-     ;; (latex . t)
-     ))
+    :config
+    (add-to-list 'org-modules 'org-tempo)
+    (org-babel-do-load-languages
+     'org-babel-load-languages
+     '((emacs-lisp . t)
+       (python . t)
+       (sql . t)
+       (shell . t)
+       ;; (fortran . t)
+       ;; (julia . t)
+       ;; (jupyter . t)
+       ;; (scheme . t)
+       ;; (haskell . t)
+       (lisp . t)
+       ;; (clojure . t)
+       ;; (C . t)
+       ;; (org . t)
+       ;; (gnuplot . t)
+       ;; (awk . t)
+       ;; (latex . t)
+       ))
 
-  (setq org-agenda-files '("~/.emacs.d/org/work.org")
-        ;; See `C-h f org-html-htmlize-output-type' for why we might set this to `nil'
-        org-html-htmlize-output-type nil)
+    (setq org-agenda-files (list (expand-file-name "work.org" renz/org-home))
+          ;; See `C-h f org-html-htmlize-output-type' for why we might set this to `nil'
+          org-html-htmlize-output-type nil)
 #+end_src
 
 *** =org-modern=
 A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
 
 #+begin_src emacs-lisp
-(use-package org-modern
-  :after org
-  :config
-  (setq
-   org-auto-align-tags nil
-   org-tags-column 0
-   org-catch-invisible-edits 'show-and-error
-   org-special-ctrl-a/e t
-   org-insert-heading-respect-content t
+  (use-package org-modern
+    :after org
+    :config
+    (setq org-auto-align-tags nil
+          org-tags-column 0
+          org-catch-invisible-edits 'show-and-error
+          org-special-ctrl-a/e t
+          org-insert-heading-respect-content t
 
-   ;; Org styling, hide markup etc.
-   org-hide-emphasis-markers t
-   org-pretty-entities t
-   org-ellipsis "…"
+          ;; Org styling, hide markup etc.
+          org-hide-emphasis-markers t
+          org-pretty-entities t
+          org-ellipsis "…"
 
-   ;; Agenda styling
-   org-agenda-tags-column 0
-   org-agenda-block-separator ?─
-   org-agenda-time-grid
-   '((daily today require-timed)
-     (800 1000 1200 1400 1600 1800 2000)
-     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-   org-agenda-current-time-string
-   "⭠ now ─────────────────────────────────────────────────")
+          ;; Agenda styling
+          org-agenda-tags-column 0
+          org-agenda-block-separator ?─
+          org-agenda-time-grid '((daily today require-timed)
+                                 (800 1000 1200 1400 1600 1800 2000)
+                                 " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+          org-agenda-current-time-string
+          "⭠ now ─────────────────────────────────────────────────")
 
-  (if (display-graphic-p)
-      (setq org-modern-table t)
-    (setq org-modern-table nil))
+    (if (display-graphic-p)
+        (setq org-modern-table t)
+      (setq org-modern-table nil))
 
-  (global-org-modern-mode))
+    (global-org-modern-mode))
 #+end_src
 
 *** Code block syntax highlighting for HTML export

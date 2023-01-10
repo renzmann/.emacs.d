@@ -453,34 +453,33 @@ Jumps at tangled code from org src block."
      ;; (latex . t)
      ))
 
-  (setq org-agenda-files '("~/.emacs.d/org/work.org")
+  (setq org-agenda-files (list (expand-file-name "work.org" renz/org-home))
         ;; See `C-h f org-html-htmlize-output-type' for why we might set this to `nil'
         org-html-htmlize-output-type nil)
 
 (use-package org-modern
   :after org
   :config
-  (setq
-   org-auto-align-tags nil
-   org-tags-column 0
-   org-catch-invisible-edits 'show-and-error
-   org-special-ctrl-a/e t
-   org-insert-heading-respect-content t
+  (setq org-auto-align-tags nil
+        org-tags-column 0
+        org-catch-invisible-edits 'show-and-error
+        org-special-ctrl-a/e t
+        org-insert-heading-respect-content t
 
-   ;; Org styling, hide markup etc.
-   org-hide-emphasis-markers t
-   org-pretty-entities t
-   org-ellipsis "…"
+        ;; Org styling, hide markup etc.
+        org-hide-emphasis-markers t
+        org-pretty-entities t
+        org-ellipsis "…"
 
-   ;; Agenda styling
-   org-agenda-tags-column 0
-   org-agenda-block-separator ?─
-   org-agenda-time-grid
-   '((daily today require-timed)
-     (800 1000 1200 1400 1600 1800 2000)
-     " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-   org-agenda-current-time-string
-   "⭠ now ─────────────────────────────────────────────────")
+        ;; Agenda styling
+        org-agenda-tags-column 0
+        org-agenda-block-separator ?─
+        org-agenda-time-grid
+        '((daily today require-timed)
+          (800 1000 1200 1400 1600 1800 2000)
+          " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
+        org-agenda-current-time-string
+        "⭠ now ─────────────────────────────────────────────────")
 
   (if (display-graphic-p)
       (setq org-modern-table t)
