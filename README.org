@@ -1272,13 +1272,6 @@ A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
     (global-org-modern-mode))
 #+end_src
 
-*** Code block syntax highlighting for HTML export
-
-#+begin_src emacs-lisp
-(use-package htmlize
-  :after (org))
-#+end_src
-
 *** Copying images out of org-babel
 Offers two functions:
 + ~ox-clip-formatted-copy~
