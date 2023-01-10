@@ -1110,11 +1110,10 @@ Enabling TreeSitter is done on a per-language basis to override the default
 major mode with the corresponding TreeSitter version.
 
 * Language-specific major modes
-** Web (HTML/CSS/JS)
+** CSS
 
 #+begin_src emacs-lisp
-(use-package web-mode
-  :disabled)
+(setq css-indent-offset 2)
 #+end_src
 
 ** TOML
@@ -1133,16 +1132,17 @@ case, I just fall back to =conf-toml-mode=.
 ** Org-mode
 
 #+begin_src emacs-lisp
-(setq renz/org-home "~/org/")
-(setq org-confirm-babel-evaluate nil)
-(setq org-edit-src-content-indentation 0)
+  (setq renz/org-home "~/org/")
+  (setq org-confirm-babel-evaluate nil)
+  (setq org-edit-src-content-indentation 2)
 #+end_src
 
-I use =consult-org-heading= for jumping between headers now, so I no longer tangle
-this line into my config.
+For jumping between headers, org provides ~org-goto~ (=C-c C-j= by default), which
+is a little nicer than =imenu=.
 
-#+begin_src emacs-lisp :tangle no :eval never
+#+begin_src emacs-lisp
 (setq org-goto-interface 'outline-path-completion)
+(setq org-outline-path-complete-in-steps nil)
 #+end_src
 
 When displaying images, I usually like to resize them to a comfortable width,
@@ -1206,7 +1206,6 @@ latter over the former, I've removed the =org-startup-indented= call.
    ("C-c o b d" . org-babel-detangle)
    ("C-c o b o" . org-babel-tangle-jump-to-org)
    ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
-   ;; ("C-c o j" . consult-org-heading)
    ("C-c o k" . org-babel-remove-result)
    ("C-c o o" . renz/jump-org)
    ("C-c o w" . renz/org-kill-src-block)
@@ -1235,26 +1234,8 @@ latter over the former, I've removed the =org-startup-indented= call.
      ))
 
   (setq org-agenda-files '("~/.emacs.d/org/work.org")
-        org-hugo-front-matter-format "yaml"))
-#+end_src
-
-~ob-async~ adds asynchronous source block execution to some modes that otherwise wouldn't have it.
-
-#+begin_src emacs-lisp
-(use-package ob-async
-  :after org
-  :config
-  (add-hook 'ob-async-pre-execute-src-block-hook
-            #'(lambda ()
-                (require 'ob-sql-mode)
-                (require 'hive2)))
-  ;; Python has its own =:async yes= header argument we can use, so there's no
-  ;; need to include it with ~ob-async~.
-  (setq ob-async-no-async-languages-alist '("python"))
-  ;; I'm having trouble remembering why I added this following line, except that I
-  ;; believe it has something to do with exporting to HTML with syntax
-  ;; highlighting.
-  (setq org-html-htmlize-output-type 'css))
+        ;; See `C-h f org-html-htmlize-output-type' for why we might set this to `nil'
+        org-html-htmlize-output-type nil)
 #+end_src
 
 *** =org-modern=
@@ -1307,7 +1288,9 @@ Offers two functions:
 
 #+begin_src emacs-lisp
 (use-package ox-clip
-  :after org)
+  :after org
+  :config
+  (setq org-hugo-front-matter-format "yaml"))
 #+end_src
 
 *** Exporting to Hugo
@@ -1525,7 +1508,7 @@ it.
 I make a lot of spelling mistakes as I type...
 
 #+begin_src emacs-lisp
-(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'markdown-mode-hook 'flyspell-mode)
 #+end_src
 
 =poly-markdown-mode= enables syntax highlighting within code fences for markdown.
@@ -1554,6 +1537,15 @@ Handy for viewing data quickly.
 * Small tool configuration
 These are tweaks for both third party packages and those bundled with emacs that
 require little configuration and don't warrant a top-level header.
+
+** ~imenu~
+
+#+begin_src emacs-lisp
+(use-package imenu
+  :config
+  (setq imenu-auto-rescan t
+        org-imenu-depth 3))
+#+end_src
 
 ** ~dabbrev~: swap ~M-/~ and ~C-M-/~
 

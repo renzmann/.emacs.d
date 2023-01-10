@@ -369,8 +369,7 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
   (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
 
-(use-package web-mode
-  :disabled)
+(setq css-indent-offset 2)
 
 (use-package conf-mode
   :if (or (renz/windowsp)
@@ -380,7 +379,10 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 
 (setq renz/org-home "~/org/")
 (setq org-confirm-babel-evaluate nil)
-(setq org-edit-src-content-indentation 0)
+(setq org-edit-src-content-indentation 2)
+
+(setq org-goto-interface 'outline-path-completion)
+(setq org-outline-path-complete-in-steps nil)
 
 (setq org-image-actual-width nil)
 
@@ -424,7 +426,6 @@ Jumps at tangled code from org src block."
    ("C-c o b d" . org-babel-detangle)
    ("C-c o b o" . org-babel-tangle-jump-to-org)
    ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
-   ;; ("C-c o j" . consult-org-heading)
    ("C-c o k" . org-babel-remove-result)
    ("C-c o o" . renz/jump-org)
    ("C-c o w" . renz/org-kill-src-block)
@@ -453,22 +454,8 @@ Jumps at tangled code from org src block."
      ))
 
   (setq org-agenda-files '("~/.emacs.d/org/work.org")
-        org-hugo-front-matter-format "yaml"))
-
-(use-package ob-async
-  :after org
-  :config
-  (add-hook 'ob-async-pre-execute-src-block-hook
-            #'(lambda ()
-                (require 'ob-sql-mode)
-                (require 'hive2)))
-  ;; Python has its own =:async yes= header argument we can use, so there's no
-  ;; need to include it with ~ob-async~.
-  (setq ob-async-no-async-languages-alist '("python"))
-  ;; I'm having trouble remembering why I added this following line, except that I
-  ;; believe it has something to do with exporting to HTML with syntax
-  ;; highlighting.
-  (setq org-html-htmlize-output-type 'css))
+        ;; See `C-h f org-html-htmlize-output-type' for why we might set this to `nil'
+        org-html-htmlize-output-type nil)
 
 (use-package org-modern
   :after org
@@ -505,7 +492,9 @@ Jumps at tangled code from org src block."
   :after (org))
 
 (use-package ox-clip
-  :after org)
+  :after org
+  :config
+  (setq org-hugo-front-matter-format "yaml"))
 
 (use-package ox-hugo
   :after org)
@@ -612,7 +601,7 @@ Jumps at tangled code from org src block."
   (visual-fill-column-mode)
   (setq-local fill-column 80))
 
-(add-hook 'text-mode-hook 'flyspell-mode)
+(add-hook 'markdown-mode-hook 'flyspell-mode)
 
 (use-package poly-markdown
   :after (markdown-mode)
@@ -623,6 +612,11 @@ Jumps at tangled code from org src block."
 
 (use-package csv-mode
   :mode "\\.csv\\'")
+
+(use-package imenu
+  :config
+  (setq imenu-auto-rescan t
+        org-imenu-depth 3))
 
 (use-package dabbrev
   ;; Swap M-/ and C-M-/
