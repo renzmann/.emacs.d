@@ -1,7 +1,7 @@
 #+TITLE:Setting up Org Babel for BigQuery
 #+AUTHOR: Robert Enzmann
 #+OPTIONS: ^:nil
-#+PROPERTY: header-args :exports both
+#+PROPERTY: header-args :exports both :results raw
 #+PROPERTY: header-args:sql :engine bq
 
 * Org Settings/Options
@@ -16,7 +16,7 @@ Then, to ensure table results are exported alongside the query when converting
 to HTML or previewing in GitHub, we set this property globally:
 
 #+begin_src org
-  #+PROPERTY: header-args:sql :exports both
+  #+PROPERTY: header-args :exports both :results raw
 #+end_src
 
 And finally, the ~:engine bq~ property for ~sql~ blocks is what we're going to patch
@@ -42,19 +42,21 @@ Then, set the project in which the tables reside
 Then, try querying:
 
 #+begin_src shell
-  bq query --format=csv 'SELECT PClass, avg(Survived) AS pct_survived FROM abc_pilot.titanic GROUP BY PClass;'
+  bq query --format=pretty 'SELECT PClass, avg(Survived) AS pct_survived FROM abc_pilot.titanic GROUP BY PClass;'
 #+end_src
 
 #+RESULTS:
-| PClass |        pct_survived |
-|--------+---------------------|
++--------+---------------------+
+| PClass |    pct_survived     |
++--------+---------------------+
 |      3 | 0.24236252545824846 |
 |      1 |  0.6296296296296297 |
 |      2 | 0.47282608695652173 |
++--------+---------------------+
 
 Both the ~--format=sparse~ and ~--format=csv~ options are handled well when viewing
-within Org, but ~--format=csv~ also remains good-looking as an exported table for
-HTML.
+within Org, but ~--format=pretty~ also remains good-looking as an exported table for
+HTML, and is handled as an Org table natively as well.
 
 * Setting up a Babel Backend
 Since I know that the command line version works pretty well, I just hack around
@@ -63,10 +65,10 @@ it.
 #+begin_src emacs-lisp :results none
   (defun org-babel-execute:bq (orig-fun body params)
     (if (string-equal-ignore-case (cdr (assq :engine params)) "bq")
-        (org-babel-execute:shell (concat "bq query --format=csv '" body "'") params)
+        (org-babel-execute:shell (concat "bq query --format=pretty '" body "'") params)
       (org-babel-execute:sql body params)))
 
-  (advice-add 'org-babel-execute:sql :around #org-babel-execute:bq)
+  (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 #+end_src
 
 By advising with =:around=, we capture any call to ~org-babel-execute:sql~, and
@@ -74,7 +76,8 @@ check if the =:engine= argument is ="bq"=, ignoring capitalization.  If it is, t
 we execute our query through ~org-babel-execute:shell~, which we already saw works
 pretty well.  If not, just pass through to the old ~org-babel-execute:sql~.
 
-Additionally, in order for the
+Additionally, in order to guarantee the GitHub render of our table, we need to
+ensure that there's a line under our columns.
 
 Now, we can execute SQL blocks using good old-fashioned ~C-c C-c~.
 
@@ -85,11 +88,16 @@ Now, we can execute SQL blocks using good old-fashioned ~C-c C-c~.
   FROM
       abc_pilot.titanic
   GROUP BY
+      PClass
+  ORDER BY
       PClass;
 #+end_src
 
 #+RESULTS:
++--------+--------------+
 | PClass | pct_survived |
-|      3 |         0.24 |
++--------+--------------+
 |      1 |         0.63 |
 |      2 |         0.47 |
+|      3 |         0.24 |
++--------+--------------+
