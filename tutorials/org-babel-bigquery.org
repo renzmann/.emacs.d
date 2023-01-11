@@ -36,7 +36,7 @@ When I need to authenticate to GCP with my single-sign-on (SSO), I use this.
 Then, set the project in which the tables reside
 
 #+begin_src shell
-  gcloud config set project edp-lab-abc
+  gcloud config set project <project-name>
 #+end_src
 
 Then, try querying:
