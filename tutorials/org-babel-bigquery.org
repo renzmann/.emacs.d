@@ -88,6 +88,7 @@ Now, we can execute SQL blocks using good old-fashioned ~C-c C-c~.
 
 #+RESULTS:
 | PClass | pct_survived |
+|--------+--------------|
 |      3 |         0.24 |
 |      1 |         0.63 |
 |      2 |         0.47 |
