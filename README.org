@@ -417,6 +417,18 @@ these favor spaces over tabs, so I prefer this as the default.
 (setq-default indent-tabs-mode nil)
 #+end_src
 
+Generally, though, indentation behavior is set by major-mode functions, which
+may or may not use Emacs' built-in indentation functions.  For instance, when
+trying to find the functions behind indentation in shell mode, I cam across
+~smie.el~, whose introductory comments include this gem:
+
+#+begin_quote
+OTOH we had to kill many chickens, read many coffee grounds, and practice
+untold numbers of black magic spells, to come up with the indentation code.
+Since then, some of that code has been beaten into submission, but the
+`smie-indent-keyword' function is still pretty obscure.
+#+end_quote
+
 ** Render ASCII color escape codes
 For files containing color escape codes, this provides a way to render the
 colors in-buffer.
