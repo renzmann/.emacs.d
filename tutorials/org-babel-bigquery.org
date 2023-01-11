@@ -1,7 +1,7 @@
 #+TITLE:Setting up Org Babel for BigQuery
 #+AUTHOR: Robert Enzmann
 #+OPTIONS: ^:nil
-#+PROPERTY: header-args :exports both :results raw
+#+PROPERTY: header-args :exports both
 #+PROPERTY: header-args:sql :engine bq
 
 * Org Settings/Options
@@ -94,10 +94,8 @@ Now, we can execute SQL blocks using good old-fashioned ~C-c C-c~.
 #+end_src
 
 #+RESULTS:
-+--------+--------------+
 | PClass | pct_survived |
-+--------+--------------+
+|--------+--------------|
 |      1 |         0.63 |
 |      2 |         0.47 |
 |      3 |         0.24 |
-+--------+--------------+
