@@ -2,7 +2,7 @@
 #+AUTHOR: Robert Enzmann
 #+OPTIONS: ^:nil
 #+PROPERTY: header-args :exports both
-#+PROPERTY: header-args:sql :engine bq :exports both
+#+PROPERTY: header-args:sql :engine bq
 
 * Org Settings/Options
 Disabling the underscore-to-subscript behavior when printing a table that
@@ -73,6 +73,8 @@ By advising with =:around=, we capture any call to ~org-babel-execute:sql~, and
 check if the =:engine= argument is ="bq"=, ignoring capitalization.  If it is, then
 we execute our query through ~org-babel-execute:shell~, which we already saw works
 pretty well.  If not, just pass through to the old ~org-babel-execute:sql~.
+
+Additionally, in order for the
 
 Now, we can execute SQL blocks using good old-fashioned ~C-c C-c~.
 
