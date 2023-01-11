@@ -78,7 +78,7 @@ Additionally, in order for the
 
 Now, we can execute SQL blocks using good old-fashioned ~C-c C-c~.
 
-#+begin_src sql :exports both
+#+begin_src sql
   SELECT
       PClass,
       ROUND(AVG(Survived), 2) AS pct_survived
