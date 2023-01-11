@@ -1116,6 +1116,12 @@ major mode with the corresponding TreeSitter version.
 (setq css-indent-offset 2)
 #+end_src
 
+For validation, grab [[https://github.com/w3c/css-validator/releases/download/cssval-20220105/css-validator.jar][css-validator.jar]] and execute it with java:
+
+#+begin_example
+java -jar ~/.local/jars/css-validator.jar file:///home/me/my/site/index.html
+#+end_example
+
 ** TOML
 It looks like Emacs 29 will use tree-sitter parsing by default for TOML.  If I
 haven't grabbed those modules yet though, that can cause problems.  In that
@@ -1482,6 +1488,14 @@ Formatting a buffer with =black= has never been easier!
   (("C-c t v a" . tramp-venv-activate)
    ("C-c t v d" . tramp-venv-deactivate)))
 #+end_src
+
+*** Tags - jump to definition the old way
+
+With =C-x p c= ~project-compile~:
+
+#+begin_example
+find . -name "*.py" -print | etags -
+#+end_example
 
 ** Markdown
 Some folks like to write markdown without hard line breaks.  When viewing those
