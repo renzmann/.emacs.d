@@ -147,7 +147,7 @@ To avoid loading packages twice, [[https://www.gnu.org/software/emacs/manual/htm
 (setq package-enable-at-startup nil)
 #+end_src
 
-MELPA (Milypostman's Emacs Lisp Package Archive) is the largest repository for
+MELPA (Milkypostman's Emacs Lisp Package Archive) is the largest repository for
 elisp sources that aren't a part of the official GNU ELPA.  To install packages
 from it, we need it on the =package-archives= list.
 
