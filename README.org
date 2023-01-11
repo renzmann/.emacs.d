@@ -1,6 +1,6 @@
 #+title: My Literate =.emacs.d=
 #+author: Robb Enzmann
-#+property: header-args:emacs-lisp :tangle init.el :results none :eval never-export
+#+property: header-args:emacs-lisp :tangle init.el :results none :eval never-export :comments link
 #+options: toc:1 num:nil
 #+hugo_base_dir: ~/repos/renzmann.github.io/
 #+hugo_section: .
@@ -108,18 +108,21 @@ To comply with the Emacs [[https://www.gnu.org/software/emacs/manual/html_node/e
 have the following header and [[Footer][footer:]]
 
 #+begin_src emacs-lisp
-;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
+  ;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
 
-;; Copyright (C) 2022 Robert Enzmann
+  ;; Copyright (C) 2022 Robert Enzmann
 
-;; Author: Robb Enzmann <robbenzmann@gmail.com>
-;; Keywords: internal
-;; URL: https://robbmann.io/
+  ;; Author: Robb Enzmann <robbenzmann@gmail.com>
+  ;; Keywords: internal
+  ;; URL: https://robbmann.io/
 
-;;; Commentary:
-;; A mostly minimal, reproducible Emacs configuration
+  ;;; Commentary:
+  ;; A mostly minimal, reproducible Emacs configuration.  This file is
+  ;; automatically tangled from README.org, with header/footer comments on each
+  ;; code block that allow for de-tangling the source back to README.org when
+  ;; working on this file directly.
 
-;;; Code:
+  ;;; Code:
 #+end_src
 
 * Custom
@@ -127,9 +130,9 @@ I prefer having custom modify its own file.  This next snippet ensures any
 =package-install= or =custom= edits go to =custom.el=.
 
 #+begin_src emacs-lisp
-(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
-(when (file-exists-p custom-file)
-  (load custom-file 'noerror))
+  (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+  (when (file-exists-p custom-file)
+    (load custom-file 'noerror))
 #+end_src
 
 * Packages
@@ -428,6 +431,23 @@ untold numbers of black magic spells, to come up with the indentation code.
 Since then, some of that code has been beaten into submission, but the
 `smie-indent-keyword' function is still pretty obscure.
 #+end_quote
+
+Even the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto_002dIndentation.html][GNU manual]] speaks of it in the same way:
+
+#+begin_quote
+Writing a good indentation function can be difficult and to a large extent it is
+still a black art. Many major mode authors will start by writing a simple
+indentation function that works for simple cases, for example by comparing with
+the indentation of the previous text line. For most programming languages that
+are not really line-based, this tends to scale very poorly: improving such a
+function to let it handle more diverse situations tends to become more and more
+difficult, resulting in the end with a large, complex, unmaintainable
+indentation function which nobody dares to touch.
+#+end_quote
+
+#+begin_src emacs-lisp
+  (add-hook 'sh-mode-hook (lambda () (setq indent-tabs-mode t)))
+#+end_src
 
 ** Render ASCII color escape codes
 For files containing color escape codes, this provides a way to render the
@@ -1122,6 +1142,16 @@ Enabling TreeSitter is done on a per-language basis to override the default
 major mode with the corresponding TreeSitter version.
 
 * Language-specific major modes
+** Shell (Bash, sh, ...)
+
+#+begin_src emacs-lisp
+  (defun renz/sh-indentation ()
+    (setq indent-tabs-mode t)
+    (setq tab-width 8))
+
+  (add-hook 'sh-mode-hook #'renz/sh-indentation)
+#+end_src
+
 ** CSS
 
 #+begin_src emacs-lisp
@@ -1253,7 +1283,7 @@ latter over the former, I've removed the =org-startup-indented= call.
 
     (setq org-agenda-files (list (expand-file-name "work.org" renz/org-home))
           ;; See `C-h f org-html-htmlize-output-type' for why we might set this to `nil'
-          org-html-htmlize-output-type nil)
+          org-html-htmlize-output-type nil))
 #+end_src
 
 *** =org-modern=
