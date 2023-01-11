@@ -2,7 +2,7 @@
 #+AUTHOR: Robert Enzmann
 #+OPTIONS: ^:nil
 #+PROPERTY: header-args :exports both
-#+PROPERTY: header-args:sql :engine bq
+#+PROPERTY: header-args:sql :engine bq :exports both
 
 * Org Settings/Options
 Disabling the underscore-to-subscript behavior when printing a table that
