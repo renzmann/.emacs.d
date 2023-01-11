@@ -1,4 +1,3 @@
-;; [[file:README.org::*Header][Header:1]]
 ;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
 
 ;; Copyright (C) 2022 Robert Enzmann
@@ -14,7 +13,6 @@
 ;; working on this file directly.
 
 ;;; Code:
-;; Header:1 ends here
 
 ;; [[file:README.org::*Custom][Custom:1]]
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -23,6 +21,7 @@
 ;; Custom:1 ends here
 
 ;; [[file:README.org::*Packages][Packages:1]]
+(require 'package)
 (setq package-enable-at-startup nil)
 ;; Packages:1 ends here
 
@@ -32,7 +31,7 @@
 
 ;; [[file:README.org::*Packages][Packages:3]]
 (defun renz/package-sync ()
-  "Remove unused sources and install any missing ones"
+  "Remove unused sources and install any missing ones."
   (interactive)
   (package-autoremove)
   (package-install-selected-packages))
@@ -112,6 +111,7 @@
 (recentf-mode t)
 
 (defun renz/find-recent-file ()
+  "Find a file that was recently visted using `completing-read'."
   (interactive)
   (find-file (completing-read "Find recent file: " recentf-list nil t)))
 ;; Recent files menu:1 ends here
@@ -153,6 +153,7 @@
 
 ;; [[file:README.org::*Render ASCII color escape codes][Render ASCII color escape codes:1]]
 (defun renz/display-ansi-colors ()
+  "Render colors in a buffer that contains ASCII color escape codes."
   (interactive)
   (require 'ansi-color)
   (ansi-color-apply-on-region (point-min) (point-max)))
@@ -276,12 +277,13 @@
 
 ;; [[file:README.org::*Keybindings][Keybindings:1]]
 (defun renz/--jump-section (dirname prompt extension)
-  "For internal use: prompt for a file under `dirname' in the user
-emacs config site with matching `extension' regexp"
+  "Jump to a section of my configuration.
+Asks for a file under `DIRNAME' using `PROMPT' in the user Emacs
+config site with matching `EXTENSION' regexp."
   (find-file
    (concat dirname
-	   (completing-read prompt
-			    (directory-files dirname nil extension)))))
+           (completing-read prompt
+                            (directory-files dirname nil extension)))))
 ;; Keybindings:1 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
@@ -329,7 +331,7 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*=C-c d= jump to a tag][=C-c d= jump to a tag:1]]
 (defun renz/find-tag ()
-  "Use completing-read to navigate to a tag"
+  "Use `completing-read' to navigate to a tag."
   (interactive)
   (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
 
@@ -347,10 +349,11 @@ emacs config site with matching `extension' regexp"
   "Prompt for a .el file in my site-lisp folder, then go there."
   (interactive)
   (renz/--jump-section renz/site-lisp-dir
-		       "Elisp config files: "
-		       ".*\.el$"))
+                       "Elisp config files: "
+                       ".*\.el$"))
 
 (defun renz/jump-init ()
+  "Jump directly to my literate configuration document."
   (interactive)
   (find-file (expand-file-name "README.org" user-emacs-directory)))
 
@@ -360,29 +363,30 @@ emacs config site with matching `extension' regexp"
 
 ;; [[file:README.org::*=C-c j= Toggle window split][=C-c j= Toggle window split:1]]
 (defun toggle-window-split ()
+  "Switch between horizontal and vertical split window layout."
   (interactive)
   (if (= (count-windows) 2)
       (let* ((this-win-buffer (window-buffer))
-	     (next-win-buffer (window-buffer (next-window)))
-	     (this-win-edges (window-edges (selected-window)))
-	     (next-win-edges (window-edges (next-window)))
-	     (this-win-2nd (not (and (<= (car this-win-edges)
-					 (car next-win-edges))
-				     (<= (cadr this-win-edges)
-					 (cadr next-win-edges)))))
-	     (splitter
-	      (if (= (car this-win-edges)
-		     (car (window-edges (next-window))))
-		  'split-window-horizontally
-		'split-window-vertically)))
-	(delete-other-windows)
-	(let ((first-win (selected-window)))
-	  (funcall splitter)
-	  (if this-win-2nd (other-window 1))
-	  (set-window-buffer (selected-window) this-win-buffer)
-	  (set-window-buffer (next-window) next-win-buffer)
-	  (select-window first-win)
-	  (if this-win-2nd (other-window 1))))))
+             (next-win-buffer (window-buffer (next-window)))
+             (this-win-edges (window-edges (selected-window)))
+             (next-win-edges (window-edges (next-window)))
+             (this-win-2nd (not (and (<= (car this-win-edges)
+                                         (car next-win-edges))
+                                     (<= (cadr this-win-edges)
+                                         (cadr next-win-edges)))))
+             (splitter
+              (if (= (car this-win-edges)
+                     (car (window-edges (next-window))))
+                  'split-window-horizontally
+                'split-window-vertically)))
+        (delete-other-windows)
+        (let ((first-win (selected-window)))
+          (funcall splitter)
+          (if this-win-2nd (other-window 1))
+          (set-window-buffer (selected-window) this-win-buffer)
+          (set-window-buffer (next-window) next-win-buffer)
+          (select-window first-win)
+          (if this-win-2nd (other-window 1))))))
 
 (global-set-key (kbd "C-c j") #'toggle-window-split)
 ;; =C-c j= Toggle window split:1 ends here
@@ -906,7 +910,5 @@ Jumps at tangled code from org src block."
 (server-start)
 ;; Start a server for =emacsclient=:1 ends here
 
-;; [[file:README.org::*Footer][Footer:1]]
 (provide 'init.el)
 ;;; init.el ends here
-;; Footer:1 ends here
