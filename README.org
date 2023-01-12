@@ -1349,6 +1349,15 @@ links.
     :after org)
 #+end_src
 
+*** Converting JSON to Org Tables
+I use a small external dependency for this:
+
+#+begin_src emacs-lisp
+  (use-package json-to-org-table
+    :load-path "site-lisp/json-to-org-table/"
+    :after org)
+#+end_src
+
 ** SQL
 
 #+begin_src emacs-lisp
@@ -1433,6 +1442,22 @@ call it.
 When I get to it, I think what I'll do instead is rewrite this to simply pipe
 the current buffer into ~sql-formatter~, and use a bit of elisp to determine whether
 a ~.sql-formatter-config.json~ exists in the VC root directory.
+
+*** BigQuery ~sql~ Blocks in Org-Babel
+Advising ~org-babel-execute:sql~ in this way allows me to use ~#+begin_src sql
+:engine bq :results raw~ blocks in org-babel and execute them with ~C-c C-c~.  More
+commonly, though, I set ~#+PROPERTY: header-args:sql :engine bq :results raw~ at
+the top of the document so that I can just mark a ~src~ block as ~sql~ and be done
+with it.
+
+#+begin_src emacs-lisp
+  (defun org-babel-execute:bq (orig-fun body params)
+    (if (string-equal-ignore-case (cdr (assq :engine params)) "bq")
+        (json-to-org-table-parse-json-string (org-babel-execute:shell (concat "bq query --format=json '" body "'") params))
+      (org-babel-execute:sql body params)))
+
+  (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
+#+end_src
 
 ** Python
 
