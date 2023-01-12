@@ -2,7 +2,7 @@
 #+AUTHOR: Robert Enzmann
 #+OPTIONS: ^:nil
 #+PROPERTY: header-args :exports both
-#+PROPERTY: header-args:sql :engine bq
+#+PROPERTY: header-args:sql :engine bq :results raw
 
 * Org Settings/Options
 Disabling the underscore-to-subscript behavior when printing a table that
@@ -28,8 +28,11 @@ And finally, the ~:engine bq~ property for ~sql~ blocks is what we're going to p
 in this document so that we can get nice ~C-c C-c~ execution.
 
 #+begin_src org
-  PROPERTY: header-args:sql :engine bq
+  PROPERTY: header-args:sql :engine bq :results raw
 #+end_src
+
+The ~:results raw~ is also required to make sure our hacky patch comes back with a
+string instead of data/a table before we get a chance to format it.
 
 * Login and setup
 When I need to authenticate to GCP with my single-sign-on (SSO), I use this.
@@ -40,16 +43,13 @@ When I need to authenticate to GCP with my single-sign-on (SSO), I use this.
 
 Then, set the project in which the tables reside
 
-#+begin_src shell :results none
-  gcloud projects list
-  # gcloud config set project <id-from-list>
-#+end_src
-
 #+begin_src shell
-  gcloud datasets
+  gcloud projects list
 #+end_src
 
-#+RESULTS:
+#+begin_src shell :results none
+  gcloud config set project <name>
+#+end_src
 
 Then, try querying:
 
