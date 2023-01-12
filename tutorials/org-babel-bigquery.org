@@ -16,8 +16,13 @@ Then, to ensure table results are exported alongside the query when converting
 to HTML or previewing in GitHub, we set this property globally:
 
 #+begin_src org
-  #+PROPERTY: header-args :exports both :results raw
+  #+PROPERTY: header-args :exports both
 #+end_src
+
+GitHub can have some trouble picking up on the ~:exports~ though.  In particular,
+if a table doesn't have an explicitly underlined header row, it won't render.
+In that case, some of the blocks still need their own ~:exports both~ to ensure
+the table shows up on the GitHub rich view.
 
 And finally, the ~:engine bq~ property for ~sql~ blocks is what we're going to patch
 in this document so that we can get nice ~C-c C-c~ execution.
@@ -35,9 +40,16 @@ When I need to authenticate to GCP with my single-sign-on (SSO), I use this.
 
 Then, set the project in which the tables reside
 
-#+begin_src shell
-  gcloud config set project <project-name>
+#+begin_src shell :results none
+  gcloud projects list
+  # gcloud config set project <id-from-list>
 #+end_src
+
+#+begin_src shell
+  gcloud datasets
+#+end_src
+
+#+RESULTS:
 
 Then, try querying:
 
@@ -55,12 +67,12 @@ Then, try querying:
 
 
 Both the ~--format=sparse~ and ~--format=csv~ options are handled well when viewing
-within Org, but ~--format=pretty~ also remains good-looking as an exported table for
-HTML, and is handled as an Org table natively as well.
+within Org, but ~--format=json~ is the easiest for the computer to parse, and what
+we'll use alongside a special function to convert it into an org table.
 
 * Setting up a Babel Backend
 Since I know that the command line version works pretty well, I just hack around
-it.
+it using a small library called [[https://github.com/noonker/json-to-org-table][json-to-org-table]]:
 
 #+begin_src emacs-lisp :results none
   (defun org-babel-execute:bq (orig-fun body params)
