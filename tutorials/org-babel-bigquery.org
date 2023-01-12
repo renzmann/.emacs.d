@@ -41,19 +41,16 @@ Then, set the project in which the tables reside
 
 Then, try querying:
 
-#+begin_src shell :results drawer :exports both
-  bq query --format=pretty 'SELECT PClass, avg(Survived) AS pct_survived FROM abc_pilot.titanic GROUP BY PClass;'
+#+begin_src shell :results drawer table :exports both
+  bq query --format=csv 'SELECT PClass, avg(Survived) AS pct_survived FROM abc_pilot.titanic GROUP BY PClass;'
 #+end_src
 
 #+RESULTS:
 :results:
-+--------+---------------------+
-| PClass |    pct_survived     |
-+--------+---------------------+
+| PClass |        pct_survived |
 |      3 | 0.24236252545824846 |
 |      1 |  0.6296296296296297 |
 |      2 | 0.47282608695652173 |
-+--------+---------------------+
 :end:
 
 
