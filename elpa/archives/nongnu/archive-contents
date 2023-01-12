@@ -1017,15 +1017,15 @@
 			   ("Nikolaj Schumacher <bugs * nschum de>"))
 			  (:commit . "438a1cb2563e2a2496be4678cc0df8d5b22caf5d"))])
  (hl-block-mode .
-		[(0 1)
+		[(0 2)
 		 ((emacs
 		   (26 1)))
 		 "Highlighting nested blocks" tar
-		 ((:url . "https://codeberg.com/ideasman42/emacs-hl-block-mode")
+		 ((:url . "https://codeberg.org/ideasman42/emacs-hl-block-mode")
 		  (:maintainer "Campbell Barton" . "ideasman42@gmail.com")
 		  (:authors
 		   ("Campbell Barton" . "ideasman42@gmail.com"))
-		  (:commit . "877e14c0645397aa8c1a45eb34ea70f3ecd21280"))])
+		  (:commit . "760e02b5fd66812e701c12292a1f00bde3c1c46c"))])
  (hl-column .
 	    [(1 0)
 	     ((emacs
@@ -1884,7 +1884,7 @@
 	   ("Random User"))
 	  (:commit . "28a75a6f6803e5c5d121c4d36ef403e8832fbf1f"))])
  (sweeprolog .
-	     [(0 10 1)
+	     [(0 11 2)
 	      ((emacs
 		(28 1)))
 	      "Embedded SWI-Prolog" tar
@@ -1893,7 +1893,7 @@
 	       (:maintainer "Eshel Yaron" . "~eshel/dev@lists.sr.ht")
 	       (:authors
 		("Eshel Yaron" . "me@eshelyaron.com"))
-	       (:commit . "803e3ea346780bff045bac128204d48cfcfe6f76"))])
+	       (:commit . "e540d05a79748b8c41f021d0fd798bd863d223d3"))])
  (swift-mode .
 	     [(8 6 0)
 	      ((emacs
@@ -2051,17 +2051,17 @@
 		 (:authors
 		  ("Mark Tran" . "mark.tran@gmail.com")))])
  (undo-fu .
-	  [(0 4)
+	  [(0 5)
 	   ((emacs
 	     (25 1)))
 	   "Undo helper with redo" tar
-	   ((:url . "https://codeberg.com/ideasman42/emacs-undo-fu")
+	   ((:url . "https://codeberg.org/ideasman42/emacs-undo-fu")
 	    (:maintainer "Campbell Barton" . "ideasman42@gmail.com")
 	    (:authors
 	     ("Campbell Barton" . "ideasman42@gmail.com"))
-	    (:commit . "46de023b5f8ddb989eeff7665feeec2877d8eda8"))])
+	    (:commit . "57615408f9bd70247d2b2844a1946a00300ef5bb"))])
  (undo-fu-session .
-		  [(0 2)
+		  [(0 4)
 		   ((emacs
 		     (28 1)))
 		   "Persistent undo, available between sessions" tar
@@ -2070,7 +2070,7 @@
 		    (:maintainer "Campbell Barton" . "ideasman42@gmail.com")
 		    (:authors
 		     ("Campbell Barton" . "ideasman42@gmail.com"))
-		    (:commit . "e2043f8350970e1a9ef06a94956a733826cdf32b"))])
+		    (:commit . "e6cf0dca6ae598b1c752dec7bdc18daeac88acec"))])
  (vc-fossil .
 	    [(20221120)
 	     nil "VC backend for the fossil sofware configuraiton management system" tar
