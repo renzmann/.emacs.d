@@ -41,7 +41,7 @@ Then, set the project in which the tables reside
 
 Then, try querying:
 
-#+begin_src shell :results drawer
+#+begin_src shell :results drawer :exports both
   bq query --format=pretty 'SELECT PClass, avg(Survived) AS pct_survived FROM abc_pilot.titanic GROUP BY PClass;'
 #+end_src
 
