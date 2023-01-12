@@ -41,11 +41,12 @@ Then, set the project in which the tables reside
 
 Then, try querying:
 
-#+begin_src shell
+#+begin_src shell :results drawer
   bq query --format=pretty 'SELECT PClass, avg(Survived) AS pct_survived FROM abc_pilot.titanic GROUP BY PClass;'
 #+end_src
 
 #+RESULTS:
+:results:
 +--------+---------------------+
 | PClass |    pct_survived     |
 +--------+---------------------+
@@ -53,6 +54,8 @@ Then, try querying:
 |      1 |  0.6296296296296297 |
 |      2 | 0.47282608695652173 |
 +--------+---------------------+
+:end:
+
 
 Both the ~--format=sparse~ and ~--format=csv~ options are handled well when viewing
 within Org, but ~--format=pretty~ also remains good-looking as an exported table for
@@ -65,7 +68,7 @@ it.
 #+begin_src emacs-lisp :results none
   (defun org-babel-execute:bq (orig-fun body params)
     (if (string-equal-ignore-case (cdr (assq :engine params)) "bq")
-        (org-babel-execute:shell (concat "bq query --format=pretty '" body "'") params)
+        (json-to-org-table-parse-json-string (org-babel-execute:shell (concat "bq query --format=json '" body "'") params))
       (org-babel-execute:sql body params)))
 
   (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
