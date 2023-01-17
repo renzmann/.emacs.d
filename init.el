@@ -679,6 +679,12 @@ Jumps at tangled code from org src block."
   :after org)
 ;; Exporting to Hugo:1 ends here
 
+;; [[file:README.org::*Converting JSON to Org Tables][Converting JSON to Org Tables:1]]
+(use-package json-to-org-table
+  :load-path "site-lisp/json-to-org-table/"
+  :after org)
+;; Converting JSON to Org Tables:1 ends here
+
 ;; [[file:README.org::*SQL][SQL:1]]
 (defun renz/sql-mode-hook ()
   (setq tab-width 4)
@@ -752,6 +758,17 @@ Jumps at tangled code from org src block."
 (use-package sqlformat
   :after (sql))
 ;; sql-formatter:1 ends here
+
+;; [[file:README.org::*BigQuery ~sql~ Blocks in Org-Babel][BigQuery ~sql~ Blocks in Org-Babel:1]]
+(defun org-babel-execute:bq (orig-fun body params)
+  (if (string-equal-ignore-case (cdr (assq :engine params)) "bq")
+      (json-to-org-table-parse-json-string
+       (org-babel-execute:shell (concat "bq query --format=json --nouse_legacy_sql '" body "'")
+                                params))
+    (org-babel-execute:sql body params)))
+
+(advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
+;; BigQuery ~sql~ Blocks in Org-Babel:1 ends here
 
 ;; [[file:README.org::*Python][Python:1]]
 (with-eval-after-load 'compile

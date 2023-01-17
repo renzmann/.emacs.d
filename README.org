@@ -1453,14 +1453,15 @@ with it.
 #+begin_src emacs-lisp
   (defun org-babel-execute:bq (orig-fun body params)
     (if (string-equal-ignore-case (cdr (assq :engine params)) "bq")
-        (json-to-org-table-parse-json-string (org-babel-execute:shell (concat "bq query --format=json '" body "'") params))
+        (json-to-org-table-parse-json-string
+         (org-babel-execute:shell (concat "bq query --format=json --nouse_legacy_sql '" body "'")
+                                  params))
       (org-babel-execute:sql body params)))
 
   (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 #+end_src
 
 ** Python
-
 The =M-x compile= feature does not recognize or parse ~pyright~ error messages out
 of the box, so I add that support myself.  Here's an example error message:
 
