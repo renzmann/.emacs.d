@@ -37,38 +37,54 @@ string instead of data/a table before we get a chance to format it.
 * Login and setup
 When I need to authenticate to GCP with my single-sign-on (SSO), I use this.
 
-#+begin_src shell
-  gcloud auth
+#+begin_src shell :results none
+  gcloud auth login
 #+end_src
 
 Then, set the project in which the tables reside
 
-#+begin_src shell
+#+begin_src shell :results verbatim
   gcloud projects list
 #+end_src
 
+#+RESULTS:
+: PROJECT_ID              NAME              PROJECT_NUMBER
+: driven-presence-375016  My First Project  199710904639
+
 #+begin_src shell :results none
-  gcloud config set project <name>
+  gcloud config set project driven-presence-375016
 #+end_src
 
 Then, try querying:
 
-#+begin_src shell :results drawer table :exports both
-  bq query --format=csv 'SELECT PClass, avg(Survived) AS pct_survived FROM abc_pilot.titanic GROUP BY PClass;'
+#+begin_src shell :results table :exports both
+  bq query --format=csv --nouse_legacy_sql '
+    SELECT
+          word,
+          sum(word_count) AS total_usage
+    FROM
+          `bigquery-public-data.samples.shakespeare`
+    WHERE
+          LENGTH(word) > 5
+    GROUP BY
+           word
+    ORDER BY
+          total_usage desc
+    limit 5;'
 #+end_src
 
 #+RESULTS:
-:results:
-| PClass |        pct_survived |
-|      3 | 0.24236252545824846 |
-|      1 |  0.6296296296296297 |
-|      2 | 0.47282608695652173 |
-:end:
-
+| word   | total_usage |
+| should |        1505 |
+| Exeunt |        1052 |
+| father |         837 |
+| cannot |         745 |
+| before |         658 |
 
 Both the ~--format=sparse~ and ~--format=csv~ options are handled well when viewing
 within Org, but ~--format=json~ is the easiest for the computer to parse, and what
-we'll use alongside a special function to convert it into an org table.
+we'll use alongside a special function to convert it into an org table.  At the
+command line itself, I tend to use ~--format=pretty~.
 
 * Setting up a Babel Backend
 Since I know that the command line version works pretty well, I just hack around
@@ -77,7 +93,7 @@ it using a small library called [[https://github.com/noonker/json-to-org-table][
 #+begin_src emacs-lisp :results none
   (defun org-babel-execute:bq (orig-fun body params)
     (if (string-equal-ignore-case (cdr (assq :engine params)) "bq")
-        (json-to-org-table-parse-json-string (org-babel-execute:shell (concat "bq query --format=json '" body "'") params))
+        (json-to-org-table-parse-json-string (org-babel-execute:shell (concat "bq query --format=json --nouse_legacy_sql '" body "'") params))
       (org-babel-execute:sql body params)))
 
   (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
@@ -95,19 +111,25 @@ Now, we can execute SQL blocks using good old-fashioned ~C-c C-c~.
 
 #+begin_src sql
   SELECT
-      PClass,
-      ROUND(AVG(Survived), 2) AS pct_survived
+      word,
+      sum(word_count) AS total_usage
   FROM
-      abc_pilot.titanic
+      `bigquery-public-data.samples.shakespeare`
+  WHERE
+      LENGTH(word) > 5
   GROUP BY
-      PClass
+      word
   ORDER BY
-      PClass;
+      total_usage DESC
+  LIMIT
+      5;
 #+end_src
 
 #+RESULTS:
-| PClass | pct_survived |
-|--------+--------------|
-|      1 |         0.63 |
-|      2 |         0.47 |
-|      3 |         0.24 |
+| total_usage | word   |
+|-------------+--------|
+|        1505 | should |
+|        1052 | Exeunt |
+|         837 | father |
+|         745 | cannot |
+|         658 | before |
