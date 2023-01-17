@@ -1,11 +1,12 @@
-#+title: My Literate =.emacs.d=
-#+author: Robb Enzmann
-#+property: header-args:emacs-lisp :tangle init.el :results none :eval never-export :comments link
-#+options: toc:1 num:nil
-#+hugo_base_dir: ~/repos/renzmann.github.io/
-#+hugo_section: .
-#+export_file_name: emacsd
-#+export_hugo_menu: :menu "main"
+#+TITLE: My Literate =.emacs.d=
+#+AUTHOR: Robb Enzmann
+#+PROPERTY: header-args:emacs-lisp :tangle init.el :results none :eval never-export :comments link
+#+OPTIONS: toc:1 num:nil
+#+HUGO_BASE_DIR: ~/repos/renzmann.github.io/
+#+HUGO_SECTION: .
+#+EXPORT_FILE_NAME: emacsd
+#+EXPORT_HUGO_MENU: :menu "main"
+#+STARTUP: overview
 
 Want to use it? Go ahead!
 
