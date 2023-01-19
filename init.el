@@ -47,7 +47,8 @@
   (memq system-type '(windows-nt cygwin ms-dos)))
 
 (when (renz/windowsp)
-  ;; Set a better font on Windows
+  ;; Set a font that supports emoji
+  (set-fontset-font t 'unicode (font-spec :family "Segoe UI Emoji") nil 'prepend)
   (set-face-attribute 'default nil :font "Hack NF-12")
 
   ;; Alternate ispell when we've got msys on Windows
@@ -84,6 +85,15 @@
   :config
   (load-theme 'ef-cherie :no-confirm))
 ;; Theme:1 ends here
+
+;; [[file:README.org::*Unicode][Unicode:1]]
+(prefer-coding-system       'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)
+(setq default-buffer-file-coding-system 'utf-8)
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+;; Unicode:1 ends here
 
 ;; [[file:README.org::*Mode line][Mode line:2]]
 (setq column-number-mode t
@@ -576,6 +586,10 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (setq tab-width 8))
 
 (add-hook 'sh-mode-hook #'renz/sh-indentation)
+
+;; When the interpreter is explicitly set to "bash", use the TreeSitter mode if
+;; we can
+(add-to-list 'interpreter-mode-alist '("r?bash2?" . bash-ts-or-fallback-mode))
 ;; Shell (Bash, sh, ...):1 ends here
 
 ;; [[file:README.org::*CSS][CSS:1]]
@@ -688,7 +702,7 @@ Jumps at tangled code from org src block."
                                (800 1000 1200 1400 1600 1800 2000)
                                " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
         org-agenda-current-time-string
-        "⭠ now ─────────────────────────────────────────────────")
+        "<─ now ────────────────────────────────────────────────")
 
   (if (display-graphic-p)
       (setq org-modern-table t)

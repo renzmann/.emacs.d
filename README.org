@@ -1,3 +1,4 @@
+; -*- coding: utf-8 -*-
 #+TITLE: My Literate =.emacs.d=
 #+AUTHOR: Robb Enzmann
 #+PROPERTY: header-args:emacs-lisp :tangle init.el :results none :eval never-export :comments link
@@ -185,7 +186,6 @@ There are also a few hand-made packages I keep around in a special
 #+end_src
 
 * OS-specific Configuration
-
 ** Microsoft Windows
 *** Compiling Emacs
 Compiling Emacs on Windows can be a bit of a pain, but it’s mostly the same as
@@ -291,7 +291,8 @@ with ~msys64~.
     (memq system-type '(windows-nt cygwin ms-dos)))
 
   (when (renz/windowsp)
-    ;; Set a better font on Windows
+    ;; Set a font that supports emoji
+    (set-fontset-font t 'unicode (font-spec :family "Segoe UI Emoji") nil 'prepend)
     (set-face-attribute 'default nil :font "Hack NF-12")
 
     ;; Alternate ispell when we've got msys on Windows
@@ -405,6 +406,19 @@ Kitty for me, I haven't spent too much time looking into it.
 * Emacs' Built-in Settings
 My settings for base Emacs.  Assuming I ran with /no/ plugins (ala ~emacs -Q~), I
 would still set most of these by hand at one point or another.
+
+** Unicode
+Sometimes (especially on Windows), Emacs gets confused about what encoding to
+use.  These setting try to prevent that confusion.
+
+#+begin_src emacs-lisp
+  (prefer-coding-system       'utf-8)
+  (set-default-coding-systems 'utf-8)
+  (set-terminal-coding-system 'utf-8)
+  (set-keyboard-coding-system 'utf-8)
+  (setq default-buffer-file-coding-system 'utf-8)
+  (setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
+#+end_src
 
 ** Mode line
 It's easy for the mode line to get cluttered once things like Flymake and eglot
@@ -1308,6 +1322,10 @@ I like to program "in Skittles":
     (setq tab-width 8))
 
   (add-hook 'sh-mode-hook #'renz/sh-indentation)
+
+  ;; When the interpreter is explicitly set to "bash", use the TreeSitter mode if
+  ;; we can
+  (add-to-list 'interpreter-mode-alist '("r?bash2?" . bash-ts-or-fallback-mode))
 #+end_src
 
 ** CSS
@@ -1444,7 +1462,7 @@ A [[https://github.com/minad/org-modern][lovely look]] for ~org-mode~ by minad.
                                  (800 1000 1200 1400 1600 1800 2000)
                                  " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
           org-agenda-current-time-string
-          "⭠ now ─────────────────────────────────────────────────")
+          "<─ now ────────────────────────────────────────────────")
 
     (if (display-graphic-p)
         (setq org-modern-table t)
