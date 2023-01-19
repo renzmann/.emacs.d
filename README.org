@@ -1,4 +1,3 @@
-; -*- coding: utf-8 -*-
 #+TITLE: My Literate =.emacs.d=
 #+AUTHOR: Robb Enzmann
 #+PROPERTY: header-args:emacs-lisp :tangle init.el :results none :eval never-export :comments link
@@ -1262,6 +1261,7 @@ respective TreeSitter grammar.
         '((bash "https://github.com/tree-sitter/tree-sitter-bash")
           (c "https://github.com/tree-sitter/tree-sitter-c")
           (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+          (css "https://github.com/tree-sitter/tree-sitter-css")
           (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
           (elisp "https://github.com/Wilfred/tree-sitter-elisp")
           (go "https://github.com/tree-sitter/tree-sitter-go")
