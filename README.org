@@ -598,8 +598,16 @@ I usually leave the tool bar disabled
   (tool-bar-mode -1)
 #+end_src
 
-The /menu/ bar, on the other hand =(menu-bar-mode)=, is very handy, and I don't
-think I'll ever disable it.
+The /menu/ bar, on the other hand =(menu-bar-mode)=, is very handy, and I only
+disable it on Windows, where it looks hideous if I'm running in dark mode.
+
+#+begin_src emacs-lisp
+  (when (renz/windowsp)
+    (menu-bar-mode -1))
+#+end_src
+
+For newcomers to Emacs, I would strongly discourage disabling the menu bar, as
+it is the most straightforward way to discover Emacs' most useful features.
 
 ** Ignore risky .dir-locals.el
 From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
