@@ -254,7 +254,7 @@ though.
 (set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
 #+end_src
 
-* Theme: ~ef-themes~
+* Theme
 [[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with
 his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too! The =ef-themes-headings= variable creates
 larger, bolder headings when in [[Org-mode]], and ~ef-themes-to-toggle~ allows me to
@@ -1148,6 +1148,35 @@ C-h i d m elisp RET g Parsing Program Source RET
 Enabling TreeSitter is done on a per-language basis to override the default
 major mode with the corresponding TreeSitter version.
 
+We will have to wait until Emacs 30+ for automatic fallback.  Until then, the
+[[https://archive.casouri.cc/note/2023/tree-sitter-in-emacs-29/index.html][recommended workaround]] is to derive a mode that picks between them.
+
+#+begin_src emacs-lisp
+  (define-derived-mode python-auto-mode prog-mode "Python Auto"
+    "Automatically decide which Python mode to use."
+    (if (treesit-ready-p 'python t)
+        (python-ts-mode)
+      (python-mode)))
+#+end_src
+
+To install grammars, use this:
+
+#+begin_src emacs-lisp
+  (when (boundp 'treesit-language-source-alist)
+    (add-to-list
+     'treesit-language-source-alist
+     '(python "Https://github.com/tree-sitter/tree-sitter-python.git")))
+
+  (when (fboundp 'treesit-install-language-grammar)
+    (treesit-install-language-grammar "python"))
+#+end_src
+
+Finally, I like to program "in Skittles":
+
+#+begin_src emacs-lisp
+  (setq-default treesit-font-lock-level 4)
+#+end_src
+
 * Language-specific major modes
 ** Shell (Bash, sh, ...)
 
@@ -1188,23 +1217,6 @@ case, I just fall back to =conf-toml-mode=.
 
 #+begin_src emacs-lisp
   (setq renz/org-home "~/org/")
-  (setq org-confirm-babel-evaluate nil)
-  (setq org-edit-src-content-indentation 2)
-#+end_src
-
-For jumping between headers, org provides ~org-goto~ (=C-c C-j= by default), which
-is a little nicer than =imenu=.
-
-#+begin_src emacs-lisp
-  (setq org-goto-interface 'outline-path-completion)
-  (setq org-outline-path-complete-in-steps nil)
-#+end_src
-
-When displaying images, I usually like to resize them to a comfortable width,
-which the following enables.
-
-#+begin_src emacs-lisp
-  (setq org-image-actual-width nil)
 #+end_src
 
 ~org-mode~ provides =org-babel-tangle-jump-to-org=, which jumps back to an Org
@@ -1266,6 +1278,15 @@ latter over the former, I've removed the =org-startup-indented= call.
      ("C-c o w" . renz/org-kill-src-block)
      ("C-c o y" . ox-clip-image-to-clipboard))
 
+    :custom
+    (org-image-actual-width nil "Enable resizing of images")
+    (org-agenda-files (list (expand-file-name "work.org" renz/org-home)) "Sources for Org agenda view")
+    (org-html-htmlize-output-type nil "See C-h f org-html-htmlize-output-type")
+    (org-confirm-babel-evaluate nil "Don't ask for confirmation when executing src blocks")
+    (org-edit-src-content-indentation 2 "Indent all src blocks by this much")
+    (org-goto-interface 'outline-path-completion "Use completing-read for org-goto (C-c C-j, nicer than imenu)")
+    (org-outline-path-complete-in-steps nil "Flatten the outline path, instead of completing hierarchically")
+
     :config
     (add-to-list 'org-modules 'org-tempo)
     (org-babel-do-load-languages
@@ -1286,11 +1307,7 @@ latter over the former, I've removed the =org-startup-indented= call.
        ;; (gnuplot . t)
        ;; (awk . t)
        ;; (latex . t)
-       ))
-
-    (setq org-agenda-files (list (expand-file-name "work.org" renz/org-home))
-          ;; See `C-h f org-html-htmlize-output-type' for why we might set this to `nil'
-          org-html-htmlize-output-type nil))
+       )))
 #+end_src
 
 *** =org-modern=
@@ -1360,8 +1377,7 @@ I use a small external dependency for this:
 #+end_src
 
 ** SQL
-
-** Interactive ~hive2~ mode
+*** Interactive ~hive2~ mode
 
 #+begin_src emacs-lisp
   (use-package hive2
@@ -1403,6 +1419,7 @@ with it.
 #+end_src
 
 ** Python
+*** Pyright error links in \ast{}compilation\ast{}
 The =M-x compile= feature does not recognize or parse ~pyright~ error messages out
 of the box, so I add that support myself.  Here's an example error message:
 
@@ -1428,6 +1445,7 @@ parse file name, line, and column number.
 It would be nice if we could also capture the =\\(error\\|warning\\)= part as
 "KIND", but I'm struggling to get it working.
 
+*** Python check with "ruff"
 Another nice vanilla feature of ~python-mode~ is =M-x python-check=, which runs a
 pre-specified linter.  Setting that to ~mypy~ or ~pyright~ if either of those
 programs exist is a small time saver.
@@ -1436,10 +1454,10 @@ programs exist is a small time saver.
   (use-package python
     :config
     (setq python-check-command "ruff")
-    (add-hook 'python-mode-hook #'blacken-mode)
     (add-hook 'python-mode-hook #'flymake-mode))
 #+end_src
 
+*** Fix Microsoft Windows Issues
 At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The
 culprit was "App Execution Aliases" with python and python3 redirecting to the
 windows store.  Using this fixed it:
@@ -1451,6 +1469,7 @@ windows store.  Using this fixed it:
 Also on Windows - a =pip install= of =pyreadline3= is required to make
 tab-completion work at all. It provides the =readline= import symbol.
 
+*** Make check command and virtualenv root safe for .dir-locals.el
 Virtualenvs require ~.dir-locals.el~ to have something like:
 
 #+begin_src emacs-lisp :tangle no :eval never
@@ -1465,6 +1484,7 @@ make sure that setting the virtualenv root is marked as safe.
   (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
 #+end_src
 
+*** Emacs Jupyter?
 Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with
 Jupyter kernels from org-mode.
 

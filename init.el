@@ -66,7 +66,7 @@
   (exec-path-from-shell-initialize))
 ;; macOS:1 ends here
 
-;; [[file:README.org::*Theme: ~ef-themes~][Theme: ~ef-themes~:1]]
+;; [[file:README.org::*Theme][Theme:1]]
 (use-package ef-themes
   :if (display-graphic-p)
   :demand t
@@ -87,7 +87,7 @@
 
   :config
   (load-theme 'ef-cherie :no-confirm))
-;; Theme: ~ef-themes~:1 ends here
+;; Theme:1 ends here
 
 ;; [[file:README.org::*Mode line][Mode line:2]]
 (setq column-number-mode t
@@ -526,6 +526,28 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
 ;; TreeSitter:2 ends here
 
+;; [[file:README.org::*TreeSitter][TreeSitter:3]]
+(define-derived-mode python-auto-mode prog-mode "Python Auto"
+  "Automatically decide which Python mode to use."
+  (if (treesit-ready-p 'python t)
+      (python-ts-mode)
+    (python-mode)))
+;; TreeSitter:3 ends here
+
+;; [[file:README.org::*TreeSitter][TreeSitter:4]]
+(when (boundp 'treesit-language-source-alist)
+  (add-to-list
+   'treesit-language-source-alist
+   '(python "Https://github.com/tree-sitter/tree-sitter-python.git")))
+
+(when (fboundp 'treesit-install-language-grammar)
+  (treesit-install-language-grammar "python"))
+;; TreeSitter:4 ends here
+
+;; [[file:README.org::*TreeSitter][TreeSitter:5]]
+(setq-default treesit-font-lock-level 4)
+;; TreeSitter:5 ends here
+
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
   (setq indent-tabs-mode t)
@@ -548,20 +570,9 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 
 ;; [[file:README.org::*Org-mode][Org-mode:1]]
 (setq renz/org-home "~/org/")
-(setq org-confirm-babel-evaluate nil)
-(setq org-edit-src-content-indentation 2)
 ;; Org-mode:1 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:2]]
-(setq org-goto-interface 'outline-path-completion)
-(setq org-outline-path-complete-in-steps nil)
-;; Org-mode:2 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:3]]
-(setq org-image-actual-width nil)
-;; Org-mode:3 ends here
-
-;; [[file:README.org::*Org-mode][Org-mode:4]]
 (defun renz/org-babel-tangle-jump-to-src ()
   "The opposite of `org-babel-tangle-jump-to-org'.
 Jumps at tangled code from org src block."
@@ -584,9 +595,9 @@ Jumps at tangled code from org src block."
           (beginning-of-buffer)
           (search-forward search-comment)))
     (message "Cannot jump to tangled file because point is not at org src block.")))
-;; Org-mode:4 ends here
+;; Org-mode:2 ends here
 
-;; [[file:README.org::*Org-mode][Org-mode:5]]
+;; [[file:README.org::*Org-mode][Org-mode:3]]
 (use-package org
   :hook
   ((org-mode . (lambda () (progn
@@ -609,6 +620,15 @@ Jumps at tangled code from org src block."
    ("C-c o w" . renz/org-kill-src-block)
    ("C-c o y" . ox-clip-image-to-clipboard))
 
+  :custom
+  (org-image-actual-width nil "Enable resizing of images")
+  (org-agenda-files (list (expand-file-name "work.org" renz/org-home)) "Sources for Org agenda view")
+  (org-html-htmlize-output-type nil "See C-h f org-html-htmlize-output-type")
+  (org-confirm-babel-evaluate nil "Don't ask for confirmation when executing src blocks")
+  (org-edit-src-content-indentation 2 "Indent all src blocks by this much")
+  (org-goto-interface 'outline-path-completion "Use completing-read for org-goto (C-c C-j, nicer than imenu)")
+  (org-outline-path-complete-in-steps nil "Flatten the outline path, instead of completing hierarchically")
+
   :config
   (add-to-list 'org-modules 'org-tempo)
   (org-babel-do-load-languages
@@ -629,12 +649,8 @@ Jumps at tangled code from org src block."
      ;; (gnuplot . t)
      ;; (awk . t)
      ;; (latex . t)
-     ))
-
-  (setq org-agenda-files (list (expand-file-name "work.org" renz/org-home))
-        ;; See `C-h f org-html-htmlize-output-type' for why we might set this to `nil'
-        org-html-htmlize-output-type nil))
-;; Org-mode:5 ends here
+     )))
+;; Org-mode:3 ends here
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
 (use-package org-modern
@@ -708,25 +724,24 @@ Jumps at tangled code from org src block."
 (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 ;; BigQuery ~sql~ Blocks in Org-Babel:1 ends here
 
-;; [[file:README.org::*Python][Python:1]]
+;; [[file:README.org::*Pyright error links in \ast{}compilation\ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
   (add-to-list 'compilation-error-regexp-alist 'pyright))
-;; Python:1 ends here
+;; Pyright error links in \ast{}compilation\ast{}:1 ends here
 
-;; [[file:README.org::*Python][Python:2]]
+;; [[file:README.org::*Python check with "ruff"][Python check with "ruff":1]]
 (use-package python
   :config
   (setq python-check-command "ruff")
-  (add-hook 'python-mode-hook #'blacken-mode)
   (add-hook 'python-mode-hook #'flymake-mode))
-;; Python:2 ends here
+;; Python check with "ruff":1 ends here
 
-;; [[file:README.org::*Python][Python:4]]
+;; [[file:README.org::*Make check command and virtualenv root safe for .dir-locals.el][Make check command and virtualenv root safe for .dir-locals.el:2]]
 (put 'python-check-command 'safe-local-variable #'stringp)
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
-;; Python:4 ends here
+;; Make check command and virtualenv root safe for .dir-locals.el:2 ends here
 
 ;; [[file:README.org::*pyrightconfig.json][pyrightconfig.json:1]]
 (use-package pyrightconfig
