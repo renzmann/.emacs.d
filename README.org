@@ -1303,7 +1303,7 @@ Then, loop over these names to define all the fallback modes:
           (message (concat "TreeSitter not ready for " ,name ".  Falling back to `" ,name "-mode'"))))))
 #+end_src
 
-Each major mode that I wan automatic fallback for will have this mode added to [[* Language-specific major modes][its
+Each major mode that I want automatic fallback for will have this mode added to [[* Language-specific major modes][its
 specific configuration]].
 
 *** Ooo, aaah, shiny colors

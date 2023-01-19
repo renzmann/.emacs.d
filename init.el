@@ -758,7 +758,7 @@ Jumps at tangled code from org src block."
 (add-to-list 'interpreter-mode-alist '("python[0-9.]*" . python-ts-or-fallback-mode))
 ;; Use TreeSitter if we can:1 ends here
 
-;; [[file:README.org::*Pyright error links in /ast{}compilation/ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
+;; [[file:README.org::*Pyright error links in \ast{}compilation\ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
