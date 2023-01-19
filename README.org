@@ -324,6 +324,14 @@ need to launch Emacs via ~runemacs.exe~ from the MinGW terminal to ensure the C
 and C++ compilers are both visible and usable.
 
 ** macOS
+*** Installing Emacs
+On macOS, I've had the best luck with [[https://github.com/jimeh/emacs-builds/releases][jimeh's nightly builds]].  These Emacs.app
+bundles have no external dependencies, signed with a developer certificate, and
+notarized by Apple, so it /just works/.  Even without administrator permissions,
+you can drag the bundle to the "Applications" folder under your user home
+instead, and Emacs still works beautifully.
+
+*** Configuration
 Launching Emacs from the typical application launcher or command-space usually
 won't capture any modifications to =$PATH=, typically handled in a file like
 =~/.profile= or =~/.bashrc=. So, the main configuration included here is from

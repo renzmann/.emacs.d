@@ -55,13 +55,13 @@
   (setq ispell-program-name "aspell.exe"))
 ;; Configuration:1 ends here
 
-;; [[file:README.org::*macOS][macOS:1]]
+;; [[file:README.org::*Configuration][Configuration:1]]
 (when (eq system-type 'darwin)
   ;; Uncomment this if we can't install Hack Nerd font
   ;; (set-face-attribute 'default nil :font "Menlo-14")
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
   (exec-path-from-shell-initialize))
-;; macOS:1 ends here
+;; Configuration:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
 (use-package ef-themes
