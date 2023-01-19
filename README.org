@@ -187,7 +187,95 @@ There are also a few hand-made packages I keep around in a special
 * OS-specific Configuration
 
 ** Microsoft Windows
+*** Compiling Emacs
 
+#+begin_src shell
+  pacman -Su \
+          autoconf \
+          autogen \
+          automake \
+          automake-wrapper \
+          diffutils \
+          git \
+          guile \
+          libgc \
+          libguile \
+          libltdl \
+          libunistring \
+          make \
+          texinfo \
+          mingw-w64-x86_64-binutils \
+          mingw-w64-x86_64-bzip2 \
+          mingw-w64-x86_64-cairo \
+          mingw-w64-x86_64-crt-git \
+          mingw-w64-x86_64-dbus \
+          mingw-w64-x86_64-expat \
+          mingw-w64-x86_64-fontconfig \
+          mingw-w64-x86_64-freetype \
+          mingw-w64-x86_64-gcc \
+          mingw-w64-x86_64-gcc-libs \
+          mingw-w64-x86_64-gdk-pixbuf2 \
+          mingw-w64-x86_64-gettext \
+          mingw-w64-x86_64-giflib \
+          mingw-w64-x86_64-glib2 \
+          mingw-w64-x86_64-gmp \
+          mingw-w64-x86_64-gnutls \
+          mingw-w64-x86_64-harfbuzz \
+          mingw-w64-x86_64-headers-git \
+          mingw-w64-x86_64-imagemagick \
+          mingw-w64-x86_64-isl \
+          mingw-w64-x86_64-libffi \
+          mingw-w64-x86_64-libgccjit \
+          mingw-w64-x86_64-libiconv \
+          mingw-w64-x86_64-libjpeg-turbo \
+          mingw-w64-x86_64-libpng \
+          mingw-w64-x86_64-librsvg \
+          mingw-w64-x86_64-libtiff \
+          mingw-w64-x86_64-libwinpthread-git \
+          mingw-w64-x86_64-libxml2 \
+          mingw-w64-x86_64-mpc \
+          mingw-w64-x86_64-mpfr \
+          mingw-w64-x86_64-pango \
+          mingw-w64-x86_64-pixman \
+          mingw-w64-x86_64-winpthreads \
+          mingw-w64-x86_64-xpm-nox \
+          mingw-w64-x86_64-lcms2 \
+          mingw-w64-x86_64-xz \
+          mingw-w64-x86_64-zlib \
+          mingw-w64-x86_64-tree-sitter \
+          tar \
+          wget
+#+end_src
+
+Then, the configure scripts:
+
+#+begin_src shell
+  ./autogen.sh
+  ./configure \
+      --prefix=/c/emacs-29 \
+      --with-native-compilation \
+      --with-tree-sitter \
+      --with-gnutls \
+      --with-jpeg \
+      --with-png \
+      --with-rsvg \
+      --with-tiff \
+      --with-wide-int \
+      --with-xft \
+      --with-xml2 \
+      --with-xpm \
+      --without-dbus \
+      --without-pop
+#+end_src
+
+And finally the command to compile:
+
+#+begin_src shell
+  make --jobs=$(NPROC)
+  sudo make install
+#+end_src
+
+*** Configuration
 Windows, funnily enough, has some trouble registering the Windows key as a
 usable modifier for Emacs.  In fact, =s-l= will /never/ be an option, since it's
 handled at the hardware level.  I also add a few nice-to-haves, like setting the
