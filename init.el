@@ -41,7 +41,7 @@
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:4 ends here
 
-;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
+;; [[file:README.org::*Configuration][Configuration:1]]
 (defun renz/windowsp ()
   "Are we on Microsoft Windows?"
   (memq system-type '(windows-nt cygwin ms-dos)))
@@ -51,12 +51,8 @@
   (set-face-attribute 'default nil :font "Hack NF-12")
 
   ;; Alternate ispell when we've got msys on Windows
-  (setq ispell-program-name "aspell.exe")
-
-  ;; Set default shell to pwsh
-  (setq explicit-shell-file-name "pwsh")
-  )
-;; Microsoft Windows:1 ends here
+  (setq ispell-program-name "aspell.exe"))
+;; Configuration:1 ends here
 
 ;; [[file:README.org::*macOS][macOS:1]]
 (when (eq system-type 'darwin)
@@ -229,6 +225,11 @@
 ;; [[file:README.org::*Tool bar][Tool bar:1]]
 (tool-bar-mode -1)
 ;; Tool bar:1 ends here
+
+;; [[file:README.org::*Tool bar][Tool bar:2]]
+(when (renz/windowsp)
+  (menu-bar-mode -1))
+;; Tool bar:2 ends here
 
 ;; [[file:README.org::*Ignore risky .dir-locals.el][Ignore risky .dir-locals.el:1]]
 (advice-add 'risky-local-variable-p :override #'ignore)
@@ -535,13 +536,25 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 ;; TreeSitter:3 ends here
 
 ;; [[file:README.org::*TreeSitter][TreeSitter:4]]
-(when (boundp 'treesit-language-source-alist)
-  (add-to-list
-   'treesit-language-source-alist
-   '(python "Https://github.com/tree-sitter/tree-sitter-python.git")))
-
-(when (fboundp 'treesit-install-language-grammar)
-  (treesit-install-language-grammar "python"))
+(setq treesit-language-source-alist
+      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+        (c "https://github.com/tree-sitter/tree-sitter-c")
+        (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+        (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+        (go "https://github.com/tree-sitter/tree-sitter-go")
+        (html "https://github.com/tree-sitter/tree-sitter-html")
+        (js "https://github.com/tree-sitter/tree-sitter-javascript")
+        (json "https://github.com/tree-sitter/tree-sitter-json")
+        (lua "https://github.com/Azganoth/tree-sitter-lua")
+        (make "https://github.com/alemuller/tree-sitter-make")
+        (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+        (python "https://github.com/tree-sitter/tree-sitter-python")
+        (r "https://github.com/r-lib/tree-sitter-r")
+        (rust "https://github.com/tree-sitter/tree-sitter-rust")
+        (toml "https://github.com/tree-sitter/tree-sitter-toml")
+        (ts "https://github.com/tree-sitter/tree-sitter-typescript")
+        (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 ;; TreeSitter:4 ends here
 
 ;; [[file:README.org::*TreeSitter][TreeSitter:5]]
@@ -724,7 +737,7 @@ Jumps at tangled code from org src block."
 (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 ;; BigQuery ~sql~ Blocks in Org-Babel:1 ends here
 
-;; [[file:README.org::*Pyright error links in \ast{}compilation\ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
+;; [[file:README.org::*Pyright error links in /ast{}compilation/ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))

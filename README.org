@@ -188,6 +188,9 @@ There are also a few hand-made packages I keep around in a special
 
 ** Microsoft Windows
 *** Compiling Emacs
+Compiling Emacs on Windows can be a bit of a pain, but it’s mostly the same as
+on *nix.  First, I use [[https://www.msys2.org/][MSYS2-MinGW]] to compile everything. From the MinGW
+terminal (NOT the plain MSYS2 one), I install all of these dependencies.
 
 #+begin_src shell
   pacman -Su \
@@ -292,11 +295,7 @@ with ~msys64~.
     (set-face-attribute 'default nil :font "Hack NF-12")
 
     ;; Alternate ispell when we've got msys on Windows
-    (setq ispell-program-name "aspell.exe")
-
-    ;; Set default shell to pwsh
-    (setq explicit-shell-file-name "pwsh")
-    )
+    (setq ispell-program-name "aspell.exe"))
 #+end_src
 
 For a time I considered enabling the use of the winkey like this:
@@ -318,6 +317,11 @@ Since I've taken a more TTY-friendly approach for my config in general, where
 super can be a bit tough to integrate with both the windowing application /and/
 the terminal emulator, I've mostly given up on the GUI key in favor of other
 chords, especially the =C-c= ones.
+
+*** A note on TreeSitter
+When compiling tree-sitter dll's with ~treesit-install-language-grammar~, I also
+need to launch Emacs via ~runemacs.exe~ from the MinGW terminal to ensure the C
+and C++ compilers are both visible and usable.
 
 ** macOS
 Launching Emacs from the typical application launcher or command-space usually
@@ -1255,17 +1259,36 @@ We will have to wait until Emacs 30+ for automatic fallback.  Until then, the
       (python-mode)))
 #+end_src
 
-To install grammars, use this:
+To install a grammar (e.g. for Python), I just need to do =M-x
+treesit-install-language-grammar RET python= after setting
+~treesit-language-source-alist~.
 
 #+begin_src emacs-lisp
-  (when (boundp 'treesit-language-source-alist)
-    (add-to-list
-     'treesit-language-source-alist
-     '(python "Https://github.com/tree-sitter/tree-sitter-python.git")))
-
-  (when (fboundp 'treesit-install-language-grammar)
-    (treesit-install-language-grammar "python"))
+  (setq treesit-language-source-alist
+        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
+          (c "https://github.com/tree-sitter/tree-sitter-c")
+          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
+          (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
+          (go "https://github.com/tree-sitter/tree-sitter-go")
+          (html "https://github.com/tree-sitter/tree-sitter-html")
+          (js "https://github.com/tree-sitter/tree-sitter-javascript")
+          (json "https://github.com/tree-sitter/tree-sitter-json")
+          (lua "https://github.com/Azganoth/tree-sitter-lua")
+          (make "https://github.com/alemuller/tree-sitter-make")
+          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
+          (python "https://github.com/tree-sitter/tree-sitter-python")
+          (r "https://github.com/r-lib/tree-sitter-r")
+          (rust "https://github.com/tree-sitter/tree-sitter-rust")
+          (toml "https://github.com/tree-sitter/tree-sitter-toml")
+          (ts "https://github.com/tree-sitter/tree-sitter-typescript")
+          (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 #+end_src
+
+What I need to play with now is ~auto-mode-alist~ and ~interpreter-mode-alist~,
+along with the fallback macro above to boot up the treesitter version
+automatically if everything is installed, otherwise falling back to the original
+mode.
 
 Finally, I like to program "in Skittles":
 
