@@ -86,6 +86,10 @@
   (load-theme 'ef-cherie :no-confirm))
 ;; Theme:1 ends here
 
+;; [[file:README.org::*Start a server for =emacsclient=][Start a server for =emacsclient=:1]]
+(server-start)
+;; Start a server for =emacsclient=:1 ends here
+
 ;; [[file:README.org::*Unicode][Unicode:1]]
 (prefer-coding-system       'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -595,6 +599,7 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 
 ;; [[file:README.org::*CSS][CSS:1]]
 (setq css-indent-offset 2)
+(add-to-list 'auto-mode-alist '("\\.css\\'" . css-ts-or-fallback-mode))
 ;; CSS:1 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:1]]
@@ -861,19 +866,6 @@ Jumps at tangled code from org src block."
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 ;; Visual fill column:1 ends here
 
-;; [[file:README.org::*Magit][Magit:1]]
-(use-package magit
-  :bind ("C-c g" . magit-status))
-;; Magit:1 ends here
-
-;; [[file:README.org::*Change or copy inner/outer][Change or copy inner/outer:1]]
-(use-package change-inner
-  :bind (("C-c c i" . change-inner)
-         ("C-c c o" . change-outer)
-         ("C-c y i" . copy-inner)
-         ("C-c y o" . copy-outer)))
-;; Change or copy inner/outer:1 ends here
-
 ;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
 (use-package eww
   :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
@@ -909,10 +901,6 @@ Jumps at tangled code from org src block."
          ("C-c l r n" . eglot-rename)
          ("C-c l s" . eglot-shutdown)))
 ;; Language Server Protocol (LSP) with ~eglot~:1 ends here
-
-;; [[file:README.org::*Start a server for =emacsclient=][Start a server for =emacsclient=:1]]
-(server-start)
-;; Start a server for =emacsclient=:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here

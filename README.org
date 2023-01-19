@@ -406,6 +406,12 @@ Kitty for me, I haven't spent too much time looking into it.
 My settings for base Emacs.  Assuming I ran with /no/ plugins (ala ~emacs -Q~), I
 would still set most of these by hand at one point or another.
 
+** Start a server for =emacsclient=
+
+#+begin_src emacs-lisp
+  (server-start)
+#+end_src
+
 ** Unicode
 Sometimes (especially on Windows), Emacs gets confused about what encoding to
 use.  These setting try to prevent that confusion.
@@ -1332,6 +1338,7 @@ I like to program "in Skittles":
 
 #+begin_src emacs-lisp
   (setq css-indent-offset 2)
+  (add-to-list 'auto-mode-alist '("\\.css\\'" . css-ts-or-fallback-mode))
 #+end_src
 
 For validation, grab [[https://github.com/w3c/css-validator/releases/download/cssval-20220105/css-validator.jar][css-validator.jar]] and execute it with java:
@@ -1732,7 +1739,6 @@ require little configuration and don't warrant a top-level header.
     (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
   #+end_src
 
-
 ** dired
 By default, ~dired~ uses bytes instead of "K", "Mb", or "G" for file sizes.  I
 also have it hide the mode, size, and owner of each file by default.
@@ -1769,30 +1775,6 @@ word.
   (use-package visual-fill-column
     :config
     (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
-#+end_src
-
-** Magit
-The one and only.
-
-#+begin_src emacs-lisp
-  (use-package magit
-    :bind ("C-c g" . magit-status))
-#+end_src
-
-As a reminder - when using pre-commit hooks it may take a while for the hooks to
-install.  Magit will asynchronously kick off that process, and we can check on
-it with =$=.  The built-in `vc` is /synchronous/, and will block Emacs entirely
-until it's done.  So some of the performance hit from using Magit is well worth
-it in situations like that.
-
-** Change or copy inner/outer
-
-#+begin_src emacs-lisp
-  (use-package change-inner
-    :bind (("C-c c i" . change-inner)
-           ("C-c c o" . change-outer)
-           ("C-c y i" . copy-inner)
-           ("C-c y o" . copy-outer)))
 #+end_src
 
 ** eww - search engine and browser
@@ -1868,12 +1850,6 @@ language's major mode hook:
 
 #+begin_src emacs-lisp :tangle no :eval never
 (add-hook 'python-mode-hook 'semantic-mode)
-#+end_src
-
-* Start a server for =emacsclient=
-
-#+begin_src emacs-lisp
-  (server-start)
 #+end_src
 
 * Don't forget about these
