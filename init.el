@@ -39,8 +39,7 @@
   (setq ispell-program-name "aspell.exe")
 
   ;; Set default shell to pwsh
-  (setq explicit-shell-file-name "pwsh")
-  )
+  (setq explicit-shell-file-name "pwsh"))
 
 (when (eq system-type 'darwin)
   ;; Uncomment this if we can't install Hack Nerd font
@@ -153,6 +152,9 @@
 (add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
 
 (tool-bar-mode -1)
+
+(when (renz/windowsp)
+  (menu-bar-mode -1))
 
 (advice-add 'risky-local-variable-p :override #'ignore)
 
