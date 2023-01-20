@@ -542,17 +542,20 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
 ;; About TreeSitter and its Load Paths:1 ends here
 
-;; [[file:README.org::*Automatically Using TreeSitter modes][Automatically Using TreeSitter modes:1]]
+;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
 (setq treesit-language-source-alist
       '((bash "https://github.com/tree-sitter/tree-sitter-bash")
         (c "https://github.com/tree-sitter/tree-sitter-c")
+        ;; cmake
         (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
         (css "https://github.com/tree-sitter/tree-sitter-css")
         (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+        ;; dockerfile
         (elisp "https://github.com/Wilfred/tree-sitter-elisp")
         (go "https://github.com/tree-sitter/tree-sitter-go")
+        ;; go-mod
         (html "https://github.com/tree-sitter/tree-sitter-html")
-        (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+        (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
         (json "https://github.com/tree-sitter/tree-sitter-json")
         (lua "https://github.com/Azganoth/tree-sitter-lua")
         (make "https://github.com/alemuller/tree-sitter-make")
@@ -561,26 +564,30 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
         (r "https://github.com/r-lib/tree-sitter-r")
         (rust "https://github.com/tree-sitter/tree-sitter-rust")
         (toml "https://github.com/tree-sitter/tree-sitter-toml")
-        (tsx-typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+        (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
         (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
         (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
-;; Automatically Using TreeSitter modes:1 ends here
+;; Automatically Using TreeSitter Modes:1 ends here
 
-;; [[file:README.org::*Automatically Using TreeSitter modes][Automatically Using TreeSitter modes:2]]
-(setq ts-fallbacks-to-create
-      (mapcar (lambda (x) (symbol-name (car x))) treesit-language-source-alist))
-;; Automatically Using TreeSitter modes:2 ends here
+;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:2]]
+(require 'treesit)
 
-;; [[file:README.org::*Automatically Using TreeSitter modes][Automatically Using TreeSitter modes:3]]
-(dolist (name ts-fallbacks-to-create)
-  (eval
-   `(define-derived-mode ,(intern (concat name "-ts-or-fallback-mode")) prog-mode ,(concat name " auto")
-      ,(format "Automatically use %s-ts-mode if it's ready, otherwise fall back to %s-mode." name name)
-      (if (treesit-ready-p ',(intern name) t)
-          (,(intern (concat name "-ts-mode")))
-        (,(intern (concat name "-mode")))
-        (message (concat "TreeSitter not ready for " ,name ".  Falling back to `" ,name "-mode'"))))))
-;; Automatically Using TreeSitter modes:3 ends here
+(let ((auto-modes (delete-dups (mapcar 'cdr auto-mode-alist)))
+      (no-fallback-modes '(tsx typescript)))
+
+  (defun renz/ts-or-fallback (language-source)
+    "Add a major mode's corresponding ts mode to major-mode-remap-alist, if it's ready."
+    (let* ((name (car language-source))
+           (name-mode (intern (concat (symbol-name name) "-mode")))
+           (name-ts-mode (intern (concat (symbol-name name) "-ts-mode"))))
+      (if (treesit-ready-p name t)
+          (add-to-list 'major-mode-remap-alist `(,name-mode . ,name-ts-mode))
+        (when (and (seq-contains-p auto-modes name-ts-mode)
+                   (not (seq-contains-p no-fallback-modes name)))
+          (add-to-list 'major-mode-remap-alist `(,name-ts-mode . ,name-mode))))))
+
+  (mapcar 'renz/ts-or-fallback treesit-language-source-alist))
+;; Automatically Using TreeSitter Modes:2 ends here
 
 ;; [[file:README.org::*Ooo, aaah, shiny colors][Ooo, aaah, shiny colors:1]]
 (setq-default treesit-font-lock-level 4)
@@ -759,12 +766,7 @@ Jumps at tangled code from org src block."
 (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 ;; BigQuery ~sql~ Blocks in Org-Babel:1 ends here
 
-;; [[file:README.org::*Use TreeSitter if we can][Use TreeSitter if we can:1]]
-(add-to-list 'auto-mode-alist '("\\.py\\'" . python-ts-or-fallback-mode))
-(add-to-list 'interpreter-mode-alist '("python[0-9.]*" . python-ts-or-fallback-mode))
-;; Use TreeSitter if we can:1 ends here
-
-;; [[file:README.org::*Pyright error links in \ast{}compilation\ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
+;; [[file:README.org::*Pyright error links in /ast{}compilation/ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))

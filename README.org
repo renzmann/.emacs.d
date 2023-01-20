@@ -233,6 +233,7 @@ terminal (NOT the plain MSYS2 one), I install all of these dependencies.
           mingw-w64-x86_64-libpng \
           mingw-w64-x86_64-librsvg \
           mingw-w64-x86_64-libtiff \
+          mingw-w64-x86_64-libwebp \
           mingw-w64-x86_64-libwinpthread-git \
           mingw-w64-x86_64-libxml2 \
           mingw-w64-x86_64-mpc \
@@ -1265,23 +1266,25 @@ C-h i d m elisp RET g Parsing Program Source RET
 Enabling TreeSitter is done on a per-language basis to override the default
 major mode with the corresponding TreeSitter version.
 
-*** Automatically Using TreeSitter modes
+*** Automatically Using TreeSitter Modes
 We will have to wait until Emacs 30+ for automatic fallback.  Until then, the
-[[https://archive.casouri.cc/note/2023/tree-sitter-in-emacs-29/index.html][recommended workaround]] is to derive a mode that picks between them.  So, what we
-start with is a list that defines languages and the source repository for their
-respective TreeSitter grammar.
+[[https://archive.casouri.cc/note/2023/tree-sitter-in-emacs-29/index.html][recommended workaround]] is to derive a mode that picks between them.  Instead,
+I'm hoping I can abuse the new =major-mode-remap-alist= instead.
 
 #+begin_src emacs-lisp
   (setq treesit-language-source-alist
         '((bash "https://github.com/tree-sitter/tree-sitter-bash")
           (c "https://github.com/tree-sitter/tree-sitter-c")
+          ;; cmake
           (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
           (css "https://github.com/tree-sitter/tree-sitter-css")
           (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
+          ;; dockerfile
           (elisp "https://github.com/Wilfred/tree-sitter-elisp")
           (go "https://github.com/tree-sitter/tree-sitter-go")
+          ;; go-mod
           (html "https://github.com/tree-sitter/tree-sitter-html")
-          (javascript . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
+          (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
           (json "https://github.com/tree-sitter/tree-sitter-json")
           (lua "https://github.com/Azganoth/tree-sitter-lua")
           (make "https://github.com/alemuller/tree-sitter-make")
@@ -1290,7 +1293,7 @@ respective TreeSitter grammar.
           (r "https://github.com/r-lib/tree-sitter-r")
           (rust "https://github.com/tree-sitter/tree-sitter-rust")
           (toml "https://github.com/tree-sitter/tree-sitter-toml")
-          (tsx-typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
+          (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
           (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
           (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
 #+end_src
@@ -1301,25 +1304,24 @@ fallback modes, we convert the ~car~ of each element above to a string, which
 we will format into the derived mode's name and body:
 
 #+begin_src emacs-lisp
-  (setq ts-fallbacks-to-create
-        (mapcar (lambda (x) (symbol-name (car x))) treesit-language-source-alist))
+  (require 'treesit)
+
+  (let ((auto-modes (delete-dups (mapcar 'cdr auto-mode-alist)))
+        (no-fallback-modes '(tsx typescript)))
+
+    (defun renz/ts-or-fallback (language-source)
+      "Add a major mode's corresponding ts mode to major-mode-remap-alist, if it's ready."
+      (let* ((name (car language-source))
+             (name-mode (intern (concat (symbol-name name) "-mode")))
+             (name-ts-mode (intern (concat (symbol-name name) "-ts-mode"))))
+        (if (treesit-ready-p name t)
+            (add-to-list 'major-mode-remap-alist `(,name-mode . ,name-ts-mode))
+          (when (and (seq-contains-p auto-modes name-ts-mode)
+                     (not (seq-contains-p no-fallback-modes name)))
+            (add-to-list 'major-mode-remap-alist `(,name-ts-mode . ,name-mode))))))
+
+    (mapcar 'renz/ts-or-fallback treesit-language-source-alist))
 #+end_src
-
-Then, loop over these names to define all the fallback modes:
-
-#+begin_src emacs-lisp
-  (dolist (name ts-fallbacks-to-create)
-    (eval
-     `(define-derived-mode ,(intern (concat name "-ts-or-fallback-mode")) prog-mode ,(concat name " auto")
-        ,(format "Automatically use %s-ts-mode if it's ready, otherwise fall back to %s-mode." name name)
-        (if (treesit-ready-p ',(intern name) t)
-            (,(intern (concat name "-ts-mode")))
-          (,(intern (concat name "-mode")))
-          (message (concat "TreeSitter not ready for " ,name ".  Falling back to `" ,name "-mode'"))))))
-#+end_src
-
-Each major mode that I want automatic fallback for will have this mode added to [[* Language-specific major modes][its
-specific configuration]].
 
 *** Ooo, aaah, shiny colors
 I like to program "in Skittles":
@@ -1562,12 +1564,6 @@ with it.
 #+end_src
 
 ** Python
-*** Use TreeSitter if we can
-#+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.py\\'" . python-ts-or-fallback-mode))
-  (add-to-list 'interpreter-mode-alist '("python[0-9.]*" . python-ts-or-fallback-mode))
-#+end_src
-
 *** Pyright error links in \ast{}compilation\ast{}
 The =M-x compile= feature does not recognize or parse ~pyright~ error messages out
 of the box, so I add that support myself.  Here's an example error message:
