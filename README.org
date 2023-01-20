@@ -342,6 +342,7 @@ won't capture any modifications to =$PATH=, typically handled in a file like
     ;; Uncomment this if we can't install Hack Nerd font
     ;; (set-face-attribute 'default nil :font "Menlo-14")
     (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
+    (setq exec-path-from-shell-arguments '("-l"))
     (exec-path-from-shell-initialize))
 #+end_src
 
@@ -1697,6 +1698,7 @@ I make a lot of spelling mistakes as I type...
 
 #+begin_src emacs-lisp
   (add-hook 'markdown-mode-hook 'flyspell-mode)
+  (add-hook 'markdown-mode-hook 'auto-fill-mode)
 #+end_src
 
 =poly-markdown-mode= enables syntax highlighting within code fences for markdown.

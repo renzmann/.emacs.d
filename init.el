@@ -60,6 +60,7 @@
   ;; Uncomment this if we can't install Hack Nerd font
   ;; (set-face-attribute 'default nil :font "Menlo-14")
   (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
+  (setq exec-path-from-shell-arguments '("-l"))
   (exec-path-from-shell-initialize))
 ;; Configuration:1 ends here
 
@@ -810,6 +811,7 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*Markdown][Markdown:2]]
 (add-hook 'markdown-mode-hook 'flyspell-mode)
+(add-hook 'markdown-mode-hook 'auto-fill-mode)
 ;; Markdown:2 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:3]]
