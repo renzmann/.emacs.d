@@ -543,51 +543,9 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 ;; About TreeSitter and its Load Paths:1 ends here
 
 ;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
-(setq treesit-language-source-alist
-      '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-        (c "https://github.com/tree-sitter/tree-sitter-c")
-        ;; cmake
-        (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-        (css "https://github.com/tree-sitter/tree-sitter-css")
-        (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
-        ;; dockerfile
-        (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-        (go "https://github.com/tree-sitter/tree-sitter-go")
-        ;; go-mod
-        (html "https://github.com/tree-sitter/tree-sitter-html")
-        (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-        (json "https://github.com/tree-sitter/tree-sitter-json")
-        (lua "https://github.com/Azganoth/tree-sitter-lua")
-        (make "https://github.com/alemuller/tree-sitter-make")
-        (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-        (python "https://github.com/tree-sitter/tree-sitter-python")
-        (r "https://github.com/r-lib/tree-sitter-r")
-        (rust "https://github.com/tree-sitter/tree-sitter-rust")
-        (toml "https://github.com/tree-sitter/tree-sitter-toml")
-        (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-        (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-        (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+(use-package treesit-auto
+  :demand t)
 ;; Automatically Using TreeSitter Modes:1 ends here
-
-;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:2]]
-(require 'treesit)
-
-(let ((auto-modes (delete-dups (mapcar 'cdr auto-mode-alist)))
-      (no-fallback-modes '(tsx typescript)))
-
-  (defun renz/ts-or-fallback (language-source)
-    "Add a major mode's corresponding ts mode to major-mode-remap-alist, if it's ready."
-    (let* ((name (car language-source))
-           (name-mode (intern (concat (symbol-name name) "-mode")))
-           (name-ts-mode (intern (concat (symbol-name name) "-ts-mode"))))
-      (if (treesit-ready-p name t)
-          (add-to-list 'major-mode-remap-alist `(,name-mode . ,name-ts-mode))
-        (when (and (seq-contains-p auto-modes name-ts-mode)
-                   (not (seq-contains-p no-fallback-modes name)))
-          (add-to-list 'major-mode-remap-alist `(,name-ts-mode . ,name-mode))))))
-
-  (mapcar 'renz/ts-or-fallback treesit-language-source-alist))
-;; Automatically Using TreeSitter Modes:2 ends here
 
 ;; [[file:README.org::*Ooo, aaah, shiny colors][Ooo, aaah, shiny colors:1]]
 (setq-default treesit-font-lock-level 4)
