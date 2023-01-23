@@ -348,6 +348,36 @@ won't capture any modifications to =$PATH=, typically handled in a file like
 #+end_src
 
 ** Linux
+*** Compiling
+Much like how I compile on MinGW, but don't need to much with the =--prefix=
+option.  I do need to make sure to export the correct =CC= and =GCC= variables,
+though:
+
+#+begin_src shell
+  git clone git://git.savannah.gnu.org/emacs.git --branch emacs-29 --depth 1
+  export CC=/usr/bin/gcc-10 CXX=/usr/bin/gcc-10
+  ./autogen.sh
+  ./configure \
+    --prefix=/c/emacs-29 \
+    --with-native-compilation \
+    --with-tree-sitter \
+    --with-gnutls \
+    --with-jpeg \
+    --with-png \
+    --with-rsvg \
+    --with-tiff \
+    --with-wide-int \
+    --with-xft \
+    --with-xml2 \
+    --with-xpm \
+    --without-dbus \
+    --without-pop
+  make --jobs=$(nproc)
+  sudo make install
+#+end_src
+
+
+*** Configuration
 Very little to do here.  Emacs on Linux seems to "just work".  When I have the
 Hack font installed, I sometimes turn it on by manually evaluating this block,
 though.

@@ -766,7 +766,7 @@ Jumps at tangled code from org src block."
 (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 ;; BigQuery ~sql~ Blocks in Org-Babel:1 ends here
 
-;; [[file:README.org::*Pyright error links in /ast{}compilation/ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
+;; [[file:README.org::*Pyright error links in \ast{}compilation\ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
