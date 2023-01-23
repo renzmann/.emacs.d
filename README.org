@@ -1302,13 +1302,13 @@ using a workaround that I've posted to GitHub as [[https://github.com/renzmann/t
 to publish it to MELPA, I can install it either through =package-vc-install= or
 through a git subtree under =site-lisp/=
 
-#+begin_src shell
+#+begin_src shell :results none
   git subtree add -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
 #+end_src
 
 Fetching updates is a similar command.
 
-#+begin_src shell
+#+begin_src shell :results none
   git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
 #+end_src
 
