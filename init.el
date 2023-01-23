@@ -542,10 +542,15 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
 ;; About TreeSitter and its Load Paths:1 ends here
 
-;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
+;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:3]]
 (use-package treesit-auto
-  :demand t)
-;; Automatically Using TreeSitter Modes:1 ends here
+  :load-path "site-lisp/treesit-auto"
+  :demand t
+  :config
+  (treesit-auto-apply-remap)
+  (advice-add 'treesit-install-language-grammar
+              :after (lambda (&rest _r) (treesit-auto-apply-remap))))
+;; Automatically Using TreeSitter Modes:3 ends here
 
 ;; [[file:README.org::*Ooo, aaah, shiny colors][Ooo, aaah, shiny colors:1]]
 (setq-default treesit-font-lock-level 4)

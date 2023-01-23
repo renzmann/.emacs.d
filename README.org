@@ -1297,23 +1297,34 @@ Enabling TreeSitter is done on a per-language basis to override the default
 major mode with the corresponding TreeSitter version.
 
 *** Automatically Using TreeSitter Modes
-We will have to wait until Emacs 30+ for automatic fallback.  Until then, the
-[[https://archive.casouri.cc/note/2023/tree-sitter-in-emacs-29/index.html][recommended workaround]] is to derive a mode that picks between them.  Instead,
-I'm hoping I can abuse the new =major-mode-remap-alist= instead.
+We will have to wait until Emacs 30+ for automatic fallback.  Until then, I'm
+using a workaround that I've posted to GitHub as [[https://github.com/renzmann/treesit-auto][treesit-auto]].  Until I'm able
+to publish it to MELPA, I can install it either through =package-vc-install= or
+through a git subtree under =site-lisp/=
+
+#+begin_src shell
+  git subtree add -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
+#+end_src
+
+Fetching updates is a similar command.
+
+#+begin_src shell
+  git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
+#+end_src
+
+Then, to apply the major mode remaps:
 
 #+begin_src emacs-lisp
   (use-package treesit-auto
-    :demand t)
+    :load-path "site-lisp/treesit-auto"
+    :demand t
+    :config
+    (treesit-auto-apply-remap)
+    (advice-add 'treesit-install-language-grammar
+                :after (lambda (&rest _r) (treesit-auto-apply-remap))))
 #+end_src
 
-#+begin_comment
-Include the blow for blog post:
-
-At this point, To install a grammar (e.g. for Python), I just need to do =M-x
-treesit-install-language-grammar RET python=.  Now, to build the TreeSitter
-fallback modes, we convert the ~car~ of each element above to a string, which
-we will format into the derived mode's name and body:
-#+end_comment
+If I'm missing a grammar, I'll install it using =M-x treesit-install-language-grammar RET <name> RET=
 
 *** Ooo, aaah, shiny colors
 I like to program "in Skittles":
