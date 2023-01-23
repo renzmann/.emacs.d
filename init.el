@@ -590,7 +590,7 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 ;; Automatically Using TreeSitter Modes:2 ends here
 
 ;; [[file:README.org::*Ooo, aaah, shiny colors][Ooo, aaah, shiny colors:1]]
-(setq-default treesit-font-lock-level 4)
+(setq-default treesit-font-lock-level 3)
 ;; Ooo, aaah, shiny colors:1 ends here
 
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
@@ -766,7 +766,7 @@ Jumps at tangled code from org src block."
 (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 ;; BigQuery ~sql~ Blocks in Org-Babel:1 ends here
 
-;; [[file:README.org::*Pyright error links in /ast{}compilation/ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
+;; [[file:README.org::*Pyright error links in \ast{}compilation\ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))

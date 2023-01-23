@@ -1327,7 +1327,7 @@ we will format into the derived mode's name and body:
 I like to program "in Skittles":
 
 #+begin_src emacs-lisp
-  (setq-default treesit-font-lock-level 4)
+  (setq-default treesit-font-lock-level 3)
 #+end_src
 
 * Language-specific major modes
