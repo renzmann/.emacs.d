@@ -284,17 +284,6 @@
 (put 'downcase-region 'disabled nil)
 ;; Enable up/downcase-region:1 ends here
 
-;; [[file:README.org::*Keybindings][Keybindings:1]]
-(defun renz/--jump-section (dirname prompt extension)
-  "Jump to a section of my configuration.
-Asks for a file under `DIRNAME' using `PROMPT' in the user Emacs
-config site with matching `EXTENSION' regexp."
-  (find-file
-   (concat dirname
-           (completing-read prompt
-                            (directory-files dirname nil extension)))))
-;; Keybindings:1 ends here
-
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-h") 'backward-kill-sexp)
@@ -354,12 +343,19 @@ config site with matching `EXTENSION' regexp."
 ;; [[file:README.org::*=C-c i= jump to a header in my configuration][=C-c i= jump to a header in my configuration:1]]
 (setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
 
+(defun renz/--jump-section (dirname prompt extension)
+  "Jump to a section of my configuration.
+Asks for a file under `DIRNAME' using `PROMPT' in the user Emacs
+config site with matching `EXTENSION' regexp."
+  (find-file
+   (concat dirname
+           (completing-read prompt
+                            (directory-files dirname nil extension)))))
+
 (defun renz/jump-configuration ()
   "Prompt for a .el file in my site-lisp folder, then go there."
   (interactive)
-  (renz/--jump-section renz/site-lisp-dir
-                       "Elisp config files: "
-                       ".*\.el$"))
+  (renz/--jump-section renz/site-lisp-dir "Elisp config files: " ".*\.el$"))
 
 (defun renz/jump-init ()
   "Jump directly to my literate configuration document."

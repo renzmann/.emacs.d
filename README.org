@@ -822,20 +822,6 @@ I'll uncomment the second part.
 #+end_src
 
 * Keybindings
-Eventually, some of the custom functions that I bound to convenient keys had a
-logical abstraction, which I extract and put up here for them to use.
-
-#+begin_src emacs-lisp
-  (defun renz/--jump-section (dirname prompt extension)
-    "Jump to a section of my configuration.
-  Asks for a file under `DIRNAME' using `PROMPT' in the user Emacs
-  config site with matching `EXTENSION' regexp."
-    (find-file
-     (concat dirname
-             (completing-read prompt
-                              (directory-files dirname nil extension)))))
-#+end_src
-
 ** Expanded/better defaults
 These convenient chords allow for fast text replacement by holding =C-M-= and
 rapidly typing =k= and =h= in succession.
@@ -941,12 +927,19 @@ somewhere else.
 #+begin_src emacs-lisp
   (setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
 
+  (defun renz/--jump-section (dirname prompt extension)
+    "Jump to a section of my configuration.
+  Asks for a file under `DIRNAME' using `PROMPT' in the user Emacs
+  config site with matching `EXTENSION' regexp."
+    (find-file
+     (concat dirname
+             (completing-read prompt
+                              (directory-files dirname nil extension)))))
+
   (defun renz/jump-configuration ()
     "Prompt for a .el file in my site-lisp folder, then go there."
     (interactive)
-    (renz/--jump-section renz/site-lisp-dir
-                         "Elisp config files: "
-                         ".*\.el$"))
+    (renz/--jump-section renz/site-lisp-dir "Elisp config files: " ".*\.el$"))
 
   (defun renz/jump-init ()
     "Jump directly to my literate configuration document."
