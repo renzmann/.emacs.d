@@ -562,15 +562,10 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (setq tab-width 8))
 
 (add-hook 'sh-mode-hook #'renz/sh-indentation)
-
-;; When the interpreter is explicitly set to "bash", use the TreeSitter mode if
-;; we can
-(add-to-list 'interpreter-mode-alist '("r?bash2?" . bash-ts-or-fallback-mode))
 ;; Shell (Bash, sh, ...):1 ends here
 
 ;; [[file:README.org::*CSS][CSS:1]]
 (setq css-indent-offset 2)
-(add-to-list 'auto-mode-alist '("\\.css\\'" . css-ts-or-fallback-mode))
 ;; CSS:1 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:1]]
@@ -782,7 +777,9 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Markdown][Markdown:3]]
 (use-package poly-markdown
   :after (markdown-mode)
-  :mode ("\\.md" . poly-markdown-mode))
+  :mode ("\\.md" . poly-markdown-mode)
+  :config
+  (setq markdown-command "markdown_py"))
 ;; Markdown:3 ends here
 
 ;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]

@@ -1342,17 +1342,12 @@ I like to program "in Skittles":
     (setq tab-width 8))
 
   (add-hook 'sh-mode-hook #'renz/sh-indentation)
-
-  ;; When the interpreter is explicitly set to "bash", use the TreeSitter mode if
-  ;; we can
-  (add-to-list 'interpreter-mode-alist '("r?bash2?" . bash-ts-or-fallback-mode))
 #+end_src
 
 ** CSS
 
 #+begin_src emacs-lisp
   (setq css-indent-offset 2)
-  (add-to-list 'auto-mode-alist '("\\.css\\'" . css-ts-or-fallback-mode))
 #+end_src
 
 For validation, grab [[https://github.com/w3c/css-validator/releases/download/cssval-20220105/css-validator.jar][css-validator.jar]] and execute it with java:
@@ -1705,7 +1700,9 @@ I make a lot of spelling mistakes as I type...
 #+begin_src emacs-lisp
   (use-package poly-markdown
     :after (markdown-mode)
-    :mode ("\\.md" . poly-markdown-mode))
+    :mode ("\\.md" . poly-markdown-mode)
+    :config
+    (setq markdown-command "markdown_py"))
 #+end_src
 
 ** AutoHotkey
