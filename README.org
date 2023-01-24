@@ -348,6 +348,36 @@ won't capture any modifications to =$PATH=, typically handled in a file like
 #+end_src
 
 ** Linux
+*** Compiling
+Much like how I compile on MinGW, but don't need to much with the =--prefix=
+option.  I do need to make sure to export the correct =CC= and =GCC= variables,
+though:
+
+#+begin_src shell
+  git clone git://git.savannah.gnu.org/emacs.git --branch emacs-29 --depth 1
+  export CC=/usr/bin/gcc-10 CXX=/usr/bin/gcc-10
+  ./autogen.sh
+  ./configure \
+    --prefix=/c/emacs-29 \
+    --with-native-compilation \
+    --with-tree-sitter \
+    --with-gnutls \
+    --with-jpeg \
+    --with-png \
+    --with-rsvg \
+    --with-tiff \
+    --with-wide-int \
+    --with-xft \
+    --with-xml2 \
+    --with-xpm \
+    --without-dbus \
+    --without-pop
+  make --jobs=$(nproc)
+  sudo make install
+#+end_src
+
+
+*** Configuration
 Very little to do here.  Emacs on Linux seems to "just work".  When I have the
 Hack font installed, I sometimes turn it on by manually evaluating this block,
 though.
@@ -1267,61 +1297,34 @@ Enabling TreeSitter is done on a per-language basis to override the default
 major mode with the corresponding TreeSitter version.
 
 *** Automatically Using TreeSitter Modes
-We will have to wait until Emacs 30+ for automatic fallback.  Until then, the
-[[https://archive.casouri.cc/note/2023/tree-sitter-in-emacs-29/index.html][recommended workaround]] is to derive a mode that picks between them.  Instead,
-I'm hoping I can abuse the new =major-mode-remap-alist= instead.
+We will have to wait until Emacs 30+ for automatic fallback.  Until then, I'm
+using a workaround that I've posted to GitHub as [[https://github.com/renzmann/treesit-auto][treesit-auto]].  Until I'm able
+to publish it to MELPA, I can install it either through =package-vc-install= or
+through a git subtree under =site-lisp/=
 
-#+begin_src emacs-lisp
-  (setq treesit-language-source-alist
-        '((bash "https://github.com/tree-sitter/tree-sitter-bash")
-          (c "https://github.com/tree-sitter/tree-sitter-c")
-          ;; cmake
-          (cpp "https://github.com/tree-sitter/tree-sitter-cpp")
-          (css "https://github.com/tree-sitter/tree-sitter-css")
-          (csharp "https://github.com/tree-sitter/tree-sitter-c-sharp")
-          ;; dockerfile
-          (elisp "https://github.com/Wilfred/tree-sitter-elisp")
-          (go "https://github.com/tree-sitter/tree-sitter-go")
-          ;; go-mod
-          (html "https://github.com/tree-sitter/tree-sitter-html")
-          (js . ("https://github.com/tree-sitter/tree-sitter-javascript" "master" "src"))
-          (json "https://github.com/tree-sitter/tree-sitter-json")
-          (lua "https://github.com/Azganoth/tree-sitter-lua")
-          (make "https://github.com/alemuller/tree-sitter-make")
-          (markdown "https://github.com/ikatyang/tree-sitter-markdown")
-          (python "https://github.com/tree-sitter/tree-sitter-python")
-          (r "https://github.com/r-lib/tree-sitter-r")
-          (rust "https://github.com/tree-sitter/tree-sitter-rust")
-          (toml "https://github.com/tree-sitter/tree-sitter-toml")
-          (tsx . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "tsx/src"))
-          (typescript . ("https://github.com/tree-sitter/tree-sitter-typescript" "master" "typescript/src"))
-          (yaml "https://github.com/ikatyang/tree-sitter-yaml")))
+#+begin_src shell :results none
+  git subtree add -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
 #+end_src
 
-At this point, To install a grammar (e.g. for Python), I just need to do =M-x
-treesit-install-language-grammar RET python=.  Now, to build the TreeSitter
-fallback modes, we convert the ~car~ of each element above to a string, which
-we will format into the derived mode's name and body:
+Fetching updates is a similar command.
+
+#+begin_src shell :results none
+  git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
+#+end_src
+
+Then, to apply the major mode remaps:
 
 #+begin_src emacs-lisp
-  (require 'treesit)
-
-  (let ((auto-modes (delete-dups (mapcar 'cdr auto-mode-alist)))
-        (no-fallback-modes '(tsx typescript)))
-
-    (defun renz/ts-or-fallback (language-source)
-      "Add a major mode's corresponding ts mode to major-mode-remap-alist, if it's ready."
-      (let* ((name (car language-source))
-             (name-mode (intern (concat (symbol-name name) "-mode")))
-             (name-ts-mode (intern (concat (symbol-name name) "-ts-mode"))))
-        (if (treesit-ready-p name t)
-            (add-to-list 'major-mode-remap-alist `(,name-mode . ,name-ts-mode))
-          (when (and (seq-contains-p auto-modes name-ts-mode)
-                     (not (seq-contains-p no-fallback-modes name)))
-            (add-to-list 'major-mode-remap-alist `(,name-ts-mode . ,name-mode))))))
-
-    (mapcar 'renz/ts-or-fallback treesit-language-source-alist))
+  (use-package treesit-auto
+    :load-path "site-lisp/treesit-auto"
+    :demand t
+    :config
+    (treesit-auto-apply-remap)
+    (advice-add 'treesit-install-language-grammar
+                :after (lambda (&rest _r) (treesit-auto-apply-remap))))
 #+end_src
+
+If I'm missing a grammar, I'll install it using =M-x treesit-install-language-grammar RET <name> RET=
 
 *** Ooo, aaah, shiny colors
 I like to program "in Skittles":
