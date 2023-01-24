@@ -253,9 +253,6 @@
 ;; [[file:README.org::*Prefer =rg= and =fd= over =grep= and =find=][Prefer =rg= and =fd= over =grep= and =find=:1]]
 (when (executable-find "rg")
   (setq grep-program "rg"))
-
-(when (executable-find "fd")
-  (setq find-program "fd"))
 ;; Prefer =rg= and =fd= over =grep= and =find=:1 ends here
 
 ;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]

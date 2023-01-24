@@ -772,9 +772,6 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 #+begin_src emacs-lisp
   (when (executable-find "rg")
     (setq grep-program "rg"))
-
-  (when (executable-find "fd")
-    (setq find-program "fd"))
 #+end_src
 
 ** Confirm when exiting Emacs
