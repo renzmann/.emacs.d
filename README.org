@@ -443,8 +443,11 @@ on my ~$TERM~ variable to try and sort that out, but since it just kinda works i
 Kitty for me, I haven't spent too much time looking into it.
 
 * Emacs' Built-in Settings
-My settings for base Emacs.  Assuming I ran with /no/ plugins (ala ~emacs -Q~), I
-would still set most of these by hand at one point or another.
+My settings for base Emacs behavior.  Assuming I ran with /no/ plugins (ala ~emacs
+-Q~), I would still set most of these by hand at one point or another.  This
+section is designed for variables that modify Emacs and its editing behavior
+directly.  Configuation for built-in tools, such as Dired, Tramp, and
+Tree-sitter are located under [[* Tool configuration][Tool configuration]].
 
 ** Start a server for =emacsclient=
 
@@ -484,14 +487,6 @@ and a dimmed mode line in non-selected windows.
 #+begin_src emacs-lisp
   (setq column-number-mode t
         mode-line-in-non-selected-windows t)
-#+end_src
-
-** =eldoc=
-I find it very distracting when =eldoc= suddenly pops up and consumes a large part
-of the screen for docstrings in python.
-
-#+begin_src emacs-lisp
-  (setq eldoc-echo-area-use-multiline-p nil)
 #+end_src
 
 ** Remember minibuffer history
@@ -767,7 +762,7 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
   (advice-add 'risky-local-variable-p :override #'ignore)
 #+end_src
 
-** Prefer =rg= and =fd= over =grep= and =find=
+** Prefer =rg= over =grep=
 
 #+begin_src emacs-lisp
   (when (executable-find "rg")
@@ -1189,147 +1184,6 @@ candidates.
     (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion))
 #+end_src
 
-* Tramp
-Tramp (Transparent Remote Access Multiple Protocol) allows us to access files on
-a remote machine, and edit them locally.  This is great for simple changes or
-quickly testing out some Python on a VM somewhere.  It isn't as snappy as using
-the TTY version or an X-forwarded Emacs from the server directly, so if I /can/
-set up Emacs remotely, I usually do.  When I don't want to or don't have the
-time, Tramp is a godsend.  There are, however, many foibles to guard against,
-particularly with how interacts with version control and ~.dir-locals~.  The
-Tramp manual (distributed with Emacs) recommends adjusting these for some speed
-improvements:
-
-#+begin_src emacs-lisp
-  (use-package tramp
-    :defer t
-    :config
-    (setq vc-handled-backends '(Git)
-          file-name-inhibit-locks t
-          tramp-inline-compress-start-size 1000
-          tramp-copy-size-limit 10000
-          tramp-verbose 1)
-    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
-#+end_src
-
-eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden
-reentrant call of Tramp" message and freezing.  In the meantime, this setting
-was recommended.
-
-#+begin_src emacs-lisp
-  (setq tramp-use-ssh-controlmaster-options nil)
-#+end_src
-
-For some time I was having a lot of trouble with prohibitive slowness over
-Tramp, and after careful scrutiny of the logs on (I believe) =tramp-verbose 6=, I
-found out that enabling remote dir-locals was causing a huge bottleneck.  On
-every operation it would trace up the filesystem tree back to the root
-directory, scanning for a ~.dir-locals~ file.  Since some of the drives were
-network-mounted, this caused thousands of network calls per file operation,
-obviously slowing things down a lot.  Because of this, I've opted to simply
-disable ~.dir-locals~ over Tramp entirely, since I don't really use it much, if at
-all.
-
-#+begin_src emacs-lisp :tangle no :eval never
-;; (setq enable-remote-dir-locals t)
-#+end_src
-
-[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable
-thing to put in, since I so frequently use VC over tramp.  Fully disabling VC
-would include this snippet:
-
-#+begin_src emacs-lisp :tangle no :eval never
-(remove-hook 'find-file-hook 'vc-find-file-hook)
-
-(setq vc-ignore-dir-regexp
-      (format "\\(%s\\)\\|\\(%s\\)"
-              vc-ignore-dir-regexp
-              tramp-file-name-regexp))
-#+end_src
-
-Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs
-issues]], which I do not currently include.
-
-#+begin_src emacs-lisp :tangle no :eval never
-(setq tramp-default-method "scp")
-(setq projectile--mode-line "Projectile")
-#+end_src
-
-I often need to set these in ~/.ssh/config for TRAMP to speed up
-
-#+begin_example
-Host *
-     ControlMaster auto
-     ControlPath ~/.ssh/master-%h:%p
-     ControlPersist 10m
-     ForwardAgent yes
-     ServerAliveInterval 60
-#+end_example
-
-* TreeSitter
-*** About TreeSitter and its Load Paths
-Emacs 29 added native [[https://tree-sitter.github.io/tree-sitter/][TreeSitter]] support.  TreeSitter is a new way of
-incrementally parsing source code that offers superior navigation and syntax
-highlighting.  To fully realize this benefit, however, it requires that we
-install =tree-sitter= grammars independently from Emacs.  Right now, I'm using
-[[https://github.com/casouri/tree-sitter-module][casouri's modules]], which I build and install under =~/.emacs.d/tree-sitter=, if
-they don't already exist under =/usr/local/lib/= or =~/.local/lib=.  In case of the
-latter, I just add extra paths to =treesit-extra-load-path= explicitly.
-
-#+begin_src emacs-lisp
-  (when (boundp 'treesit-extra-load-path)
-    (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
-    (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
-#+end_src
-
-For the full instructions, the commit history of adding the =tree-sitter= modules
-to Emacs included a [[https://git.savannah.gnu.org/cgit/emacs.git/plain/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter][full guide]], which can be read in Info under "Parsing Program
-Source".
-
-#+begin_example
-C-h i d m elisp RET g Parsing Program Source RET
-#+end_example
-
-Enabling TreeSitter is done on a per-language basis to override the default
-major mode with the corresponding TreeSitter version.
-
-*** Automatically Using TreeSitter Modes
-We will have to wait until Emacs 30+ for automatic fallback.  Until then, I'm
-using a workaround that I've posted to GitHub as [[https://github.com/renzmann/treesit-auto][treesit-auto]].  Until I'm able
-to publish it to MELPA, I can install it either through =package-vc-install= or
-through a git subtree under =site-lisp/=
-
-#+begin_src shell :results none
-  git subtree add -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
-#+end_src
-
-Fetching updates is a similar command.
-
-#+begin_src shell :results none
-  git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
-#+end_src
-
-Then, to apply the major mode remaps:
-
-#+begin_src emacs-lisp
-  (use-package treesit-auto
-    :load-path "site-lisp/treesit-auto"
-    :demand t
-    :config
-    (treesit-auto-apply-remap)
-    (advice-add 'treesit-install-language-grammar
-                :after (lambda (&rest _r) (treesit-auto-apply-remap))))
-#+end_src
-
-If I'm missing a grammar, I'll install it using =M-x treesit-install-language-grammar RET <name> RET=
-
-*** Ooo, aaah, shiny colors
-I like to program "in Skittles":
-
-#+begin_src emacs-lisp
-  (setq-default treesit-font-lock-level 3)
-#+end_src
-
 * Language-specific major modes
 ** Shell (Bash, sh, ...)
 
@@ -1717,9 +1571,17 @@ Handy for viewing data quickly.
     :mode "\\.csv\\'")
 #+end_src
 
-* Small tool configuration
-These are tweaks for both third party packages and those bundled with emacs that
-require little configuration and don't warrant a top-level header.
+* Tool configuration
+These are tweaks for self-contained tooling, such as third party packages or
+built-in packages that have a well-defined scope and namespace.
+
+** =eldoc=
+I find it very distracting when =eldoc= suddenly pops up and consumes a large part
+of the screen for docstrings in python.
+
+#+begin_src emacs-lisp
+  (setq eldoc-echo-area-use-multiline-p nil)
+#+end_src
 
 ** ~imenu~
 
@@ -1789,18 +1651,6 @@ Ecosia requires JavaScript, unfortunately.
     :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
 #+end_src
 
-** change-inner
-Modeled after Vim's =ci=, =ca=, =yi=, and =ya= commands, these let us yank or kill text
-within a "surrounding" delimiter, such as "" or ().
-
-#+begin_src emacs-lisp
-  (use-package change-inner
-    :bind (("C-c c i" . change-inner)
-           ("C-c c o" . change-outer)
-           ("C-c y i" . yank-inner)
-           ("C-c y o" . yank-outer)))
-#+end_src
-
 ** Esup: startup time profiling
 [[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of Emacs.  This snippet is a work
 around of a bug where esup tries to step into the byte-compiled version of
@@ -1854,6 +1704,147 @@ language's major mode hook:
 #+begin_src emacs-lisp :tangle no :eval never
 (add-hook 'python-mode-hook 'semantic-mode)
 #+end_src
+
+** TreeSitter
+*** About TreeSitter and its Load Paths
+Emacs 29 added native [[https://tree-sitter.github.io/tree-sitter/][TreeSitter]] support.  TreeSitter is a new way of
+incrementally parsing source code that offers superior navigation and syntax
+highlighting.  To fully realize this benefit, however, it requires that we
+install =tree-sitter= grammars independently from Emacs.  Right now, I'm using
+[[https://github.com/casouri/tree-sitter-module][casouri's modules]], which I build and install under =~/.emacs.d/tree-sitter=, if
+they don't already exist under =/usr/local/lib/= or =~/.local/lib=.  In case of the
+latter, I just add extra paths to =treesit-extra-load-path= explicitly.
+
+#+begin_src emacs-lisp
+  (when (boundp 'treesit-extra-load-path)
+    (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
+    (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
+#+end_src
+
+For the full instructions, the commit history of adding the =tree-sitter= modules
+to Emacs included a [[https://git.savannah.gnu.org/cgit/emacs.git/plain/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter][full guide]], which can be read in Info under "Parsing Program
+Source".
+
+#+begin_example
+C-h i d m elisp RET g Parsing Program Source RET
+#+end_example
+
+Enabling TreeSitter is done on a per-language basis to override the default
+major mode with the corresponding TreeSitter version.
+
+*** Automatically Using TreeSitter Modes
+We will have to wait until Emacs 30+ for automatic fallback.  Until then, I'm
+using a workaround that I've posted to GitHub as [[https://github.com/renzmann/treesit-auto][treesit-auto]].  Until I'm able
+to publish it to MELPA, I can install it either through =package-vc-install= or
+through a git subtree under =site-lisp/=
+
+#+begin_src shell :results none
+  git subtree add -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
+#+end_src
+
+Fetching updates is a similar command.
+
+#+begin_src shell :results none
+  git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
+#+end_src
+
+Then, to apply the major mode remaps:
+
+#+begin_src emacs-lisp
+  (use-package treesit-auto
+    :load-path "site-lisp/treesit-auto"
+    :demand t
+    :config
+    (treesit-auto-apply-remap)
+    (advice-add 'treesit-install-language-grammar
+                :after (lambda (&rest _r) (treesit-auto-apply-remap))))
+#+end_src
+
+If I'm missing a grammar, I'll install it using =M-x treesit-install-language-grammar RET <name> RET=
+
+*** Ooo, aaah, shiny colors
+I like to program "in Skittles":
+
+#+begin_src emacs-lisp
+  (setq-default treesit-font-lock-level 3)
+#+end_src
+
+** Tramp
+Tramp (Transparent Remote Access Multiple Protocol) allows us to access files on
+a remote machine, and edit them locally.  This is great for simple changes or
+quickly testing out some Python on a VM somewhere.  It isn't as snappy as using
+the TTY version or an X-forwarded Emacs from the server directly, so if I /can/
+set up Emacs remotely, I usually do.  When I don't want to or don't have the
+time, Tramp is a godsend.  There are, however, many foibles to guard against,
+particularly with how interacts with version control and ~.dir-locals~.  The
+Tramp manual (distributed with Emacs) recommends adjusting these for some speed
+improvements:
+
+#+begin_src emacs-lisp
+  (use-package tramp
+    :defer t
+    :config
+    (setq vc-handled-backends '(Git)
+          file-name-inhibit-locks t
+          tramp-inline-compress-start-size 1000
+          tramp-copy-size-limit 10000
+          tramp-verbose 1)
+    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+#+end_src
+
+eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden
+reentrant call of Tramp" message and freezing.  In the meantime, this setting
+was recommended.
+
+#+begin_src emacs-lisp
+  (setq tramp-use-ssh-controlmaster-options nil)
+#+end_src
+
+For some time I was having a lot of trouble with prohibitive slowness over
+Tramp, and after careful scrutiny of the logs on (I believe) =tramp-verbose 6=, I
+found out that enabling remote dir-locals was causing a huge bottleneck.  On
+every operation it would trace up the filesystem tree back to the root
+directory, scanning for a ~.dir-locals~ file.  Since some of the drives were
+network-mounted, this caused thousands of network calls per file operation,
+obviously slowing things down a lot.  Because of this, I've opted to simply
+disable ~.dir-locals~ over Tramp entirely, since I don't really use it much, if at
+all.
+
+#+begin_src emacs-lisp :tangle no :eval never
+;; (setq enable-remote-dir-locals t)
+#+end_src
+
+[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable
+thing to put in, since I so frequently use VC over tramp.  Fully disabling VC
+would include this snippet:
+
+#+begin_src emacs-lisp :tangle no :eval never
+(remove-hook 'find-file-hook 'vc-find-file-hook)
+
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+#+end_src
+
+Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs
+issues]], which I do not currently include.
+
+#+begin_src emacs-lisp :tangle no :eval never
+(setq tramp-default-method "scp")
+(setq projectile--mode-line "Projectile")
+#+end_src
+
+I often need to set these in ~/.ssh/config for TRAMP to speed up
+
+#+begin_example
+Host *
+     ControlMaster auto
+     ControlPath ~/.ssh/master-%h:%p
+     ControlPersist 10m
+     ForwardAgent yes
+     ServerAliveInterval 60
+#+end_example
 
 * Don't forget about these
 There are several other interesting options that I haven't tried out yet, including:

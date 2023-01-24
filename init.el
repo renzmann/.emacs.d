@@ -105,10 +105,6 @@
       mode-line-in-non-selected-windows t)
 ;; Mode line:2 ends here
 
-;; [[file:README.org::*=eldoc=][=eldoc=:1]]
-(setq eldoc-echo-area-use-multiline-p nil)
-;; =eldoc=:1 ends here
-
 ;; [[file:README.org::*Remember minibuffer history][Remember minibuffer history:1]]
 (setq history-length 25)
 (savehist-mode 1)
@@ -250,10 +246,10 @@
 (advice-add 'risky-local-variable-p :override #'ignore)
 ;; Ignore risky .dir-locals.el:1 ends here
 
-;; [[file:README.org::*Prefer =rg= and =fd= over =grep= and =find=][Prefer =rg= and =fd= over =grep= and =find=:1]]
+;; [[file:README.org::*Prefer =rg= over =grep=][Prefer =rg= over =grep=:1]]
 (when (executable-find "rg")
   (setq grep-program "rg"))
-;; Prefer =rg= and =fd= over =grep= and =find=:1 ends here
+;; Prefer =rg= over =grep=:1 ends here
 
 ;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
 (setq confirm-kill-emacs 'yes-or-no-p)
@@ -517,42 +513,6 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion))
 ;; Completion at point:2 ends here
 
-;; [[file:README.org::*Tramp][Tramp:1]]
-(use-package tramp
-  :defer t
-  :config
-  (setq vc-handled-backends '(Git)
-        file-name-inhibit-locks t
-        tramp-inline-compress-start-size 1000
-        tramp-copy-size-limit 10000
-        tramp-verbose 1)
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
-;; Tramp:1 ends here
-
-;; [[file:README.org::*Tramp][Tramp:2]]
-(setq tramp-use-ssh-controlmaster-options nil)
-;; Tramp:2 ends here
-
-;; [[file:README.org::*About TreeSitter and its Load Paths][About TreeSitter and its Load Paths:1]]
-(when (boundp 'treesit-extra-load-path)
-  (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
-  (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
-;; About TreeSitter and its Load Paths:1 ends here
-
-;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:3]]
-(use-package treesit-auto
-  :load-path "site-lisp/treesit-auto"
-  :demand t
-  :config
-  (treesit-auto-apply-remap)
-  (advice-add 'treesit-install-language-grammar
-              :after (lambda (&rest _r) (treesit-auto-apply-remap))))
-;; Automatically Using TreeSitter Modes:3 ends here
-
-;; [[file:README.org::*Ooo, aaah, shiny colors][Ooo, aaah, shiny colors:1]]
-(setq-default treesit-font-lock-level 3)
-;; Ooo, aaah, shiny colors:1 ends here
-
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
   (setq indent-tabs-mode t)
@@ -789,6 +749,10 @@ Jumps at tangled code from org src block."
   :mode "\\.csv\\'")
 ;; csv-mode:1 ends here
 
+;; [[file:README.org::*=eldoc=][=eldoc=:1]]
+(setq eldoc-echo-area-use-multiline-p nil)
+;; =eldoc=:1 ends here
+
 ;; [[file:README.org::*~imenu~][~imenu~:1]]
 (use-package imenu
   :config
@@ -832,14 +796,6 @@ Jumps at tangled code from org src block."
   :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
 ;; eww - search engine and browser:1 ends here
 
-;; [[file:README.org::*change-inner][change-inner:1]]
-(use-package change-inner
-  :bind (("C-c c i" . change-inner)
-         ("C-c c o" . change-outer)
-         ("C-c y i" . yank-inner)
-         ("C-c y o" . yank-outer)))
-;; change-inner:1 ends here
-
 ;; [[file:README.org::*Esup: startup time profiling][Esup: startup time profiling:1]]
 (use-package esup
   :bind ("C-c x p")
@@ -862,6 +818,42 @@ Jumps at tangled code from org src block."
          ("C-c l r n" . eglot-rename)
          ("C-c l s" . eglot-shutdown)))
 ;; Language Server Protocol (LSP) with ~eglot~:1 ends here
+
+;; [[file:README.org::*About TreeSitter and its Load Paths][About TreeSitter and its Load Paths:1]]
+(when (boundp 'treesit-extra-load-path)
+  (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
+  (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
+;; About TreeSitter and its Load Paths:1 ends here
+
+;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:3]]
+(use-package treesit-auto
+  :load-path "site-lisp/treesit-auto"
+  :demand t
+  :config
+  (treesit-auto-apply-remap)
+  (advice-add 'treesit-install-language-grammar
+              :after (lambda (&rest _r) (treesit-auto-apply-remap))))
+;; Automatically Using TreeSitter Modes:3 ends here
+
+;; [[file:README.org::*Ooo, aaah, shiny colors][Ooo, aaah, shiny colors:1]]
+(setq-default treesit-font-lock-level 3)
+;; Ooo, aaah, shiny colors:1 ends here
+
+;; [[file:README.org::*Tramp][Tramp:1]]
+(use-package tramp
+  :defer t
+  :config
+  (setq vc-handled-backends '(Git)
+        file-name-inhibit-locks t
+        tramp-inline-compress-start-size 1000
+        tramp-copy-size-limit 10000
+        tramp-verbose 1)
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+;; Tramp:1 ends here
+
+;; [[file:README.org::*Tramp][Tramp:2]]
+(setq tramp-use-ssh-controlmaster-options nil)
+;; Tramp:2 ends here
 
 (provide 'init.el)
 ;;; init.el ends here
