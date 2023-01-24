@@ -25,6 +25,7 @@
 ;; using eglot + tramp + virtualenv + python
 
 ;;; Code:
+(require 'tramp)
 
 (defun pyrightconfig-write (virtualenv)
   "Write a `pyrightconfig.json' file at the Git root of a project
