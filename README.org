@@ -1860,8 +1860,6 @@ There are several other interesting options that I haven't tried out yet, includ
 + [ ] [[https://github.com/abo-abo/org-download][org-download]]
 + [ ] [[https://github.com/oantolin/math-delimiters][math-delimiters]]
 + [ ] [[https://github.com/oantolin/placeholder][oantolin/placeholder]]
-+ [X] [[https://github.com/emacs-eaf/emacs-application-framework][emacs-eaf/emacs-application-framework]] <--- big hassle
-+ [X] [[https://github.com/magnars/multiple-cursors.el][multiple-cursors]]
 + [ ] [[https://notmuchmail.org/notmuch-emacs/][notmuch for email]]
 
 * Footer
