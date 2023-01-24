@@ -826,6 +826,7 @@ Jumps at tangled code from org src block."
   :load-path "site-lisp/treesit-auto"
   :demand t
   :config
+  (add-to-list 'treesit-auto-fallback-alist '(bash-ts-mode . sh-mode))
   (treesit-auto-apply-remap)
   (advice-add 'treesit-install-language-grammar
               :after (lambda (&rest _r) (treesit-auto-apply-remap))))
