@@ -1282,6 +1282,7 @@ latter over the former, I've removed the =org-startup-indented= call.
        (python . t)
        (sql . t)
        (shell . t)
+       (R . t)
        ;; (fortran . t)
        ;; (julia . t)
        ;; (jupyter . t)

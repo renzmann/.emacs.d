@@ -331,6 +331,7 @@
 (defun renz/find-tag ()
   "Use `completing-read' to navigate to a tag."
   (interactive)
+  (tags-completion-table)
   (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
 
 (global-set-key (kbd "C-c d") #'renz/find-tag)
@@ -590,6 +591,7 @@ Jumps at tangled code from org src block."
      (python . t)
      (sql . t)
      (shell . t)
+     (R . t)
      ;; (fortran . t)
      ;; (julia . t)
      ;; (jupyter . t)
