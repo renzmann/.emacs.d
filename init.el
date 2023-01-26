@@ -327,14 +327,15 @@
 (global-set-key (kbd "C-c B") #'recompile)
 ;; =C-c b= build / compile:1 ends here
 
-;; [[file:README.org::*=C-c d= jump to a tag][=C-c d= jump to a tag:1]]
+;; [[file:README.org::*=C-c d= Navigating to symbols using old-school TAGS][=C-c d= Navigating to symbols using old-school TAGS:2]]
 (defun renz/find-tag ()
   "Use `completing-read' to navigate to a tag."
   (interactive)
+  (tags-completion-table)
   (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
 
 (global-set-key (kbd "C-c d") #'renz/find-tag)
-;; =C-c d= jump to a tag:1 ends here
+;; =C-c d= Navigating to symbols using old-school TAGS:2 ends here
 
 ;; [[file:README.org::*=C-c f= find file at point (ffap)][=C-c f= find file at point (ffap):1]]
 (global-set-key (kbd "C-c f") #'ffap)
@@ -555,7 +556,8 @@ Jumps at tangled code from org src block."
   :hook
   ((org-mode . (lambda () (progn
                             (add-hook 'after-save-hook #'org-babel-tangle :append :local)
-                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)))))
+                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
+                            (setq indent-tabs-mode t)))))
 
   :init
   (defun renz/jump-org ()
