@@ -1046,7 +1046,6 @@ completion, with just a little help from =xref-find-definitions=.
 *** =C-c= Other bindings
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c ;") #'comment-line)  ; TTY-friendly
   (global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
   (global-set-key (kbd "C-c <SPC>") #'mark-sexp)  ;; TTY-friendly
 #+end_src

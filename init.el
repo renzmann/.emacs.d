@@ -424,7 +424,6 @@ config site with matching `EXTENSION' regexp."
 ;; =C-c w= whitespace mode:1 ends here
 
 ;; [[file:README.org::*=C-c= Other bindings][=C-c= Other bindings:1]]
-(global-set-key (kbd "C-c ;") #'comment-line)  ; TTY-friendly
 (global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
 (global-set-key (kbd "C-c <SPC>") #'mark-sexp)  ;; TTY-friendly
 ;; =C-c= Other bindings:1 ends here
