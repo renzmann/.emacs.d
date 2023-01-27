@@ -732,12 +732,12 @@ Jumps at tangled code from org src block."
 (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 ;; BigQuery ~sql~ Blocks in Org-Babel:1 ends here
 
-;; [[file:README.org::*Pyright error links in \ast{}compilation\ast{}][Pyright error links in \ast{}compilation\ast{}:1]]
+;; [[file:README.org::*Pyright error links in =*compilation*=][Pyright error links in =*compilation*=:1]]
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
   (add-to-list 'compilation-error-regexp-alist 'pyright))
-;; Pyright error links in \ast{}compilation\ast{}:1 ends here
+;; Pyright error links in =*compilation*=:1 ends here
 
 ;; [[file:README.org::*Python check with "ruff"][Python check with "ruff":1]]
 (use-package python

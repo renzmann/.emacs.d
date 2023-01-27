@@ -1504,7 +1504,7 @@ with it.
 #+end_src
 
 ** Python
-*** Pyright error links in \ast{}compilation\ast{}
+*** Pyright error links in =*compilation*=
 The =M-x compile= feature does not recognize or parse ~pyright~ error messages out
 of the box, so I add that support myself.  Here's an example error message:
 
