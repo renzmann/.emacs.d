@@ -96,16 +96,16 @@
 	       (:maintainer "Jason Milkins" . "jasonm23@gmail.com")
 	       (:commit . "87a21019ed4f41a487a8af34467e0ebff19f365e"))])
  (bash-completion .
-		  [(3 1 0)
+		  [(3 1 1)
 		   ((emacs
-		     (24 3)))
-		   "BASH completion for the shell buffer" tar
+		     (25 3)))
+		   "Bash completion for the shell buffer" tar
 		   ((:url . "http://github.com/szermatt/emacs-bash-completion")
-		    (:keywords "shell" "bash" "bash-completion")
+		    (:keywords "convenience" "unix")
 		    (:maintainer "Stephane Zermatten" . "szermatt@gmail.com")
 		    (:authors
 		     ("Stephane Zermatten" . "szermatt@gmx.net"))
-		    (:commit . "d47edb9d4142a22746009c1f680df93a4fefd107"))])
+		    (:commit . "a021468eec8ff8cacb74a9ea595d3587186e29ea"))])
  (better-jumper .
 		[(1 0 1)
 		 ((emacs
@@ -313,7 +313,7 @@
 	       ("https://github.com/bradyt/dart-mode/issues"))
 	      (:keywords "languages"))])
  (denote-refs .
-	      [(0 1 1)
+	      [(0 1 2)
 	       ((emacs
 		 (28 1))
 		(denote
@@ -324,7 +324,7 @@
 		(:maintainer "Akib Azmain Turja" . "akib@disroot.org")
 		(:authors
 		 ("Akib Azmain Turja" . "akib@disroot.org"))
-		(:commit . "92bef1bc0086bc1cd8db24ec659792638fd7ecf3"))])
+		(:commit . "9ae49c8770a83eed92c58be45a4c96fa927cbe6f"))])
  (devhelp .
 	  [(1 0)
 	   ((emacs
@@ -386,7 +386,7 @@
 		 ("Arne Jørgensen" . "arne@arnested.dk"))
 		(:commit . "ed90b0c4d808365e9ae9f16cc8a96eff17815621"))])
  (eat .
-      [(0 4)
+      [(0 5)
        ((emacs
 	 (28 1)))
        "Emulate A Terminal, in a region, in a buffer and in Eshell" tar
@@ -395,7 +395,7 @@
 	(:maintainer "Akib Azmain Turja" . "akib@disroot.org")
 	(:authors
 	 ("Akib Azmain Turja" . "akib@disroot.org"))
-	(:commit . "9a432eef114ecc4f78b6e49dd1c25d11e1143571"))])
+	(:commit . "d66c55a2855f6a60f6184135d95d2d5f4b64535e"))])
  (edit-indirect .
 		[(0 1 10)
 		 ((emacs
@@ -1088,7 +1088,7 @@
 		(:maintainer "Bozhidar Batsov" . "bozhidar@batsov.dev")
 		(:commit . "151b20ba9d3ae39b88f91aecbab98bd5a5215f1a"))])
  (inf-ruby .
-	   [(2 6 2)
+	   [(2 7 0)
 	    ((emacs
 	      (24 3)))
 	    "Run a Ruby process in a buffer" tar
@@ -1101,7 +1101,7 @@
 	      ("Cornelius Mika" . "cornelius.mika@gmail.com")
 	      ("Dmitry Gutov" . "dgutov@yandex.ru")
 	      ("Kyle Hargraves" . "pd@krh.me"))
-	     (:commit . "eb7bf95d5b03bdb9b28647c89ea0a73e35fe0ad1"))])
+	     (:commit . "997b3c5f9d9d7ff72b1a1cbdb55b1f575748a9ca"))])
  (inkpot-theme .
 	       [(0 1)
 		((emacs
@@ -1767,7 +1767,7 @@
 		    ("Campbell Barton" . "ideasman42@gmail.com"))
 		   (:commit . "a668537a8da77e4425b6a4110bdaba598a295f9e"))])
  (scroll-on-jump .
-		 [(0 1)
+		 [(0 2)
 		  ((emacs
 		    (26 2)))
 		  "Scroll when jumping to a new point" tar
@@ -1775,7 +1775,7 @@
 		   (:maintainer "Campbell Barton" . "ideasman42@gmail.com")
 		   (:authors
 		    ("Campbell Barton" . "ideasman42@gmail.com"))
-		   (:commit . "30e23e86949b1bd53906d3f9036dfb57213e336c"))])
+		   (:commit . "b1fd97c62dfc3b4430f3a42f1f504fc231487c91"))])
  (sesman .
 	 [(0 3 2)
 	  ((emacs
@@ -1884,7 +1884,7 @@
 	   ("Random User"))
 	  (:commit . "28a75a6f6803e5c5d121c4d36ef403e8832fbf1f"))])
  (sweeprolog .
-	     [(0 11 2)
+	     [(0 14 1)
 	      ((emacs
 		(28 1)))
 	      "Embedded SWI-Prolog" tar
@@ -1893,7 +1893,7 @@
 	       (:maintainer "Eshel Yaron" . "~eshel/dev@lists.sr.ht")
 	       (:authors
 		("Eshel Yaron" . "me@eshelyaron.com"))
-	       (:commit . "e540d05a79748b8c41f021d0fd798bd863d223d3"))])
+	       (:commit . "2be17c1f3191dd64cf7792c2ebdc8c3d58c0743b"))])
  (swift-mode .
 	     [(8 6 0)
 	      ((emacs
@@ -2168,7 +2168,7 @@
 			  ("Nikita Bloshchanevich" . "nikblos@outlook.com"))
 			 (:commit . "07bdfbe9ab9eab4a04ad02e98b011649a4f4e6a2"))])
  (workroom .
-	   [(2 2 5)
+	   [(2 3)
 	    ((emacs
 	      (25 1))
 	     (project
@@ -2181,7 +2181,7 @@
 	     (:maintainer "Akib Azmain Turja" . "akib@disroot.org")
 	     (:authors
 	      ("Akib Azmain Turja" . "akib@disroot.org"))
-	     (:commit . "532835eda02c64a8b93437e8c3fb220e60859896"))])
+	     (:commit . "b6b06463ee7b5d66ec56fc1195836c0c27c6b6f4"))])
  (writegood-mode .
 		 [(2 2 0)
 		  nil "Polish up poor writing on the fly" tar
@@ -2199,7 +2199,7 @@
 	      (:authors
 	       ("Le Wang")))])
  (xah-fly-keys .
-	       [(22 5 20230101184908)
+	       [(22 8 20230127142338)
 		((emacs
 		  (24 1)))
 		"ergonomic modal keybinding minor mode." tar
@@ -2208,7 +2208,7 @@
 		 (:maintainer "Xah Lee" . "xah@xahlee.org")
 		 (:authors
 		  ("Xah Lee ( http://xahlee.info/ )"))
-		 (:commit . "529393f56daff086eb518d53e0b3d8a2b9ee4ca8"))])
+		 (:commit . "b47253a138a764569bf569be29b96509316bf8b7"))])
  (xkcd .
        [(1 1)
 	((json
