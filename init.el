@@ -878,7 +878,6 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:3]]
 (use-package treesit-auto
-  :load-path "site-lisp/treesit-auto"
   :demand t
   :config
   (add-to-list 'treesit-auto-fallback-alist '(bash-ts-mode . sh-mode))
