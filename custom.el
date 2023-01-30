@@ -7,7 +7,7 @@
  '(mode-line-in-non-selected-windows t)
  '(org-hugo-front-matter-format "yaml")
  '(package-selected-packages
-   '(coterm julia-mode pyvenv ess sql-indent package-lint go-mode vimrc-mdoe ox-clip org visual-fill-column ef-themes org-modern poly-markdown ox-hugo esup orderless yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode lua-mode scala-mode rust-mode markdown-mode))
+   '(treesit-auto coterm julia-mode pyvenv ess sql-indent package-lint go-mode vimrc-mdoe ox-clip org visual-fill-column ef-themes org-modern poly-markdown ox-hugo esup orderless yaml-mode exec-path-from-shell vimrc-mode csv-mode haskell-mode lua-mode scala-mode rust-mode markdown-mode))
  '(safe-local-variable-values
    '((vc-prepare-patches-separately)
      (diff-add-log-use-relative-names . t)
