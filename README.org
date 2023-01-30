@@ -1835,7 +1835,6 @@ Then, to apply the major mode remaps:
 
 #+begin_src emacs-lisp
   (use-package treesit-auto
-    :load-path "site-lisp/treesit-auto"
     :demand t
     :config
     (add-to-list 'treesit-auto-fallback-alist '(bash-ts-mode . sh-mode))
