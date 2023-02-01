@@ -331,6 +331,7 @@
 (defun renz/find-tag ()
   "Use `completing-read' to navigate to a tag."
   (interactive)
+  (require 'etags)
   (tags-completion-table)
   (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
 
@@ -881,9 +882,8 @@ Jumps at tangled code from org src block."
   :demand t
   :config
   (add-to-list 'treesit-auto-fallback-alist '(bash-ts-mode . sh-mode))
-  (treesit-auto-apply-remap)
-  (advice-add 'treesit-install-language-grammar
-              :after (lambda (&rest _r) (treesit-auto-apply-remap))))
+  (setq treesit-auto-install 'prompt)
+  (global-treesit-auto-mode))
 ;; Automatically Using TreeSitter Modes:3 ends here
 
 ;; [[file:README.org::*Ooo, aaah, shiny colors][Ooo, aaah, shiny colors:1]]

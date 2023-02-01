@@ -932,6 +932,7 @@ completion, with just a little help from =xref-find-definitions=.
   (defun renz/find-tag ()
     "Use `completing-read' to navigate to a tag."
     (interactive)
+    (require 'etags)
     (tags-completion-table)
     (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
 
@@ -1838,10 +1839,10 @@ Then, to apply the major mode remaps:
     :demand t
     :config
     (add-to-list 'treesit-auto-fallback-alist '(bash-ts-mode . sh-mode))
-    (treesit-auto-apply-remap)
-    (advice-add 'treesit-install-language-grammar
-                :after (lambda (&rest _r) (treesit-auto-apply-remap))))
+    (setq treesit-auto-install 'prompt)
+    (global-treesit-auto-mode))
 #+end_src
+
 
 If I'm missing a grammar, I'll install it using =M-x treesit-install-language-grammar RET <name> RET=
 
