@@ -1190,15 +1190,6 @@ I'd much prefer to use the easier and more intuitive =TAB=.
   (setq tab-always-indent 'complete)
 #+end_src
 
-Again, we set ~C-n~ and ~C-p~ when completion-in-region is active for selecting
-candidates.
-
-#+begin_src emacs-lisp
-  (unless (version< emacs-version "29.0")
-    (define-key completion-in-region-mode-map (kbd "C-p") #'minibuffer-previous-completion)
-    (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion))
-#+end_src
-
 * Language-specific major modes
 ** Shell (Bash, sh, ...)
 

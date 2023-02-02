@@ -504,12 +504,6 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 (setq tab-always-indent 'complete)
 ;; Completion at point:1 ends here
 
-;; [[file:README.org::*Completion at point][Completion at point:2]]
-(unless (version< emacs-version "29.0")
-  (define-key completion-in-region-mode-map (kbd "C-p") #'minibuffer-previous-completion)
-  (define-key completion-in-region-mode-map (kbd "C-n") #'minibuffer-next-completion))
-;; Completion at point:2 ends here
-
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
   (setq indent-tabs-mode t)
