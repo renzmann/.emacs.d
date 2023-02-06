@@ -84,9 +84,7 @@
   (setq ef-themes-to-toggle '(ef-cherie ef-summer))
 
   :config
-  (if (< 7 (caddr (decode-time)) 18)
-      (load-theme 'ef-summer :no-confirm)
-    (load-theme 'ef-cherie :no-confirm)))
+  (load-theme 'ef-cherie :no-confirm))
 ;; Theme:1 ends here
 
 ;; [[file:README.org::*Start a server for =emacsclient=][Start a server for =emacsclient=:1]]

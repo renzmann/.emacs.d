@@ -413,9 +413,7 @@ light of the room I'm in.
     (setq ef-themes-to-toggle '(ef-cherie ef-summer))
 
     :config
-    (if (< 7 (caddr (decode-time)) 18)
-	(load-theme 'ef-summer :no-confirm)
-      (load-theme 'ef-cherie :no-confirm)))
+    (load-theme 'ef-cherie :no-confirm))
 #+end_src
 
 I LOVE these themes from =ef-themes=:
