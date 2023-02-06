@@ -665,6 +665,12 @@ The bell is really, /really/ annoying.
   (add-hook 'prog-mode-hook (show-paren-mode t))
 #+end_src
 
+** Shorten yes/no prompts to y/n
+
+#+begin_src emacs-lisp
+(setq use-short-answers t)
+#+end_src
+
 ** Delete whitespace on save
 I would also like to have a good-looking display for trailing whitespace and
 leading tabs like in my Neovim setup, but it has proven challenging to just
@@ -673,6 +679,14 @@ check for mixed tabs, spaces, and line endings.
 
 #+begin_src emacs-lisp
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
+#+end_src
+
+** Killing buffers with a running process
+
+#+begin_src emacs-lisp
+(setq kill-buffer-query-functions
+  (remq 'process-kill-buffer-query-function
+         kill-buffer-query-functions))
 #+end_src
 
 ** Don't wrap lines

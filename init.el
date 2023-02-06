@@ -195,9 +195,19 @@
 (add-hook 'prog-mode-hook (show-paren-mode t))
 ;; Automatically create matching parens in programming modes:1 ends here
 
+;; [[file:README.org::*Shorten yes/no prompts to y/n][Shorten yes/no prompts to y/n:1]]
+(setq use-short-answers t)
+;; Shorten yes/no prompts to y/n:1 ends here
+
 ;; [[file:README.org::*Delete whitespace on save][Delete whitespace on save:1]]
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 ;; Delete whitespace on save:1 ends here
+
+;; [[file:README.org::*Killing buffers with a running process][Killing buffers with a running process:1]]
+(setq kill-buffer-query-functions
+  (remq 'process-kill-buffer-query-function
+         kill-buffer-query-functions))
+;; Killing buffers with a running process:1 ends here
 
 ;; [[file:README.org::*Don't wrap lines][Don't wrap lines:1]]
 (setq-default truncate-lines t)
