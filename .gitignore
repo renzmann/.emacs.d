@@ -5,6 +5,7 @@
 # Packaging
 .cask
 elpa/archives
+elpa/gnupg
 
 # Backup files
 *~
