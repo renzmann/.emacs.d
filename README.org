@@ -401,19 +401,21 @@ light of the room I'm in.
 
     :init
     (setq ef-themes-headings
-          '((0 . (1.9))
-            (1 . (1.3))
-            (2 . (1.2))
-            (3 . (1.1))
-            (4 . (1.0))
-            (5 . (1.0)) ; absence of weight means `bold'
-            (6 . (1.0))
-            (7 . (1.0))
-            (t . (1.0))))
+	  '((0 . (1.9))
+	    (1 . (1.3))
+	    (2 . (1.2))
+	    (3 . (1.1))
+	    (4 . (1.0))
+	    (5 . (1.0)) ; absence of weight means `bold'
+	    (6 . (1.0))
+	    (7 . (1.0))
+	    (t . (1.0))))
     (setq ef-themes-to-toggle '(ef-cherie ef-summer))
 
     :config
-    (load-theme 'ef-cherie :no-confirm))
+    (if (< 7 (caddr (decode-time)) 18)
+	(load-theme 'ef-summer :no-confirm)
+      (load-theme 'ef-cherie :no-confirm)))
 #+end_src
 
 I LOVE these themes from =ef-themes=:
