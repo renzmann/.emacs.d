@@ -1836,9 +1836,6 @@ Then, to apply the major mode remaps:
     (global-treesit-auto-mode))
 #+end_src
 
-
-If I'm missing a grammar, I'll install it using =M-x treesit-install-language-grammar RET <name> RET=
-
 *** Ooo, aaah, shiny colors
 I like to program "in Skittles":
 
