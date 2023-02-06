@@ -84,9 +84,7 @@
   (setq ef-themes-to-toggle '(ef-cherie ef-summer))
 
   :config
-  (if (< 7 (caddr (decode-time)) 18)
-      (load-theme 'ef-summer :no-confirm)
-    (load-theme 'ef-cherie :no-confirm)))
+  (load-theme 'ef-cherie :no-confirm))
 ;; Theme:1 ends here
 
 ;; [[file:README.org::*Start a server for =emacsclient=][Start a server for =emacsclient=:1]]
@@ -787,10 +785,10 @@ Jumps at tangled code from org src block."
   (setq markdown-command "markdown_py"))
 ;; Markdown:3 ends here
 
-;; [[file:README.org::*AutoHotkey][AutoHotkey:1]]
-(use-package ahk-mode
-  :mode "\\.ahk\\'")
-;; AutoHotkey:1 ends here
+;; [[file:README.org::*Missing auto-modes][Missing auto-modes:1]]
+(add-to-list 'auto-mode-alist ("\\.rs\\'" . rust-ts-mode))
+(add-to-list 'auto-mode-alist ("\\.go\\'" . go-ts-mode))
+;; Missing auto-modes:1 ends here
 
 ;; [[file:README.org::*csv-mode][csv-mode:1]]
 (use-package csv-mode
