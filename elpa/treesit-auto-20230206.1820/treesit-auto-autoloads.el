@@ -11,6 +11,11 @@
 
 ;;; Generated autoloads from treesit-auto.el
 
+(autoload 'tresit-auto-install-all "treesit-auto" "\
+Install all available and maintained grammars.
+
+Individual grammars can be opted out of by adding them to
+`treesit-auto-opt-out-list'." t)
 (autoload 'treesit-auto-apply-remap "treesit-auto" "\
 Adjust `major-mode-remap-alist' using installed tree-sitter grammars.")
 (defvar global-treesit-auto-mode nil "\

@@ -796,8 +796,8 @@ Jumps at tangled code from org src block."
 ;; Markdown:3 ends here
 
 ;; [[file:README.org::*Missing auto-modes][Missing auto-modes:1]]
-(add-to-list 'auto-mode-alist ("\\.rs\\'" . rust-ts-mode))
-(add-to-list 'auto-mode-alist ("\\.go\\'" . go-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
 ;; Missing auto-modes:1 ends here
 
 ;; [[file:README.org::*csv-mode][csv-mode:1]]
