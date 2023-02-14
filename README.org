@@ -875,8 +875,8 @@ next/previous on easy to reach chords.
 #+begin_src emacs-lisp
   (use-package flymake
     :bind (:map flymake-mode-map
-           ("M-n" . flymake-goto-next-error)
-           ("M-p" . flymake-goto-prev-error)))
+           ("C-c n" . flymake-goto-next-error)
+           ("C-c p" . flymake-goto-prev-error)))
 #+end_src
 
 When using ~isearch~ to jump to things, it's sometimes convenient to re-position
@@ -1596,15 +1596,6 @@ Configuring pyright this way rather than "activating" an environment through
 Emacs (ala =pythonic-activate= or similar) means we can be running the language
 server in more than one project at a time, each pointing to its respective
 virtual environment.
-
-*** blacken
-Formatting a buffer with =black= has never been easier!
-
-#+begin_src emacs-lisp
-  (use-package blacken
-    :bind ("C-c p" . blacken-mode)
-    :after (python))
-#+end_src
 
 *** Activating Virtual Environments Over Tramp
 

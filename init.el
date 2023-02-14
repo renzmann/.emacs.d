@@ -314,8 +314,8 @@
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:5]]
 (use-package flymake
   :bind (:map flymake-mode-map
-         ("M-n" . flymake-goto-next-error)
-         ("M-p" . flymake-goto-prev-error)))
+         ("C-c n" . flymake-goto-next-error)
+         ("C-c p" . flymake-goto-prev-error)))
 ;; Expanded/better defaults:5 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:6]]
@@ -760,12 +760,6 @@ Jumps at tangled code from org src block."
 (use-package pyrightconfig
   :after (python))
 ;; pyrightconfig.json:1 ends here
-
-;; [[file:README.org::*blacken][blacken:1]]
-(use-package blacken
-  :bind ("C-c p" . blacken-mode)
-  :after (python))
-;; blacken:1 ends here
 
 ;; [[file:README.org::*Activating Virtual Environments Over Tramp][Activating Virtual Environments Over Tramp:1]]
 (use-package tramp-venv
