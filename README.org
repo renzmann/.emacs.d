@@ -1298,7 +1298,7 @@ latter over the former, I've removed the =org-startup-indented= call.
 	(org-agenda-files (list (expand-file-name "work.org" renz/org-home)) "Sources for Org agenda view")
 	(org-html-htmlize-output-type nil "See C-h f org-html-htmlize-output-type")
 	(org-confirm-babel-evaluate nil "Don't ask for confirmation when executing src blocks")
-	(org-edit-src-content-indentation 2 "Indent all src blocks by this much")
+	(org-edit-src-content-indentation 0 "Indent all src blocks by this much")
 	(org-goto-interface 'outline-path-completion "Use completing-read for org-goto (C-c C-j, nicer than imenu)")
 	(org-outline-path-complete-in-steps nil "Flatten the outline path, instead of completing hierarchically")
 
