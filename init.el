@@ -514,6 +514,21 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 (setq tab-always-indent 'complete)
 ;; Completion at point:1 ends here
 
+;; [[file:README.org::*GUI Emacs: corfu and vertico][GUI Emacs: corfu and vertico:1]]
+(use-package corfu
+  :load-path "site-lisp/corfu"
+  :demand t
+  :bind
+  (:map corfu-map ("SPC" . corfu-insert-separator))
+  :config
+  (global-corfu-mode))
+
+(use-package vertico
+  :load-path "site-lisp/vertico"
+  :config
+  (vertico-mode))
+;; GUI Emacs: corfu and vertico:1 ends here
+
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
   (setq indent-tabs-mode t)

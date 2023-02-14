@@ -1204,6 +1204,23 @@ I'd much prefer to use the easier and more intuitive =TAB=.
   (setq tab-always-indent 'complete)
 #+end_src
 
+** GUI Emacs: corfu and vertico
+
+#+begin_src emacs-lisp
+(use-package corfu
+  :load-path "site-lisp/corfu"
+  :demand t
+  :bind
+  (:map corfu-map ("SPC" . corfu-insert-separator))
+  :config
+  (global-corfu-mode))
+
+(use-package vertico
+  :load-path "site-lisp/vertico"
+  :config
+  (vertico-mode))
+#+end_src
+
 * Language-specific major modes
 ** Shell (Bash, sh, ...)
 
