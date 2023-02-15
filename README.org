@@ -644,6 +644,12 @@ From the same article, I like having some types of buffers appear in a specific
             (window-width . 80)))
 
 (setq compilation-window-height 20)
+
+(add-to-list 'display-buffer-alist
+  '("\\*e?shell\\*" display-buffer-in-direction
+    (direction . bottom)
+    (window . root)
+    (window-height . 0.3)))
 #+end_src
 
 ** Automatically update buffers when contents change on disk

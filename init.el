@@ -188,6 +188,12 @@
             (window-width . 80)))
 
 (setq compilation-window-height 20)
+
+(add-to-list 'display-buffer-alist
+  '("\\*e?shell\\*" display-buffer-in-direction
+    (direction . bottom)
+    (window . root)
+    (window-height . 0.3)))
 ;; Window management:2 ends here
 
 ;; [[file:README.org::*Automatically update buffers when contents change on disk][Automatically update buffers when contents change on disk:1]]
