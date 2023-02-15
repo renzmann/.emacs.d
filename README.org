@@ -1620,8 +1620,9 @@ However, this only operates on `run-python' shells.  Also, for projects, we need
 make sure that setting the virtualenv root is marked as safe.
 
 #+begin_src emacs-lisp
-  (put 'python-check-command 'safe-local-variable #'stringp)
-  (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+(put 'python-check-command 'safe-local-variable #'stringp)
+(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+(put 'pyvenv-default-virtual-env-name 'safe-local-variable #'stringp)
 #+end_src
 
 *** Emacs Jupyter?

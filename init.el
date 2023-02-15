@@ -798,6 +798,7 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Make check command and virtualenv root safe for .dir-locals.el][Make check command and virtualenv root safe for .dir-locals.el:2]]
 (put 'python-check-command 'safe-local-variable #'stringp)
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+(put 'pyvenv-default-virtual-env-name 'safe-local-variable #'stringp)
 ;; Make check command and virtualenv root safe for .dir-locals.el:2 ends here
 
 ;; [[file:README.org::*pyrightconfig.json][pyrightconfig.json:1]]
