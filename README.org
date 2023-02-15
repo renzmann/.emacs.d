@@ -628,6 +628,24 @@ intend when I'm trying to get a window to display a specific buffer.
     (setq switch-to-buffer-obey-display-actions t))
 #+end_src
 
+From the same article, I like having some types of buffers appear in a specific
+"side bar" location.
+
+#+begin_src emacs-lisp
+;; left, top, right, bottom
+(setq window-sides-slots '(0 0 1 1))
+
+(add-to-list 'display-buffer-alist
+          `(,(rx (| "*compilation*" "*grep*"))
+            display-buffer-in-side-window
+            (side . bottom)
+            (slot . 0)
+            (window-parameters . ((no-delete-other-windows . t)))
+            (window-width . 80)))
+
+(setq compilation-window-height 20)
+#+end_src
+
 ** Automatically update buffers when contents change on disk
 Without setting ~global-auto-revert-mode~, we have to remember to issue a
 ~revert-buffer~ or ~revert-buffer-quick~ (=C-x x g= by default) in case a file
@@ -1213,6 +1231,14 @@ I'd much prefer to use the easier and more intuitive =TAB=.
   :bind
   (:map corfu-map ("SPC" . corfu-insert-separator))
   :config
+  (defun corfu-enable-in-minibuffer ()
+    "Enable Corfu in the minibuffer if `completion-at-point' is bound."
+    (when (where-is-internal #'completion-at-point (list (current-local-map)))
+      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay nil)
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   (global-corfu-mode))
 
 (use-package vertico
@@ -1621,6 +1647,14 @@ virtual environment.
     :bind
     (("C-c t v a" . tramp-venv-activate)
      ("C-c t v d" . tramp-venv-deactivate)))
+#+end_src
+
+*** Pyvenv for virtual environments
+
+#+begin_src emacs-lisp
+(use-package pyvenv
+  :config
+  (pyvenv-mode))
 #+end_src
 
 ** Markdown

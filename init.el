@@ -175,6 +175,21 @@
   (setq switch-to-buffer-obey-display-actions t))
 ;; Window management:1 ends here
 
+;; [[file:README.org::*Window management][Window management:2]]
+;; left, top, right, bottom
+(setq window-sides-slots '(0 0 1 1))
+
+(add-to-list 'display-buffer-alist
+          `(,(rx (| "*compilation*" "*grep*"))
+            display-buffer-in-side-window
+            (side . bottom)
+            (slot . 0)
+            (window-parameters . ((no-delete-other-windows . t)))
+            (window-width . 80)))
+
+(setq compilation-window-height 20)
+;; Window management:2 ends here
+
 ;; [[file:README.org::*Automatically update buffers when contents change on disk][Automatically update buffers when contents change on disk:1]]
 (global-auto-revert-mode)
 ;; Automatically update buffers when contents change on disk:1 ends here
@@ -521,6 +536,14 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   :bind
   (:map corfu-map ("SPC" . corfu-insert-separator))
   :config
+  (defun corfu-enable-in-minibuffer ()
+    "Enable Corfu in the minibuffer if `completion-at-point' is bound."
+    (when (where-is-internal #'completion-at-point (list (current-local-map)))
+      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay nil)
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   (global-corfu-mode))
 
 (use-package vertico
@@ -782,6 +805,12 @@ Jumps at tangled code from org src block."
   (("C-c t v a" . tramp-venv-activate)
    ("C-c t v d" . tramp-venv-deactivate)))
 ;; Activating Virtual Environments Over Tramp:1 ends here
+
+;; [[file:README.org::*Pyvenv for virtual environments][Pyvenv for virtual environments:1]]
+(use-package pyvenv
+  :config
+  (pyvenv-mode))
+;; Pyvenv for virtual environments:1 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:1]]
 (defun renz/md-hook ()
