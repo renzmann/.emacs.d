@@ -175,27 +175,6 @@
   (setq switch-to-buffer-obey-display-actions t))
 ;; Window management:1 ends here
 
-;; [[file:README.org::*Window management][Window management:2]]
-;; left, top, right, bottom
-(setq window-sides-slots '(0 0 1 1))
-
-(add-to-list 'display-buffer-alist
-          `(,(rx (| "*compilation*" "*grep*"))
-            display-buffer-in-side-window
-            (side . bottom)
-            (slot . 0)
-            (window-parameters . ((no-delete-other-windows . t)))
-            (window-width . 80)))
-
-(setq compilation-window-height 20)
-
-(add-to-list 'display-buffer-alist
-  '("\\*e?shell\\*" display-buffer-in-direction
-    (direction . bottom)
-    (window . root)
-    (window-height . 0.3)))
-;; Window management:2 ends here
-
 ;; [[file:README.org::*Automatically update buffers when contents change on disk][Automatically update buffers when contents change on disk:1]]
 (global-auto-revert-mode)
 ;; Automatically update buffers when contents change on disk:1 ends here
@@ -205,6 +184,11 @@
 (add-hook 'text-mode-hook #'hl-line-mode)
 (add-hook 'org-mode-hook #'hl-line-mode)
 ;; Highlight the line point is on:1 ends here
+
+;; [[file:README.org::*Always turn on flymake in prog mode][Always turn on flymake in prog mode:1]]
+(add-hook 'prog-mode-hook #'flymake-mode)
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+;; Always turn on flymake in prog mode:1 ends here
 
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
 ;; Stop stupid bell

@@ -628,10 +628,12 @@ intend when I'm trying to get a window to display a specific buffer.
     (setq switch-to-buffer-obey-display-actions t))
 #+end_src
 
-From the same article, I like having some types of buffers appear in a specific
-"side bar" location.
+From the same article, I'm experimenting with some buffers appearing in a
+specific "side bar" location.  However this can have unintended consequences,
+like the window becoming unselectable or getting reused by magit when I didn't
+want it to.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 ;; left, top, right, bottom
 (setq window-sides-slots '(0 0 1 1))
 
@@ -669,6 +671,13 @@ Add a faint background highlight to the line we're editing.
   (add-hook 'prog-mode-hook #'hl-line-mode)
   (add-hook 'text-mode-hook #'hl-line-mode)
   (add-hook 'org-mode-hook #'hl-line-mode)
+#+end_src
+
+** Always turn on flymake in prog mode
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'flymake-mode)
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
 #+end_src
 
 ** Stop stupid bell
