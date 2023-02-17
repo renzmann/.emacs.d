@@ -1881,9 +1881,20 @@ major mode with the corresponding TreeSitter version.
 
 *** Automatically Using TreeSitter Modes
 We will have to wait until Emacs 30+ for automatic fallback.  Until then, I'm
-using a workaround that I've posted to GitHub as [[https://github.com/renzmann/treesit-auto][treesit-auto]].  Until I'm able
-to publish it to MELPA, I can install it either through =package-vc-install= or
-through a git subtree under =site-lisp/=
+using a workaround that I've posted to GitHub and MELPA as [[https://github.com/renzmann/treesit-auto][treesit-auto]].
+
+#+begin_src emacs-lisp
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (global-treesit-auto-mode))
+#+end_src
+
+Before it was published to MELPA, I used a git subtree to manage the plugin.
+This is a pretty useful technique, so I keep these two one-liners around in case
+I need to reference or copy them.  To get a copy of something as a subtree, I
+use this:
 
 #+begin_src shell :results none
   git subtree add -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
@@ -1893,17 +1904,6 @@ Fetching updates is a similar command.
 
 #+begin_src shell :results none
   git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
-#+end_src
-
-Then, to apply the major mode remaps:
-
-#+begin_src emacs-lisp
-  (use-package treesit-auto
-    :demand t
-    :config
-    (add-to-list 'treesit-auto-fallback-alist '(bash-ts-mode . sh-mode))
-    (setq treesit-auto-install 'prompt)
-    (global-treesit-auto-mode))
 #+end_src
 
 *** Ooo, aaah, shiny colors
