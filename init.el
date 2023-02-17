@@ -926,14 +926,13 @@ Jumps at tangled code from org src block."
   (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
 ;; About TreeSitter and its Load Paths:1 ends here
 
-;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:3]]
+;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
 (use-package treesit-auto
-  :demand t
+  :custom
+  (treesit-auto-install 'prompt)
   :config
-  (add-to-list 'treesit-auto-fallback-alist '(bash-ts-mode . sh-mode))
-  (setq treesit-auto-install 'prompt)
   (global-treesit-auto-mode))
-;; Automatically Using TreeSitter Modes:3 ends here
+;; Automatically Using TreeSitter Modes:1 ends here
 
 ;; [[file:README.org::*Ooo, aaah, shiny colors][Ooo, aaah, shiny colors:1]]
 (setq-default treesit-font-lock-level 3)
