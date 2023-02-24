@@ -628,6 +628,32 @@ intend when I'm trying to get a window to display a specific buffer.
     (setq switch-to-buffer-obey-display-actions t))
 #+end_src
 
+From the same article, I'm experimenting with some buffers appearing in a
+specific "side bar" location.  However this can have unintended consequences,
+like the window becoming unselectable or getting reused by magit when I didn't
+want it to.
+
+#+begin_src emacs-lisp :tangle no
+;; left, top, right, bottom
+(setq window-sides-slots '(0 0 1 1))
+
+(add-to-list 'display-buffer-alist
+          `(,(rx (| "*compilation*" "*grep*"))
+            display-buffer-in-side-window
+            (side . bottom)
+            (slot . 0)
+            (window-parameters . ((no-delete-other-windows . t)))
+            (window-width . 80)))
+
+(setq compilation-window-height 20)
+
+(add-to-list 'display-buffer-alist
+  '("\\*e?shell\\*" display-buffer-in-direction
+    (direction . bottom)
+    (window . root)
+    (window-height . 0.3)))
+#+end_src
+
 ** Automatically update buffers when contents change on disk
 Without setting ~global-auto-revert-mode~, we have to remember to issue a
 ~revert-buffer~ or ~revert-buffer-quick~ (=C-x x g= by default) in case a file
@@ -645,6 +671,13 @@ Add a faint background highlight to the line we're editing.
   (add-hook 'prog-mode-hook #'hl-line-mode)
   (add-hook 'text-mode-hook #'hl-line-mode)
   (add-hook 'org-mode-hook #'hl-line-mode)
+#+end_src
+
+** Always turn on flymake in prog mode
+
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook #'flymake-mode)
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
 #+end_src
 
 ** Stop stupid bell
@@ -1213,6 +1246,14 @@ I'd much prefer to use the easier and more intuitive =TAB=.
   :bind
   (:map corfu-map ("SPC" . corfu-insert-separator))
   :config
+  (defun corfu-enable-in-minibuffer ()
+    "Enable Corfu in the minibuffer if `completion-at-point' is bound."
+    (when (where-is-internal #'completion-at-point (list (current-local-map)))
+      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay nil)
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   (global-corfu-mode))
 
 (use-package vertico
@@ -1588,8 +1629,9 @@ However, this only operates on `run-python' shells.  Also, for projects, we need
 make sure that setting the virtualenv root is marked as safe.
 
 #+begin_src emacs-lisp
-  (put 'python-check-command 'safe-local-variable #'stringp)
-  (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+(put 'python-check-command 'safe-local-variable #'stringp)
+(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+(put 'pyvenv-default-virtual-env-name 'safe-local-variable #'stringp)
 #+end_src
 
 *** Emacs Jupyter?
@@ -1621,6 +1663,14 @@ virtual environment.
     :bind
     (("C-c t v a" . tramp-venv-activate)
      ("C-c t v d" . tramp-venv-deactivate)))
+#+end_src
+
+*** Pyvenv for virtual environments
+
+#+begin_src emacs-lisp
+(use-package pyvenv
+  :config
+  (pyvenv-mode))
 #+end_src
 
 ** Markdown
@@ -1831,9 +1881,20 @@ major mode with the corresponding TreeSitter version.
 
 *** Automatically Using TreeSitter Modes
 We will have to wait until Emacs 30+ for automatic fallback.  Until then, I'm
-using a workaround that I've posted to GitHub as [[https://github.com/renzmann/treesit-auto][treesit-auto]].  Until I'm able
-to publish it to MELPA, I can install it either through =package-vc-install= or
-through a git subtree under =site-lisp/=
+using a workaround that I've posted to GitHub and MELPA as [[https://github.com/renzmann/treesit-auto][treesit-auto]].
+
+#+begin_src emacs-lisp
+(use-package treesit-auto
+  :custom
+  (treesit-auto-install 'prompt)
+  :config
+  (global-treesit-auto-mode))
+#+end_src
+
+Before it was published to MELPA, I used a git subtree to manage the plugin.
+This is a pretty useful technique, so I keep these two one-liners around in case
+I need to reference or copy them.  To get a copy of something as a subtree, I
+use this:
 
 #+begin_src shell :results none
   git subtree add -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
@@ -1843,17 +1904,6 @@ Fetching updates is a similar command.
 
 #+begin_src shell :results none
   git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
-#+end_src
-
-Then, to apply the major mode remaps:
-
-#+begin_src emacs-lisp
-  (use-package treesit-auto
-    :demand t
-    :config
-    (add-to-list 'treesit-auto-fallback-alist '(bash-ts-mode . sh-mode))
-    (setq treesit-auto-install 'prompt)
-    (global-treesit-auto-mode))
 #+end_src
 
 *** Ooo, aaah, shiny colors

@@ -1,2 +1,0 @@
-;;; Generated package description from treesit-auto.el  -*- no-byte-compile: t -*-
-(define-package "treesit-auto" "20230206.1820" "Automatically use tree-sitter enhanced major modes when available" '((emacs "29.0")) :commit "abc864275a17f30a0b7f48dd1df82d4dd7dca893" :authors '(("Robb Enzmann" . "robbenzmann@gmail.com")) :maintainer '("Robb Enzmann" . "robbenzmann@gmail.com") :keywords '("treesitter" "auto" "automatic" "major" "mode" "fallback" "convenience") :url "https://github.com/renzmann/treesit-auto.git")

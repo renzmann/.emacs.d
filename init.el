@@ -185,6 +185,11 @@
 (add-hook 'org-mode-hook #'hl-line-mode)
 ;; Highlight the line point is on:1 ends here
 
+;; [[file:README.org::*Always turn on flymake in prog mode][Always turn on flymake in prog mode:1]]
+(add-hook 'prog-mode-hook #'flymake-mode)
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+;; Always turn on flymake in prog mode:1 ends here
+
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
@@ -521,6 +526,14 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   :bind
   (:map corfu-map ("SPC" . corfu-insert-separator))
   :config
+  (defun corfu-enable-in-minibuffer ()
+    "Enable Corfu in the minibuffer if `completion-at-point' is bound."
+    (when (where-is-internal #'completion-at-point (list (current-local-map)))
+      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                  corfu-popupinfo-delay nil)
+      (corfu-mode 1)))
+  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   (global-corfu-mode))
 
 (use-package vertico
@@ -769,6 +782,7 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Make check command and virtualenv root safe for .dir-locals.el][Make check command and virtualenv root safe for .dir-locals.el:2]]
 (put 'python-check-command 'safe-local-variable #'stringp)
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+(put 'pyvenv-default-virtual-env-name 'safe-local-variable #'stringp)
 ;; Make check command and virtualenv root safe for .dir-locals.el:2 ends here
 
 ;; [[file:README.org::*pyrightconfig.json][pyrightconfig.json:1]]
@@ -782,6 +796,12 @@ Jumps at tangled code from org src block."
   (("C-c t v a" . tramp-venv-activate)
    ("C-c t v d" . tramp-venv-deactivate)))
 ;; Activating Virtual Environments Over Tramp:1 ends here
+
+;; [[file:README.org::*Pyvenv for virtual environments][Pyvenv for virtual environments:1]]
+(use-package pyvenv
+  :config
+  (pyvenv-mode))
+;; Pyvenv for virtual environments:1 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:1]]
 (defun renz/md-hook ()
@@ -890,14 +910,13 @@ Jumps at tangled code from org src block."
   (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
 ;; About TreeSitter and its Load Paths:1 ends here
 
-;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:3]]
+;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
 (use-package treesit-auto
-  :demand t
+  :custom
+  (treesit-auto-install 'prompt)
   :config
-  (add-to-list 'treesit-auto-fallback-alist '(bash-ts-mode . sh-mode))
-  (setq treesit-auto-install 'prompt)
   (global-treesit-auto-mode))
-;; Automatically Using TreeSitter Modes:3 ends here
+;; Automatically Using TreeSitter Modes:1 ends here
 
 ;; [[file:README.org::*Ooo, aaah, shiny colors][Ooo, aaah, shiny colors:1]]
 (setq-default treesit-font-lock-level 3)
