@@ -187,7 +187,7 @@
 
 ;; [[file:README.org::*Always turn on flymake in prog mode][Always turn on flymake in prog mode:1]]
 (add-hook 'prog-mode-hook #'flymake-mode)
-(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 ;; Always turn on flymake in prog mode:1 ends here
 
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
@@ -524,7 +524,12 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   :load-path "site-lisp/corfu"
   :demand t
   :bind
-  (:map corfu-map ("SPC" . corfu-insert-separator))
+  (:map corfu-map
+        ("SPC" . corfu-insert-separator)
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
   :config
   (defun corfu-enable-in-minibuffer ()
     "Enable Corfu in the minibuffer if `completion-at-point' is bound."
@@ -533,6 +538,20 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
       (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
                   corfu-popupinfo-delay nil)
       (corfu-mode 1)))
+
+  ;; (defun orderless-fast-dispatch (word index total)
+  ;;   (and (= index 0) (= total 1) (length< word 4)
+  ;;        `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
+
+  ;; (orderless-define-completion-style orderless-fast
+  ;;   (orderless-style-dispatchers '(orderless-fast-dispatch))
+  ;;   (orderless-matching-styles '(orderless-literal orderless-regexp)))
+
+  ;; (setq-local corfu-auto t
+  ;;             corfu-auto-delay 0
+  ;;             corfu-auto-prefix 0
+  ;;             completion-styles '(orderless-fast))
+
   (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   (global-corfu-mode))
 
@@ -827,6 +846,7 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Missing auto-modes][Missing auto-modes:1]]
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 ;; Missing auto-modes:1 ends here
 
 ;; [[file:README.org::*csv-mode][csv-mode:1]]

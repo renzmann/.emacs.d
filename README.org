@@ -677,7 +677,7 @@ Add a faint background highlight to the line we're editing.
 
 #+begin_src emacs-lisp
 (add-hook 'prog-mode-hook #'flymake-mode)
-(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 #+end_src
 
 ** Stop stupid bell
@@ -1244,7 +1244,12 @@ I'd much prefer to use the easier and more intuitive =TAB=.
   :load-path "site-lisp/corfu"
   :demand t
   :bind
-  (:map corfu-map ("SPC" . corfu-insert-separator))
+  (:map corfu-map
+        ("SPC" . corfu-insert-separator)
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
   :config
   (defun corfu-enable-in-minibuffer ()
     "Enable Corfu in the minibuffer if `completion-at-point' is bound."
@@ -1253,6 +1258,20 @@ I'd much prefer to use the easier and more intuitive =TAB=.
       (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
                   corfu-popupinfo-delay nil)
       (corfu-mode 1)))
+
+  ;; (defun orderless-fast-dispatch (word index total)
+  ;;   (and (= index 0) (= total 1) (length< word 4)
+  ;;        `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
+
+  ;; (orderless-define-completion-style orderless-fast
+  ;;   (orderless-style-dispatchers '(orderless-fast-dispatch))
+  ;;   (orderless-matching-styles '(orderless-literal orderless-regexp)))
+
+  ;; (setq-local corfu-auto t
+  ;;             corfu-auto-delay 0
+  ;;             corfu-auto-prefix 0
+  ;;             completion-styles '(orderless-fast))
+
   (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   (global-corfu-mode))
 
@@ -1706,8 +1725,9 @@ I make a lot of spelling mistakes as I type...
 These really should already be in =auto-mode-alist=, but aren't for some reason.
 
 #+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
 #+end_src
 
 ** csv-mode
