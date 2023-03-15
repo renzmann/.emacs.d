@@ -262,9 +262,19 @@
 ;; Ignore risky .dir-locals.el:1 ends here
 
 ;; [[file:README.org::*Prefer =rg= over =grep=][Prefer =rg= over =grep=:1]]
+(require 'grep)
 (when (executable-find "rg")
-  (setq grep-program "rg"))
+  (setq grep-program "rg")
+  (grep-apply-setting
+   'grep-find-command
+   '("rg -n -H --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27)))
 ;; Prefer =rg= over =grep=:1 ends here
+
+;; [[file:README.org::*Shorter file paths in grep/compilation buffers][Shorter file paths in grep/compilation buffers:1]]
+(use-package scf-mode
+  :load-path "site-lisp"
+  :hook (grep-mode . (lambda () (scf-mode 1))))
+;; Shorter file paths in grep/compilation buffers:1 ends here
 
 ;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
 (setq confirm-kill-emacs 'yes-or-no-p)
@@ -530,6 +540,11 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
         ([tab] . corfu-next)
         ("S-TAB" . corfu-previous)
         ([backtab] . corfu-previous))
+  :custom
+  (corfu-auto t)
+  (corfu-auto-delay 0)
+  (corfu-auto-prefix 0)
+  (completion-styles '(orderless-fast))
   :config
   (defun corfu-enable-in-minibuffer ()
     "Enable Corfu in the minibuffer if `completion-at-point' is bound."
@@ -539,18 +554,13 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
                   corfu-popupinfo-delay nil)
       (corfu-mode 1)))
 
-  ;; (defun orderless-fast-dispatch (word index total)
-  ;;   (and (= index 0) (= total 1) (length< word 4)
-  ;;        `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
+  (defun orderless-fast-dispatch (word index total)
+    (and (= index 0) (= total 1) (length< word 4)
+         `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
 
-  ;; (orderless-define-completion-style orderless-fast
-  ;;   (orderless-style-dispatchers '(orderless-fast-dispatch))
-  ;;   (orderless-matching-styles '(orderless-literal orderless-regexp)))
-
-  ;; (setq-local corfu-auto t
-  ;;             corfu-auto-delay 0
-  ;;             corfu-auto-prefix 0
-  ;;             completion-styles '(orderless-fast))
+  (orderless-define-completion-style orderless-fast
+    (orderless-style-dispatchers '(orderless-fast-dispatch))
+    (orderless-matching-styles '(orderless-literal orderless-regexp)))
 
   (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
   (global-corfu-mode))
@@ -631,7 +641,7 @@ Jumps at tangled code from org src block."
   (org-agenda-files (list (expand-file-name "work.org" renz/org-home)) "Sources for Org agenda view")
   (org-html-htmlize-output-type nil "See C-h f org-html-htmlize-output-type")
   (org-confirm-babel-evaluate nil "Don't ask for confirmation when executing src blocks")
-  (org-edit-src-content-indentation 0 "Indent all src blocks by this much")
+  (org-edit-src-content-indentation 2 "Indent all src blocks by this much")
   (org-goto-interface 'outline-path-completion "Use completing-read for org-goto (C-c C-j, nicer than imenu)")
   (org-outline-path-complete-in-steps nil "Flatten the outline path, instead of completing hierarchically")
 
@@ -769,7 +779,6 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Interactive ~hive2~ mode][Interactive ~hive2~ mode:1]]
 (use-package hive2
   :load-path "site-lisp/"
-  :after (sql)
   :mode ("\\.hql" . sql-mode))
 ;; Interactive ~hive2~ mode:1 ends here
 

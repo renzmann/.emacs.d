@@ -812,10 +812,21 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 ** Prefer =rg= over =grep=
 
 #+begin_src emacs-lisp
+  (require 'grep)
   (when (executable-find "rg")
-    (setq grep-program "rg"))
+    (setq grep-program "rg")
+    (grep-apply-setting
+     'grep-find-command
+     '("rg -n -H --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27)))
 #+end_src
 
+** Shorter file paths in grep/compilation buffers
+
+#+begin_src emacs-lisp
+  (use-package scf-mode
+    :load-path "site-lisp"
+    :hook (grep-mode . (lambda () (scf-mode 1))))
+#+end_src
 ** Confirm when exiting Emacs
 It's very annoying when I'm working and suddenly I meant to do ~C-c C-x~, but
 instead hit ~C-x C-c~.  This helps prevent that.
@@ -1240,45 +1251,45 @@ I'd much prefer to use the easier and more intuitive =TAB=.
 ** GUI Emacs: corfu and vertico
 
 #+begin_src emacs-lisp
-(use-package corfu
-  :load-path "site-lisp/corfu"
-  :demand t
-  :bind
-  (:map corfu-map
-        ("SPC" . corfu-insert-separator)
-        ("TAB" . corfu-next)
-        ([tab] . corfu-next)
-        ("S-TAB" . corfu-previous)
-        ([backtab] . corfu-previous))
-  :config
-  (defun corfu-enable-in-minibuffer ()
-    "Enable Corfu in the minibuffer if `completion-at-point' is bound."
-    (when (where-is-internal #'completion-at-point (list (current-local-map)))
-      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
-      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-                  corfu-popupinfo-delay nil)
-      (corfu-mode 1)))
+  (use-package corfu
+    :load-path "site-lisp/corfu"
+    :demand t
+    :bind
+    (:map corfu-map
+          ("SPC" . corfu-insert-separator)
+          ("TAB" . corfu-next)
+          ([tab] . corfu-next)
+          ("S-TAB" . corfu-previous)
+          ([backtab] . corfu-previous))
+    :custom
+    (corfu-auto t)
+    (corfu-auto-delay 0)
+    (corfu-auto-prefix 0)
+    (completion-styles '(orderless-fast))
+    :config
+    (defun corfu-enable-in-minibuffer ()
+      "Enable Corfu in the minibuffer if `completion-at-point' is bound."
+      (when (where-is-internal #'completion-at-point (list (current-local-map)))
+        ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+        (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
+                    corfu-popupinfo-delay nil)
+        (corfu-mode 1)))
 
-  ;; (defun orderless-fast-dispatch (word index total)
-  ;;   (and (= index 0) (= total 1) (length< word 4)
-  ;;        `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
+    (defun orderless-fast-dispatch (word index total)
+      (and (= index 0) (= total 1) (length< word 4)
+           `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
 
-  ;; (orderless-define-completion-style orderless-fast
-  ;;   (orderless-style-dispatchers '(orderless-fast-dispatch))
-  ;;   (orderless-matching-styles '(orderless-literal orderless-regexp)))
+    (orderless-define-completion-style orderless-fast
+      (orderless-style-dispatchers '(orderless-fast-dispatch))
+      (orderless-matching-styles '(orderless-literal orderless-regexp)))
 
-  ;; (setq-local corfu-auto t
-  ;;             corfu-auto-delay 0
-  ;;             corfu-auto-prefix 0
-  ;;             completion-styles '(orderless-fast))
+    (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
+    (global-corfu-mode))
 
-  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
-  (global-corfu-mode))
-
-(use-package vertico
-  :load-path "site-lisp/vertico"
-  :config
-  (vertico-mode))
+  (use-package vertico
+    :load-path "site-lisp/vertico"
+    :config
+    (vertico-mode))
 #+end_src
 
 * Language-specific major modes
@@ -1375,7 +1386,7 @@ latter over the former, I've removed the =org-startup-indented= call.
 	(org-agenda-files (list (expand-file-name "work.org" renz/org-home)) "Sources for Org agenda view")
 	(org-html-htmlize-output-type nil "See C-h f org-html-htmlize-output-type")
 	(org-confirm-babel-evaluate nil "Don't ask for confirmation when executing src blocks")
-	(org-edit-src-content-indentation 0 "Indent all src blocks by this much")
+	(org-edit-src-content-indentation 2 "Indent all src blocks by this much")
 	(org-goto-interface 'outline-path-completion "Use completing-read for org-goto (C-c C-j, nicer than imenu)")
 	(org-outline-path-complete-in-steps nil "Flatten the outline path, instead of completing hierarchically")
 
@@ -1550,7 +1561,6 @@ The configuration of =sql-indent= below achieves that nicely when using =RET= an
 #+begin_src emacs-lisp
   (use-package hive2
     :load-path "site-lisp/"
-    :after (sql)
     :mode ("\\.hql" . sql-mode))
 #+end_src
 
