@@ -820,7 +820,9 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
      '("rg -n -H --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27)))
 #+end_src
 
-** Shorter file paths in grep/compilation buffers
+** TODO Shorter file paths in grep/compilation buffers
+This is an older, unmaintained file that throws a few warnings.  Let's clean
+that up sometime.
 
 #+begin_src emacs-lisp
   (use-package scf-mode
@@ -1700,6 +1702,16 @@ virtual environment.
 (use-package pyvenv
   :config
   (pyvenv-mode))
+#+end_src
+
+*** TODO Executing cell-by-cell
+
+#+begin_src emacs-lisp
+  (use-package code-cells
+    :hook ((python-mode . code-cells-mode-maybe)
+	   (python-ts-mode . code-cells-mode-maybe))
+    :config
+    (add-to-list 'code-cells-eval-region-commands '(python-ts-mode . python-shell-send-region)))
 #+end_src
 
 ** Markdown

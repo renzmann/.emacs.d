@@ -831,6 +831,14 @@ Jumps at tangled code from org src block."
   (pyvenv-mode))
 ;; Pyvenv for virtual environments:1 ends here
 
+;; [[file:README.org::*Executing cell-by-cell][Executing cell-by-cell:1]]
+(use-package code-cells
+  :hook ((python-mode . code-cells-mode-maybe)
+	 (python-ts-mode . code-cells-mode-maybe))
+  :config
+  (add-to-list 'code-cells-eval-region-commands '(python-ts-mode . python-shell-send-region)))
+;; Executing cell-by-cell:1 ends here
+
 ;; [[file:README.org::*Markdown][Markdown:1]]
 (defun renz/md-hook ()
   "View buffer in visual fill mode with 80 character width."
