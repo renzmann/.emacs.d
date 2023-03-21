@@ -401,15 +401,15 @@ light of the room I'm in.
 
     :init
     (setq ef-themes-headings
-	  '((0 . (1.9))
-	    (1 . (1.3))
-	    (2 . (1.2))
-	    (3 . (1.1))
-	    (4 . (1.0))
-	    (5 . (1.0)) ; absence of weight means `bold'
-	    (6 . (1.0))
-	    (7 . (1.0))
-	    (t . (1.0))))
+          '((0 . (1.9))
+            (1 . (1.3))
+            (2 . (1.2))
+            (3 . (1.1))
+            (4 . (1.0))
+            (5 . (1.0)) ; absence of weight means `bold'
+            (6 . (1.0))
+            (7 . (1.0))
+            (t . (1.0))))
     (setq ef-themes-to-toggle '(ef-cherie ef-summer))
 
     :config
@@ -974,14 +974,14 @@ project's =Makefile=:
 
 #+begin_src makefile :tangle Makefile
   TAGS:
-	  find . -type d -name ".venv" -prune \
-		  -o -type d -name ".ipynb_checkpoints" -prune \
-		  -o -type d -name ".node_modules" -prune \
-		  -o -type d -name "elpa" -prune \
-		  -o -type f -name "*.py" -print \
-		  -o -type f -name "*.sql" -print \
-		  -o -type f -name "*.el" -print \
-		  | etags -
+          find . -type d -name ".venv" -prune \
+                  -o -type d -name ".ipynb_checkpoints" -prune \
+                  -o -type d -name ".node_modules" -prune \
+                  -o -type d -name "elpa" -prune \
+                  -o -type f -name "*.py" -print \
+                  -o -type f -name "*.sql" -print \
+                  -o -type f -name "*.el" -print \
+                  | etags -
 #+end_src
 
 Then, =M-x project-compile RET make TAGS= builds a tags table.  At which point, I
@@ -1272,7 +1272,7 @@ I'd much prefer to use the easier and more intuitive =TAB=.
     (defun corfu-enable-in-minibuffer ()
       "Enable Corfu in the minibuffer if `completion-at-point' is bound."
       (when (where-is-internal #'completion-at-point (list (current-local-map)))
-        ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+        (setq-local corfu-auto nil) ;; Enable/disable auto completion
         (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
                     corfu-popupinfo-delay nil)
         (corfu-mode 1)))
@@ -1361,59 +1361,59 @@ latter over the former, I've removed the =org-startup-indented= call.
 
 #+begin_src emacs-lisp
       (use-package org
-	:hook
-	((org-mode . (lambda () (progn
-				  (add-hook 'after-save-hook #'org-babel-tangle :append :local)
-				  (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
-				  (setq indent-tabs-mode t)))))
+        :hook
+        ((org-mode . (lambda () (progn
+                                  (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                                  (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
+                                  (setq indent-tabs-mode t)))))
 
-	:init
-	(defun renz/jump-org ()
-	  "Prompt for an org file in my emacs directory, then go there."
-	  (interactive)
-	  (renz/--jump-section renz/org-home "Org files: " ".*\.org$"))
+        :init
+        (defun renz/jump-org ()
+          "Prompt for an org file in my emacs directory, then go there."
+          (interactive)
+          (renz/--jump-section renz/org-home "Org files: " ".*\.org$"))
 
-	:bind
-	(("C-c o a" . org-agenda)
-	 ("C-c o b d" . org-babel-detangle)
-	 ("C-c o b o" . org-babel-tangle-jump-to-org)
-	 ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
-	 ("C-c o k" . org-babel-remove-result)
-	 ("C-c o o" . renz/jump-org)
-	 ("C-c o w" . renz/org-kill-src-block)
-	 ("C-c o y" . ox-clip-image-to-clipboard))
+        :bind
+        (("C-c o a" . org-agenda)
+         ("C-c o b d" . org-babel-detangle)
+         ("C-c o b o" . org-babel-tangle-jump-to-org)
+         ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
+         ("C-c o k" . org-babel-remove-result)
+         ("C-c o o" . renz/jump-org)
+         ("C-c o w" . renz/org-kill-src-block)
+         ("C-c o y" . ox-clip-image-to-clipboard))
 
-	:custom
-	(org-image-actual-width nil "Enable resizing of images")
-	(org-agenda-files (list (expand-file-name "work.org" renz/org-home)) "Sources for Org agenda view")
-	(org-html-htmlize-output-type nil "See C-h f org-html-htmlize-output-type")
-	(org-confirm-babel-evaluate nil "Don't ask for confirmation when executing src blocks")
-	(org-edit-src-content-indentation 2 "Indent all src blocks by this much")
-	(org-goto-interface 'outline-path-completion "Use completing-read for org-goto (C-c C-j, nicer than imenu)")
-	(org-outline-path-complete-in-steps nil "Flatten the outline path, instead of completing hierarchically")
+        :custom
+        (org-image-actual-width nil "Enable resizing of images")
+        (org-agenda-files (list (expand-file-name "work.org" renz/org-home)) "Sources for Org agenda view")
+        (org-html-htmlize-output-type nil "See C-h f org-html-htmlize-output-type")
+        (org-confirm-babel-evaluate nil "Don't ask for confirmation when executing src blocks")
+        (org-edit-src-content-indentation 2 "Indent all src blocks by this much")
+        (org-goto-interface 'outline-path-completion "Use completing-read for org-goto (C-c C-j, nicer than imenu)")
+        (org-outline-path-complete-in-steps nil "Flatten the outline path, instead of completing hierarchically")
 
       :config
       (add-to-list 'org-modules 'org-tempo)
       (org-babel-do-load-languages
        'org-babel-load-languages
        '((emacs-lisp . t)
-	 (python . t)
-	 (sql . t)
-	 (shell . t)
-	 (R . t)
-	 ;; (fortran . t)
-	 ;; (julia . t)
-	 ;; (jupyter . t)
-	 ;; (scheme . t)
-	 ;; (haskell . t)
-	 (lisp . t)
-	 ;; (clojure . t)
-	 ;; (C . t)
-	 ;; (org . t)
-	 ;; (gnuplot . t)
-	 ;; (awk . t)
-	 ;; (latex . t)
-	 )))
+         (python . t)
+         (sql . t)
+         (shell . t)
+         (R . t)
+         ;; (fortran . t)
+         ;; (julia . t)
+         ;; (jupyter . t)
+         ;; (scheme . t)
+         ;; (haskell . t)
+         (lisp . t)
+         ;; (clojure . t)
+         ;; (C . t)
+         ;; (org . t)
+         ;; (gnuplot . t)
+         ;; (awk . t)
+         ;; (latex . t)
+         )))
 #+end_src
 
 *** =org-modern=
@@ -1563,6 +1563,7 @@ The configuration of =sql-indent= below achieves that nicely when using =RET= an
 #+begin_src emacs-lisp
   (use-package hive2
     :load-path "site-lisp/"
+    :demand t
     :mode ("\\.hql" . sql-mode))
 #+end_src
 
@@ -1709,7 +1710,7 @@ virtual environment.
 #+begin_src emacs-lisp
   (use-package code-cells
     :hook ((python-mode . code-cells-mode-maybe)
-	   (python-ts-mode . code-cells-mode-maybe))
+           (python-ts-mode . code-cells-mode-maybe))
     :config
     (add-to-list 'code-cells-eval-region-commands '(python-ts-mode . python-shell-send-region)))
 #+end_src
@@ -1926,11 +1927,11 @@ We will have to wait until Emacs 30+ for automatic fallback.  Until then, I'm
 using a workaround that I've posted to GitHub and MELPA as [[https://github.com/renzmann/treesit-auto][treesit-auto]].
 
 #+begin_src emacs-lisp
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  :config
-  (global-treesit-auto-mode))
+  (use-package treesit-auto
+    :custom
+    (treesit-auto-install 'prompt)
+    :config
+    (global-treesit-auto-mode))
 #+end_src
 
 Before it was published to MELPA, I used a git subtree to manage the plugin.

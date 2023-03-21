@@ -72,15 +72,15 @@
 
   :init
   (setq ef-themes-headings
-	'((0 . (1.9))
-	  (1 . (1.3))
-	  (2 . (1.2))
-	  (3 . (1.1))
-	  (4 . (1.0))
-	  (5 . (1.0)) ; absence of weight means `bold'
-	  (6 . (1.0))
-	  (7 . (1.0))
-	  (t . (1.0))))
+        '((0 . (1.9))
+          (1 . (1.3))
+          (2 . (1.2))
+          (3 . (1.1))
+          (4 . (1.0))
+          (5 . (1.0)) ; absence of weight means `bold'
+          (6 . (1.0))
+          (7 . (1.0))
+          (t . (1.0))))
   (setq ef-themes-to-toggle '(ef-cherie ef-summer))
 
   :config
@@ -549,7 +549,7 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (defun corfu-enable-in-minibuffer ()
     "Enable Corfu in the minibuffer if `completion-at-point' is bound."
     (when (where-is-internal #'completion-at-point (list (current-local-map)))
-      ;; (setq-local corfu-auto nil) ;; Enable/disable auto completion
+      (setq-local corfu-auto nil) ;; Enable/disable auto completion
       (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
                   corfu-popupinfo-delay nil)
       (corfu-mode 1)))
@@ -616,9 +616,9 @@ Jumps at tangled code from org src block."
 (use-package org
   :hook
   ((org-mode . (lambda () (progn
-			    (add-hook 'after-save-hook #'org-babel-tangle :append :local)
-			    (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
-			    (setq indent-tabs-mode t)))))
+                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
+                            (setq indent-tabs-mode t)))))
 
   :init
   (defun renz/jump-org ()
@@ -779,6 +779,7 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Interactive ~hive2~ mode][Interactive ~hive2~ mode:1]]
 (use-package hive2
   :load-path "site-lisp/"
+  :demand t
   :mode ("\\.hql" . sql-mode))
 ;; Interactive ~hive2~ mode:1 ends here
 
@@ -834,7 +835,7 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Executing cell-by-cell][Executing cell-by-cell:1]]
 (use-package code-cells
   :hook ((python-mode . code-cells-mode-maybe)
-	 (python-ts-mode . code-cells-mode-maybe))
+         (python-ts-mode . code-cells-mode-maybe))
   :config
   (add-to-list 'code-cells-eval-region-commands '(python-ts-mode . python-shell-send-region)))
 ;; Executing cell-by-cell:1 ends here
