@@ -1,51 +1,35 @@
 ;;; scf-mode.el --- shorten file-names in compilation type buffers
 
-;; this file is not part of Emacs
+;; This file is not part of Emacs
 
               ;;;;;;;;{ shorten compilation filename };;;;;;;;;
               ;; scf stands for shorten-compilation-filename ;;
               ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
 
 ;; Copyright (C) 2011 Le Wang
 ;; Author: Le Wang
 ;; Maintainer: Le Wang
 ;; Description: minor-mode to shorten file-names in compilation derived major-modes
 ;; Author: Le Wang
-;; Maintainer: Le Wang
-
-;; Created: Sat Oct  1 03:07:18 2011 (+0800)
-;; Version: 0.1
-;; Last-Updated: Tue Oct  4 13:39:53 2011 (+0800)
-;;           By: Le Wang
-;;     Update #: 25
-;;          URL: https://github.com/lewang/scf-mode
+;; Maintainer: Le Wang, modified by Robb Enzmann for his configuration.
+;; URL: https://github.com/lewang/scf-mode
 ;; Keywords: compilation
 ;; Compatibility: Emacs23.3+
-
+;;
 ;;; Installation:
-
 ;;    (require 'scf-mode)
 ;;    (define-key grep-mode-map [(s)] 'scf-mode)
 ;;
-
 ;;; [optional] to shorten grep output automatically:
-
 ;;    (add-hook 'grep-mode-hook (lambda () (scf-mode 1)))
 ;;
-
 ;;; Commentary:
-
 ;; Shorten long file-name targets to just the `base-name' without directories
 ;;
 ;; I only show how to install in `grep-mode', but scf-mode should work for all
 ;; compilation-mode derived major-modes.
-;;
-;;
 
 ;;; License:
-
 ;; This program is free software; you can redistribute it and/or
 ;; modify it under the terms of the GNU General Public License as
 ;; published by the Free Software Foundation; either version 3, or
@@ -65,29 +49,29 @@
 
 ;;; Code:
 
-(eval-when-compile (require 'cl))
+(eval-when-compile
+  (require 'cl-lib))
 
 (require 'grep)
-
-(provide 'scf-mode)
 
 (defvar scf-invisible-overlays nil)
 
 (defvar scf-minimum-hide-length 4
-  "minimum length of the directory part of path that gets hidden")
+  "Minimum length of the directory part of path that gets hidden.")
 
 (defvar scf-parsed-point-max nil)
 
 (defun scf-mode-has-compilation (&optional mode)
+  "Non-nil if MODE is compilation."
   (setq mode (or mode major-mode))
-  (memq 'compilation-mode (loop for parent = mode then (get parent 'derived-mode-parent)
-                                while parent
-                                collect parent into parents
-                                finally return parents)))
+  (memq 'compilation-mode (cl-loop for parent = mode then (get parent 'derived-mode-parent)
+                                   while parent
+                                   collect parent into parents
+                                   finally return parents)))
 
 (defun scf-add-invisible-overlay (begin end)
-  "Add an overlay from `begin' to `end' in the current buffer.  Push the
-overlay onto `scf-invisible-overlays'."
+  "Add an overlay from BEGIN to END in the current buffer.
+Push the overlay onto `scf-invisible-overlays'."
   (let ((overlay (make-overlay begin end)))
     (push overlay scf-invisible-overlays)
     (overlay-put overlay 'invisible '(scf . t))
@@ -95,7 +79,7 @@ overlay onto `scf-invisible-overlays'."
     ))
 
 (defun scf-has-face (face &optional pos)
-  "return true if POS has face."
+  "Return non-nil if POS has FACE."
   (setq pos (or pos (point)))
   (let ((faces (get-text-property (point) 'face)))
     (setq faces (if (symbolp faces)
@@ -103,18 +87,18 @@ overlay onto `scf-invisible-overlays'."
                   (mapcar 'symbol-name faces)))
     (dolist (f faces)
       (when (string-match (format "\\`%s" face) f)
-        (return t)))))
+        (cl-return t)))))
 
 ;;;###autoload
 (define-minor-mode scf-mode
-  "shorten file names in a compilation buffer"
-  nil
-  " SCF"
-  nil
+  "Shorten file names in a compilation buffer."
+  :init-value nil
+  :lighter " SCF"
+  :keymap nil
   (if scf-mode
       (progn
         (unless (scf-mode-has-compilation major-mode)
-          (error "only compilation derived modes need apply."))
+          (error "Only compilation derived modes need apply"))
         ;; if we are turning on the mode from a major-mode hook, then we need
         ;; to rerun after compilation finishes, as there is likely no output
         ;; yet.
@@ -136,11 +120,11 @@ overlay onto `scf-invisible-overlays'."
                 (let* ((start (point))
                        (fn (buffer-substring-no-properties
                             start
-                            (loop until (progn
-                                          (goto-char (or (next-single-property-change (point) 'face)
-                                                         (point-max)))
-                                          (not (scf-has-face 'compilation-info)))
-                                  finally return (point))))
+                            (cl-loop until (progn
+                                             (goto-char (or (next-single-property-change (point) 'face)
+                                                            (point-max)))
+                                             (not (scf-has-face 'compilation-info)))
+                                     finally return (point))))
                        (base-name (file-name-nondirectory fn))
                        (end (- (+ start (length fn)) (length base-name))))
                   (when (>= (- end start) scf-minimum-hide-length)
@@ -150,4 +134,6 @@ overlay onto `scf-invisible-overlays'."
           (setq scf-parsed-point-max (point))))
     (remove-from-invisibility-spec '(scf . t))))
 
+
+(provide 'scf-mode)
 ;;; scf-mode.el ends here
