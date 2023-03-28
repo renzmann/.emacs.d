@@ -1258,11 +1258,11 @@ I'd much prefer to use the easier and more intuitive =TAB=.
     :demand t
     :bind
     (:map corfu-map
-          ("SPC" . corfu-insert-separator)
-          ("TAB" . corfu-next)
-          ([tab] . corfu-next)
-          ("S-TAB" . corfu-previous)
-          ([backtab] . corfu-previous))
+	  ;; ("SPC" . corfu-insert-separator)
+	  ("TAB" . corfu-next)
+	  ([tab] . corfu-next)
+	  ("S-TAB" . corfu-previous)
+	  ([backtab] . corfu-previous))
     :custom
     (corfu-auto t)
     (corfu-auto-delay 0)

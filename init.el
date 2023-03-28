@@ -535,11 +535,11 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   :demand t
   :bind
   (:map corfu-map
-        ("SPC" . corfu-insert-separator)
-        ("TAB" . corfu-next)
-        ([tab] . corfu-next)
-        ("S-TAB" . corfu-previous)
-        ([backtab] . corfu-previous))
+	;; ("SPC" . corfu-insert-separator)
+	("TAB" . corfu-next)
+	([tab] . corfu-next)
+	("S-TAB" . corfu-previous)
+	([backtab] . corfu-previous))
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0)
