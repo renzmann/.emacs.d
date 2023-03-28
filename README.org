@@ -184,6 +184,33 @@ There are also a few hand-made packages I keep around in a special
   (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 #+end_src
 
+** Proxy settings
+When behind a corporate proxy, we might have to authenticate before we can pull
+packages off MELPA or ELPA.  Emacs only uses the HOST and PORT portions of the
+=http_proxy= and =https_proxy= environment variables, so we need to set LOGIN (user
+id) and PASSWORD ourselves.
+
+#+begin_src emacs-lisp :tangle no :eval never
+  (setq url-proxy-services
+	'(("no_proxy" . "^\\(localhost\\|10.*\\)")
+	  ("http" . "HOST:PORT")
+	  ("https" . "HOST:PORT")))
+
+  (setq url-http-proxy-basic-auth-storage
+	(list (list "HOST:PORT"
+		    (cons "LOGIN"
+			  (base64-encode-string "LOGIN:PASSWORD")))))
+#+end_src
+
+I store something like the above in a =proxy.el= file with HOST, PORT, LOGIN, and
+PASSWORD filled out (obviously outside of version control).
+
+#+begin_src emacs-lisp
+  (let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
+    (when (file-exists-p proxy-file)
+      (load-file proxy-file)))
+#+end_src
+
 * OS-specific Configuration
 ** Microsoft Windows
 *** Compiling Emacs

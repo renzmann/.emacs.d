@@ -41,6 +41,12 @@
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:4 ends here
 
+;; [[file:README.org::*Proxy settings][Proxy settings:2]]
+(let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
+  (when (file-exists-p proxy-file)
+    (load-file proxy-file)))
+;; Proxy settings:2 ends here
+
 ;; [[file:README.org::*Configuration][Configuration:1]]
 (defun renz/windowsp ()
   "Are we on Microsoft Windows?"

@@ -55,3 +55,4 @@ history
 /eln-cache/
 tree-sitter/
 TAGS
+proxy.el
