@@ -622,9 +622,9 @@ Jumps at tangled code from org src block."
 (use-package org
   :hook
   ((org-mode . (lambda () (progn
-                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
-                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
-                            (setq indent-tabs-mode t)))))
+			    (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+			    (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
+			    (setq indent-tabs-mode nil)))))
 
   :init
   (defun renz/jump-org ()
@@ -651,29 +651,36 @@ Jumps at tangled code from org src block."
   (org-goto-interface 'outline-path-completion "Use completing-read for org-goto (C-c C-j, nicer than imenu)")
   (org-outline-path-complete-in-steps nil "Flatten the outline path, instead of completing hierarchically")
 
-:config
-(add-to-list 'org-modules 'org-tempo)
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp . t)
-   (python . t)
-   (sql . t)
-   (shell . t)
-   (R . t)
-   ;; (fortran . t)
-   ;; (julia . t)
-   ;; (jupyter . t)
-   ;; (scheme . t)
-   ;; (haskell . t)
-   (lisp . t)
-   ;; (clojure . t)
-   ;; (C . t)
-   ;; (org . t)
-   ;; (gnuplot . t)
-   ;; (awk . t)
-   ;; (latex . t)
-   )))
+  :config
+  (add-to-list 'org-modules 'org-tempo)
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '((emacs-lisp . t)
+     (python . t)
+     (sql . t)
+     (shell . t)
+     (R . t)
+     ;; (fortran . t)
+     (julia . t)
+     ;; (jupyter . t)
+     ;; (scheme . t)
+     ;; (haskell . t)
+     (lisp . t)
+     ;; (clojure . t)
+     ;; (C . t)
+     ;; (org . t)
+     ;; (gnuplot . t)
+     ;; (awk . t)
+     ;; (latex . t)
+     )))
 ;; Org-mode:3 ends here
+
+;; [[file:README.org::*Org babel][Org babel:1]]
+(use-package ob-async
+  :after org
+  :config
+  (setq ob-async-no-async-languages-alist '("ipython" "python")))
+;; Org babel:1 ends here
 
 ;; [[file:README.org::*=org-modern=][=org-modern=:1]]
 (use-package org-modern
