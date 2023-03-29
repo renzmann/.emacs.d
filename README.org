@@ -1727,9 +1727,11 @@ virtual environment.
 *** Pyvenv for virtual environments
 
 #+begin_src emacs-lisp
-(use-package pyvenv
-  :config
-  (pyvenv-mode))
+  (use-package pyvenv
+    :init
+    (setenv "WORKON_HOME" "~/.conda/envs/")
+    :config
+    (pyvenv-mode))
 #+end_src
 
 *** TODO Executing cell-by-cell

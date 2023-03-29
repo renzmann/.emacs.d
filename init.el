@@ -834,6 +834,8 @@ Jumps at tangled code from org src block."
 
 ;; [[file:README.org::*Pyvenv for virtual environments][Pyvenv for virtual environments:1]]
 (use-package pyvenv
+  :init
+  (setenv "WORKON_HOME" "~/.conda/envs/")
   :config
   (pyvenv-mode))
 ;; Pyvenv for virtual environments:1 ends here
