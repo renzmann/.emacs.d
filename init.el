@@ -796,6 +796,12 @@ Jumps at tangled code from org src block."
   :mode ("\\.hql" . sql-mode))
 ;; Interactive ~hive2~ mode:1 ends here
 
+;; [[file:README.org::*Interactive =bq shell=][Interactive =bq shell=:2]]
+(use-package bq
+  :load-path "site-lisp"
+  :demand t)
+;; Interactive =bq shell=:2 ends here
+
 ;; [[file:README.org::*BigQuery ~sql~ Blocks in Org-Babel][BigQuery ~sql~ Blocks in Org-Babel:1]]
 (defun org-babel-execute:bq (orig-fun body params)
   (if (string-equal-ignore-case (cdr (assq :engine params)) "bq")
@@ -872,6 +878,8 @@ Jumps at tangled code from org src block."
 (use-package poly-markdown
   :after (markdown-mode)
   :mode ("\\.md" . poly-markdown-mode)
+  :init
+  (require 'sql)
   :config
   (setq markdown-command "markdown_py"))
 ;; Markdown:3 ends here

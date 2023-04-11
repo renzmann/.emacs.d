@@ -1617,6 +1617,23 @@ call it.
 When I get to it, I think what I'll do instead is rewrite this to simply pipe
 the current buffer into ~sql-formatter~, and use a bit of elisp to determine whether
 a ~.sql-formatter-config.json~ exists in the VC root directory.
+*** Interactive =bq shell=
+
+The SQL interactive commands are looking for a single executable file, so let's
+set that up somewhere common.
+
+#+begin_src shell :tangle ~/.local/bin/bq-shell
+  #!/usr/bin/env sh
+  bq shell "$@"
+#+end_src
+
+Then enable the BQ product.
+
+#+begin_src emacs-lisp
+  (use-package bq
+    :load-path "site-lisp"
+    :demand t)
+#+end_src
 
 *** BigQuery ~sql~ Blocks in Org-Babel
 Advising ~org-babel-execute:sql~ in this way allows me to use ~#+begin_src sql
@@ -1780,6 +1797,8 @@ I make a lot of spelling mistakes as I type...
   (use-package poly-markdown
     :after (markdown-mode)
     :mode ("\\.md" . poly-markdown-mode)
+    :init
+    (require 'sql)
     :config
     (setq markdown-command "markdown_py"))
 #+end_src
