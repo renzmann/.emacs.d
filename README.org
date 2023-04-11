@@ -205,7 +205,7 @@ id) and PASSWORD ourselves.
 I store something like the above in a =proxy.el= file with HOST, PORT, LOGIN, and
 PASSWORD filled out (obviously outside of version control).
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
     (when (file-exists-p proxy-file)
       (load-file proxy-file)))
@@ -1119,10 +1119,22 @@ completion, with just a little help from =xref-find-definitions=.
   (global-set-key (kbd "C-c s t") #'term)
 #+end_src
 
-*** =C-c v= open thing at point in browser
+*** =C-c v= faster git-commit
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c v") #'browse-url-at-point)
+  (defun renz/git-commit ()
+    (interactive)
+    (vc-next-action nil)
+    (log-edit-show-diff)
+    (other-window 1))
+
+  (global-set-key (kbd "C-c v") #'renz/git-commit)
+#+end_src
+
+*** =C-c V= open thing at point in browser
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c V") #'browse-url-at-point)
 #+end_src
 
 *** =C-c w= whitespace mode
@@ -1520,6 +1532,13 @@ I use a small external dependency for this:
 #+end_src
 
 ** SQL
+*** DDL is SQL
+
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("\\.ddl\\'" . sql-mode))
+  (add-to-list 'auto-mode-alist '("\\.bql\\'" . sql-mode))
+#+end_src
+
 *** Indentation
 Vanilla Emacs doesn't offer a lot (read: nothing) in terms of making SQL code
 pretty.  I tend to format SQL like this:
@@ -1756,7 +1775,10 @@ virtual environment.
 #+begin_src emacs-lisp
   (use-package pyvenv
     :init
-    (setenv "WORKON_HOME" "~/.conda/envs/")
+    (if (eq system-type 'darwin)
+        (setenv "WORKON_HOME" "~/Library/Caches/pypoetry/virtualenvs")
+      (setenv "WORKON_HOME" "~/.conda/envs/"))
+
     :config
     (pyvenv-mode))
 #+end_src

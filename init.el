@@ -41,12 +41,6 @@
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:4 ends here
 
-;; [[file:README.org::*Proxy settings][Proxy settings:2]]
-(let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
-  (when (file-exists-p proxy-file)
-    (load-file proxy-file)))
-;; Proxy settings:2 ends here
-
 ;; [[file:README.org::*Configuration][Configuration:1]]
 (defun renz/windowsp ()
   "Are we on Microsoft Windows?"
@@ -447,9 +441,19 @@ config site with matching `EXTENSION' regexp."
 (global-set-key (kbd "C-c s t") #'term)
 ;; =C-c s= shell:1 ends here
 
-;; [[file:README.org::*=C-c v= open thing at point in browser][=C-c v= open thing at point in browser:1]]
-(global-set-key (kbd "C-c v") #'browse-url-at-point)
-;; =C-c v= open thing at point in browser:1 ends here
+;; [[file:README.org::*=C-c v= faster git-commit][=C-c v= faster git-commit:1]]
+(defun renz/git-commit ()
+  (interactive)
+  (vc-next-action nil)
+  (log-edit-show-diff)
+  (other-window 1))
+
+(global-set-key (kbd "C-c v") #'renz/git-commit)
+;; =C-c v= faster git-commit:1 ends here
+
+;; [[file:README.org::*=C-c V= open thing at point in browser][=C-c V= open thing at point in browser:1]]
+(global-set-key (kbd "C-c V") #'browse-url-at-point)
+;; =C-c V= open thing at point in browser:1 ends here
 
 ;; [[file:README.org::*=C-c w= whitespace mode][=C-c w= whitespace mode:1]]
 (global-set-key (kbd "C-c w") #'whitespace-mode)
@@ -731,6 +735,11 @@ Jumps at tangled code from org src block."
   :after org)
 ;; Converting JSON to Org Tables:1 ends here
 
+;; [[file:README.org::*DDL is SQL][DDL is SQL:1]]
+(add-to-list 'auto-mode-alist '("\\.ddl\\'" . sql-mode))
+(add-to-list 'auto-mode-alist '("\\.bql\\'" . sql-mode))
+;; DDL is SQL:1 ends here
+
 ;; [[file:README.org::*Indentation][Indentation:2]]
 (defun renz/sql-mode-hook ()
   (setq tab-width 4))
@@ -848,7 +857,10 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Pyvenv for virtual environments][Pyvenv for virtual environments:1]]
 (use-package pyvenv
   :init
-  (setenv "WORKON_HOME" "~/.conda/envs/")
+  (if (eq system-type 'darwin)
+      (setenv "WORKON_HOME" "~/Library/Caches/pypoetry/virtualenvs")
+    (setenv "WORKON_HOME" "~/.conda/envs/"))
+
   :config
   (pyvenv-mode))
 ;; Pyvenv for virtual environments:1 ends here
