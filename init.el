@@ -91,6 +91,10 @@
 (server-start)
 ;; Start a server for =emacsclient=:1 ends here
 
+;; [[file:README.org::*So long and thanks for all the fish][So long and thanks for all the fish:1]]
+(global-so-long-mode t)
+;; So long and thanks for all the fish:1 ends here
+
 ;; [[file:README.org::*Unicode][Unicode:1]]
 (prefer-coding-system       'utf-8)
 (set-default-coding-systems 'utf-8)
@@ -887,13 +891,7 @@ Jumps at tangled code from org src block."
 ;; Markdown:2 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:3]]
-(use-package poly-markdown
-  :after (markdown-mode)
-  :mode ("\\.md" . poly-markdown-mode)
-  :init
-  (require 'sql)
-  :config
-  (setq markdown-command "markdown_py"))
+(setq markdown-fontify-code-blocks-natively t)
 ;; Markdown:3 ends here
 
 ;; [[file:README.org::*Missing auto-modes][Missing auto-modes:1]]

@@ -482,6 +482,13 @@ Tree-sitter are located under [[* Tool configuration][Tool configuration]].
   (server-start)
 #+end_src
 
+** So long and thanks for all the fish
+Prevents hanging when visiting files with extremely long lines.
+
+#+begin_src emacs-lisp
+  (global-so-long-mode t)
+#+end_src
+
 ** Unicode
 Sometimes (especially on Windows), Emacs gets confused about what encoding to
 use.  These setting try to prevent that confusion.
@@ -1813,17 +1820,12 @@ I make a lot of spelling mistakes as I type...
   (add-hook 'markdown-mode-hook 'auto-fill-mode)
 #+end_src
 
-=poly-markdown-mode= enables syntax highlighting within code fences for markdown.
+And I like to see language syntax highlighting within code fences.
 
 #+begin_src emacs-lisp
-  (use-package poly-markdown
-    :after (markdown-mode)
-    :mode ("\\.md" . poly-markdown-mode)
-    :init
-    (require 'sql)
-    :config
-    (setq markdown-command "markdown_py"))
+  (setq markdown-fontify-code-blocks-natively t)
 #+end_src
+
 ** Missing auto-modes
 These really should already be in =auto-mode-alist=, but aren't for some reason.
 
