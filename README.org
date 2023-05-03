@@ -1296,19 +1296,20 @@ I'd much prefer to use the easier and more intuitive =TAB=.
   (setq tab-always-indent 'complete)
 #+end_src
 
-** GUI Emacs: corfu and vertico
+** =corfu= and =vertico=
 
 #+begin_src emacs-lisp
   (use-package corfu
     :load-path "site-lisp/corfu"
+    :disabled t
     :demand t
     :bind
     (:map corfu-map
-	  ;; ("SPC" . corfu-insert-separator)
-	  ("TAB" . corfu-next)
-	  ([tab] . corfu-next)
-	  ("S-TAB" . corfu-previous)
-	  ([backtab] . corfu-previous))
+          ;; ("SPC" . corfu-insert-separator)
+          ("TAB" . corfu-next)
+          ([tab] . corfu-next)
+          ("S-TAB" . corfu-previous)
+          ([backtab] . corfu-previous))
     :custom
     (corfu-auto t)
     (corfu-auto-delay 0)
@@ -1336,6 +1337,7 @@ I'd much prefer to use the easier and more intuitive =TAB=.
 
   (use-package vertico
     :load-path "site-lisp/vertico"
+    :disabled t
     :config
     (vertico-mode))
 #+end_src
@@ -1679,6 +1681,8 @@ with it.
   (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 #+end_src
 
+*** BigQuery exception markers
+
 ** Python
 *** Pyright error links in =*compilation*=
 The =M-x compile= feature does not recognize or parse ~pyright~ error messages out
@@ -1714,9 +1718,17 @@ programs exist is a small time saver.
 #+begin_src emacs-lisp
   (use-package python
     :config
+    (require 'eglot)
     (setq python-check-command "ruff")
-    (add-hook 'python-mode-hook #'flymake-mode))
+    (add-hook 'python-mode-hook #'flymake-mode)
+    (add-hook 'python-mode-hook #'blacken-mode)
+    (add-hook 'python-ts-mode-hook #'flymake-mode)
+    (add-hook 'python-ts-mode-hook #'blacken-mode)
+    ;; (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) "ruff-lsp"))
+    )
 #+end_src
+
+
 
 *** Fix Microsoft Windows Issues
 At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The

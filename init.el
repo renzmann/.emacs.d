@@ -543,17 +543,18 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 (setq tab-always-indent 'complete)
 ;; Completion at point:1 ends here
 
-;; [[file:README.org::*GUI Emacs: corfu and vertico][GUI Emacs: corfu and vertico:1]]
+;; [[file:README.org::*=corfu= and =vertico=][=corfu= and =vertico=:1]]
 (use-package corfu
   :load-path "site-lisp/corfu"
+  :disabled t
   :demand t
   :bind
   (:map corfu-map
-	;; ("SPC" . corfu-insert-separator)
-	("TAB" . corfu-next)
-	([tab] . corfu-next)
-	("S-TAB" . corfu-previous)
-	([backtab] . corfu-previous))
+        ;; ("SPC" . corfu-insert-separator)
+        ("TAB" . corfu-next)
+        ([tab] . corfu-next)
+        ("S-TAB" . corfu-previous)
+        ([backtab] . corfu-previous))
   :custom
   (corfu-auto t)
   (corfu-auto-delay 0)
@@ -581,9 +582,10 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 
 (use-package vertico
   :load-path "site-lisp/vertico"
+  :disabled t
   :config
   (vertico-mode))
-;; GUI Emacs: corfu and vertico:1 ends here
+;; =corfu= and =vertico=:1 ends here
 
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
@@ -836,8 +838,14 @@ Jumps at tangled code from org src block."
 ;; [[file:README.org::*Python check with "ruff"][Python check with "ruff":1]]
 (use-package python
   :config
+  (require 'eglot)
   (setq python-check-command "ruff")
-  (add-hook 'python-mode-hook #'flymake-mode))
+  (add-hook 'python-mode-hook #'flymake-mode)
+  (add-hook 'python-mode-hook #'blacken-mode)
+  (add-hook 'python-ts-mode-hook #'flymake-mode)
+  (add-hook 'python-ts-mode-hook #'blacken-mode)
+  ;; (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) "ruff-lsp"))
+  )
 ;; Python check with "ruff":1 ends here
 
 ;; [[file:README.org::*Make check command and virtualenv root safe for .dir-locals.el][Make check command and virtualenv root safe for .dir-locals.el:2]]
