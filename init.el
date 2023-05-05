@@ -468,6 +468,10 @@ config site with matching `EXTENSION' regexp."
 (global-set-key (kbd "C-c <SPC>") #'mark-sexp)  ;; TTY-friendly
 ;; =C-c= Other bindings:1 ends here
 
+;; [[file:README.org::*Super bindings][Super bindings:1]]
+(global-set-key (kbd "s-p") #'project-switch-project)
+;; Super bindings:1 ends here
+
 ;; [[file:README.org::*Completion style: Orderless][Completion style: Orderless:1]]
 (setq completion-styles '(flex basic partial-completion emacs22))
 ;; Completion style: Orderless:1 ends here

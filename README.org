@@ -1164,6 +1164,12 @@ up using things bound to my =C-c= keymaps instead.  The =C-c= kyes from a more
 natural, nested language in my head, so it feels more like I'm "speaking Emacs"
 that way.
 
+** Super bindings
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "s-p") #'project-switch-project)
+#+end_src
+
 * Text Completion
 Emacs offers incredible depth and freedom when configuring methods that
 automatically complete text.  There are actually two things that
