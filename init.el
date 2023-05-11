@@ -874,7 +874,7 @@ Jumps at tangled code from org src block."
 (use-package pyvenv
   :init
   (if (eq system-type 'darwin)
-      (setenv "WORKON_HOME" "~/Library/Caches/pypoetry/virtualenvs")
+      (setenv "WORKON_HOME" "~/micromamba/envs/")
     (setenv "WORKON_HOME" "~/.conda/envs/"))
 
   :config
