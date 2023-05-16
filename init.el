@@ -365,10 +365,6 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 
 (setq tramp-use-ssh-controlmaster-options nil)
 
-(when (boundp 'treesit-extra-load-path)
-  (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
-  (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
-
 (use-package conf-mode
   :if (or (renz/windowsp)
           (and (not (file-exists-p (expand-file-name "tree-sitter/libtree-sitter-toml.dylib" user-emacs-directory)))
@@ -608,8 +604,6 @@ Jumps at tangled code from org src block."
   (interactive)
   (visual-fill-column-mode)
   (setq-local fill-column 80))
-
-(add-hook 'text-mode-hook 'flyspell-mode)
 
 (use-package poly-markdown
   :after (markdown-mode)

@@ -1163,44 +1163,6 @@ Host *
      ServerAliveInterval 60
 #+end_example
 
-* TODO TreeSitter
-Emacs 29 added native [[https://tree-sitter.github.io/tree-sitter/][TreeSitter]] support.  TreeSitter is a new way of
-incrementally parsing source code that offers superior navigation and syntax
-highlighting.  To fully realize this benefit, however, it requires that we
-install =tree-sitter= grammars independently from Emacs.  Right now, I'm using
-[[https://github.com/casouri/tree-sitter-module][casouri's modules]], which I build and install under =~/.emacs.d/tree-sitter=, if
-they don't already exist under =/usr/local/lib/= or =~/.local/lib=.
-
-*REMINDER:* We could just use a little lisp here to download the module if on linux or mac...
-
-#+begin_src shell
-git clone git@github.com:casouri/tree-sitter-module.git
-cd tree-sitter-module
-./batch.sh
-mkdir -p ~/.emacs.d/tree-sitter
-cp ./dist/* ~/.emacs.d/tree-sitter/
-#+end_src
-
-In case of the latter, I just add extra paths to =treesit-extra-load-path=
-explicitly.
-
-#+begin_src emacs-lisp
-(when (boundp 'treesit-extra-load-path)
-  (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
-  (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
-#+end_src
-
-For the full instructions, the commit history of adding the =tree-sitter= modules
-to Emacs included a [[https://git.savannah.gnu.org/cgit/emacs.git/plain/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter][full guide]], which can be read in Info under "Parsing Program
-Source".
-
-#+begin_example
-C-h i d m elisp RET g Parsing Program Source RET
-#+end_example
-
-Enabling TreeSitter is done on a per-language basis to override the default
-major mode with the corresponding TreeSitter version.
-
 * Language-specific major modes
 ** TOML
 It looks like Emacs 29 will use tree-sitter parsing by default for TOML.  If I
@@ -1605,12 +1567,6 @@ it.
   (interactive)
   (visual-fill-column-mode)
   (setq-local fill-column 80))
-#+end_src
-
-I make a lot of spelling mistakes as I type...
-
-#+begin_src emacs-lisp
-(add-hook 'text-mode-hook 'flyspell-mode)
 #+end_src
 
 =poly-markdown-mode= enables syntax highlighting within code fences for markdown.
