@@ -829,6 +829,13 @@ somewhere else.
 (global-set-key (kbd "C-c B") #'recompile)
 #+end_src
 
+*** =C-c c= calendar
+
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-c c") #'calendar)
+(global-set-key (kbd "C-c C") #'diary)
+#+end_src
+
 *** =C-c d= jump to a tag
 
 #+begin_src emacs-lisp
@@ -1164,6 +1171,9 @@ Host *
 #+end_example
 
 * Language-specific major modes
+** TODO Diary
+Use tabs in diary-mode
+
 ** TOML
 It looks like Emacs 29 will use tree-sitter parsing by default for TOML.  If I
 haven't grabbed those modules yet though, that can cause problems.  In that
@@ -1554,6 +1564,23 @@ Formatting a buffer with =black= has never been easier!
   :bind
   (("C-c t v a" . tramp-venv-activate)
    ("C-c t v d" . tramp-venv-deactivate)))
+#+end_src
+
+*** pyvenv
+
+#+begin_src emacs-lisp
+
+
+(use-package pyvenv
+  :init
+  (if (eq system-type 'darwin)
+      (setenv "WORKON_HOME" "~/micromamba/envs/")
+    (if (not (renz/windowsp))
+        (setenv "WORKON_HOME" "~/.conda/envs/")
+      (setenv "WORKON_HOME" "~/mambaforge/envs/")))
+
+  :config
+  (pyvenv-mode))
 #+end_src
 
 ** Markdown

@@ -220,6 +220,9 @@ emacs config site with matching `extension' regexp"
 (global-set-key (kbd "C-c b") #'compile)
 (global-set-key (kbd "C-c B") #'recompile)
 
+(global-set-key (kbd "C-c c") #'calendar)
+(global-set-key (kbd "C-c C") #'diary)
+
 (defun renz/find-tag ()
   "Use completing-read to navigate to a tag"
   (interactive)
@@ -598,6 +601,17 @@ Jumps at tangled code from org src block."
   :bind
   (("C-c t v a" . tramp-venv-activate)
    ("C-c t v d" . tramp-venv-deactivate)))
+
+(use-package pyvenv
+  :init
+  (if (eq system-type 'darwin)
+      (setenv "WORKON_HOME" "~/micromamba/envs/")
+    (if (not (renz/windowsp))
+        (setenv "WORKON_HOME" "~/.conda/envs/")
+      (setenv "WORKON_HOME" "~/mambaforge/envs/")))
+
+  :config
+  (pyvenv-mode))
 
 (defun renz/md-hook ()
   "View buffer in visual fill mode with 80 character width."
