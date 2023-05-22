@@ -655,20 +655,8 @@ Jumps at tangled code from org src block."
 (use-package magit
   :bind ("C-c g" . magit-status))
 
-(use-package change-inner
-  :bind (("C-c c i" . change-inner)
-         ("C-c c o" . change-outer)
-         ("C-c y i" . copy-inner)
-         ("C-c y o" . copy-outer)))
-
 (use-package eww
   :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
-
-(use-package change-inner
-  :bind (("C-c c i" . change-inner)
-         ("C-c c o" . change-outer)
-         ("C-c y i" . yank-inner)
-         ("C-c y o" . yank-outer)))
 
 (use-package esup
   :bind ("C-c x p")

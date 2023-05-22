@@ -1688,16 +1688,6 @@ it with =$=.  The built-in `vc` is /synchronous/, and will block Emacs entirely
 until it's done.  So some of the performance hit from using Magit is well worth
 it in situations like that.
 
-** Change or copy inner/outer
-
-#+begin_src emacs-lisp
-(use-package change-inner
-  :bind (("C-c c i" . change-inner)
-         ("C-c c o" . change-outer)
-         ("C-c y i" . copy-inner)
-         ("C-c y o" . copy-outer)))
-#+end_src
-
 ** eww - search engine and browser
 
 Ecosia requires JavaScript, unfortunately.
@@ -1705,18 +1695,6 @@ Ecosia requires JavaScript, unfortunately.
 #+begin_src emacs-lisp
 (use-package eww
   :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
-#+end_src
-
-** change-inner
-Modeled after Vim's =ci=, =ca=, =yi=, and =ya= commands, these let us yank or kill text
-within a "surrounding" delimiter, such as "" or ().
-
-#+begin_src emacs-lisp
-(use-package change-inner
-  :bind (("C-c c i" . change-inner)
-         ("C-c c o" . change-outer)
-         ("C-c y i" . yank-inner)
-         ("C-c y o" . yank-outer)))
 #+end_src
 
 ** Esup: startup time profiling
