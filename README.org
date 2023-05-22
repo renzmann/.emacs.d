@@ -1291,8 +1291,8 @@ latter over the former, I've removed the =org-startup-indented= call.
      ;; (latex . t)
      ))
 
-  (setq org-agenda-files '("~/.emacs.d/org/work.org")
-        org-hugo-front-matter-format "yaml"))
+  (setq org-hugo-front-matter-format "yaml"
+        org-agenda-files (directory-files (expand-file-name "org" user-emacs-directory) nil ".*\.org")))
 #+end_src
 
 ~ob-async~ adds asynchronous source block execution to some modes that otherwise wouldn't have it.

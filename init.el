@@ -448,8 +448,8 @@ Jumps at tangled code from org src block."
      ;; (latex . t)
      ))
 
-  (setq org-agenda-files '("~/.emacs.d/org/work.org")
-        org-hugo-front-matter-format "yaml"))
+  (setq org-hugo-front-matter-format "yaml"
+        org-agenda-files (directory-files (expand-file-name "org" user-emacs-directory) nil ".*\.org")))
 
 (use-package ob-async
   :after org
