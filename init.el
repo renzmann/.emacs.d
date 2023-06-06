@@ -41,6 +41,23 @@
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:4 ends here
 
+;; [[file:README.org::*Proxy settings][Proxy settings:1]]
+(let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
+  (when (file-exists-p proxy-file)
+    (load-file proxy-file)
+    (setq url-proxy-services
+          '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+            ("http" . "proxy:9119")
+            ("https" . "proxy:9119")))
+    (setq url-http-proxy-basic-auth-storage
+          (list
+           (list
+            (concat renz/proxy-host ":" renz/proxy-port)
+            (cons renz/proxy-login
+                  (base64-encode-string
+                   (concat renz/proxy-login ":" (password-read "Proxy password: ")))))))))
+;; Proxy settings:1 ends here
+
 ;; [[file:README.org::*Configuration][Configuration:1]]
 (defun renz/windowsp ()
   "Are we on Microsoft Windows?"
@@ -73,9 +90,9 @@
   :init
   (setq ef-themes-headings
         '((0 . (1.9))
-          (1 . (1.3))
-          (2 . (1.2))
-          (3 . (1.1))
+          (1 . (1.1))
+          (2 . (1.0))
+          (3 . (1.0))
           (4 . (1.0))
           (5 . (1.0)) ; absence of weight means `bold'
           (6 . (1.0))
@@ -356,6 +373,10 @@
 (global-set-key (kbd "C-c B") #'recompile)
 ;; =C-c b= build / compile:1 ends here
 
+;; [[file:README.org::*=C-c c= Calendar][=C-c c= Calendar:1]]
+(global-set-key (kbd "C-c c") #'calendar)
+;; =C-c c= Calendar:1 ends here
+
 ;; [[file:README.org::*=C-c d= Navigating to symbols using old-school TAGS][=C-c d= Navigating to symbols using old-school TAGS:2]]
 (defun renz/find-tag ()
   "Use `completing-read' to navigate to a tag."
@@ -604,7 +625,7 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 ;; CSS:1 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:1]]
-(setq renz/org-home "~/org/")
+(setq renz/org-home "~/.emacs.d/org/")
 ;; Org-mode:1 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:2]]
@@ -633,12 +654,16 @@ Jumps at tangled code from org src block."
 ;; Org-mode:2 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:3]]
+(defun renz/list-files-with-absolute-path (directory)
+  "Return a list of files in DIRECTORY with their absolute paths."
+  (cl-remove-if-not #'file-regular-p (directory-files directory t ".*\.org$")))
+
 (use-package org
   :hook
   ((org-mode . (lambda () (progn
-			    (add-hook 'after-save-hook #'org-babel-tangle :append :local)
-			    (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
-			    (setq indent-tabs-mode nil)))))
+                            (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                            (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
+                            (setq indent-tabs-mode nil)))))
 
   :init
   (defun renz/jump-org ()
@@ -658,7 +683,7 @@ Jumps at tangled code from org src block."
 
   :custom
   (org-image-actual-width nil "Enable resizing of images")
-  (org-agenda-files (list (expand-file-name "work.org" renz/org-home)) "Sources for Org agenda view")
+  (org-agenda-files (renz/list-files-with-absolute-path renz/org-home) "Sources for Org agenda view")
   (org-html-htmlize-output-type nil "See C-h f org-html-htmlize-output-type")
   (org-confirm-babel-evaluate nil "Don't ask for confirmation when executing src blocks")
   (org-edit-src-content-indentation 2 "Indent all src blocks by this much")
@@ -876,7 +901,8 @@ Jumps at tangled code from org src block."
   (if (eq system-type 'darwin)
       (setenv "WORKON_HOME" "~/micromamba/envs/")
     (setenv "WORKON_HOME" "~/.conda/envs/"))
-
+  :bind
+  (("C-c p w" . pyvenv-workon))
   :config
   (pyvenv-mode))
 ;; Pyvenv for virtual environments:1 ends here

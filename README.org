@@ -190,25 +190,25 @@ packages off MELPA or ELPA.  Emacs only uses the HOST and PORT portions of the
 =http_proxy= and =https_proxy= environment variables, so we need to set LOGIN (user
 id) and PASSWORD ourselves.
 
-#+begin_src emacs-lisp :tangle no :eval never
-  (setq url-proxy-services
-	'(("no_proxy" . "^\\(localhost\\|10.*\\)")
-	  ("http" . "HOST:PORT")
-	  ("https" . "HOST:PORT")))
+I store the login, port, and host variables in a =proxy.el= file (obviously
+outside version control) when I'm on a machine that's behind an http proxy.  We
+grab the password interactively when such a file exists.
 
-  (setq url-http-proxy-basic-auth-storage
-	(list (list "HOST:PORT"
-		    (cons "LOGIN"
-			  (base64-encode-string "LOGIN:PASSWORD")))))
-#+end_src
-
-I store something like the above in a =proxy.el= file with HOST, PORT, LOGIN, and
-PASSWORD filled out (obviously outside of version control).
-
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
     (when (file-exists-p proxy-file)
-      (load-file proxy-file)))
+      (load-file proxy-file)
+      (setq url-proxy-services
+            '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+              ("http" . "proxy:9119")
+              ("https" . "proxy:9119")))
+      (setq url-http-proxy-basic-auth-storage
+            (list
+             (list
+              (concat renz/proxy-host ":" renz/proxy-port)
+              (cons renz/proxy-login
+                    (base64-encode-string
+                     (concat renz/proxy-login ":" (password-read "Proxy password: ")))))))))
 #+end_src
 
 * OS-specific Configuration
@@ -429,9 +429,9 @@ light of the room I'm in.
     :init
     (setq ef-themes-headings
           '((0 . (1.9))
-            (1 . (1.3))
-            (2 . (1.2))
-            (3 . (1.1))
+            (1 . (1.1))
+            (2 . (1.0))
+            (3 . (1.0))
             (4 . (1.0))
             (5 . (1.0)) ; absence of weight means `bold'
             (6 . (1.0))
@@ -999,7 +999,14 @@ somewhere else.
   (global-set-key (kbd "C-c B") #'recompile)
 #+end_src
 
+*** =C-c c= Calendar
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c c") #'calendar)
+#+end_src
+
 *** =C-c d= Navigating to symbols using old-school TAGS
+
 Before the whole language server revolution, we had TAGS files for caching the
 location of symbol definitions.  =etags= comes with Emacs, and combining some
 clever use of =find= with it can render a pretty good symbol search experience.
@@ -1374,7 +1381,7 @@ java -jar ~/.local/jars/css-validator.jar file:///home/me/my/site/index.html
 ** Org-mode
 
 #+begin_src emacs-lisp
-  (setq renz/org-home "~/org/")
+  (setq renz/org-home "~/.emacs.d/org/")
 #+end_src
 
 ~org-mode~ provides =org-babel-tangle-jump-to-org=, which jumps back to an Org
@@ -1414,12 +1421,16 @@ interfering with the beautification features from ~org-modern~.  Preferring the
 latter over the former, I've removed the =org-startup-indented= call.
 
 #+begin_src emacs-lisp
+  (defun renz/list-files-with-absolute-path (directory)
+    "Return a list of files in DIRECTORY with their absolute paths."
+    (cl-remove-if-not #'file-regular-p (directory-files directory t ".*\.org$")))
+
   (use-package org
     :hook
     ((org-mode . (lambda () (progn
-			      (add-hook 'after-save-hook #'org-babel-tangle :append :local)
-			      (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
-			      (setq indent-tabs-mode nil)))))
+                              (add-hook 'after-save-hook #'org-babel-tangle :append :local)
+                              (add-hook 'org-babel-after-execute-hook #'renz/display-ansi-colors)
+                              (setq indent-tabs-mode nil)))))
 
     :init
     (defun renz/jump-org ()
@@ -1439,7 +1450,7 @@ latter over the former, I've removed the =org-startup-indented= call.
 
     :custom
     (org-image-actual-width nil "Enable resizing of images")
-    (org-agenda-files (list (expand-file-name "work.org" renz/org-home)) "Sources for Org agenda view")
+    (org-agenda-files (renz/list-files-with-absolute-path renz/org-home) "Sources for Org agenda view")
     (org-html-htmlize-output-type nil "See C-h f org-html-htmlize-output-type")
     (org-confirm-babel-evaluate nil "Don't ask for confirmation when executing src blocks")
     (org-edit-src-content-indentation 2 "Indent all src blocks by this much")
@@ -1803,7 +1814,8 @@ virtual environment.
     (if (eq system-type 'darwin)
         (setenv "WORKON_HOME" "~/micromamba/envs/")
       (setenv "WORKON_HOME" "~/.conda/envs/"))
-
+    :bind
+    (("C-c p w" . pyvenv-workon))
     :config
     (pyvenv-mode))
 #+end_src
