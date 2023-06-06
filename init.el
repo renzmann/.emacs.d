@@ -42,20 +42,23 @@
 ;; Packages:4 ends here
 
 ;; [[file:README.org::*Proxy settings][Proxy settings:1]]
-(let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
-  (when (file-exists-p proxy-file)
-    (load-file proxy-file)
-    (setq url-proxy-services
-          '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-            ("http" . "proxy:9119")
-            ("https" . "proxy:9119")))
-    (setq url-http-proxy-basic-auth-storage
-          (list
-           (list
-            (concat renz/proxy-host ":" renz/proxy-port)
-            (cons renz/proxy-login
-                  (base64-encode-string
-                   (concat renz/proxy-login ":" (password-read "Proxy password: ")))))))))
+(defun renz/enable-proxy ()
+  (interactive)
+  "Turn on HTTP proxy."
+  (let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
+    (when (file-exists-p proxy-file)
+      (load-file proxy-file)
+      (setq url-proxy-services
+            '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+              ("http" . "proxy:9119")
+              ("https" . "proxy:9119")))
+      (setq url-http-proxy-basic-auth-storage
+            (list
+             (list
+              (concat renz/proxy-host ":" renz/proxy-port)
+              (cons renz/proxy-login
+                    (base64-encode-string
+                     (concat renz/proxy-login ":" (password-read "Proxy password: "))))))))))
 ;; Proxy settings:1 ends here
 
 ;; [[file:README.org::*Configuration][Configuration:1]]
