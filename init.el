@@ -20,6 +20,26 @@
   (load custom-file 'noerror))
 ;; Custom:1 ends here
 
+;; [[file:README.org::*Proxy settings][Proxy settings:1]]
+(defun renz/enable-proxy ()
+  (interactive)
+  "Turn on HTTP proxy."
+  (let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
+    (when (file-exists-p proxy-file)
+      (load-file proxy-file)
+      (setq url-proxy-services
+            '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+              ("http" . (concat renz/proxy-host ":" renz/proxy-port))
+              ("https" . (concat renz/proxy-host ":" renz/proxy-port))))
+      (setq url-http-proxy-basic-auth-storage
+            (list
+             (list
+              (concat renz/proxy-host ":" renz/proxy-port)
+              (cons renz/proxy-login
+                    (base64-encode-string
+                     (concat renz/proxy-login ":" (password-read "Proxy password: "))))))))))
+;; Proxy settings:1 ends here
+
 ;; [[file:README.org::*Packages][Packages:1]]
 (require 'package)
 (setq package-enable-at-startup nil)
@@ -40,26 +60,6 @@
 ;; [[file:README.org::*Packages][Packages:4]]
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:4 ends here
-
-;; [[file:README.org::*Proxy settings][Proxy settings:1]]
-(defun renz/enable-proxy ()
-  (interactive)
-  "Turn on HTTP proxy."
-  (let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
-    (when (file-exists-p proxy-file)
-      (load-file proxy-file)
-      (setq url-proxy-services
-            '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-              ("http" . "proxy:9119")
-              ("https" . "proxy:9119")))
-      (setq url-http-proxy-basic-auth-storage
-            (list
-             (list
-              (concat renz/proxy-host ":" renz/proxy-port)
-              (cons renz/proxy-login
-                    (base64-encode-string
-                     (concat renz/proxy-login ":" (password-read "Proxy password: "))))))))))
-;; Proxy settings:1 ends here
 
 ;; [[file:README.org::*Configuration][Configuration:1]]
 (defun renz/windowsp ()
@@ -859,6 +859,10 @@ Jumps at tangled code from org src block."
 
 (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 ;; BigQuery ~sql~ Blocks in Org-Babel:1 ends here
+
+;; [[file:README.org::*Python][Python:1]]
+(add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
+;; Python:1 ends here
 
 ;; [[file:README.org::*Pyright error links in =*compilation*=][Pyright error links in =*compilation*=:1]]
 (with-eval-after-load 'compile

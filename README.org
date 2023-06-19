@@ -127,13 +127,43 @@ have the following header and [[Footer][footer:]]
 #+end_src
 
 * Custom
-I prefer having custom modify its own file.  This next snippet ensures any
-=package-install= or =custom= edits go to =custom.el=.
+I prefer having =custom= modify its own file.  This next snippet ensures any
+~package-install~ or =custom= edits go to =custom.el=.
 
 #+begin_src emacs-lisp
   (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
   (when (file-exists-p custom-file)
     (load custom-file 'noerror))
+#+end_src
+
+* Proxy settings
+When behind a corporate proxy, we might have to authenticate before we can pull
+packages off MELPA or ELPA.  Emacs only uses the HOST and PORT portions of the
+=http_proxy= and =https_proxy= environment variables, so we need to set LOGIN (user
+id) and PASSWORD ourselves.
+
+I store the login, port, and host variables in a =proxy.el= file (obviously
+outside version control) when I'm on a machine that's behind an http proxy.  We
+grab the password interactively when such a file exists.
+
+#+begin_src emacs-lisp
+  (defun renz/enable-proxy ()
+    (interactive)
+    "Turn on HTTP proxy."
+    (let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
+      (when (file-exists-p proxy-file)
+        (load-file proxy-file)
+        (setq url-proxy-services
+              '(("no_proxy" . "^\\(localhost\\|10.*\\)")
+                ("http" . (concat renz/proxy-host ":" renz/proxy-port))
+                ("https" . (concat renz/proxy-host ":" renz/proxy-port))))
+        (setq url-http-proxy-basic-auth-storage
+              (list
+               (list
+                (concat renz/proxy-host ":" renz/proxy-port)
+                (cons renz/proxy-login
+                      (base64-encode-string
+                       (concat renz/proxy-login ":" (password-read "Proxy password: "))))))))))
 #+end_src
 
 * Packages
@@ -182,36 +212,6 @@ There are also a few hand-made packages I keep around in a special
 
 #+begin_src emacs-lisp
   (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
-#+end_src
-
-** Proxy settings
-When behind a corporate proxy, we might have to authenticate before we can pull
-packages off MELPA or ELPA.  Emacs only uses the HOST and PORT portions of the
-=http_proxy= and =https_proxy= environment variables, so we need to set LOGIN (user
-id) and PASSWORD ourselves.
-
-I store the login, port, and host variables in a =proxy.el= file (obviously
-outside version control) when I'm on a machine that's behind an http proxy.  We
-grab the password interactively when such a file exists.
-
-#+begin_src emacs-lisp
-  (defun renz/enable-proxy ()
-    (interactive)
-    "Turn on HTTP proxy."
-    (let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
-      (when (file-exists-p proxy-file)
-        (load-file proxy-file)
-        (setq url-proxy-services
-              '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-                ("http" . "proxy:9119")
-                ("https" . "proxy:9119")))
-        (setq url-http-proxy-basic-auth-storage
-              (list
-               (list
-                (concat renz/proxy-host ":" renz/proxy-port)
-                (cons renz/proxy-login
-                      (base64-encode-string
-                       (concat renz/proxy-login ":" (password-read "Proxy password: "))))))))))
 #+end_src
 
 * OS-specific Configuration
@@ -1704,6 +1704,9 @@ with it.
 *** BigQuery exception markers
 
 ** Python
+#+begin_src emacs-lisp
+  (add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
+#+end_src
 *** Pyright error links in =*compilation*=
 The =M-x compile= feature does not recognize or parse ~pyright~ error messages out
 of the box, so I add that support myself.  Here's an example error message:
