@@ -857,7 +857,7 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
      '("rg -n -H --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27)))
 #+end_src
 
-** TODO Shorter file paths in grep/compilation buffers
+** Shorter file paths in grep/compilation buffers
 This is an older, unmaintained file that throws a few warnings.  Let's clean
 that up sometime.
 
@@ -1313,6 +1313,9 @@ I'd much prefer to use the easier and more intuitive =TAB=.
 #+end_src
 
 ** =corfu= and =vertico=
+
+When I was using =corfu= and =vertico=, I did some hacking on it to optimize for
+=orderless=, as well as some "tab-n-go" style configuration.
 
 #+begin_src emacs-lisp
   (use-package corfu
