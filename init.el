@@ -71,11 +71,11 @@
   (setq ispell-program-name "aspell.exe"))
 ;; Microsoft Windows:1 ends here
 
-;; [[file:README.org::*Configuration][Configuration:1]]
+;; [[file:README.org::*macOS][macOS:1]]
 (when (eq system-type 'darwin)
   (setq exec-path-from-shell-arguments '("-l"))
   (exec-path-from-shell-initialize))
-;; Configuration:1 ends here
+;; macOS:1 ends here
 
 ;; [[file:README.org::*Font][Font:1]]
 (let ((font-file (expand-file-name "font.el" user-emacs-directory)))
@@ -115,9 +115,9 @@
 (server-start)
 ;; Start a server for =emacsclient=:1 ends here
 
-;; [[file:README.org::*So long and thanks for all the fish][So long and thanks for all the fish:1]]
+;; [[file:README.org::*Don't hang when visiting files with extremely long lines][Don't hang when visiting files with extremely long lines:1]]
 (global-so-long-mode t)
-;; So long and thanks for all the fish:1 ends here
+;; Don't hang when visiting files with extremely long lines:1 ends here
 
 ;; [[file:README.org::*Unicode][Unicode:1]]
 (prefer-coding-system       'utf-8)
@@ -138,9 +138,22 @@
 (savehist-mode 1)
 ;; Remember minibuffer history:1 ends here
 
-;; [[file:README.org::*Colored output in ~eshell~][Colored output in ~eshell~:1]]
-(add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
-;; Colored output in ~eshell~:1 ends here
+;; [[file:README.org::*Render ASCII color escape codes][Render ASCII color escape codes:1]]
+(defun renz/display-ansi-colors ()
+  "Render colors in a buffer that contains ASCII color escape codes."
+  (interactive)
+  (require 'ansi-color)
+  (let ((inhibit-read-only t))
+    (ansi-color-apply-on-region (point-min) (point-max))))
+;; Render ASCII color escape codes:1 ends here
+
+;; [[file:README.org::*Colored output in ~eshell~ and =*compilation*=][Colored output in ~eshell~ and =*compilation*=:1]]
+(add-hook 'compilation-filter-hook #'renz/display-ansi-colors)
+;; Colored output in ~eshell~ and =*compilation*=:1 ends here
+
+;; [[file:README.org::*Colored output in ~eshell~ and =*compilation*=][Colored output in ~eshell~ and =*compilation*=:2]]
+(add-hook 'eshell-preoutput-filter-functions  #'ansi-color-apply)
+;; Colored output in ~eshell~ and =*compilation*=:2 ends here
 
 ;; [[file:README.org::*Recent files menu][Recent files menu:1]]
 (recentf-mode t)
@@ -182,18 +195,6 @@
 (setq-default indent-tabs-mode nil)
 ;; Indent with spaces by default:1 ends here
 
-;; [[file:README.org::*Indent with spaces by default][Indent with spaces by default:2]]
-(add-hook 'sh-mode-hook (lambda () (setq indent-tabs-mode t)))
-;; Indent with spaces by default:2 ends here
-
-;; [[file:README.org::*Render ASCII color escape codes][Render ASCII color escape codes:1]]
-(defun renz/display-ansi-colors ()
-  "Render colors in a buffer that contains ASCII color escape codes."
-  (interactive)
-  (require 'ansi-color)
-  (ansi-color-apply-on-region (point-min) (point-max)))
-;; Render ASCII color escape codes:1 ends here
-
 ;; [[file:README.org::*Enable horizontal scrolling with mouse][Enable horizontal scrolling with mouse:1]]
 (setq mouse-wheel-tilt-scroll t)
 ;; Enable horizontal scrolling with mouse:1 ends here
@@ -215,8 +216,11 @@
 
 ;; [[file:README.org::*Always turn on flymake in prog mode][Always turn on flymake in prog mode:1]]
 (add-hook 'prog-mode-hook #'flymake-mode)
-;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 ;; Always turn on flymake in prog mode:1 ends here
+
+;; [[file:README.org::*Always turn on flymake in prog mode][Always turn on flymake in prog mode:2]]
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+;; Always turn on flymake in prog mode:2 ends here
 
 ;; [[file:README.org::*Automatically create matching parens in programming modes][Automatically create matching parens in programming modes:1]]
 (add-hook 'prog-mode-hook (electric-pair-mode t))
@@ -240,13 +244,18 @@
 ;; [[file:README.org::*Don't wrap lines][Don't wrap lines:1]]
 (setq-default truncate-lines t)
 (add-hook 'eshell-mode-hook (lambda () (setq-local truncate-lines nil)))
+(add-hook 'shell-mode-hook (lambda () (setq-local truncate-lines nil)))
 ;; Don't wrap lines:1 ends here
 
 ;; [[file:README.org::*Relative line numbers][Relative line numbers:1]]
-(add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
-(add-hook 'yaml-mode-hook (lambda () (setq display-line-numbers 'relative)))
+(defun renz/display-relative-lines ()
+  (setq display-line-numbers 'relative))
+
+(add-hook 'prog-mode-hook #'renz/display-relative-lines)
+(add-hook 'yaml-mode-hook #'renz/display-relative-lines)
+
 (unless (display-graphic-p)
-  (add-hook 'text-mode-hook (lambda () (setq display-line-numbers 'relative))))
+  (add-hook 'text-mode-hook #'renz/display-relative-lines))
 ;; Relative line numbers:1 ends here
 
 ;; [[file:README.org::*Delete region when we yank on top of it][Delete region when we yank on top of it:1]]
@@ -258,18 +267,8 @@
 ;; Enable mouse in terminal/TTY:1 ends here
 
 ;; [[file:README.org::*Compilation][Compilation:1]]
-(setq compilation-scroll-output t)
+(setq compilation-scroll-output 'first-error)
 ;; Compilation:1 ends here
-
-;; [[file:README.org::*Compilation][Compilation:2]]
-(defun renz/colorize-compilation-buffer ()
-  "Enable colors in the *compilation* buffer."
-  (require 'ansi-color)
-  (let ((inhibit-read-only t))
-    (ansi-color-apply-on-region (point-min) (point-max))))
-
-(add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
-;; Compilation:2 ends here
 
 ;; [[file:README.org::*Tool bar][Tool bar:1]]
 (tool-bar-mode -1)
@@ -316,10 +315,8 @@
 ;; Prefer ~aspell~ over ~ispell~:1 ends here
 
 ;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
-(setq backup-directory-alist
-      '(("." . "~/.emacs.d/backups/"))
-      ;; auto-save-file-name-transforms
-      ;; '(("." ,temporary-file-directory t))
+(setq backup-directory-alist '(("." . "~/.emacs.d/backups/"))
+      ;; auto-save-file-name-transforms '(("." ,temporary-file-directory t))
       )
 ;; Backup and auto-save files:1 ends here
 
@@ -454,6 +451,10 @@ config site with matching `EXTENSION' regexp."
 (global-set-key (kbd "C-c k") #'just-one-space)
 ;; =C-c k= kill all but one space:1 ends here
 
+;; [[file:README.org::*=C-c o= open thing at point in browser][=C-c o= open thing at point in browser:1]]
+(global-set-key (kbd "C-c o") #'browse-url-at-point)
+;; =C-c o= open thing at point in browser:1 ends here
+
 ;; [[file:README.org::*=C-c q= replace regexp][=C-c q= replace regexp:1]]
 (global-set-key (kbd "C-c q") #'replace-regexp)
 ;; =C-c q= replace regexp:1 ends here
@@ -477,10 +478,6 @@ config site with matching `EXTENSION' regexp."
 
 (global-set-key (kbd "C-c v") #'renz/git-commit)
 ;; =C-c v= faster git-commit:1 ends here
-
-;; [[file:README.org::*=C-c V= open thing at point in browser][=C-c V= open thing at point in browser:1]]
-(global-set-key (kbd "C-c V") #'browse-url-at-point)
-;; =C-c V= open thing at point in browser:1 ends here
 
 ;; [[file:README.org::*=C-c w= whitespace mode][=C-c w= whitespace mode:1]]
 (global-set-key (kbd "C-c w") #'whitespace-mode)

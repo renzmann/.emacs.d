@@ -319,7 +319,6 @@ the terminal emulator, I've mostly given up on the GUI key in favor of other
 chords, especially the =C-c= ones.
 
 ** macOS
-*** Configuration
 Launching Emacs from the typical application launcher or command-space usually
 won't capture any modifications to =$PATH=, typically handled in a file like
 =~/.profile= or =~/.bashrc=. So, the main configuration included here is from
@@ -333,10 +332,9 @@ won't capture any modifications to =$PATH=, typically handled in a file like
 
 
 * Font
-Fonts are a tricky business.  They render differently depending on what computer
-I'm using, and I can't always have my favorite fonts installed everywhere.
-Moreover, I can't expect everyone who might want to try out this configuration
-to use the same fonts I do, so they are an optional thing.  If a file
+Fonts are a tricky business.  I can't always have my favorite fonts installed
+everywhere, and I can't expect everyone who might want to try out this
+configuration to use the same fonts I do.  So I made them optional.  If a file
 =~/.emacs.d/font.el= exists, then this section will simply read it and apply
 whatever settings are there.
 
@@ -346,8 +344,8 @@ whatever settings are there.
       (load-file font-file)))
 #+end_src
 
-Typically I'll have a per-os font configuration in there.  [[https://github.com/renzmann/.emacs.d/blob/main/font.el][Check out what I've
-done here!]]
+Typically I'll have a per-OS font configuration in there, [[https://github.com/renzmann/.emacs.d/blob/main/font.el][typically with some
+variant of Hack Nerd Mono.]]
 
 * Theme
 [[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with
@@ -408,7 +406,8 @@ Tree-sitter are located under [[* Tool configuration][Tool configuration]].
 
 ** Stop stupid bell
 This snippet has a special place in my heart, because it was the first two lines
-of elisp I wrote when first learning Emacs.
+of elisp I wrote when first learning Emacs.  It is the central kernel around
+which my =~/.emacs= and later =~/.emacs.d/init.el= grew.
 
 #+begin_src emacs-lisp
   ;; Stop stupid bell
@@ -423,8 +422,7 @@ The bell is really, /really/ annoying.
   (server-start)
 #+end_src
 
-** So long and thanks for all the fish
-Prevents hanging when visiting files with extremely long lines.
+** Don't hang when visiting files with extremely long lines
 
 #+begin_src emacs-lisp
   (global-so-long-mode t)
@@ -432,7 +430,7 @@ Prevents hanging when visiting files with extremely long lines.
 
 ** Unicode
 Sometimes (especially on Windows), Emacs gets confused about what encoding to
-use.  These setting try to prevent that confusion.
+use.  These settings try to prevent that confusion.
 
 #+begin_src emacs-lisp
   (prefer-coding-system       'utf-8)
@@ -472,15 +470,39 @@ Found this on a [[https://www.youtube.com/watch?v=51eSeqcaikM][System Crafters v
   (savehist-mode 1)
 #+end_src
 
-** Colored output in ~eshell~
-Copy-pasted from a [[https://emacs.stackexchange.com/questions/9517/colored-git-output-in-eshell][stack overflow question]].
+** Render ASCII color escape codes
+For files containing color escape codes, this provides a way to render the
+colors in-buffer.  Provided by a [[https://stackoverflow.com/a/3072831/13215205][helpful stackoverflow answer]].
 
 #+begin_src emacs-lisp
-  (add-hook 'eshell-preoutput-filter-functions  'ansi-color-apply)
+  (defun renz/display-ansi-colors ()
+    "Render colors in a buffer that contains ASCII color escape codes."
+    (interactive)
+    (require 'ansi-color)
+    (let ((inhibit-read-only t))
+      (ansi-color-apply-on-region (point-min) (point-max))))
 #+end_src
 
+*** Colored output in ~eshell~ and =*compilation*=
+In =*compilation*= mode, we just use the "display colors" function from above.
+Enable colors in the =*compilation*= buffer.
+
+#+begin_src emacs-lisp
+  (add-hook 'compilation-filter-hook #'renz/display-ansi-colors)
+#+end_src
+
+For =eshell=, this is copy-pasted from a [[https://emacs.stackexchange.com/questions/9517/colored-git-output-in-eshell][stack overflow question]].
+
+#+begin_src emacs-lisp
+  (add-hook 'eshell-preoutput-filter-functions  #'ansi-color-apply)
+#+end_src
+
+*** xterm-color
+Soon, I'd like to swap out my hacks above for this more robust package:
+https://github.com/atomontage/xterm-color/tree/master
+
 ** Recent files menu
-This enables "File -> Open Recent" from the menu bar, and ~consult-recent-file~.
+This enables "File -> Open Recent" from the menu bar and using ~completing-read~ over the ~recentf-list~.
 
 #+begin_src emacs-lisp
   (recentf-mode t)
@@ -507,6 +529,8 @@ currently on.
 #+begin_src emacs-lisp
   (scroll-bar-mode -1)
 #+end_src
+
+By default, though, I prefer it to be off when I start Emacs.
 
 ** Window margins and fringe
 This hunk adds some space around all sides of each window so that we get a clear
@@ -546,7 +570,7 @@ these favor spaces over tabs, so I prefer this as the default.
 
 Generally, though, indentation behavior is set by major-mode functions, which
 may or may not use Emacs' built-in indentation functions.  For instance, when
-trying to find the functions behind indentation in shell mode, I cam across
+trying to find the functions behind indentation in shell mode, I came across
 ~smie.el~, whose introductory comments include this gem:
 
 #+begin_quote
@@ -569,22 +593,6 @@ Even the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto_002dIn
   indentation function which nobody dares to touch.
 #+end_quote
 
-#+begin_src emacs-lisp
-  (add-hook 'sh-mode-hook (lambda () (setq indent-tabs-mode t)))
-#+end_src
-
-** Render ASCII color escape codes
-For files containing color escape codes, this provides a way to render the
-colors in-buffer.
-
-#+begin_src emacs-lisp
-  (defun renz/display-ansi-colors ()
-    "Render colors in a buffer that contains ASCII color escape codes."
-    (interactive)
-    (require 'ansi-color)
-    (ansi-color-apply-on-region (point-min) (point-max)))
-#+end_src
-
 ** Enable horizontal scrolling with mouse
 From a helpful [[https://stackoverflow.com/a/67758169][stackoverflow answer.]]
 
@@ -601,32 +609,6 @@ intend when I'm trying to get a window to display a specific buffer.
 #+begin_src emacs-lisp
   (unless (version< emacs-version "27.1")
     (setq switch-to-buffer-obey-display-actions t))
-#+end_src
-
-From the same article, I'm experimenting with some buffers appearing in a
-specific "side bar" location.  However this can have unintended consequences,
-like the window becoming unselectable or getting reused by magit when I didn't
-want it to.
-
-#+begin_src emacs-lisp :tangle no
-;; left, top, right, bottom
-(setq window-sides-slots '(0 0 1 1))
-
-(add-to-list 'display-buffer-alist
-          `(,(rx (| "*compilation*" "*grep*"))
-            display-buffer-in-side-window
-            (side . bottom)
-            (slot . 0)
-            (window-parameters . ((no-delete-other-windows . t)))
-            (window-width . 80)))
-
-(setq compilation-window-height 20)
-
-(add-to-list 'display-buffer-alist
-  '("\\*e?shell\\*" display-buffer-in-direction
-    (direction . bottom)
-    (window . root)
-    (window-height . 0.3)))
 #+end_src
 
 ** Automatically update buffers when contents change on disk
@@ -651,8 +633,14 @@ Add a faint background highlight to the line we're editing.
 ** Always turn on flymake in prog mode
 
 #+begin_src emacs-lisp
-(add-hook 'prog-mode-hook #'flymake-mode)
-;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
+  (add-hook 'prog-mode-hook #'flymake-mode)
+#+end_src
+
+Another, related mode is ~flyspell-prog-mode~, which is just checks spelling in
+comments and strings.
+
+#+begin_src emacs-lisp
+  (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 #+end_src
 
 ** Automatically create matching parens in programming modes
@@ -679,6 +667,9 @@ check for mixed tabs, spaces, and line endings.
 #+end_src
 
 ** Killing buffers with a running process
+Typically, Emacs will ask you to confirm before killing a buffer that has a
+running process, such as with ~run-python~, a =*shell*= buffer, or a =*compilation*=
+buffer.
 
 #+begin_src emacs-lisp
 (setq kill-buffer-query-functions
@@ -687,10 +678,14 @@ check for mixed tabs, spaces, and line endings.
 #+end_src
 
 ** Don't wrap lines
+I much prefer having long lines simply spill off to the right of the screen than
+having them wrap around onto the next line, except in the case where I'd like to
+see wrapped line content, like in one of the shell modes.
 
 #+begin_src emacs-lisp
   (setq-default truncate-lines t)
   (add-hook 'eshell-mode-hook (lambda () (setq-local truncate-lines nil)))
+  (add-hook 'shell-mode-hook (lambda () (setq-local truncate-lines nil)))
 #+end_src
 
 ** Relative line numbers
@@ -704,10 +699,14 @@ well in org-mode without the line numbers so far, since for each of the code
 blocks I can always use =C-c '= to edit in ~prog-mode~, where I /do/ get line numbers.
 
 #+begin_src emacs-lisp
-  (add-hook 'prog-mode-hook (lambda () (setq display-line-numbers 'relative)))
-  (add-hook 'yaml-mode-hook (lambda () (setq display-line-numbers 'relative)))
+  (defun renz/display-relative-lines ()
+    (setq display-line-numbers 'relative))
+
+  (add-hook 'prog-mode-hook #'renz/display-relative-lines)
+  (add-hook 'yaml-mode-hook #'renz/display-relative-lines)
+
   (unless (display-graphic-p)
-    (add-hook 'text-mode-hook (lambda () (setq display-line-numbers 'relative))))
+    (add-hook 'text-mode-hook #'renz/display-relative-lines))
 #+end_src
 
 ** Delete region when we yank on top of it
@@ -727,25 +726,13 @@ the yanked content.
 #+end_src
 
 ** Compilation
-As new text appears, the default behavior is for it to spill off the bottom
-where we can't see it.  Instead, I prefer the window to scroll along with text
-as it appears
+As new text appears, the default behavior is for it to spill off the bottom,
+unless we manually scroll to the end of the buffer.  Instead, I prefer the
+window to automatically scroll along with text as it appears, stopping at the
+first error that appears.
 
 #+begin_src emacs-lisp
-  (setq compilation-scroll-output t)
-#+end_src
-
-Enable colors in the =*compilation*= buffer.  Provided by a [[https://stackoverflow.com/a/3072831/13215205][helpful stackoverflow
-answer]].
-
-#+begin_src emacs-lisp
-  (defun renz/colorize-compilation-buffer ()
-    "Enable colors in the *compilation* buffer."
-    (require 'ansi-color)
-    (let ((inhibit-read-only t))
-      (ansi-color-apply-on-region (point-min) (point-max))))
-
-  (add-hook 'compilation-filter-hook 'renz/colorize-compilation-buffer)
+  (setq compilation-scroll-output 'first-error)
 #+end_src
 
 ** Tool bar
@@ -785,14 +772,13 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 #+end_src
 
 ** Shorter file paths in grep/compilation buffers
-This is an older, unmaintained file that throws a few warnings.  Let's clean
-that up sometime.
 
 #+begin_src emacs-lisp
   (use-package scf-mode
     :load-path "site-lisp"
     :hook (grep-mode . (lambda () (scf-mode 1))))
 #+end_src
+
 ** Confirm when exiting Emacs
 It's very annoying when I'm working and suddenly I meant to do ~C-c C-x~, but
 instead hit ~C-x C-c~.  This helps prevent that.
@@ -825,20 +811,23 @@ not found" errors popping up during auto-save on Windows.  Once I debug that,
 I'll uncomment the second part.
 
 #+begin_src emacs-lisp
-  (setq backup-directory-alist
-        '(("." . "~/.emacs.d/backups/"))
-        ;; auto-save-file-name-transforms
-        ;; '(("." ,temporary-file-directory t))
+  (setq backup-directory-alist '(("." . "~/.emacs.d/backups/"))
+        ;; auto-save-file-name-transforms '(("." ,temporary-file-directory t))
         )
 #+end_src
 
 ** Enable ~narrow-to-region~
+~narrow-to-region~ restricts editing in this buffer to the current region.  The
+rest of the text becomes temporarily invisible and untouchable but is not
+deleted; if you save the buffer in a file, the invisible text is included in the
+file.  =C-x n w= makes all visible again.
 
 #+begin_src emacs-lisp
   (put 'narrow-to-region 'disabled nil)
 #+end_src
 
 ** Enable up/downcase-region
+Allows us to convert entire regions to upper or lower case.
 
 #+begin_src emacs-lisp
   (put 'upcase-region 'disabled nil)
@@ -866,9 +855,7 @@ suspend the frame.
 #+end_src
 
 Hippie-expand [[https://www.masteringemacs.org/article/text-expansion-hippie-expand][is purported]] to be a better version of ~dabbrev~, but I rather like
-the default behavior of ~dabbrev~.  I typically have ~hippie-expand~ on a dedicated
-key, and sometimes re-bind the default =M-/= as well, depending on my current
-workflow.
+the default behavior of ~dabbrev~.
 
 #+begin_src emacs-lisp
   (global-set-key [remap dabbrev-expand] 'hippie-expand)
@@ -918,11 +905,10 @@ more frequently.
 Emacs has [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html][some standards]] about where user-configured keys should go; =C-c
 <letter>= is always free for users.  It may seem like overkill how I set a header
 for each possible =C-c= combination, but it's incredibly handy when I want to jump
-directly to one of these headings while in another buffer.  See
-e.g. =renz/jump-init=, which allows me to narrow in on a particular key I'd like
-to bind by leveraging =completing-read=.  If a =C-c <letter>= combination is missing
-as a header, then I'm probably using it in a ~:bind~ statement with ~use-package~
-somewhere else.
+directly to one of these headings while in another buffer.  See e.g. =org-goto=,
+which allows me to narrow in on a particular key I'd like to bind by leveraging
+=completing-read=.  If a =C-c <letter>= combination is missing as a header, then I'm
+probably using it in a ~:bind~ statement with ~use-package~ somewhere else.
 
 *** =C-c b= build / compile
 
@@ -942,19 +928,18 @@ somewhere else.
 Before the whole language server revolution, we had TAGS files for caching the
 location of symbol definitions.  =etags= comes with Emacs, and combining some
 clever use of =find= with it can render a pretty good symbol search experience.
-To generate the TAGS file, I usually have something similar to this in each
-project's =Makefile=:
+To generate the TAGS file, I usually have a =TAGS= recipe that looks something
+similar to this in each project's =Makefile=:
 
-#+begin_src makefile :tangle Makefile
-  TAGS:
-          find . -type d -name ".venv" -prune \
-                  -o -type d -name ".ipynb_checkpoints" -prune \
-                  -o -type d -name ".node_modules" -prune \
-                  -o -type d -name "elpa" -prune \
-                  -o -type f -name "*.py" -print \
-                  -o -type f -name "*.sql" -print \
-                  -o -type f -name "*.el" -print \
-                  | etags -
+#+begin_src shell
+  find . -type d -name ".venv" -prune \
+          -o -type d -name ".ipynb_checkpoints" -prune \
+          -o -type d -name ".node_modules" -prune \
+          -o -type d -name "elpa" -prune \
+          -o -type f -name "*.py" -print \
+          -o -type f -name "*.sql" -print \
+          -o -type f -name "*.el" -print \
+          | etags -
 #+end_src
 
 Then, =M-x project-compile RET make TAGS= builds a tags table.  At which point, I
@@ -1045,6 +1030,12 @@ completion, with just a little help from =xref-find-definitions=.
   (global-set-key (kbd "C-c k") #'just-one-space)
 #+end_src
 
+*** =C-c o= open thing at point in browser
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c o") #'browse-url-at-point)
+#+end_src
+
 *** =C-c q= replace regexp
 
 #+begin_src emacs-lisp
@@ -1075,12 +1066,6 @@ completion, with just a little help from =xref-find-definitions=.
     (other-window 1))
 
   (global-set-key (kbd "C-c v") #'renz/git-commit)
-#+end_src
-
-*** =C-c V= open thing at point in browser
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-c V") #'browse-url-at-point)
 #+end_src
 
 *** =C-c w= whitespace mode
@@ -1123,6 +1108,7 @@ at point.  For both the minibuffer and ~completion-at-point~ it uses a special
 buffer called ~*Completions*~, from which we can see (and optionally select) a
 completion from potential candidates.  Before we get to tweak those settings,
 though, we first need to oil the engine with an enhanced /completion style/
+
 
 ** Completion style: Orderless
 For both the minibuffer and ~completion-at-point~, I use the same /completion
@@ -1295,7 +1281,6 @@ When I was using =corfu= and =vertico=, I did some hacking on it to optimize for
 * Language-specific major modes
 
 ** Shell (Bash, sh, ...)
-
 #+begin_src emacs-lisp
   (defun renz/sh-indentation ()
     (setq indent-tabs-mode t)
