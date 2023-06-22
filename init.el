@@ -61,28 +61,27 @@
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:4 ends here
 
-;; [[file:README.org::*Configuration][Configuration:1]]
+;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
 (defun renz/windowsp ()
   "Are we on Microsoft Windows?"
   (memq system-type '(windows-nt cygwin ms-dos)))
 
 (when (renz/windowsp)
-  ;; Set a font that supports emoji
-  (set-fontset-font t 'unicode (font-spec :family "Segoe UI Emoji") nil 'prepend)
-  (set-face-attribute 'default nil :font "Hack NF-12")
-
   ;; Alternate ispell when we've got msys on Windows
   (setq ispell-program-name "aspell.exe"))
-;; Configuration:1 ends here
+;; Microsoft Windows:1 ends here
 
 ;; [[file:README.org::*Configuration][Configuration:1]]
 (when (eq system-type 'darwin)
-  ;; Uncomment this if we can't install Hack Nerd font
-  ;; (set-face-attribute 'default nil :font "Menlo-14")
-  (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
   (setq exec-path-from-shell-arguments '("-l"))
   (exec-path-from-shell-initialize))
 ;; Configuration:1 ends here
+
+;; [[file:README.org::*Font][Font:1]]
+(let ((font-file (expand-file-name "font.el" user-emacs-directory)))
+  (when (file-exists-p font-file)
+    (load-file font-file)))
+;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
 (use-package ef-themes
@@ -106,6 +105,11 @@
   :config
   (load-theme 'ef-cherie :no-confirm))
 ;; Theme:1 ends here
+
+;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
+;; Stop stupid bell
+(setq ring-bell-function 'ignore)
+;; Stop stupid bell:1 ends here
 
 ;; [[file:README.org::*Start a server for =emacsclient=][Start a server for =emacsclient=:1]]
 (server-start)
@@ -213,11 +217,6 @@
 (add-hook 'prog-mode-hook #'flymake-mode)
 ;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 ;; Always turn on flymake in prog mode:1 ends here
-
-;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
-;; Stop stupid bell
-(setq ring-bell-function 'ignore)
-;; Stop stupid bell:1 ends here
 
 ;; [[file:README.org::*Automatically create matching parens in programming modes][Automatically create matching parens in programming modes:1]]
 (add-hook 'prog-mode-hook (electric-pair-mode t))

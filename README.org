@@ -11,7 +11,7 @@
 Want to use it? Go ahead!
 
 #+begin_src shell :eval never
-git clone --depth 1 https://github.com/renzmann/.emacs.d ~/.emacs.d
+git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 #+end_src
 
 All external dependency sources are explicitly included under the ~elpa/~
@@ -103,6 +103,71 @@ contributors, such as:
 - [[https://github.com/minad][Daniel Mendler]]
 - [[https://github.com/oantolin][Omar Antolín Camarena]]
 - [[https://www.lucacambiaghi.com/vanilla-emacs/readme.html][Luca's Literate Config]]
+
+* Getting Emacs
+For a while I would try to compile Emacs myself, but installing the whole
+compilation toolchain hasn't been worth it lately, especially on Windows.
+Instead, I've started simply downloading emacs from these sources on each of the
+platforms:
+
+** Windows
+I go to the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/emacs-29/][pretest FTP]] to get the latest version of Emacs.  Usually not quite
+up-to-date with the master branch, but still one version number ahead of the
+most recent official release.
+
+** Mac
+On macOS, I've had the best luck with [[https://github.com/jimeh/emacs-builds/releases][jimeh's nightly builds]].  These Emacs.app
+bundles have no external dependencies, signed with a developer certificate, and
+notarized by Apple, so it /just works/.  Even without administrator permissions,
+you can drag the bundle to the "Applications" folder under your user home
+instead, and Emacs still works beautifully.
+
+In particular, this feature has saved me a lot of headaches that I ran into
+compiling Emacs on my own:
+
+#+begin_quote
+Emacs.app is signed with a developer certificate and notarized by Apple.
+#+end_quote
+
+Very nice!
+
+** Linux
+Depending on the machine, I get Emacs one of several ways in a GNU/Linux setup.
+These rank from highest to lowest priority:
+
+1. Through my system package manager, such as =sudo apt-get install emacs= or =pacman -S emacs=
+2. Through the [[https://ftp.gnu.org/gnu/emacs/][official FTP]]
+3. Through the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/emacs-29/][pretest FTP]]
+4. Through [[https://github.com/mariusvniekerk/condax][condax]]
+5. Compiling it myself
+
+*** Compiling
+If I do ever want to compile it myself, these are the options I use, making sure
+to export the correct =CC= and =GCC= variables:
+
+#+begin_src shell
+  git clone git://git.savannah.gnu.org/emacs.git --branch emacs-29 --depth 1
+  export CC=/usr/bin/gcc-10 CXX=/usr/bin/gcc-10
+  ./autogen.sh
+  ./configure \
+    --prefix=/c/emacs-29 \
+    --with-native-compilation \
+    --with-tree-sitter \
+    --with-gnutls \
+    --with-jpeg \
+    --with-png \
+    --with-rsvg \
+    --with-tiff \
+    --with-wide-int \
+    --with-xft \
+    --with-xml2 \
+    --with-xpm \
+    --without-dbus \
+    --without-pop
+  make --jobs=$(nproc)
+  sudo make install
+#+end_src
+
 
 * Header
 To comply with the Emacs [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][conventions for libraries]], the tangled init.el must
@@ -215,100 +280,8 @@ There are also a few hand-made packages I keep around in a special
 #+end_src
 
 * OS-specific Configuration
+
 ** Microsoft Windows
-*** Compiling Emacs
-Compiling Emacs on Windows can be a bit of a pain, but it’s mostly the same as
-on *nix.  First, I use [[https://www.msys2.org/][MSYS2-MinGW]] to compile everything. From the MinGW
-terminal (NOT the plain MSYS2 one), I install all of these dependencies.
-
-#+begin_src shell
-  pacman -Su \
-          autoconf \
-          autogen \
-          automake \
-          automake-wrapper \
-          diffutils \
-          git \
-          guile \
-          libgc \
-          libguile \
-          libltdl \
-          libunistring \
-          make \
-          texinfo \
-          mingw-w64-x86_64-binutils \
-          mingw-w64-x86_64-bzip2 \
-          mingw-w64-x86_64-cairo \
-          mingw-w64-x86_64-crt-git \
-          mingw-w64-x86_64-dbus \
-          mingw-w64-x86_64-expat \
-          mingw-w64-x86_64-fontconfig \
-          mingw-w64-x86_64-freetype \
-          mingw-w64-x86_64-gcc \
-          mingw-w64-x86_64-gcc-libs \
-          mingw-w64-x86_64-gdk-pixbuf2 \
-          mingw-w64-x86_64-gettext \
-          mingw-w64-x86_64-giflib \
-          mingw-w64-x86_64-glib2 \
-          mingw-w64-x86_64-gmp \
-          mingw-w64-x86_64-gnutls \
-          mingw-w64-x86_64-harfbuzz \
-          mingw-w64-x86_64-headers-git \
-          mingw-w64-x86_64-imagemagick \
-          mingw-w64-x86_64-isl \
-          mingw-w64-x86_64-libffi \
-          mingw-w64-x86_64-libgccjit \
-          mingw-w64-x86_64-libiconv \
-          mingw-w64-x86_64-libjpeg-turbo \
-          mingw-w64-x86_64-libpng \
-          mingw-w64-x86_64-librsvg \
-          mingw-w64-x86_64-libtiff \
-          mingw-w64-x86_64-libwebp \
-          mingw-w64-x86_64-libwinpthread-git \
-          mingw-w64-x86_64-libxml2 \
-          mingw-w64-x86_64-mpc \
-          mingw-w64-x86_64-mpfr \
-          mingw-w64-x86_64-pango \
-          mingw-w64-x86_64-pixman \
-          mingw-w64-x86_64-winpthreads \
-          mingw-w64-x86_64-xpm-nox \
-          mingw-w64-x86_64-lcms2 \
-          mingw-w64-x86_64-xz \
-          mingw-w64-x86_64-zlib \
-          mingw-w64-x86_64-tree-sitter \
-          tar \
-          wget
-#+end_src
-
-Then, the configure scripts:
-
-#+begin_src shell
-  ./autogen.sh
-  ./configure \
-      --prefix=/c/emacs-29 \
-      --with-native-compilation \
-      --with-tree-sitter \
-      --with-gnutls \
-      --with-jpeg \
-      --with-png \
-      --with-rsvg \
-      --with-tiff \
-      --with-wide-int \
-      --with-xft \
-      --with-xml2 \
-      --with-xpm \
-      --without-dbus \
-      --without-pop
-#+end_src
-
-And finally the command to compile:
-
-#+begin_src shell
-  make --jobs=$(NPROC)
-  sudo make install
-#+end_src
-
-*** Configuration
 Windows, funnily enough, has some trouble registering the Windows key as a
 usable modifier for Emacs.  In fact, =s-l= will /never/ be an option, since it's
 handled at the hardware level.  I also add a few nice-to-haves, like setting the
@@ -321,10 +294,6 @@ with ~msys64~.
     (memq system-type '(windows-nt cygwin ms-dos)))
 
   (when (renz/windowsp)
-    ;; Set a font that supports emoji
-    (set-fontset-font t 'unicode (font-spec :family "Segoe UI Emoji") nil 'prepend)
-    (set-face-attribute 'default nil :font "Hack NF-12")
-
     ;; Alternate ispell when we've got msys on Windows
     (setq ispell-program-name "aspell.exe"))
 #+end_src
@@ -349,19 +318,7 @@ super can be a bit tough to integrate with both the windowing application /and/
 the terminal emulator, I've mostly given up on the GUI key in favor of other
 chords, especially the =C-c= ones.
 
-*** A note on TreeSitter
-When compiling tree-sitter dll's with ~treesit-install-language-grammar~, I also
-need to launch Emacs via ~runemacs.exe~ from the MinGW terminal to ensure the C
-and C++ compilers are both visible and usable.
-
 ** macOS
-*** Installing Emacs
-On macOS, I've had the best luck with [[https://github.com/jimeh/emacs-builds/releases][jimeh's nightly builds]].  These Emacs.app
-bundles have no external dependencies, signed with a developer certificate, and
-notarized by Apple, so it /just works/.  Even without administrator permissions,
-you can drag the bundle to the "Applications" folder under your user home
-instead, and Emacs still works beautifully.
-
 *** Configuration
 Launching Emacs from the typical application launcher or command-space usually
 won't capture any modifications to =$PATH=, typically handled in a file like
@@ -370,51 +327,27 @@ won't capture any modifications to =$PATH=, typically handled in a file like
 
 #+begin_src emacs-lisp
   (when (eq system-type 'darwin)
-    ;; Uncomment this if we can't install Hack Nerd font
-    ;; (set-face-attribute 'default nil :font "Menlo-14")
-    (set-face-attribute 'default nil :font "Hack Nerd Font Mono-13")
     (setq exec-path-from-shell-arguments '("-l"))
     (exec-path-from-shell-initialize))
 #+end_src
 
-** Linux
-*** Compiling
-Much like how I compile on MinGW, but don't need to much with the =--prefix=
-option.  I do need to make sure to export the correct =CC= and =GCC= variables,
-though:
 
-#+begin_src shell
-  git clone git://git.savannah.gnu.org/emacs.git --branch emacs-29 --depth 1
-  export CC=/usr/bin/gcc-10 CXX=/usr/bin/gcc-10
-  ./autogen.sh
-  ./configure \
-    --prefix=/c/emacs-29 \
-    --with-native-compilation \
-    --with-tree-sitter \
-    --with-gnutls \
-    --with-jpeg \
-    --with-png \
-    --with-rsvg \
-    --with-tiff \
-    --with-wide-int \
-    --with-xft \
-    --with-xml2 \
-    --with-xpm \
-    --without-dbus \
-    --without-pop
-  make --jobs=$(nproc)
-  sudo make install
+* Font
+Fonts are a tricky business.  They render differently depending on what computer
+I'm using, and I can't always have my favorite fonts installed everywhere.
+Moreover, I can't expect everyone who might want to try out this configuration
+to use the same fonts I do, so they are an optional thing.  If a file
+=~/.emacs.d/font.el= exists, then this section will simply read it and apply
+whatever settings are there.
+
+#+begin_src emacs-lisp
+  (let ((font-file (expand-file-name "font.el" user-emacs-directory)))
+    (when (file-exists-p font-file)
+      (load-file font-file)))
 #+end_src
 
-
-*** Configuration
-Very little to do here.  Emacs on Linux seems to "just work".  When I have the
-Hack font installed, I sometimes turn it on by manually evaluating this block,
-though.
-
-#+begin_src emacs-lisp :tangle no
-(set-face-attribute 'default nil :font "Hack Nerd Font Mono-11")
-#+end_src
+Typically I'll have a per-os font configuration in there.  [[https://github.com/renzmann/.emacs.d/blob/main/font.el][Check out what I've
+done here!]]
 
 * Theme
 [[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with
@@ -459,18 +392,12 @@ I LOVE these themes from =ef-themes=:
 
 I've mostly settled on ~ef-cherie~, but sometimes switch to the others above.
 
-** Gave up on Nord
-It's worth mentioning that I've tried [[https://www.nordtheme.com/ports/emacs/][nord-theme]] a couple times and found that
-the legibility or contrast wasn't quite good enough in some modes.  Though I
-still employ Nord for my terminal config in Alacritty and Kitty, where it looks
-/excellent/.  I also still actively use the [[https://github.com/EdenEast/nightfox.nvim][nordfox]] theme in Neovim, which sports
-a beautiful TreeSitter integration.
-
 ** Messed up colors in TTY mode
 In TTY mode, I use [[https://sw.kovidgoyal.net/kitty/][kitty]].  I have had trouble with dark blue or red themes in
 Alacritty, and on Windows terminal.  There is probably some hacking I could do
 on my ~$TERM~ variable to try and sort that out, but since it just kinda works in
 Kitty for me, I haven't spent too much time looking into it.
+
 
 * Emacs' Built-in Settings
 My settings for base Emacs behavior.  Assuming I ran with /no/ plugins (ala ~emacs
@@ -478,6 +405,17 @@ My settings for base Emacs behavior.  Assuming I ran with /no/ plugins (ala ~ema
 section is designed for variables that modify Emacs and its editing behavior
 directly.  Configuation for built-in tools, such as Dired, Tramp, and
 Tree-sitter are located under [[* Tool configuration][Tool configuration]].
+
+** Stop stupid bell
+This snippet has a special place in my heart, because it was the first two lines
+of elisp I wrote when first learning Emacs.
+
+#+begin_src emacs-lisp
+  ;; Stop stupid bell
+  (setq ring-bell-function 'ignore)
+#+end_src
+
+The bell is really, /really/ annoying.
 
 ** Start a server for =emacsclient=
 
@@ -717,17 +655,6 @@ Add a faint background highlight to the line we're editing.
 ;; (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 #+end_src
 
-** Stop stupid bell
-This snippet has a special place in my heart, because it was the first two lines
-of elisp I wrote when first learning Emacs.
-
-#+begin_src emacs-lisp
-  ;; Stop stupid bell
-  (setq ring-bell-function 'ignore)
-#+end_src
-
-The bell is really, /really/ annoying.
-
 ** Automatically create matching parens in programming modes
 
 #+begin_src emacs-lisp
@@ -918,7 +845,9 @@ I'll uncomment the second part.
   (put 'downcase-region 'disabled nil)
 #+end_src
 
+
 * Keybindings
+
 ** Expanded/better defaults
 These convenient chords allow for fast text replacement by holding =C-M-= and
 rapidly typing =k= and =h= in succession.
@@ -1180,6 +1109,7 @@ that way.
   (global-set-key (kbd "s-p") #'project-switch-project)
 #+end_src
 
+
 * Text Completion
 Emacs offers incredible depth and freedom when configuring methods that
 automatically complete text.  There are actually two things that
@@ -1361,7 +1291,9 @@ When I was using =corfu= and =vertico=, I did some hacking on it to optimize for
     (vertico-mode))
 #+end_src
 
+
 * Language-specific major modes
+
 ** Shell (Bash, sh, ...)
 
 #+begin_src emacs-lisp
@@ -1882,6 +1814,7 @@ Handy for viewing data quickly.
     :mode "\\.csv\\'")
 #+end_src
 
+
 * Tool configuration
 These are tweaks for self-contained tooling, such as third party packages or
 built-in packages that have a well-defined scope and namespace.
@@ -2153,6 +2086,7 @@ Host *
      ForwardAgent yes
      ServerAliveInterval 60
 #+end_example
+
 
 * Don't forget about these
 There are several other interesting options that I haven't tried out yet, including:
