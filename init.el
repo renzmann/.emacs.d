@@ -617,6 +617,7 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (setq tab-width 8))
 
 (add-hook 'sh-mode-hook #'renz/sh-indentation)
+(add-hook 'bash-ts-mode-hook #'renz/sh-indentation)
 ;; Shell (Bash, sh, ...):1 ends here
 
 ;; [[file:README.org::*CSS][CSS:1]]
@@ -630,7 +631,7 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 ;; [[file:README.org::*Org-mode][Org-mode:2]]
 (defun renz/org-babel-tangle-jump-to-src ()
   "The opposite of `org-babel-tangle-jump-to-org'.
-Jumps at tangled code from org src block."
+Jumps to an Org src block from tangled code."
   (interactive)
   (if (org-in-src-block-p)
       (let* ((header (car (org-babel-tangle-single-block 1 'only-this-block)))
@@ -677,7 +678,6 @@ Jumps at tangled code from org src block."
    ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
    ("C-c o k" . org-babel-remove-result)
    ("C-c o o" . renz/jump-org)
-   ("C-c o w" . renz/org-kill-src-block)
    ("C-c o y" . ox-clip-image-to-clipboard))
 
   :custom
@@ -839,11 +839,11 @@ Jumps at tangled code from org src block."
   :mode ("\\.hql" . sql-mode))
 ;; Interactive ~hive2~ mode:1 ends here
 
-;; [[file:README.org::*Interactive =bq shell=][Interactive =bq shell=:2]]
+;; [[file:README.org::*Interactive =bq shell=][Interactive =bq shell=:3]]
 (use-package bq
   :load-path "site-lisp"
   :demand t)
-;; Interactive =bq shell=:2 ends here
+;; Interactive =bq shell=:3 ends here
 
 ;; [[file:README.org::*BigQuery ~sql~ Blocks in Org-Babel][BigQuery ~sql~ Blocks in Org-Babel:1]]
 (defun org-babel-execute:bq (orig-fun body params)

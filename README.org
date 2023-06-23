@@ -1096,7 +1096,7 @@ that way.
 
 
 * Text Completion
-Emacs offers incredible depth and freedom when configuring methods that
+Emacs offers incredible depth and freedom when configuring methods to
 automatically complete text.  There are actually two things that
 "autocompletion" can refer to in Emacs:
 
@@ -1108,7 +1108,6 @@ at point.  For both the minibuffer and ~completion-at-point~ it uses a special
 buffer called ~*Completions*~, from which we can see (and optionally select) a
 completion from potential candidates.  Before we get to tweak those settings,
 though, we first need to oil the engine with an enhanced /completion style/
-
 
 ** Completion style: Orderless
 For both the minibuffer and ~completion-at-point~, I use the same /completion
@@ -1231,7 +1230,8 @@ I'd much prefer to use the easier and more intuitive =TAB=.
 ** =corfu= and =vertico=
 
 When I was using =corfu= and =vertico=, I did some hacking on it to optimize for
-=orderless=, as well as some "tab-n-go" style configuration.
+=orderless=, as well as some "tab-n-go" style configuration.  This is here as a
+vestige of days past, but good as a reference if I ever wanted to go back.
 
 #+begin_src emacs-lisp
   (use-package corfu
@@ -1287,6 +1287,7 @@ When I was using =corfu= and =vertico=, I did some hacking on it to optimize for
     (setq tab-width 8))
 
   (add-hook 'sh-mode-hook #'renz/sh-indentation)
+  (add-hook 'bash-ts-mode-hook #'renz/sh-indentation)
 #+end_src
 
 ** CSS
@@ -1316,7 +1317,7 @@ defined below, does the opposite - given the Org source file and point inside a
 #+begin_src emacs-lisp
   (defun renz/org-babel-tangle-jump-to-src ()
     "The opposite of `org-babel-tangle-jump-to-org'.
-  Jumps at tangled code from org src block."
+  Jumps to an Org src block from tangled code."
     (interactive)
     (if (org-in-src-block-p)
         (let* ((header (car (org-babel-tangle-single-block 1 'only-this-block)))
@@ -1339,7 +1340,7 @@ defined below, does the opposite - given the Org source file and point inside a
 #+end_src
 
 Now we configure ~org-mode~ itself.  For a while I was trying =(setq
-org-startup-indented t)= t get indentation under each header, but this was
+org-startup-indented t)= to get indentation under each header, but this was
 interfering with the beautification features from ~org-modern~.  Preferring the
 latter over the former, I've removed the =org-startup-indented= call.
 
@@ -1368,7 +1369,6 @@ latter over the former, I've removed the =org-startup-indented= call.
      ("C-c o b s" . renz/org-babel-tangle-jump-to-src)
      ("C-c o k" . org-babel-remove-result)
      ("C-c o o" . renz/jump-org)
-     ("C-c o w" . renz/org-kill-src-block)
      ("C-c o y" . ox-clip-image-to-clipboard))
 
     :custom
@@ -1563,7 +1563,12 @@ The configuration of =sql-indent= below achieves that nicely when using =RET= an
            (sql-mode . sqlup-mode)
            (sql-mode . sqlind-minor-mode)))
 #+end_src
+
 *** Interactive ~hive2~ mode
+This "hive2" package came from the days where I was working on an on-prem system
+that used ~hive2~ as the main command-line interface to Hive.  I don't use this
+much now, but it's a good reference for implementing a plug-in to a new
+interactive SQL CLI.
 
 #+begin_src emacs-lisp
   (use-package hive2
@@ -1585,14 +1590,27 @@ call it.
 When I get to it, I think what I'll do instead is rewrite this to simply pipe
 the current buffer into ~sql-formatter~, and use a bit of elisp to determine whether
 a ~.sql-formatter-config.json~ exists in the VC root directory.
-*** Interactive =bq shell=
 
+For the time being, though, I just pipe the file to an external ~sql-formatter~
+process and redirect the output either to a new buffer, or the current buffer if
+I'm happy with the results.
+
+*** Interactive =bq shell=
 The SQL interactive commands are looking for a single executable file, so let's
 set that up somewhere common.
 
 #+begin_src shell :tangle ~/.local/bin/bq-shell
   #!/usr/bin/env sh
   bq shell "$@"
+#+end_src
+
+Also, we don't want to use "legacy SQL" in our queries, which requires us to
+configure the ~bq query~ statically in a =~/.bigqueryrc= file, according to the
+Google [[https://issuetracker.google.com/issues/35905841][issue tracker]].
+
+#+begin_src :tangle ~/.bigqueryrc
+[query]
+--use_legacy_sql=false
 #+end_src
 
 Then enable the BQ product.
@@ -1604,6 +1622,7 @@ Then enable the BQ product.
 #+end_src
 
 *** BigQuery ~sql~ Blocks in Org-Babel
+#+OPTIONS: ^:nil
 Advising ~org-babel-execute:sql~ in this way allows me to use ~#+begin_src sql
 :engine bq :results raw~ blocks in org-babel and execute them with ~C-c C-c~.  More
 commonly, though, I set ~#+PROPERTY: header-args:sql :engine bq :results raw~ at
@@ -1621,7 +1640,12 @@ with it.
   (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 #+end_src
 
-*** BigQuery exception markers
+This also typically requires =#+OPTIONS: ^:nil= at the top of the Org document to
+stop underscores from messing up how column names are displayed.
+
+*** TODO BigQuery exception markers
+When running BigQuery from a =*compilation*= buffer, it would be nice if I could get
+error markers to jump directly to the issue.
 
 ** Python
 #+begin_src emacs-lisp
@@ -1670,7 +1694,6 @@ programs exist is a small time saver.
     ;; (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) "ruff-lsp"))
     )
 #+end_src
-
 
 
 *** Fix Microsoft Windows Issues
