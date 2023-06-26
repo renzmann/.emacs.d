@@ -1030,12 +1030,6 @@ completion, with just a little help from =xref-find-definitions=.
   (global-set-key (kbd "C-c k") #'just-one-space)
 #+end_src
 
-*** =C-c o= open thing at point in browser
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-c o") #'browse-url-at-point)
-#+end_src
-
 *** =C-c q= replace regexp
 
 #+begin_src emacs-lisp
@@ -1054,6 +1048,12 @@ completion, with just a little help from =xref-find-definitions=.
   (global-set-key (kbd "C-c s s") #'shell)
   (global-set-key (kbd "C-c s e") #'eshell)
   (global-set-key (kbd "C-c s t") #'term)
+#+end_src
+
+*** =C-c u= open URL at point in browser
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c u") #'browse-url-at-point)
 #+end_src
 
 *** =C-c v= faster git-commit
