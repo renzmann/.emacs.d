@@ -451,10 +451,6 @@ config site with matching `EXTENSION' regexp."
 (global-set-key (kbd "C-c k") #'just-one-space)
 ;; =C-c k= kill all but one space:1 ends here
 
-;; [[file:README.org::*=C-c o= open thing at point in browser][=C-c o= open thing at point in browser:1]]
-(global-set-key (kbd "C-c o") #'browse-url-at-point)
-;; =C-c o= open thing at point in browser:1 ends here
-
 ;; [[file:README.org::*=C-c q= replace regexp][=C-c q= replace regexp:1]]
 (global-set-key (kbd "C-c q") #'replace-regexp)
 ;; =C-c q= replace regexp:1 ends here
@@ -468,6 +464,10 @@ config site with matching `EXTENSION' regexp."
 (global-set-key (kbd "C-c s e") #'eshell)
 (global-set-key (kbd "C-c s t") #'term)
 ;; =C-c s= shell:1 ends here
+
+;; [[file:README.org::*=C-c u= open URL at point in browser][=C-c u= open URL at point in browser:1]]
+(global-set-key (kbd "C-c u") #'browse-url-at-point)
+;; =C-c u= open URL at point in browser:1 ends here
 
 ;; [[file:README.org::*=C-c v= faster git-commit][=C-c v= faster git-commit:1]]
 (defun renz/git-commit ()
