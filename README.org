@@ -168,7 +168,6 @@ to export the correct =CC= and =GCC= variables:
   sudo make install
 #+end_src
 
-
 * Header
 To comply with the Emacs [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Library-Headers.html][conventions for libraries]], the tangled init.el must
 have the following header and [[Footer][footer:]]
@@ -330,7 +329,6 @@ won't capture any modifications to =$PATH=, typically handled in a file like
     (exec-path-from-shell-initialize))
 #+end_src
 
-
 * Font
 Fonts are a tricky business.  I can't always have my favorite fonts installed
 everywhere, and I can't expect everyone who might want to try out this
@@ -395,7 +393,6 @@ In TTY mode, I use [[https://sw.kovidgoyal.net/kitty/][kitty]].  I have had trou
 Alacritty, and on Windows terminal.  There is probably some hacking I could do
 on my ~$TERM~ variable to try and sort that out, but since it just kinda works in
 Kitty for me, I haven't spent too much time looking into it.
-
 
 * Emacs' Built-in Settings
 My settings for base Emacs behavior.  Assuming I ran with /no/ plugins (ala ~emacs
@@ -834,7 +831,6 @@ Allows us to convert entire regions to upper or lower case.
   (put 'downcase-region 'disabled nil)
 #+end_src
 
-
 * Keybindings
 
 ** Expanded/better defaults
@@ -1094,7 +1090,6 @@ that way.
   (global-set-key (kbd "s-p") #'project-switch-project)
 #+end_src
 
-
 * Text Completion
 Emacs offers incredible depth and freedom when configuring methods to
 automatically complete text.  There are actually two things that
@@ -1276,7 +1271,6 @@ vestige of days past, but good as a reference if I ever wanted to go back.
     :config
     (vertico-mode))
 #+end_src
-
 
 * Language-specific major modes
 
@@ -1822,7 +1816,6 @@ Handy for viewing data quickly.
     :mode "\\.csv\\'")
 #+end_src
 
-
 * Tool configuration
 These are tweaks for self-contained tooling, such as third party packages or
 built-in packages that have a well-defined scope and namespace.
@@ -2095,6 +2088,18 @@ Host *
      ServerAliveInterval 60
 #+end_example
 
+** Shell commands
+
+#+begin_src emacs-lisp
+  (defun renz/async-shell-command-filter-hook ()
+    "Filter async shell command output via `comint-output-filter'."
+    (when (equal (buffer-name (current-buffer)) "*Async Shell Command*")
+      (when-let ((proc (get-buffer-process (current-buffer))))
+        (set-process-filter proc 'comint-output-filter))))
+
+
+  (add-hook 'shell-mode-hook #'renz/async-shell-command-filter-hook)
+#+end_src
 
 * Don't forget about these
 There are several other interesting options that I haven't tried out yet, including:

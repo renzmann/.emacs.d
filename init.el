@@ -1050,5 +1050,16 @@ Jumps to an Org src block from tangled code."
 (setq tramp-use-ssh-controlmaster-options nil)
 ;; Tramp:2 ends here
 
+;; [[file:README.org::*Shell commands][Shell commands:1]]
+(defun renz/async-shell-command-filter-hook ()
+  "Filter async shell command output via `comint-output-filter'."
+  (when (equal (buffer-name (current-buffer)) "*Async Shell Command*")
+    (when-let ((proc (get-buffer-process (current-buffer))))
+      (set-process-filter proc 'comint-output-filter))))
+
+
+(add-hook 'shell-mode-hook #'renz/async-shell-command-filter-hook)
+;; Shell commands:1 ends here
+
 (provide 'init.el)
 ;;; init.el ends here
