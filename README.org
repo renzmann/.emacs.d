@@ -535,17 +535,26 @@ space between the edge of the screen and the fringe.  This helps ~src~ blocks lo
 clean and well delineated for [[=org-modern=][org-modern]].
 
 #+begin_src emacs-lisp
-  (modify-all-frames-parameters
-   '((right-divider-width . 40)
-     (internal-border-width . 40)))
+  (defun renz/modify-margins ()
+    "Add some space around each window."
+    (modify-all-frames-parameters
+     '((right-divider-width . 40)
+       (internal-border-width . 40)))
+    (dolist (face '(window-divider
+                    window-divider-first-pixel
+                    window-divider-last-pixel))
+      (face-spec-reset-face face)
+      (set-face-foreground face (face-attribute 'default :background)))
+    (set-face-background 'fringe (face-attribute 'default :background)))
 
-  (dolist (face '(window-divider
-                  window-divider-first-pixel
-                  window-divider-last-pixel))
-    (face-spec-reset-face face)
-    (set-face-foreground face (face-attribute 'default :background)))
+  (renz/modify-margins)
+#+end_src
 
-  (set-face-background 'fringe (face-attribute 'default :background))
+We also need to make sure this runs each time we change the =ef-theme=, otherwise
+the old background color will linger in the margins.
+
+#+begin_src emacs-lisp
+  (add-hook 'ef-themes-post-load-hook 'renz/modify-margins)
 #+end_src
 
 ** Automatically visit symlink sources

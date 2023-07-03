@@ -173,18 +173,24 @@
 ;; Scroll bar:1 ends here
 
 ;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
-(modify-all-frames-parameters
- '((right-divider-width . 40)
-   (internal-border-width . 40)))
+(defun renz/modify-margins ()
+  "Add some space around each window."
+  (modify-all-frames-parameters
+   '((right-divider-width . 40)
+     (internal-border-width . 40)))
+  (dolist (face '(window-divider
+                  window-divider-first-pixel
+                  window-divider-last-pixel))
+    (face-spec-reset-face face)
+    (set-face-foreground face (face-attribute 'default :background)))
+  (set-face-background 'fringe (face-attribute 'default :background)))
 
-(dolist (face '(window-divider
-                window-divider-first-pixel
-                window-divider-last-pixel))
-  (face-spec-reset-face face)
-  (set-face-foreground face (face-attribute 'default :background)))
-
-(set-face-background 'fringe (face-attribute 'default :background))
+(renz/modify-margins)
 ;; Window margins and fringe:1 ends here
+
+;; [[file:README.org::*Window margins and fringe][Window margins and fringe:2]]
+(add-hook 'ef-themes-post-load-hook 'renz/modify-margins)
+;; Window margins and fringe:2 ends here
 
 ;; [[file:README.org::*Automatically visit symlink sources][Automatically visit symlink sources:1]]
 (setq find-file-visit-truename t)
