@@ -78,9 +78,9 @@
 ;; macOS:1 ends here
 
 ;; [[file:README.org::*Font][Font:1]]
-(let ((font-file (expand-file-name "font.el" user-emacs-directory)))
-  (when (file-exists-p font-file)
-    (load-file font-file)))
+(when-let* ((font-file (expand-file-name "font.el" user-emacs-directory))
+            (exists (file-exists-p font-file)))
+  (load-file font-file))
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]

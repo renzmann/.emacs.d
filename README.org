@@ -337,9 +337,9 @@ configuration to use the same fonts I do.  So I made them optional.  If a file
 whatever settings are there.
 
 #+begin_src emacs-lisp
-  (let ((font-file (expand-file-name "font.el" user-emacs-directory)))
-    (when (file-exists-p font-file)
-      (load-file font-file)))
+  (when-let* ((font-file (expand-file-name "font.el" user-emacs-directory))
+              (exists (file-exists-p font-file)))
+    (load-file font-file))
 #+end_src
 
 Typically I'll have a per-OS font configuration in there, [[https://github.com/renzmann/.emacs.d/blob/main/font.el][typically with some
