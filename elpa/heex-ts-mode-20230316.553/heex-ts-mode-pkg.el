@@ -1,2 +1,0 @@
-;;; Generated package description from heex-ts-mode.el  -*- no-byte-compile: t -*-
-(define-package "heex-ts-mode" "20230316.553" "Major mode for Heex with tree-sitter support" '((emacs "29")) :commit "a61a4b6f158c19c1d583722bc35d95b09152551e" :authors '(("Wilhelm H Kirschbaum")) :maintainers '(("Wilhelm H Kirschbaum")) :maintainer '("Wilhelm H Kirschbaum") :keywords '("heex" "languages" "tree-sitter") :url "https://github.com/wkirschbaum/elixir-ts-mode")
