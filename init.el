@@ -89,18 +89,18 @@
   :demand t
   :bind ("C-c m" . ef-themes-toggle)
 
-  :init
-  (setq ef-themes-headings
-        '((0 . (1.9))
-          (1 . (1.1))
-          (2 . (1.0))
-          (3 . (1.0))
-          (4 . (1.0))
-          (5 . (1.0)) ; absence of weight means `bold'
-          (6 . (1.0))
-          (7 . (1.0))
-          (t . (1.0))))
-  (setq ef-themes-to-toggle '(ef-cherie ef-summer))
+  :custom
+  (ef-themes-headings
+   '((0 . (1.9))
+     (1 . (1.1))
+     (2 . (1.0))
+     (3 . (1.0))
+     (4 . (1.0))
+     (5 . (1.0)) ; absence of weight means `bold'
+     (6 . (1.0))
+     (7 . (1.0))
+     (t . (1.0))))
+  (ef-themes-to-toggle '(ef-cherie ef-kassio))
 
   :config
   (load-theme 'ef-cherie :no-confirm))
