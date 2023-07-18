@@ -335,6 +335,15 @@
 (put 'downcase-region 'disabled nil)
 ;; Enable up/downcase-region:1 ends here
 
+;; [[file:README.org::*Mark rings: bigger, faster, stronger][Mark rings: bigger, faster, stronger:1]]
+(setq-default mark-ring-max 32)
+(setq global-mark-ring-max 32)
+;; Mark rings: bigger, faster, stronger:1 ends here
+
+;; [[file:README.org::*Mark rings: bigger, faster, stronger][Mark rings: bigger, faster, stronger:2]]
+(setq set-mark-command-repeat-pop t)
+;; Mark rings: bigger, faster, stronger:2 ends here
+
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-M-h") 'backward-kill-sexp)

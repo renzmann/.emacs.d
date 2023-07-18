@@ -840,6 +840,23 @@ Allows us to convert entire regions to upper or lower case.
   (put 'downcase-region 'disabled nil)
 #+end_src
 
+** Mark rings: bigger, faster, stronger
+16 is the default number of marks stored on the global and local mark rings
+is 16.  I hop around much more than 16 times as I'm editing, so I expand this a
+bit.
+
+#+begin_src emacs-lisp
+  (setq-default mark-ring-max 32)
+  (setq global-mark-ring-max 32)
+#+end_src
+
+Another handy shortcut is continually popping marks by repeated =C-<SPC>= after
+the first =C-u C-<SPC>= through the ~set-mark-command-repeat-pop~ setting.
+
+#+begin_src emacs-lisp
+  (setq set-mark-command-repeat-pop t)
+#+end_src
+
 * Keybindings
 
 ** Expanded/better defaults
