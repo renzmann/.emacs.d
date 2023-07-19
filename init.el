@@ -373,15 +373,6 @@
          ("C-c p" . flymake-goto-prev-error)))
 ;; Expanded/better defaults:5 ends here
 
-;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:6]]
-(define-key isearch-mode-map (kbd "<C-return>")
-  (defun isearch-done-opposite (&optional nopush edit)
-    "End current search in the opposite side of the match."
-    (interactive)
-    (funcall #'isearch-done nopush edit)
-    (when isearch-other-end (goto-char isearch-other-end))))
-;; Expanded/better defaults:6 ends here
-
 ;; [[file:README.org::*Overriding defaults][Overriding defaults:1]]
 (global-set-key (kbd "C-x C-p") 'previous-buffer)  ; Overrides `mark-page'
 (global-set-key (kbd "C-x C-n") 'next-buffer)      ; Overrides `set-goal-column'

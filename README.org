@@ -911,20 +911,6 @@ next/previous on easy to reach chords.
            ("C-c p" . flymake-goto-prev-error)))
 #+end_src
 
-When using ~isearch~ to jump to things, it's sometimes convenient to re-position
-point on the opposite side of where the search would normally put it.  E.g. when
-using =C-r=, but we want point to be at the end of the word when we're done.
-Provided by a [[https://emacs.stackexchange.com/a/52554][stack overflow answer]].
-
-#+begin_src emacs-lisp
-  (define-key isearch-mode-map (kbd "<C-return>")
-    (defun isearch-done-opposite (&optional nopush edit)
-      "End current search in the opposite side of the match."
-      (interactive)
-      (funcall #'isearch-done nopush edit)
-      (when isearch-other-end (goto-char isearch-other-end))))
-#+end_src
-
 ** Overriding defaults
 Some default bindings aren't useful for me, so I bind them to actions I take
 more frequently.
