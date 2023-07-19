@@ -840,7 +840,7 @@ Allows us to convert entire regions to upper or lower case.
   (put 'downcase-region 'disabled nil)
 #+end_src
 
-** Mark rings: bigger, faster, stronger
+** Mark rings and registers: bigger, faster, stronger
 16 is the default number of marks stored on the global and local mark rings
 is 16.  I hop around much more than 16 times as I'm editing, so I expand this a
 bit.
@@ -856,6 +856,17 @@ the first =C-u C-<SPC>= through the ~set-mark-command-repeat-pop~ setting.
 #+begin_src emacs-lisp
   (setq set-mark-command-repeat-pop t)
 #+end_src
+
+A handy "bookmark" system (aside from actual bookmarks) is to set common buffers
+and files to registers pre-emptively.
+
+#+begin_src emacs-lisp
+  (set-register ?s '(buffer . "*scratch*"))
+  (set-register ?i `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+#+end_src
+
+The default keybinding for ~jump-to-register~ is =C-x r j R=, where =R= is the name of
+the register.
 
 * Keybindings
 
@@ -983,34 +994,6 @@ completion, with just a little help from =xref-find-definitions=.
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c f") #'ffap)
-#+end_src
-
-*** =C-c i= jump to a header in my configuration
-
-#+begin_src emacs-lisp
-  (setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
-
-  (defun renz/--jump-section (dirname prompt extension)
-    "Jump to a section of my configuration.
-  Asks for a file under `DIRNAME' using `PROMPT' in the user Emacs
-  config site with matching `EXTENSION' regexp."
-    (find-file
-     (concat dirname
-             (completing-read prompt
-                              (directory-files dirname nil extension)))))
-
-  (defun renz/jump-configuration ()
-    "Prompt for a .el file in my site-lisp folder, then go there."
-    (interactive)
-    (renz/--jump-section renz/site-lisp-dir "Elisp config files: " ".*\.el$"))
-
-  (defun renz/jump-init ()
-    "Jump directly to my literate configuration document."
-    (interactive)
-    (find-file (expand-file-name "README.org" user-emacs-directory)))
-
-  (global-set-key (kbd "C-c i i") #'renz/jump-init)
-  (global-set-key (kbd "C-c i l") #'renz/jump-configuration)
 #+end_src
 
 *** =C-c j= Toggle window split

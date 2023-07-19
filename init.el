@@ -335,14 +335,19 @@
 (put 'downcase-region 'disabled nil)
 ;; Enable up/downcase-region:1 ends here
 
-;; [[file:README.org::*Mark rings: bigger, faster, stronger][Mark rings: bigger, faster, stronger:1]]
+;; [[file:README.org::*Mark rings and registers: bigger, faster, stronger][Mark rings and registers: bigger, faster, stronger:1]]
 (setq-default mark-ring-max 32)
 (setq global-mark-ring-max 32)
-;; Mark rings: bigger, faster, stronger:1 ends here
+;; Mark rings and registers: bigger, faster, stronger:1 ends here
 
-;; [[file:README.org::*Mark rings: bigger, faster, stronger][Mark rings: bigger, faster, stronger:2]]
+;; [[file:README.org::*Mark rings and registers: bigger, faster, stronger][Mark rings and registers: bigger, faster, stronger:2]]
 (setq set-mark-command-repeat-pop t)
-;; Mark rings: bigger, faster, stronger:2 ends here
+;; Mark rings and registers: bigger, faster, stronger:2 ends here
+
+;; [[file:README.org::*Mark rings and registers: bigger, faster, stronger][Mark rings and registers: bigger, faster, stronger:3]]
+(set-register ?s '(buffer . "*scratch*"))
+(set-register ?i `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+;; Mark rings and registers: bigger, faster, stronger:3 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
@@ -405,32 +410,6 @@
 ;; [[file:README.org::*=C-c f= find file at point (ffap)][=C-c f= find file at point (ffap):1]]
 (global-set-key (kbd "C-c f") #'ffap)
 ;; =C-c f= find file at point (ffap):1 ends here
-
-;; [[file:README.org::*=C-c i= jump to a header in my configuration][=C-c i= jump to a header in my configuration:1]]
-(setq renz/site-lisp-dir (expand-file-name "site-lisp/" user-emacs-directory))
-
-(defun renz/--jump-section (dirname prompt extension)
-  "Jump to a section of my configuration.
-Asks for a file under `DIRNAME' using `PROMPT' in the user Emacs
-config site with matching `EXTENSION' regexp."
-  (find-file
-   (concat dirname
-           (completing-read prompt
-                            (directory-files dirname nil extension)))))
-
-(defun renz/jump-configuration ()
-  "Prompt for a .el file in my site-lisp folder, then go there."
-  (interactive)
-  (renz/--jump-section renz/site-lisp-dir "Elisp config files: " ".*\.el$"))
-
-(defun renz/jump-init ()
-  "Jump directly to my literate configuration document."
-  (interactive)
-  (find-file (expand-file-name "README.org" user-emacs-directory)))
-
-(global-set-key (kbd "C-c i i") #'renz/jump-init)
-(global-set-key (kbd "C-c i l") #'renz/jump-configuration)
-;; =C-c i= jump to a header in my configuration:1 ends here
 
 ;; [[file:README.org::*=C-c j= Toggle window split][=C-c j= Toggle window split:1]]
 (defun toggle-window-split ()
