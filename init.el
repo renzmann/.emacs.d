@@ -1039,7 +1039,12 @@ Jumps to an Org src block from tangled code."
 (defun renz/async-shell-command-filter-hook ()
   "Filter async shell command output via `comint-output-filter'."
   (when (equal (buffer-name (current-buffer)) "*Async Shell Command*")
+    ;; When `comint-output-filter' is non-nil, the carriage return characters ^M
+    ;; are displayed
+    (setq-local comint-inhibit-carriage-motion nil)
     (when-let ((proc (get-buffer-process (current-buffer))))
+      ;; Attempting a solution found here:
+      ;; https://gnu.emacs.help.narkive.com/2PEYGWfM/m-chars-in-async-command-output
       (set-process-filter proc 'comint-output-filter))))
 
 

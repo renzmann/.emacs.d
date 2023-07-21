@@ -2085,16 +2085,27 @@ Host *
 
 ** Shell commands
 
+The Async command buffer's default behavior is to print =^M= characters (the
+carriage return) instead of actually clearing text.  This is problematic for
+spinners and progress bars, so I have a little hack to work around that.
+
 #+begin_src emacs-lisp
   (defun renz/async-shell-command-filter-hook ()
     "Filter async shell command output via `comint-output-filter'."
     (when (equal (buffer-name (current-buffer)) "*Async Shell Command*")
+      ;; When `comint-output-filter' is non-nil, the carriage return characters ^M
+      ;; are displayed
+      (setq-local comint-inhibit-carriage-motion nil)
       (when-let ((proc (get-buffer-process (current-buffer))))
+        ;; Attempting a solution found here:
+        ;; https://gnu.emacs.help.narkive.com/2PEYGWfM/m-chars-in-async-command-output
         (set-process-filter proc 'comint-output-filter))))
 
 
   (add-hook 'shell-mode-hook #'renz/async-shell-command-filter-hook)
 #+end_src
+
+There might be a better way, but this mostly works for now.
 
 * Don't forget about these
 There are several other interesting options that I haven't tried out yet, including:
