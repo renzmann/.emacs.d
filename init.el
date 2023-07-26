@@ -92,7 +92,7 @@
   :custom
   (ef-themes-headings
    '((0 . (1.9))
-     (1 . (1.1))
+     (1 . (1.3))
      (2 . (1.0))
      (3 . (1.0))
      (4 . (1.0))
@@ -345,8 +345,8 @@
 ;; Mark rings and registers: bigger, faster, stronger:2 ends here
 
 ;; [[file:README.org::*Mark rings and registers: bigger, faster, stronger][Mark rings and registers: bigger, faster, stronger:3]]
-(set-register ?s '(buffer . "*scratch*"))
-(set-register ?i `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+(set-register ?S '(buffer . "*scratch*"))
+(set-register ?I `(file . ,(expand-file-name "README.org" user-emacs-directory)))
 ;; Mark rings and registers: bigger, faster, stronger:3 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]

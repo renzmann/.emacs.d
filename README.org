@@ -361,7 +361,7 @@ light of the room I'm in.
     :custom
     (ef-themes-headings
      '((0 . (1.9))
-       (1 . (1.1))
+       (1 . (1.3))
        (2 . (1.0))
        (3 . (1.0))
        (4 . (1.0))
@@ -857,16 +857,26 @@ the first =C-u C-<SPC>= through the ~set-mark-command-repeat-pop~ setting.
   (setq set-mark-command-repeat-pop t)
 #+end_src
 
+And, because I always forget it, to pop a global mark you use =C-x C-<SPC>=.  The
+local version, =C-u C-<SPC>= will only pop marks from the current buffer.  So the
+=C-x C-<SPC>= version is much closer to how Vim's jump stack works.
+
 A handy "bookmark" system (aside from actual bookmarks) is to set common buffers
 and files to registers pre-emptively.
 
 #+begin_src emacs-lisp
-  (set-register ?s '(buffer . "*scratch*"))
-  (set-register ?i `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+  (set-register ?S '(buffer . "*scratch*"))
+  (set-register ?I `(file . ,(expand-file-name "README.org" user-emacs-directory)))
 #+end_src
 
 The default keybinding for ~jump-to-register~ is =C-x r j R=, where =R= is the name of
-the register.
+the register.  My own personal convention here is to use lower-case letter for
+interactive session bookmarks that will be lost between sessions, and upper-case
+letters for ones I've set permanently here.
+
+Before I was aware of this feature I had created my own ~jump-to-X~ style
+functions, but this is much better!  You even get a handy pop-up if you wait a
+second after typing =C-x r j= to see all the available registers.
 
 * Keybindings
 
