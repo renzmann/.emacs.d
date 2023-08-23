@@ -347,6 +347,7 @@
 ;; [[file:README.org::*Mark rings and registers: bigger, faster, stronger][Mark rings and registers: bigger, faster, stronger:3]]
 (set-register ?S '(buffer . "*scratch*"))
 (set-register ?I `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+(set-register ?B `(file . "~/.bashrc"))
 ;; Mark rings and registers: bigger, faster, stronger:3 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
@@ -598,7 +599,7 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
-  (setq indent-tabs-mode t)
+  ;; (setq indent-tabs-mode t)
   (setq tab-width 8))
 
 (add-hook 'sh-mode-hook #'renz/sh-indentation)
@@ -890,7 +891,9 @@ Jumps to an Org src block from tangled code."
       (setenv "WORKON_HOME" "~/micromamba/envs/")
     (setenv "WORKON_HOME" "~/.conda/envs/"))
   :bind
-  (("C-c p w" . pyvenv-workon))
+  (("C-c p w" . pyvenv-workon)
+   ("C-c p d" . pyvenv-deactivate)
+   ("C-c p a" . pyvenv-activate))
   :config
   (pyvenv-mode))
 ;; Pyvenv for virtual environments:1 ends here
@@ -924,6 +927,7 @@ Jumps to an Org src block from tangled code."
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
 (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+(add-to-list 'auto-mode-alist '("\\.dockerfile\\'" . dockerfile-ts-mode))
 ;; Missing auto-modes:1 ends here
 
 ;; [[file:README.org::*csv-mode][csv-mode:1]]

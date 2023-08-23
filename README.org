@@ -867,6 +867,7 @@ and files to registers pre-emptively.
 #+begin_src emacs-lisp
   (set-register ?S '(buffer . "*scratch*"))
   (set-register ?I `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+  (set-register ?B `(file . "~/.bashrc"))
 #+end_src
 
 The default keybinding for ~jump-to-register~ is =C-x r j R=, where =R= is the name of
@@ -962,13 +963,13 @@ similar to this in each project's =Makefile=:
 
 #+begin_src shell
   find . -type d -name ".venv" -prune \
-          -o -type d -name ".ipynb_checkpoints" -prune \
-          -o -type d -name ".node_modules" -prune \
-          -o -type d -name "elpa" -prune \
-          -o -type f -name "*.py" -print \
-          -o -type f -name "*.sql" -print \
-          -o -type f -name "*.el" -print \
-          | etags -
+      -o -type d -name ".ipynb_checkpoints" -prune \
+      -o -type d -name ".node_modules" -prune \
+      -o -type d -name "elpa" -prune \
+      -o -type f -name "*.py" -print \
+      -o -type f -name "*.sql" -print \
+      -o -type f -name "*.el" -print \
+      | etags -
 #+end_src
 
 Then, =M-x project-compile RET make TAGS= builds a tags table.  At which point, I
@@ -1282,7 +1283,7 @@ vestige of days past, but good as a reference if I ever wanted to go back.
 ** Shell (Bash, sh, ...)
 #+begin_src emacs-lisp
   (defun renz/sh-indentation ()
-    (setq indent-tabs-mode t)
+    ;; (setq indent-tabs-mode t)
     (setq tab-width 8))
 
   (add-hook 'sh-mode-hook #'renz/sh-indentation)
@@ -1763,7 +1764,9 @@ virtual environment.
         (setenv "WORKON_HOME" "~/micromamba/envs/")
       (setenv "WORKON_HOME" "~/.conda/envs/"))
     :bind
-    (("C-c p w" . pyvenv-workon))
+    (("C-c p w" . pyvenv-workon)
+     ("C-c p d" . pyvenv-deactivate)
+     ("C-c p a" . pyvenv-activate))
     :config
     (pyvenv-mode))
 #+end_src
@@ -1808,9 +1811,10 @@ And I like to see language syntax highlighting within code fences.
 These really should already be in =auto-mode-alist=, but aren't for some reason.
 
 #+begin_src emacs-lisp
-(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
+  (add-to-list 'auto-mode-alist '("\\.dockerfile\\'" . dockerfile-ts-mode))
 #+end_src
 
 ** csv-mode
