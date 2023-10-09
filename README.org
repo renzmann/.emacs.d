@@ -292,9 +292,9 @@ with ~msys64~.
     "Are we on Microsoft Windows?"
     (memq system-type '(windows-nt cygwin ms-dos)))
 
-  (when (renz/windowsp)
+  (when (and (renz/windowsp) (executable-find "aspell"))
     ;; Alternate ispell when we've got msys on Windows
-    (setq ispell-program-name "aspell.exe"))
+    (setq ispell-program-name "aspell"))
 #+end_src
 
 For a time I considered enabling the use of the winkey like this:
@@ -330,20 +330,18 @@ won't capture any modifications to =$PATH=, typically handled in a file like
 #+end_src
 
 * Font
-Fonts are a tricky business.  I can't always have my favorite fonts installed
-everywhere, and I can't expect everyone who might want to try out this
-configuration to use the same fonts I do.  So I made them optional.  If a file
-=~/.emacs.d/font.el= exists, then this section will simply read it and apply
-whatever settings are there.
+Fonts are a tricky business.  See Emacs/Fonts in the manual (=C-h i=) for relevant
+information on how checking and setting default fonts works:
+
++ [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Font-Lookup.html][Searching for installed fonts]]
++ [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Fonts.html][Setting the default font]]
 
 #+begin_src emacs-lisp
-  (when-let* ((font-file (expand-file-name "font.el" user-emacs-directory))
-              (exists (file-exists-p font-file)))
-    (load-file font-file))
+  (cond ((x-list-fonts "Hack Nerd Font")
+         (add-to-list 'default-frame-alist '(font . "Hack Nerd Font-12")))
+        ((x-list-fonts "Segoe UI Emoji")
+         (add-to-list 'default-frame-alist '(font . "Segoe UI Emoji-12"))))
 #+end_src
-
-Typically I'll have a per-OS font configuration in there, [[https://github.com/renzmann/.emacs.d/blob/main/font.el][typically with some
-variant of Hack Nerd Mono.]]
 
 * Theme
 [[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with
@@ -1279,7 +1277,11 @@ vestige of days past, but good as a reference if I ever wanted to go back.
 #+end_src
 
 * Language-specific major modes
-
+** protobuf
+#+begin_src emacs-lisp
+  (use-package protobuf-ts-mode
+   :mode ("\\.proto\\'" . protobuf-ts-mode))
+#+end_src
 ** Shell (Bash, sh, ...)
 #+begin_src emacs-lisp
   (defun renz/sh-indentation ()
@@ -1992,6 +1994,7 @@ using a workaround that I've posted to GitHub and MELPA as [[https://github.com/
 
 #+begin_src emacs-lisp
   (use-package treesit-auto
+    :load-path "site-lisp/treesit-auto/"
     :custom
     (treesit-auto-install 'prompt)
     :config

@@ -66,9 +66,9 @@
   "Are we on Microsoft Windows?"
   (memq system-type '(windows-nt cygwin ms-dos)))
 
-(when (renz/windowsp)
+(when (and (renz/windowsp) (executable-find "aspell"))
   ;; Alternate ispell when we've got msys on Windows
-  (setq ispell-program-name "aspell.exe"))
+  (setq ispell-program-name "aspell"))
 ;; Microsoft Windows:1 ends here
 
 ;; [[file:README.org::*macOS][macOS:1]]
@@ -78,9 +78,10 @@
 ;; macOS:1 ends here
 
 ;; [[file:README.org::*Font][Font:1]]
-(when-let* ((font-file (expand-file-name "font.el" user-emacs-directory))
-            (exists (file-exists-p font-file)))
-  (load-file font-file))
+(cond ((x-list-fonts "Hack Nerd Font")
+       (add-to-list 'default-frame-alist '(font . "Hack Nerd Font-12")))
+      ((x-list-fonts "Segoe UI Emoji")
+       (add-to-list 'default-frame-alist '(font . "Segoe UI Emoji-12"))))
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
@@ -597,6 +598,11 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
   (vertico-mode))
 ;; =corfu= and =vertico=:1 ends here
 
+;; [[file:README.org::*protobuf][protobuf:1]]
+(use-package protobuf-ts-mode
+ :mode ("\\.proto\\'" . protobuf-ts-mode))
+;; protobuf:1 ends here
+
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
   ;; (setq indent-tabs-mode t)
@@ -1013,6 +1019,7 @@ Jumps to an Org src block from tangled code."
 
 ;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
 (use-package treesit-auto
+  :load-path "site-lisp/treesit-auto/"
   :custom
   (treesit-auto-install 'prompt)
   :config
