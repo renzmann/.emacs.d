@@ -64,3 +64,5 @@ TAGS
 proxy.el
 site-lisp/bigquery-mode
 site-lisp/python-venv
+site-lisp/treesit-auto
+org-persist/
