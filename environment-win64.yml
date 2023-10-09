@@ -1,0 +1,7 @@
+name: emacs
+channels:
+- conda-forge
+dependencies:
+- bump2version
+- m2w64-gcc
+- python=3.10
