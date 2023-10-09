@@ -3,5 +3,7 @@ channels:
 - conda-forge
 dependencies:
 - bump2version
+- git
+- m2-openssh
 - m2w64-gcc
 - python=3.10
