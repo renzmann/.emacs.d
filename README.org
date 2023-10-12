@@ -301,6 +301,7 @@ There are a few things I set up independent of Emacs.  Namely, =find=, =xargs=, 
 #+begin_src shell
   winget install BurntSushi.ripgrep.GNU
   winget install GnuWin32.FindUtils
+  winget install GnuWin32.Grep
   winget install RubyInstallerTeam.RubyWithDevKit.3.2  # For building my website with Jekyll
   winget install Python.Python.3.11  # I work a lot in python
 #+end_src
@@ -804,6 +805,8 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
        'grep-find-command
        '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27))))
 #+end_src
+
+If you're on Windows, this command assumes you're running =pwsh= version 7 or higher.
 
 ** Shorter file paths in grep/compilation buffers
 

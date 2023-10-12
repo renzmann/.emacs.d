@@ -68,8 +68,8 @@
 ;; Microsoft Windows:1 ends here
 
 ;; [[file:README.org::*Microsoft Windows][Microsoft Windows:2]]
-(when (and (renz/windowsp) (executable-find "powershell"))
-  (setq shell-file-name "powershell"))
+(when (and (renz/windowsp) (executable-find "pwsh"))
+  (setq shell-file-name "pwsh"))
 ;; Microsoft Windows:2 ends here
 
 ;; [[file:README.org::*macOS][macOS:1]]
@@ -292,12 +292,13 @@
 ;; Ignore risky .dir-locals.el:1 ends here
 
 ;; [[file:README.org::*Prefer =rg= over =grep=][Prefer =rg= over =grep=:1]]
-(require 'grep)
-(when (executable-find "rg")
-  (setq grep-program "rg")
-  (grep-apply-setting
-   'grep-find-command
-   '("rg -n -H --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27)))
+(use-package grep
+  :config
+  (when (executable-find "rg")
+    (setq grep-program "rg")
+    (grep-apply-setting
+     'grep-find-command
+     '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27))))
 ;; Prefer =rg= over =grep=:1 ends here
 
 ;; [[file:README.org::*Shorter file paths in grep/compilation buffers][Shorter file paths in grep/compilation buffers:1]]
