@@ -65,11 +65,12 @@
 (defun renz/windowsp ()
   "Are we on Microsoft Windows?"
   (memq system-type '(windows-nt cygwin ms-dos)))
-
-(when (and (renz/windowsp) (executable-find "aspell"))
-  ;; Alternate ispell when we've got msys on Windows
-  (setq ispell-program-name "aspell"))
 ;; Microsoft Windows:1 ends here
+
+;; [[file:README.org::*Microsoft Windows][Microsoft Windows:2]]
+(when (and (renz/windowsp) (executable-find "powershell"))
+  (setq shell-file-name "powershell"))
+;; Microsoft Windows:2 ends here
 
 ;; [[file:README.org::*macOS][macOS:1]]
 (when (eq system-type 'darwin)
@@ -316,10 +317,14 @@
   (setq pixel-scroll-precision-large-scroll-height 35.0))
 ;; Smooth scrolling:1 ends here
 
-;; [[file:README.org::*Prefer ~aspell~ over ~ispell~][Prefer ~aspell~ over ~ispell~:1]]
-(when (executable-find "aspell")
-  (setq ispell-program-name "aspell"))
-;; Prefer ~aspell~ over ~ispell~:1 ends here
+;; [[file:README.org::*Spellchecking][Spellchecking:2]]
+(cond ((executable-find "aspell")
+       (setq ispell-program-name "aspell"
+             ispell-really-aspell t))
+      ((executable-find "hunspell")
+       (setq ispell-program-name "hunspell"
+             ispell-really-hunspell t)))
+;; Spellchecking:2 ends here
 
 ;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
 (setq backup-directory-alist '(("." . "~/.emacs.d/backups/"))
@@ -403,6 +408,10 @@
 ;; [[file:README.org::*=C-c f= find file at point (ffap)][=C-c f= find file at point (ffap):1]]
 (global-set-key (kbd "C-c f") #'ffap)
 ;; =C-c f= find file at point (ffap):1 ends here
+
+;; [[file:README.org::*=C-c i= browse url of buffer][=C-c i= browse url of buffer:1]]
+(global-set-key (kbd "C-c i") #'browse-url-of-buffer)
+;; =C-c i= browse url of buffer:1 ends here
 
 ;; [[file:README.org::*=C-c j= Toggle window split][=C-c j= Toggle window split:1]]
 (defun toggle-window-split ()
@@ -611,6 +620,18 @@ Use `mct-sort-sort-by-alpha-length' if no history is available."
 (add-hook 'sh-mode-hook #'renz/sh-indentation)
 (add-hook 'bash-ts-mode-hook #'renz/sh-indentation)
 ;; Shell (Bash, sh, ...):1 ends here
+
+;; [[file:README.org::*HTML][HTML:1]]
+(use-package sgml-mode
+  :defer t
+  :config
+  (let* ((p-tag-old (assoc "p" html-tag-alist))
+         ;; Close the <p> tag and open on a new line.
+         (p-tag-new `("p" \n ,(cdr (cdr p-tag-old)))))
+    (add-to-list 'html-tag-alist p-tag-new)
+    ;; Close the <code> tag and stay inline.
+    (add-to-list 'html-tag-alist '("code"))))
+;; HTML:1 ends here
 
 ;; [[file:README.org::*CSS][CSS:1]]
 (setq css-indent-offset 2)
@@ -913,21 +934,26 @@ Jumps to an Org src block from tangled code."
 ;; Executing cell-by-cell:1 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:1]]
+(when (and (not (executable-find "markdown")) (executable-find "markdown_py"))
+  (setq markdown-command "markdown_py"))
+;; Markdown:1 ends here
+
+;; [[file:README.org::*Markdown][Markdown:2]]
 (defun renz/md-hook ()
   "View buffer in visual fill mode with 80 character width."
   (interactive)
   (visual-fill-column-mode)
   (setq-local fill-column 80))
-;; Markdown:1 ends here
-
-;; [[file:README.org::*Markdown][Markdown:2]]
-(add-hook 'markdown-mode-hook 'flyspell-mode)
-(add-hook 'markdown-mode-hook 'auto-fill-mode)
 ;; Markdown:2 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:3]]
-(setq markdown-fontify-code-blocks-natively t)
+(add-hook 'markdown-mode-hook 'flyspell-mode)
+(add-hook 'markdown-mode-hook 'auto-fill-mode)
 ;; Markdown:3 ends here
+
+;; [[file:README.org::*Markdown][Markdown:4]]
+(setq markdown-fontify-code-blocks-natively t)
+;; Markdown:4 ends here
 
 ;; [[file:README.org::*Missing auto-modes][Missing auto-modes:1]]
 (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
