@@ -279,23 +279,52 @@ There are also a few hand-made packages I keep around in a special
 #+end_src
 
 * OS-specific Configuration
-
 ** Microsoft Windows
 Windows, funnily enough, has some trouble registering the Windows key as a
 usable modifier for Emacs.  In fact, =s-l= will /never/ be an option, since it's
-handled at the hardware level.  I also add a few nice-to-haves, like setting the
-default shell to ~pwsh~ and explicitly pathing out ~aspell~, which I always install
-with ~msys64~.
+handled at the hardware level.
 
 #+begin_src emacs-lisp
   (defun renz/windowsp ()
     "Are we on Microsoft Windows?"
     (memq system-type '(windows-nt cygwin ms-dos)))
-
-  (when (and (renz/windowsp) (executable-find "aspell"))
-    ;; Alternate ispell when we've got msys on Windows
-    (setq ispell-program-name "aspell"))
 #+end_src
+
+#+begin_src emacs-lisp
+  (when (and (renz/windowsp) (executable-find "powershell"))
+    (setq shell-file-name "powershell"))
+#+end_src
+
+There are a few things I set up independent of Emacs.  Namely, =find=, =xargs=, and
+=rg=.  These days, I can usually install these things with =winget=:
+
+#+begin_src shell
+  winget install BurntSushi.ripgrep.GNU
+  winget install GnuWin32.FindUtils
+  winget install RubyInstallerTeam.RubyWithDevKit.3.2  # For building my website with Jekyll
+  winget install Python.Python.3.11  # I work a lot in python
+#+end_src
+
+You can use Emacs without these, but some commands like =M-x grep= or =M-x
+project-find-regexp= will not work without making sure the GNU version of =find=
+and =grep= (or a suitable replacement) are on your PATH.  I tend not to muck with
+PATH inside Emacs if I can help it, and instead launch Emacs from powershell
+where things are properly set.  Usually I'll have some things like this in my =$PROFILE=:
+
+#+begin_src powershell :tangle no
+  $ENV:Path = "${ENV:ProgramFiles}\Hunspell\bin\;" + $ENV:Path
+  $ENV:Path = "${ENV:ProgramFiles(x86)}\GnuWin32\bin\;" + $ENV:Path
+  $ENV:Path = "${ENV:ProgramFiles}\Emacs\emacs-29.1\bin\;" + $ENV:Path
+  $ENV:PROFILE = $PROFILE
+  $ENV:LANG = "en_US"
+  $ENV:DICPATH = "$ENV:ProgramFiles\Hunspell\"
+#+end_src
+
+The duplicate =$PROFILE= thing is so we can access that file through =C-x C-f
+$PROFILE= within Emacs.  Check out the [[*Spellchecking][Spellchecking]] section on the Hunspell
+stuff.
+
+*** On the winkey
 
 For a time I considered enabling the use of the winkey like this:
 
@@ -802,11 +831,26 @@ Emacs 29 introduced smooth, pixel-level scrolling, which removes much of the
     (setq pixel-scroll-precision-large-scroll-height 35.0))
 #+end_src
 
-** Prefer ~aspell~ over ~ispell~
+** Spellchecking
+On macOS and linux I typically use =aspell=, given how easy it is to install.  For
+Windows, I'll set up [[http://hunspell.github.io/][hunspell]], which I install from [[https://github.com/iquiw/hunspell-binary/releases/][the hunspell-binary repo]].
+After installing the =hunspell= binary, it requires installing a dictionary and
+affix file to the installation directory:
+
+#+begin_src shell :tangle no :results none
+  curl -o en_US.dic https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.dic?id=a4473e06b56bfe35187e302754f6baaa8d75e54f
+  curl -o en_US.aff https://cgit.freedesktop.org/libreoffice/dictionaries/plain/en/en_US.aff?id=a4473e06b56bfe35187e302754f6baaa8d75e54f
+#+end_src
+
+Then move these files to wherever hunspell is.  For instance, =C:\Program Files\Hunspell=.
 
 #+begin_src emacs-lisp
-  (when (executable-find "aspell")
-    (setq ispell-program-name "aspell"))
+  (cond ((executable-find "aspell")
+         (setq ispell-program-name "aspell"
+               ispell-really-aspell t))
+        ((executable-find "hunspell")
+         (setq ispell-program-name "hunspell"
+               ispell-really-hunspell t)))
 #+end_src
 
 ** Backup and auto-save files
@@ -989,6 +1033,12 @@ completion, with just a little help from =xref-find-definitions=.
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c f") #'ffap)
+#+end_src
+
+*** =C-c i= browse url of buffer
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c i") #'browse-url-of-buffer)
 #+end_src
 
 *** =C-c j= Toggle window split
@@ -1291,7 +1341,22 @@ vestige of days past, but good as a reference if I ever wanted to go back.
   (add-hook 'sh-mode-hook #'renz/sh-indentation)
   (add-hook 'bash-ts-mode-hook #'renz/sh-indentation)
 #+end_src
+** HTML
 
+This changes the behavior of a few commonly-used tags in web pages that I write.
+
+#+begin_src emacs-lisp
+  (use-package sgml-mode
+    :defer t
+    :config
+    (let* ((p-tag-old (assoc "p" html-tag-alist))
+           ;; Close the <p> tag and open on a new line.
+           (p-tag-new `("p" \n ,(cdr (cdr p-tag-old)))))
+      (add-to-list 'html-tag-alist p-tag-new)
+      ;; Close the <code> tag and stay inline.
+      (add-to-list 'html-tag-alist '("code"))))
+
+#+end_src
 ** CSS
 
 #+begin_src emacs-lisp
@@ -1599,9 +1664,9 @@ I'm happy with the results.
 
 *** Interactive =bq shell=
 The SQL interactive commands are looking for a single executable file, so let's
-set that up somewhere common.
+set that up somewhere common, like =~/.local/bin/bq-shell=.
 
-#+begin_src shell :tangle ~/.local/bin/bq-shell
+#+begin_src shell :tangle no
   #!/usr/bin/env sh
   bq shell "$@"
 #+end_src
@@ -1784,6 +1849,14 @@ virtual environment.
 #+end_src
 
 ** Markdown
+When installing =markdown= through Anaconda, the executable is actually called
+=markdown_py=.  In case =markdown= isn't found, use that instead.
+
+#+begin_src emacs-lisp
+  (when (and (not (executable-find "markdown")) (executable-find "markdown_py"))
+    (setq markdown-command "markdown_py"))
+#+end_src
+
 Some folks like to write markdown without hard line breaks.  When viewing those
 documents, I can use ~M-x renz/md-hook~ to view it as if there were line breaks in
 it.
