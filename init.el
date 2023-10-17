@@ -493,16 +493,6 @@
 (setq completion-styles '(flex basic partial-completion emacs22))
 ;; Completion style: Orderless:1 ends here
 
-;; [[file:README.org::*Completion style: Orderless][Completion style: Orderless:2]]
-(use-package orderless
-  :config
-  (add-to-list 'completion-styles 'orderless)
-  (setq orderless-component-separator "[ &]")
-
-  :custom
-  (completion-category-overrides '((file (styles basic partial-completion)))))
-;; Completion style: Orderless:2 ends here
-
 ;; [[file:README.org::*Nicer Display and Behavior of ~*Completions*~][Nicer Display and Behavior of ~*Completions*~:1]]
 (setq completions-format 'one-column)
 ;; Nicer Display and Behavior of ~*Completions*~:1 ends here
@@ -514,99 +504,22 @@
 
 ;; [[file:README.org::*Nicer Display and Behavior of ~*Completions*~][Nicer Display and Behavior of ~*Completions*~:3]]
 (unless (version< emacs-version "29.0")
-  (setq completion-auto-help 'visible
+  (setq completion-auto-help 'lazy
         completion-auto-select 'second-tab
         completion-show-help nil
         completions-sort nil
         completions-header-format nil))
 ;; Nicer Display and Behavior of ~*Completions*~:3 ends here
 
-;; [[file:README.org::*Nicer Display and Behavior of ~*Completions*~][Nicer Display and Behavior of ~*Completions*~:4]]
-(defun renz/sort-by-alpha-length (elems)
-  "Sort ELEMS first alphabetically, then by length."
-  (sort elems (lambda (c1 c2)
-                (or (string-version-lessp c1 c2)
-                    (< (length c1) (length c2))))))
-
-(defun renz/sort-by-history (elems)
-  "Sort ELEMS by minibuffer history.
-Use `mct-sort-sort-by-alpha-length' if no history is available."
-  (if-let ((hist (and (not (eq minibuffer-history-variable t))
-                      (symbol-value minibuffer-history-variable))))
-      (minibuffer--sort-by-position hist elems)
-    (renz/sort-by-alpha-length elems)))
-
-(defun renz/completion-category ()
-  "Return completion category."
-  (when-let ((window (active-minibuffer-window)))
-    (with-current-buffer (window-buffer window)
-      (completion-metadata-get
-       (completion-metadata (buffer-substring-no-properties
-                             (minibuffer-prompt-end)
-                             (max (minibuffer-prompt-end) (point)))
-                            minibuffer-completion-table
-                            minibuffer-completion-predicate)
-       'category))))
-
-(defun renz/sort-multi-category (elems)
-  "Sort ELEMS per completion category."
-  (pcase (renz/completion-category)
-    ('nil elems) ; no sorting
-    ('kill-ring elems)
-    ('project-file (renz/sort-by-alpha-length elems))
-    (_ (renz/sort-by-history elems))))
-
-(unless (version< emacs-version "29.0")
-  (setq completions-sort #'renz/sort-multi-category))
-;; Nicer Display and Behavior of ~*Completions*~:4 ends here
-
 ;; [[file:README.org::*Completion at point][Completion at point:1]]
 (setq tab-always-indent 'complete)
 ;; Completion at point:1 ends here
 
-;; [[file:README.org::*=corfu= and =vertico=][=corfu= and =vertico=:1]]
-(use-package corfu
-  :load-path "site-lisp/corfu"
-  :disabled t
-  :demand t
-  :bind
-  (:map corfu-map
-        ;; ("SPC" . corfu-insert-separator)
-        ("TAB" . corfu-next)
-        ([tab] . corfu-next)
-        ("S-TAB" . corfu-previous)
-        ([backtab] . corfu-previous))
-  :custom
-  (corfu-auto t)
-  (corfu-auto-delay 0)
-  (corfu-auto-prefix 0)
-  (completion-styles '(orderless-fast))
-  :config
-  (defun corfu-enable-in-minibuffer ()
-    "Enable Corfu in the minibuffer if `completion-at-point' is bound."
-    (when (where-is-internal #'completion-at-point (list (current-local-map)))
-      (setq-local corfu-auto nil) ;; Enable/disable auto completion
-      (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-                  corfu-popupinfo-delay nil)
-      (corfu-mode 1)))
-
-  (defun orderless-fast-dispatch (word index total)
-    (and (= index 0) (= total 1) (length< word 4)
-         `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
-
-  (orderless-define-completion-style orderless-fast
-    (orderless-style-dispatchers '(orderless-fast-dispatch))
-    (orderless-matching-styles '(orderless-literal orderless-regexp)))
-
-  (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
-  (global-corfu-mode))
-
-(use-package vertico
-  :load-path "site-lisp/vertico"
-  :disabled t
-  :config
-  (vertico-mode))
-;; =corfu= and =vertico=:1 ends here
+;; [[file:README.org::*Completion at point][Completion at point:2]]
+(setq icomplete-in-buffer t)
+(setq icomplete-prospects-height 10)
+(fido-vertical-mode t)
+;; Completion at point:2 ends here
 
 ;; [[file:README.org::*protobuf][protobuf:1]]
 (use-package protobuf-ts-mode

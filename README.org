@@ -1179,7 +1179,7 @@ order.  In Emacs, I may not know if I'm looking for ~package-list~ or
 ~list-packages~.  In either case, I can just type "=pack lis=" in the minibuffer to
 find the correct one.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package orderless
     :config
     (add-to-list 'completion-styles 'orderless)
@@ -1215,62 +1215,12 @@ options in question.
 
 #+begin_src emacs-lisp
   (unless (version< emacs-version "29.0")
-    (setq completion-auto-help 'visible
+    (setq completion-auto-help 'lazy
           completion-auto-select 'second-tab
           completion-show-help nil
           completions-sort nil
           completions-header-format nil))
 #+end_src
-
-Another nice addition to Emacs 29 is the option to sort completion candidates
-with any supplied function.  Below is one example provided by Prot, which
-prioritzes history, followed by lexicographical order, then length.
-
-#+begin_src emacs-lisp
-  (defun renz/sort-by-alpha-length (elems)
-    "Sort ELEMS first alphabetically, then by length."
-    (sort elems (lambda (c1 c2)
-                  (or (string-version-lessp c1 c2)
-                      (< (length c1) (length c2))))))
-
-  (defun renz/sort-by-history (elems)
-    "Sort ELEMS by minibuffer history.
-  Use `mct-sort-sort-by-alpha-length' if no history is available."
-    (if-let ((hist (and (not (eq minibuffer-history-variable t))
-                        (symbol-value minibuffer-history-variable))))
-        (minibuffer--sort-by-position hist elems)
-      (renz/sort-by-alpha-length elems)))
-
-  (defun renz/completion-category ()
-    "Return completion category."
-    (when-let ((window (active-minibuffer-window)))
-      (with-current-buffer (window-buffer window)
-        (completion-metadata-get
-         (completion-metadata (buffer-substring-no-properties
-                               (minibuffer-prompt-end)
-                               (max (minibuffer-prompt-end) (point)))
-                              minibuffer-completion-table
-                              minibuffer-completion-predicate)
-         'category))))
-
-  (defun renz/sort-multi-category (elems)
-    "Sort ELEMS per completion category."
-    (pcase (renz/completion-category)
-      ('nil elems) ; no sorting
-      ('kill-ring elems)
-      ('project-file (renz/sort-by-alpha-length elems))
-      (_ (renz/sort-by-history elems))))
-
-  (unless (version< emacs-version "29.0")
-    (setq completions-sort #'renz/sort-multi-category))
-#+end_src
-
-Ideally, I would have a function that prioritizes based on /relevance/, which is
-not always a trivial algorithm.
-
-What all of the above form isn't /quite/ the live-updating version that [[https://github.com/oantolin/live-completions][Oantolnin]],
-MCT, or vertico offer, but it's pretty close.  The ~*Completions*~ buffer updates
-after every ~<SPC>~, which is the natural filtering mechanism for =orderless=.
 
 ** Completion at point
 By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.
@@ -1280,55 +1230,23 @@ I'd much prefer to use the easier and more intuitive =TAB=.
   (setq tab-always-indent 'complete)
 #+end_src
 
-** =corfu= and =vertico=
-
-When I was using =corfu= and =vertico=, I did some hacking on it to optimize for
-=orderless=, as well as some "tab-n-go" style configuration.  This is here as a
-vestige of days past, but good as a reference if I ever wanted to go back.
+Something I might try is to use =icomplete= along with =icomplete-in-buffer= to get
+something like a little window that updates as I type.  It seems a little wonky,
+since TAB-completion will still cause the \ast{}Completions\ast{} buffer to pop up, even
+while Icomplete is active, unless we set =completion-auto-help= to =lazy=; and even
+then it will still come up on the second TAB press.
 
 #+begin_src emacs-lisp
-  (use-package corfu
-    :load-path "site-lisp/corfu"
-    :disabled t
-    :demand t
-    :bind
-    (:map corfu-map
-          ;; ("SPC" . corfu-insert-separator)
-          ("TAB" . corfu-next)
-          ([tab] . corfu-next)
-          ("S-TAB" . corfu-previous)
-          ([backtab] . corfu-previous))
-    :custom
-    (corfu-auto t)
-    (corfu-auto-delay 0)
-    (corfu-auto-prefix 0)
-    (completion-styles '(orderless-fast))
-    :config
-    (defun corfu-enable-in-minibuffer ()
-      "Enable Corfu in the minibuffer if `completion-at-point' is bound."
-      (when (where-is-internal #'completion-at-point (list (current-local-map)))
-        (setq-local corfu-auto nil) ;; Enable/disable auto completion
-        (setq-local corfu-echo-delay nil ;; Disable automatic echo and popup
-                    corfu-popupinfo-delay nil)
-        (corfu-mode 1)))
-
-    (defun orderless-fast-dispatch (word index total)
-      (and (= index 0) (= total 1) (length< word 4)
-           `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
-
-    (orderless-define-completion-style orderless-fast
-      (orderless-style-dispatchers '(orderless-fast-dispatch))
-      (orderless-matching-styles '(orderless-literal orderless-regexp)))
-
-    (add-hook 'minibuffer-setup-hook #'corfu-enable-in-minibuffer)
-    (global-corfu-mode))
-
-  (use-package vertico
-    :load-path "site-lisp/vertico"
-    :disabled t
-    :config
-    (vertico-mode))
+  (setq icomplete-in-buffer t)
+  (setq icomplete-prospects-height 10)
+  (fido-vertical-mode t)
 #+end_src
+
+In the case that we need to enter a new file name, but =fido= is still showing a
+completion candidate, you have to use =C-d= to refuse completion and take whatever
+is currently in the prompt.  For instance, if we are editing a file =hello.py=,
+and then use =C-x C-f hell.py=, the minibuffer will complete =hell.py= into =hello.py=
+if we use =RET=, and will open a new buffer for =hell.py= if we use =C-d=.
 
 * Language-specific major modes
 ** protobuf
