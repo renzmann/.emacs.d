@@ -392,7 +392,7 @@ light of the room I'm in.
 
 
 #+begin_src emacs-lisp
-  (load-theme 'leuven-dark)
+  (load-theme 'deeper-blue)
   ;; (use-package emacs
   ;;   :custom
   ;;   (modus-themes-subtle-line-numbers t)
