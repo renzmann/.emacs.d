@@ -86,7 +86,6 @@
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
-;; (load-theme 'leuven-dark)
 (use-package emacs
   :custom
   (modus-themes-inhibit-reload nil)
@@ -100,7 +99,7 @@
   ;; (modus-themes-mode-line 'borderless)
   (modus-themes-fringes 'subtle)
   (modus-themes-org-blocks 'gray-background)
-  (modus-themes-vivendi-color-overrides '((bg-main . "#1d2021")))
+  (modus-themes-vivendi-color-overrides '((bg-main . "#010101")))
   :bind   ("<f5>" . modus-themes-toggle)
   :config (load-theme 'modus-vivendi))
 ;; Theme:1 ends here
@@ -554,7 +553,7 @@
   "The opposite of `org-babel-tangle-jump-to-org'.
 Jumps to an Org src block from tangled code."
   (interactive)
-  (if (org-in-src-block-p)
+  (if (org-in-block-p)
       (let* ((header (car (org-babel-tangle-single-block 1 'only-this-block)))
              (tangle (car header))
              (lang (caadr header))
@@ -606,7 +605,6 @@ Jumps to an Org src block from tangled code."
   (org-agenda-files (renz/list-files-with-absolute-path renz/org-home) "Sources for Org agenda view")
   (org-html-htmlize-output-type nil "See C-h f org-html-htmlize-output-type")
   (org-confirm-babel-evaluate nil "Don't ask for confirmation when executing src blocks")
-  (org-edit-src-content-indentation 2 "Indent all src blocks by this much")
   (org-goto-interface 'outline-path-completion "Use completing-read for org-goto (C-c C-j, nicer than imenu)")
   (org-outline-path-complete-in-steps nil "Flatten the outline path, instead of completing hierarchically")
 
@@ -620,7 +618,7 @@ Jumps to an Org src block from tangled code."
      (shell . t)
      (R . t)
      ;; (fortran . t)
-     (julia . t)
+     ;; (julia . t)
      ;; (jupyter . t)
      ;; (scheme . t)
      ;; (haskell . t)
