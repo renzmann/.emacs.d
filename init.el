@@ -484,9 +484,9 @@
 (global-set-key (kbd "s-p") #'project-switch-project)
 ;; Super bindings:1 ends here
 
-;; [[file:README.org::*Completion style: Orderless][Completion style: Orderless:1]]
+;; [[file:README.org::*Completion style][Completion style:1]]
 (setq completion-styles '(flex basic partial-completion emacs22))
-;; Completion style: Orderless:1 ends here
+;; Completion style:1 ends here
 
 ;; [[file:README.org::*Nicer Display and Behavior of ~*Completions*~][Nicer Display and Behavior of ~*Completions*~:1]]
 (setq completions-format 'one-column)
@@ -506,15 +506,16 @@
         completions-header-format nil))
 ;; Nicer Display and Behavior of ~*Completions*~:3 ends here
 
-;; [[file:README.org::*Completion at point][Completion at point:1]]
+;; [[file:README.org::*Completion in the minibuffer and at point][Completion in the minibuffer and at point:1]]
 (setq tab-always-indent 'complete)
-;; Completion at point:1 ends here
+;; Completion in the minibuffer and at point:1 ends here
 
-;; [[file:README.org::*Completion at point][Completion at point:2]]
+;; [[file:README.org::*Completion in the minibuffer and at point][Completion in the minibuffer and at point:2]]
 (setq icomplete-in-buffer t)
 (setq icomplete-prospects-height 10)
+(setq )
 (fido-vertical-mode t)
-;; Completion at point:2 ends here
+;; Completion in the minibuffer and at point:2 ends here
 
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()

@@ -1,3 +1,4 @@
+
 #+TITLE: My Literate =.emacs.d=
 #+AUTHOR: Robb Enzmann
 #+PROPERTY: header-args:emacs-lisp :tangle init.el :results none :eval never-export :comments link
@@ -1148,7 +1149,7 @@ buffer called ~*Completions*~, from which we can see (and optionally select) a
 completion from potential candidates.  Before we get to tweak those settings,
 though, we first need to oil the engine with an enhanced /completion style/
 
-** Completion style: Orderless
+** Completion style
 For both the minibuffer and ~completion-at-point~, I use the same /completion
 style/.  Completion style is the method of assigning completion candidates to a
 given input string.  ~flex~ is the built-in "fuzzy" completion style, familiar to
@@ -1157,22 +1158,6 @@ much like your default TAB-complete at a Bash shell.
 
 #+begin_src emacs-lisp
   (setq completion-styles '(flex basic partial-completion emacs22))
-#+end_src
-
-I've found the [[https://github.com/oantolin/orderless][orderless]] completion style especially well-suited to Emacs.  It
-allows me to type short strings that can match the symbol I'm looking for in any
-order.  In Emacs, I may not know if I'm looking for ~package-list~ or
-~list-packages~.  In either case, I can just type "=pack lis=" in the minibuffer to
-find the correct one.
-
-#+begin_src emacs-lisp :tangle no
-  (use-package orderless
-    :config
-    (add-to-list 'completion-styles 'orderless)
-    (setq orderless-component-separator "[ &]")
-
-    :custom
-    (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
 ** Nicer Display and Behavior of ~*Completions*~
@@ -1208,7 +1193,7 @@ options in question.
           completions-header-format nil))
 #+end_src
 
-** Completion at point
+** Completion in the minibuffer and at point
 By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.
 I'd much prefer to use the easier and more intuitive =TAB=.
 
@@ -1225,6 +1210,7 @@ then it will still come up on the second TAB press.
 #+begin_src emacs-lisp
   (setq icomplete-in-buffer t)
   (setq icomplete-prospects-height 10)
+  (setq )
   (fido-vertical-mode t)
 #+end_src
 
