@@ -639,9 +639,7 @@ Jumps to an Org src block from tangled code."
 
 ;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
 (use-package ox-clip
-  :after org
-  :config
-  (setq org-hugo-front-matter-format "yaml"))
+  :after org)
 ;; Copying images out of org-babel:1 ends here
 
 ;; [[file:README.org::*Converting JSON to Org Tables][Converting JSON to Org Tables:1]]

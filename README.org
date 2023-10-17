@@ -2,10 +2,6 @@
 #+AUTHOR: Robb Enzmann
 #+PROPERTY: header-args:emacs-lisp :tangle init.el :results none :eval never-export :comments link
 #+OPTIONS: toc:1 num:nil
-#+HUGO_BASE_DIR: ~/repos/renzmann.github.io/
-#+HUGO_SECTION: .
-#+EXPORT_FILE_NAME: emacsd
-#+EXPORT_HUGO_MENU: :menu "main"
 #+STARTUP: overview indent
 
 Want to use it? Go ahead!
@@ -1395,9 +1391,7 @@ Offers two functions:
 
 #+begin_src emacs-lisp
   (use-package ox-clip
-    :after org
-    :config
-    (setq org-hugo-front-matter-format "yaml"))
+    :after org)
 #+end_src
 
 *** Converting JSON to Org Tables
@@ -1912,8 +1906,7 @@ Enabling TreeSitter is done on a per-language basis to override the default
 major mode with the corresponding TreeSitter version.
 
 *** Automatically Using TreeSitter Modes
-We will have to wait until Emacs 30+ for automatic fallback.  Until then, I'm
-using a workaround that I've posted to GitHub and MELPA as [[https://github.com/renzmann/treesit-auto][treesit-auto]].
+I've posted this to GitHub and MELPA as [[https://github.com/renzmann/treesit-auto][treesit-auto]].
 
 #+begin_src emacs-lisp
   (use-package treesit-auto
