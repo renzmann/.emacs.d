@@ -1852,18 +1852,6 @@ Ecosia requires JavaScript, unfortunately.
     :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
 #+end_src
 
-** Esup: startup time profiling
-[[https://github.com/jschaf/esup][esup]] is a tool for profiling the startup time of Emacs.  This snippet is a work
-around of a bug where esup tries to step into the byte-compiled version of
-`cl-lib', and fails horribly: https://github.com/jschaf/esup/issues/85
-
-#+begin_src emacs-lisp
-  (use-package esup
-    :bind ("C-c x p")
-    :config
-    (setq esup-depth 0))
-#+end_src
-
 ** Reloading Emacs
 Often used when changing up my ~init.el~.
 

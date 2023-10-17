@@ -887,13 +887,6 @@ Jumps to an Org src block from tangled code."
   :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
 ;; eww - search engine and browser:1 ends here
 
-;; [[file:README.org::*Esup: startup time profiling][Esup: startup time profiling:1]]
-(use-package esup
-  :bind ("C-c x p")
-  :config
-  (setq esup-depth 0))
-;; Esup: startup time profiling:1 ends here
-
 ;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
 (use-package restart-emacs
   :bind ("C-c x r" . restart-emacs))
