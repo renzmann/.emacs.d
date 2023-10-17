@@ -6,4 +6,6 @@ dependencies:
 - git
 - m2-openssh
 - m2w64-gcc
+- make
+- markdown
 - python=3.10
