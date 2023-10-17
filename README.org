@@ -380,47 +380,37 @@ larger, bolder headings when in [[Org-mode]], and ~ef-themes-to-toggle~ allows m
 quickly switch between preset light and dark themes depending on the ambient
 light of the room I'm in.
 
+1. leuven-dark is mostly grey/blue, but the green-purple in buffers is a little
+   clashing.  The way this theme treats Org files is superior to deeper-blue, though.
+2. modus-vivendi is probably the best theme, but requires the most tweaks to get
+   comfortable.  Eventually I'd like a configured version of this theme to
+   become my daily driver.
+3. deeper-blue doesn't have org src highlighting by default, but I think this
+   scheme is most legible in programming modes.
+4. tsdh-dark not terrible, but the red outline around the minibuffer is kinda
+   ugly.  Green in-buffer isn't great.
+5. wombat is /okay/, but the green is not super clear in e.g. HTML mode.
+   Underlining is used too frequently and looks bad.
+6. NO tango-dark (lose syntax on highlighted line)
+
+
 #+begin_src emacs-lisp
-  (use-package ef-themes
-    :if (display-graphic-p)
-    :demand t
-    :bind ("C-c m" . ef-themes-toggle)
-
-    :custom
-    (ef-themes-headings
-     '((0 . (1.9))
-       (1 . (1.3))
-       (2 . (1.0))
-       (3 . (1.0))
-       (4 . (1.0))
-       (5 . (1.0)) ; absence of weight means `bold'
-       (6 . (1.0))
-       (7 . (1.0))
-       (t . (1.0))))
-    (ef-themes-to-toggle '(ef-cherie ef-kassio))
-
-    :config
-    (load-theme 'ef-cherie :no-confirm))
+  (load-theme 'leuven-dark)
+  ;; (use-package emacs
+  ;;   :custom
+  ;;   (modus-themes-subtle-line-numbers t)
+  ;;   (modus-themes-syntax '(alt-syntax faint))
+  ;;   (modus-themes-diffs 'desaturated)
+  ;;   ;; (modus-themes-hl-line 'intense)
+  ;;   (modus-themes-deuteranopia nil)
+  ;;   (modus-themes-bold-constructs t)
+  ;;   (modus-themes-italic-constructs t)
+  ;;   ;; (modus-themes-mode-line 'borderless)
+  ;;   (modus-themes-fringes 'subtle)
+  ;;   (modus-themes-org-blocks 'gray-background)
+  ;;   :bind   ("<f5>" . modus-themes-toggle)
+  ;;   :config (load-theme 'modus-vivendi))
 #+end_src
-
-I LOVE these themes from =ef-themes=:
-
- * *Light*
-   + =ef-frost=
-   + =ef-light=
-   + =ef-summer=
- * *Dark*
-   + =ef-cherie=
-   + =ef-trio-dark=
-   + =ef-winter=
-
-I've mostly settled on ~ef-cherie~, but sometimes switch to the others above.
-
-** Messed up colors in TTY mode
-In TTY mode, I use [[https://sw.kovidgoyal.net/kitty/][kitty]].  I have had trouble with dark blue or red themes in
-Alacritty, and on Windows terminal.  There is probably some hacking I could do
-on my ~$TERM~ variable to try and sort that out, but since it just kinda works in
-Kitty for me, I haven't spent too much time looking into it.
 
 * Emacs' Built-in Settings
 My settings for base Emacs behavior.  Assuming I ran with /no/ plugins (ala ~emacs

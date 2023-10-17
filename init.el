@@ -86,26 +86,21 @@
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
-(use-package ef-themes
-  :if (display-graphic-p)
-  :demand t
-  :bind ("C-c m" . ef-themes-toggle)
-
-  :custom
-  (ef-themes-headings
-   '((0 . (1.9))
-     (1 . (1.3))
-     (2 . (1.0))
-     (3 . (1.0))
-     (4 . (1.0))
-     (5 . (1.0)) ; absence of weight means `bold'
-     (6 . (1.0))
-     (7 . (1.0))
-     (t . (1.0))))
-  (ef-themes-to-toggle '(ef-cherie ef-kassio))
-
-  :config
-  (load-theme 'ef-cherie :no-confirm))
+(load-theme 'leuven-dark)
+;; (use-package emacs
+;;   :custom
+;;   (modus-themes-subtle-line-numbers t)
+;;   (modus-themes-syntax '(alt-syntax faint))
+;;   (modus-themes-diffs 'desaturated)
+;;   ;; (modus-themes-hl-line 'intense)
+;;   (modus-themes-deuteranopia nil)
+;;   (modus-themes-bold-constructs t)
+;;   (modus-themes-italic-constructs t)
+;;   ;; (modus-themes-mode-line 'borderless)
+;;   (modus-themes-fringes 'subtle)
+;;   (modus-themes-org-blocks 'gray-background)
+;;   :bind   ("<f5>" . modus-themes-toggle)
+;;   :config (load-theme 'modus-vivendi))
 ;; Theme:1 ends here
 
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
