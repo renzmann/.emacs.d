@@ -391,21 +391,23 @@ light of the room I'm in.
 
 
 #+begin_src emacs-lisp
-  (load-theme 'leuven-dark)
-  ;; (use-package emacs
-  ;;   :custom
-  ;;   (modus-themes-subtle-line-numbers t)
-  ;;   (modus-themes-syntax '(alt-syntax faint))
-  ;;   (modus-themes-diffs 'desaturated)
-  ;;   ;; (modus-themes-hl-line 'intense)
-  ;;   (modus-themes-deuteranopia nil)
-  ;;   (modus-themes-bold-constructs t)
-  ;;   (modus-themes-italic-constructs t)
-  ;;   ;; (modus-themes-mode-line 'borderless)
-  ;;   (modus-themes-fringes 'subtle)
-  ;;   (modus-themes-org-blocks 'gray-background)
-  ;;   :bind   ("<f5>" . modus-themes-toggle)
-  ;;   :config (load-theme 'modus-vivendi))
+  ;; (load-theme 'leuven-dark)
+  (use-package emacs
+    :custom
+    (modus-themes-inhibit-reload nil)
+    (modus-themes-subtle-line-numbers t)
+    (modus-themes-syntax '(alt-syntax faint green-strings yellow-comments))
+    (modus-themes-diffs 'desaturated)
+    ;; (modus-themes-hl-line 'intense)
+    (modus-themes-deuteranopia nil)
+    (modus-themes-bold-constructs t)
+    (modus-themes-italic-constructs t)
+    ;; (modus-themes-mode-line 'borderless)
+    (modus-themes-fringes 'subtle)
+    (modus-themes-org-blocks 'gray-background)
+    (modus-themes-vivendi-color-overrides '((bg-main . "#1d2021")))
+    :bind   ("<f5>" . modus-themes-toggle)
+    :config (load-theme 'modus-vivendi))
 #+end_src
 
 * Emacs' Built-in Settings
@@ -551,6 +553,7 @@ clean and well delineated for [[=org-modern=][org-modern]].
 #+begin_src emacs-lisp
   (defun renz/modify-margins ()
     "Add some space around each window."
+    (interactive)
     (modify-all-frames-parameters
      '((right-divider-width . 40)
        (internal-border-width . 40)))
@@ -1790,16 +1793,6 @@ Also enabled above is Do-What-I-Mean (DWIM) copying.  This is for when two dired
 windows are open, and we want to copy something from one location to the other.
 By enabling ~dired-dwim-target~, it auto-populates the minibuffer with the other
 dired window's path when issuing a copy command with ~C~.
-
-** Coterm mode
-Adds the ability to use TUI programs in shell mode.
-
-#+begin_src emacs-lisp
-  (use-package coterm
-    :unless (renz/windowsp)
-    :config
-    (coterm-mode))
-#+end_src
 
 ** Visual fill column
 For visual lines, this adds line breaks at the fill-column value.  Especially

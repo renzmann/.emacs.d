@@ -86,21 +86,23 @@
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
-(load-theme 'leuven-dark)
-;; (use-package emacs
-;;   :custom
-;;   (modus-themes-subtle-line-numbers t)
-;;   (modus-themes-syntax '(alt-syntax faint))
-;;   (modus-themes-diffs 'desaturated)
-;;   ;; (modus-themes-hl-line 'intense)
-;;   (modus-themes-deuteranopia nil)
-;;   (modus-themes-bold-constructs t)
-;;   (modus-themes-italic-constructs t)
-;;   ;; (modus-themes-mode-line 'borderless)
-;;   (modus-themes-fringes 'subtle)
-;;   (modus-themes-org-blocks 'gray-background)
-;;   :bind   ("<f5>" . modus-themes-toggle)
-;;   :config (load-theme 'modus-vivendi))
+;; (load-theme 'leuven-dark)
+(use-package emacs
+  :custom
+  (modus-themes-inhibit-reload nil)
+  (modus-themes-subtle-line-numbers t)
+  (modus-themes-syntax '(alt-syntax faint green-strings yellow-comments))
+  (modus-themes-diffs 'desaturated)
+  ;; (modus-themes-hl-line 'intense)
+  (modus-themes-deuteranopia nil)
+  (modus-themes-bold-constructs t)
+  (modus-themes-italic-constructs t)
+  ;; (modus-themes-mode-line 'borderless)
+  (modus-themes-fringes 'subtle)
+  (modus-themes-org-blocks 'gray-background)
+  (modus-themes-vivendi-color-overrides '((bg-main . "#1d2021")))
+  :bind   ("<f5>" . modus-themes-toggle)
+  :config (load-theme 'modus-vivendi))
 ;; Theme:1 ends here
 
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
@@ -172,6 +174,7 @@
 ;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
 (defun renz/modify-margins ()
   "Add some space around each window."
+  (interactive)
   (modify-all-frames-parameters
    '((right-divider-width . 40)
      (internal-border-width . 40)))
@@ -862,13 +865,6 @@ Jumps to an Org src block from tangled code."
   (setq dired-listing-switches "-alFh")
   (setq dired-dwim-target t))
 ;; dired:1 ends here
-
-;; [[file:README.org::*Coterm mode][Coterm mode:1]]
-(use-package coterm
-  :unless (renz/windowsp)
-  :config
-  (coterm-mode))
-;; Coterm mode:1 ends here
 
 ;; [[file:README.org::*Visual fill column][Visual fill column:1]]
 (use-package visual-fill-column
