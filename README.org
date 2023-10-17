@@ -7,7 +7,7 @@
 Want to use it? Go ahead!
 
 #+begin_src shell :eval never
-git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
+  git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
 #+end_src
 
 All external dependency sources are explicitly included under the ~elpa/~
