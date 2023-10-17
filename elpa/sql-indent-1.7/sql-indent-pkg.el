@@ -1,0 +1,2 @@
+;; Generated package description from sql-indent.el  -*- no-byte-compile: t -*-
+(define-package "sql-indent" "1.7" "Support for indenting code in SQL files." '((cl-lib "0.5")) :commit "323ece64acaac7f27b7806db9dba0757d6e57885" :authors '(("Alex Harsanyi" . "AlexHarsanyi@gmail.com")) :maintainer '("Alex Harsanyi" . "AlexHarsanyi@gmail.com") :keywords '("languages" "sql") :url "https://github.com/alex-hhh/emacs-sql-indent")
