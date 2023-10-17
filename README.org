@@ -391,7 +391,7 @@ light of the room I'm in.
 
 
 #+begin_src emacs-lisp
-  (load-theme 'deeper-blue)
+  (load-theme 'leuven-dark)
   ;; (use-package emacs
   ;;   :custom
   ;;   (modus-themes-subtle-line-numbers t)

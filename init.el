@@ -86,7 +86,7 @@
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
-(load-theme 'deeper-blue)
+(load-theme 'leuven-dark)
 ;; (use-package emacs
 ;;   :custom
 ;;   (modus-themes-subtle-line-numbers t)
