@@ -521,11 +521,6 @@
 (fido-vertical-mode t)
 ;; Completion at point:2 ends here
 
-;; [[file:README.org::*protobuf][protobuf:1]]
-(use-package protobuf-ts-mode
- :mode ("\\.proto\\'" . protobuf-ts-mode))
-;; protobuf:1 ends here
-
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
   ;; (setq indent-tabs-mode t)
@@ -647,48 +642,12 @@ Jumps to an Org src block from tangled code."
   (setq ob-async-no-async-languages-alist '("ipython" "python")))
 ;; Org babel:1 ends here
 
-;; [[file:README.org::*=org-modern=][=org-modern=:1]]
-(use-package org-modern
-  :after org
-  :config
-  (setq org-auto-align-tags nil
-        org-tags-column 0
-        org-catch-invisible-edits 'show-and-error
-        org-special-ctrl-a/e t
-        org-insert-heading-respect-content t
-
-        ;; Org styling, hide markup etc.
-        org-hide-emphasis-markers t
-        org-pretty-entities t
-        org-ellipsis "…"
-
-        ;; Agenda styling
-        org-agenda-tags-column 0
-        org-agenda-block-separator ?─
-        org-agenda-time-grid '((daily today require-timed)
-                               (800 1000 1200 1400 1600 1800 2000)
-                               " ┄┄┄┄┄ " "┄┄┄┄┄┄┄┄┄┄┄┄┄┄┄")
-        org-agenda-current-time-string
-        "<─ now ────────────────────────────────────────────────")
-
-  (if (display-graphic-p)
-      (setq org-modern-table t)
-    (setq org-modern-table nil))
-
-  (global-org-modern-mode))
-;; =org-modern=:1 ends here
-
 ;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
 (use-package ox-clip
   :after org
   :config
   (setq org-hugo-front-matter-format "yaml"))
 ;; Copying images out of org-babel:1 ends here
-
-;; [[file:README.org::*Exporting to Hugo][Exporting to Hugo:1]]
-(use-package ox-hugo
-  :after org)
-;; Exporting to Hugo:1 ends here
 
 ;; [[file:README.org::*Converting JSON to Org Tables][Converting JSON to Org Tables:1]]
 (use-package json-to-org-table
@@ -959,7 +918,6 @@ Jumps to an Org src block from tangled code."
 
 ;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
 (use-package treesit-auto
-  :load-path "site-lisp/treesit-auto/"
   :custom
   (treesit-auto-install 'prompt)
   :config
