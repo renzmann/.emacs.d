@@ -81,8 +81,9 @@
 ;; [[file:README.org::*Font][Font:1]]
 (cond ((x-list-fonts "Hack Nerd Font")
        (add-to-list 'default-frame-alist '(font . "Hack Nerd Font-12")))
-      ((x-list-fonts "Segoe UI Emoji")
-       (add-to-list 'default-frame-alist '(font . "Segoe UI Emoji-12"))))
+      ;; ((x-list-fonts "Segoe UI Emoji")
+      ;;  (add-to-list 'default-frame-alist '(font . "Segoe UI Emoji-12")))
+      )
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]

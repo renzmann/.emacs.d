@@ -365,8 +365,9 @@ information on how checking and setting default fonts works:
 #+begin_src emacs-lisp
   (cond ((x-list-fonts "Hack Nerd Font")
          (add-to-list 'default-frame-alist '(font . "Hack Nerd Font-12")))
-        ((x-list-fonts "Segoe UI Emoji")
-         (add-to-list 'default-frame-alist '(font . "Segoe UI Emoji-12"))))
+        ;; ((x-list-fonts "Segoe UI Emoji")
+        ;;  (add-to-list 'default-frame-alist '(font . "Segoe UI Emoji-12")))
+        )
 #+end_src
 
 * Theme
