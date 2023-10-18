@@ -370,11 +370,6 @@ information on how checking and setting default fonts works:
 #+end_src
 
 * Theme
-[[https://protesilaos.com/][Prot's]] themes have been reliably legible in nearly every situation.  Now with
-his new [[https://protesilaos.com/emacs/ef-themes][ef-themes]], they're pretty, too! The =ef-themes-headings= variable creates
-larger, bolder headings when in [[Org-mode]], and ~ef-themes-to-toggle~ allows me to
-quickly switch between preset light and dark themes depending on the ambient
-light of the room I'm in.
 
 1. leuven-dark is mostly grey/blue, but the green-purple in buffers is a little
    clashing.  The way this theme treats Org files is superior to deeper-blue, though.
