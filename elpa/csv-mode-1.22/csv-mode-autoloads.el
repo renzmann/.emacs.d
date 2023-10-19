@@ -5,7 +5,7 @@
 
 ;;; Code:
 
-(add-to-list 'load-path (or (and load-file-name (file-name-directory load-file-name)) (car load-path)))
+(add-to-list 'load-path (or (and load-file-name (directory-file-name (file-name-directory load-file-name))) (car load-path)))
 
 
 
