@@ -15,7 +15,7 @@ directory, meaning it's as simple as "clone-n-go".  Opening this document under
 my configuration looks like so:
 
 #+attr_html: :width 800px
-[[https://user-images.githubusercontent.com/32076780/209576965-0c428bff-bea2-4b06-8373-37dfa4e4d86d.png]]
+[[https://raw.githubusercontent.com/renzmann/.emacs.d/e93d5ea85896745ed5e79fa725278cd37f09f727/img/emacs-screen.png]]
 
 If you prefer a prettier reading experience, check out this same document weaved
 into [[https://robbmann.io/emacsd/][my website.]]  Or, if you're already reading this on my website, check out
