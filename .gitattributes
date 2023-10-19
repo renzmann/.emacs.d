@@ -1,1 +1,7 @@
-* text eol=lf
+*.el text eol=lf
+*.py text eol=lf
+*.org text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.py text eol=lf
