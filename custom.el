@@ -6,7 +6,9 @@
  '(column-number-mode t)
  '(mode-line-in-non-selected-windows t)
  '(package-selected-packages
-   '(treesit-auto ob-powershell powershell ob-async blacken pyvenv ess sql-indent package-lint vimrc-mdoe ox-clip org visual-fill-column yaml-mode exec-path-from-shell vimrc-mode csv-mode markdown-mode))
+   '(orderless treesit-auto yaml-mode visual-fill-column sql-indent package-lint markdown-mode exec-path-from-shell csv-mode modus-themes))
+ '(package-vc-selected-packages
+   '((treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
  '(safe-local-variable-values
    '((vc-prepare-patches-separately)
      (diff-add-log-use-relative-names . t)
