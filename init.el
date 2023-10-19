@@ -85,6 +85,11 @@
       ;; ((x-list-fonts "Segoe UI Emoji")
       ;;  (add-to-list 'default-frame-alist '(font . "Segoe UI Emoji-12")))
       )
+
+(defun renz/change-font-size (new-size)
+  "Change the default font size to the given size."
+  (interactive "nNew font size: ")
+  (set-face-attribute 'default nil :height (* 10 new-size)))
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
