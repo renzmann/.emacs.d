@@ -28,9 +28,9 @@
     (when (file-exists-p proxy-file)
       (load-file proxy-file)
       (setq url-proxy-services
-            '(("no_proxy" . "^\\(localhost\\|10.*\\)")
-              ("http" . (concat renz/proxy-host ":" renz/proxy-port))
-              ("https" . (concat renz/proxy-host ":" renz/proxy-port))))
+            `(("no_proxy" . "^\\(localhost\\|10.*\\)")
+              ("http" . ,(concat renz/proxy-host ":" renz/proxy-port))
+              ("https" . ,(concat renz/proxy-host ":" renz/proxy-port))))
       (setq url-http-proxy-basic-auth-storage
             (list
              (list
