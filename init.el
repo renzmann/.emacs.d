@@ -525,7 +525,6 @@
 ;; [[file:README.org::*Completion in the minibuffer and at point][Completion in the minibuffer and at point:2]]
 (setq icomplete-in-buffer t)
 (setq icomplete-prospects-height 10)
-(setq )
 (fido-vertical-mode t)
 ;; Completion in the minibuffer and at point:2 ends here
 

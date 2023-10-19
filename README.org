@@ -1206,7 +1206,6 @@ then it will still come up on the second TAB press.
 #+begin_src emacs-lisp
   (setq icomplete-in-buffer t)
   (setq icomplete-prospects-height 10)
-  (setq )
   (fido-vertical-mode t)
 #+end_src
 
