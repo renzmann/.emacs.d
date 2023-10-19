@@ -41,8 +41,8 @@ or call the function `global-visual-fill-column-mode'.")
 (custom-autoload 'global-visual-fill-column-mode "visual-fill-column" nil)
 (autoload 'global-visual-fill-column-mode "visual-fill-column" "\
 Toggle Visual-Fill-Column mode in all buffers.
-With prefix ARG, enable Global Visual-Fill-Column mode if ARG is positive;
-otherwise, disable it.
+With prefix ARG, enable Global Visual-Fill-Column mode if ARG is
+positive; otherwise, disable it.
 
 If called from Lisp, toggle the mode if ARG is `toggle'.
 Enable the mode if ARG is nil, omitted, or is a positive number.
@@ -51,7 +51,8 @@ Disable the mode if ARG is a negative number.
 Visual-Fill-Column mode is enabled in all buffers where
 `turn-on-visual-fill-column-mode' would do it.
 
-See `visual-fill-column-mode' for more information on Visual-Fill-Column mode.
+See `visual-fill-column-mode' for more information on
+Visual-Fill-Column mode.
 
 (fn &optional ARG)" t)
 (autoload 'visual-fill-column-split-window-sensibly "visual-fill-column" "\
