@@ -46,20 +46,21 @@
 ;; Packages:1 ends here
 
 ;; [[file:README.org::*Packages][Packages:2]]
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-;; Packages:2 ends here
-
-;; [[file:README.org::*Packages][Packages:3]]
 (defun renz/package-sync ()
   "Remove unused sources and install any missing ones."
   (interactive)
   (package-autoremove)
-  (package-install-selected-packages))
-;; Packages:3 ends here
+  (package-install-selected-packages)
+  (package-vc-install-selected-packages))
 
-;; [[file:README.org::*Packages][Packages:4]]
+(when (and (cl-notevery 'package-installed-p package-selected-packages)
+           (yes-or-no-p "Install VC packages?"))
+  (package-vc-install-selected-packages))
+;; Packages:2 ends here
+
+;; [[file:README.org::*Packages][Packages:3]]
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
-;; Packages:4 ends here
+;; Packages:3 ends here
 
 ;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
 (defun renz/windowsp ()
@@ -102,7 +103,10 @@
   (modus-themes-org-blocks 'gray-background)
   (modus-themes-vivendi-color-overrides '((bg-main . "#010101")))
   :bind   ("<f5>" . modus-themes-toggle)
-  :config (load-theme 'modus-vivendi))
+  :config
+  (if (version< emacs-version "29.0")
+      (load-theme 'leuven-dark)
+    (load-theme 'modus-vivendi-tinted t)))
 ;; Theme:1 ends here
 
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
@@ -632,18 +636,6 @@ Jumps to an Org src block from tangled code."
      ;; (latex . t)
      )))
 ;; Org-mode:3 ends here
-
-;; [[file:README.org::*Org babel][Org babel:1]]
-(use-package ob-async
-  :after org
-  :config
-  (setq ob-async-no-async-languages-alist '("ipython" "python")))
-;; Org babel:1 ends here
-
-;; [[file:README.org::*Copying images out of org-babel][Copying images out of org-babel:1]]
-(use-package ox-clip
-  :after org)
-;; Copying images out of org-babel:1 ends here
 
 ;; [[file:README.org::*Converting JSON to Org Tables][Converting JSON to Org Tables:1]]
 (use-package json-to-org-table

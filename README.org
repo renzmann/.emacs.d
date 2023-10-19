@@ -239,32 +239,32 @@ To avoid loading packages twice, [[https://www.gnu.org/software/emacs/manual/htm
   (setq package-enable-at-startup nil)
 #+end_src
 
-MELPA (Milkypostman's Emacs Lisp Package Archive) is the largest repository for
-elisp sources that aren't a part of the official GNU ELPA.  To install packages
-from it, we need it on the =package-archives= list.
-
-#+begin_src emacs-lisp
-  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-#+end_src
-
 I do not use the =:ensure t= keyword in =use-package= declarations to install
-packages.  Instead, I rely on =M-x package-install= and =M-x package-delete=, and
-only permit =use-package= to handle the configuration and loading of packages.  As
-mentioned in the introduction, each package's source is explicitly included into
-version control of my configuration, so I don't worry too much about pinning
-package versions in this file.  When I want to update a package, I use =M-x
-package-update=, the =package.el= user interface, or delete the package's source
-folder and use =renz/package-sync= (defined below).  Should something go wrong, I
-roll back to a previous commit.  So far, this method has been reliable for
-keeping my =init.el= (this README), =custom.el=, the =package-selected-packages=
-variable, and =elpa/= directory all in sync with one another.
+packages, because I cannot always ensure that I have a stable connection to GNU
+Elpa (in the case of =package-install-selected-packages=) or the public
+=github.com= (for =package-vc-install-selected-packages=).  Instead, I rely on
+=M-x package-install= and =M-x package-delete=, and only permit =use-package= to
+handle the configuration and loading of packages.  As mentioned in the
+introduction, each package's source is explicitly included into version control
+of my configuration, so I don't worry too much about pinning package versions in
+this file.  When I want to update a package, I use =M-x package-update=, the
+=package.el= user interface, or delete the package's source folder and use
+=renz/package-sync= (defined below).  Should something go wrong, I roll back to
+a previous commit.  So far, this method has been reliable for keeping my
+=init.el= (this README), =custom.el=, the =package-selected-packages= variable,
+and =elpa/= directory all in sync with one another.
 
 #+begin_src emacs-lisp
   (defun renz/package-sync ()
     "Remove unused sources and install any missing ones."
     (interactive)
     (package-autoremove)
-    (package-install-selected-packages))
+    (package-install-selected-packages)
+    (package-vc-install-selected-packages))
+
+  (when (and (cl-notevery 'package-installed-p package-selected-packages)
+             (yes-or-no-p "Install VC packages?"))
+    (package-vc-install-selected-packages))
 #+end_src
 
 There are also a few hand-made packages I keep around in a special
@@ -372,19 +372,10 @@ information on how checking and setting default fonts works:
 
 * Theme
 
-1. leuven-dark is mostly grey/blue, but the green-purple in buffers is a little
-   clashing.  The way this theme treats Org files is superior to deeper-blue, though.
-2. modus-vivendi is probably the best theme, but requires the most tweaks to get
-   comfortable.  Eventually I'd like a configured version of this theme to
-   become my daily driver.
-3. deeper-blue doesn't have org src highlighting by default, but I think this
-   scheme is most legible in programming modes.
-4. tsdh-dark not terrible, but the red outline around the minibuffer is kinda
-   ugly.  Green in-buffer isn't great.
-5. wombat is /okay/, but the green is not super clear in e.g. HTML mode.
-   Underlining is used too frequently and looks bad.
-6. NO tango-dark (lose syntax on highlighted line)
-
+With the introduction of =modus-vivendi-tinted= in Emacs 29, I really have no need for any
+external themes now.  It is accessible, well optimized for =org-mode= and
+=prog-mode=, and distributed with vanilla Emacs.  Hats off to [[https://protesilaos.com/][Prot]] for these
+wonderful themes.
 
 #+begin_src emacs-lisp
   (use-package emacs
@@ -402,7 +393,10 @@ information on how checking and setting default fonts works:
     (modus-themes-org-blocks 'gray-background)
     (modus-themes-vivendi-color-overrides '((bg-main . "#010101")))
     :bind   ("<f5>" . modus-themes-toggle)
-    :config (load-theme 'modus-vivendi))
+    :config
+    (if (version< emacs-version "29.0")
+        (load-theme 'leuven-dark)
+      (load-theme 'modus-vivendi-tinted t)))
 #+end_src
 
 * Emacs' Built-in Settings
@@ -1354,26 +1348,6 @@ latter over the former, I've removed the =org-startup-indented= call.
        ;; (awk . t)
        ;; (latex . t)
        )))
-#+end_src
-
-*** Org babel
-For literate programming.  =ob-async= allows us to execute a block without waiting for it to finish.
-
-#+begin_src emacs-lisp
-  (use-package ob-async
-    :after org
-    :config
-    (setq ob-async-no-async-languages-alist '("ipython" "python")))
-#+end_src
-
-*** Copying images out of org-babel
-Offers two functions:
-+ ~ox-clip-formatted-copy~
-+ ~ox-clip-image-to-clipboard~
-
-#+begin_src emacs-lisp
-  (use-package ox-clip
-    :after org)
 #+end_src
 
 *** Converting JSON to Org Tables
