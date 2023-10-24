@@ -22,25 +22,24 @@ into [[https://robbmann.io/emacsd/][my website.]]  Or, if you're already reading
 the [[https://github.com/renzmann/.emacs.d/][source code on GitHub]].
 
 * Goals
-If I had to sum up the theme of my configuration, it would be "vanilla extract".
-In only a few instances do I change overt behavior of Emacs, the most noticeable
-departure of course being the color theme with org-modern.  Even with those,
-though, I want a configuration that fits my hands in such a way that I remain
-comfortable using =emacs -Q= with very little disruption to my normal muscle
-memory and workflow.
+If I had to sum up the theme of my configuration, it would be "vanilla extract,"
+because in only a few instances do I change the overt behavior of Emacs.  Even
+with those, though, I want a configuration that fits my hands in such a way that
+I remain comfortable using =emacs -Q= with very little disruption to my normal
+muscle memory and workflow.
 
 Aside from these aesthetic and philosophical reasons, there are practical
 concerns this configuration needs to address.  I spend my time on Windows for
 games, macOS or Linux with remote machines for work, and desktop Linux for
 personal projects like building my website.  Some of these situations enforce a
 very slow internet connection and tight security measures for Tramp, which can
-cause modern, "live updating" features like =corfu= and =consult= to hang Emacs.  In
-other cases, I have no access to the outside internet at all (so no ELPA or
+cause modern, "live updating" features like =corfu= and =consult= to hang Emacs.
+In other cases, I have no access to the outside internet at all (so no ELPA or
 MELPA updates).  Hence, keeping only a small number of external dependencies
 under =elpa/= maximizes portability and maintainability between systems.
 
-Altogether, I wind up using Emacs 28+ on all three of the major platforms, in both
-GUI and TTY mode.  So this config is designed to work equally well for:
+Altogether, I wind up using Emacs 29+ on all three of the major platforms, in
+both GUI and TTY mode.  So this config is designed to work equally well for:
 
 |----------+----------+-----+-----------+-------|
 | platform | terminal | GUI | ssh + TTY | Tramp |
@@ -50,28 +49,22 @@ GUI and TTY mode.  So this config is designed to work equally well for:
 | Windows  | ❌       | ✅  | ❌        | ✅    |
 |----------+----------+-----+-----------+-------|
 
-Once I figure out how to get colors working in Windows terminal, I'll update
-this table.  For now though, the 16 bit colors don't react to my color theme,
-and so on Windows I rely singularly on GUI mode, rather than WSL or Emacs inside
-Alacritty.
-
 * Notable Features
 You may notice that despite the laudable goal of intended minimalism, this
 document is is still quite long, as I have found many (ever increasing) quirky
 behaviors of Emacs that I tweak.  Most of my time is spent in Org, SQL, Python,
-Bash, and Markdown, so the majority of configuration lies around these sections.
+Bash, YAML, TOML, and Markdown, so the majority of configuration lies around
+these sections.
 
 I do make changes to things that I feel "should have been included."  Some
 examples of this are:
 
-1. Additional major modes for languages like Markdown, Go, and Rust
+1. Additional major modes for common filetypes like Markdown, CSV, and YAML
 2. Error message support for =pyright= in a =*Compilation*= buffer
 3. Reasonable indentation behavior for SQL files
 4. Updating buffers automatically if their contents change on disk
 5. Syntax highlighting for Source blocks in Markdown
 6. Handling ANSI color escape codes in shell output, compilation, and VC buffers
-7. Ability to run TUI interfaces in comint-mode (shell, eshell) on Linux and
-   macOS
 
 * Tangling
 My configuration is a single literate programming document, which is tangled
@@ -89,9 +82,8 @@ code, and so a change of medium felt prudent.  In my case, that's the venerable
 commentary and code together.
 
 * Inspirations
-Here's where I put the typical quote about standing on one form of shoulders or
-another.  I steal quite a lot from other, more qualified Emacs community
-contributors, such as:
+I steal quite a lot from other, more qualified Emacs community contributors,
+such as:
 
 - [[https://protesilaos.com/][Protesilaos Stavrou]]
 - [[https://panadestein.github.io/emacsd/][Ramón Panadestein]]
@@ -198,9 +190,9 @@ I prefer having =custom= modify its own file.  This next snippet ensures any
 
 * Proxy settings
 When behind a corporate proxy, we might have to authenticate before we can pull
-packages off MELPA or ELPA.  Emacs only uses the HOST and PORT portions of the
-=http_proxy= and =https_proxy= environment variables, so we need to set LOGIN (user
-id) and PASSWORD ourselves.
+packages off ELPA.  Emacs only uses the HOST and PORT portions of the
+=http_proxy= and =https_proxy= environment variables, so we need to set LOGIN
+(user id) and PASSWORD ourselves.
 
 I store the login, port, and host variables in a =proxy.el= file (obviously
 outside version control) when I'm on a machine that's behind an http proxy.  We
@@ -241,7 +233,7 @@ To avoid loading packages twice, [[https://www.gnu.org/software/emacs/manual/htm
 
 I do not use the =:ensure t= keyword in =use-package= declarations to install
 packages, because I cannot always ensure that I have a stable connection to GNU
-Elpa (in the case of =package-install-selected-packages=) or the public
+ELPA (in the case of =package-install-selected-packages=) or the public
 =github.com= (for =package-vc-install-selected-packages=).  Instead, I rely on
 =M-x package-install= and =M-x package-delete=, and only permit =use-package= to
 handle the configuration and loading of packages.  As mentioned in the
