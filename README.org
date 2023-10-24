@@ -1725,19 +1725,15 @@ of the screen for docstrings in python.
           org-imenu-depth 3))
 #+end_src
 
-** ~dabbrev~: swap ~M-/~ and ~C-M-/~
+** ~dabbrev~
 
 #+begin_src emacs-lisp
   (use-package dabbrev
-    ;; Swap M-/ and C-M-/
-    :bind (("M-/" . dabbrev-completion)
-           ("C-M-/" . dabbrev-expand))
-    ;; Other useful Dabbrev configurations.
     :custom
     (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
   #+end_src
 
-** dired
+** ~dired~
 By default, ~dired~ uses bytes instead of "K", "Mb", or "G" for file sizes.  I
 also have it hide the mode, size, and owner of each file by default.
 
@@ -1976,13 +1972,6 @@ spinners and progress bars, so I have a little hack to work around that.
 #+end_src
 
 There might be a better way, but this mostly works for now.
-
-* Don't forget about these
-There are several other interesting options that I haven't tried out yet, including:
-+ [ ] [[https://github.com/abo-abo/org-download][org-download]]
-+ [ ] [[https://github.com/oantolin/math-delimiters][math-delimiters]]
-+ [ ] [[https://github.com/oantolin/placeholder][oantolin/placeholder]]
-+ [ ] [[https://notmuchmail.org/notmuch-emacs/][notmuch for email]]
 
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an

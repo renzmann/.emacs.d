@@ -833,23 +833,19 @@ Jumps to an Org src block from tangled code."
         org-imenu-depth 3))
 ;; ~imenu~:1 ends here
 
-;; [[file:README.org::*~dabbrev~: swap ~M-/~ and ~C-M-/~][~dabbrev~: swap ~M-/~ and ~C-M-/~:1]]
+;; [[file:README.org::*~dabbrev~][~dabbrev~:1]]
 (use-package dabbrev
-  ;; Swap M-/ and C-M-/
-  :bind (("M-/" . dabbrev-completion)
-         ("C-M-/" . dabbrev-expand))
-  ;; Other useful Dabbrev configurations.
   :custom
   (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
-;; ~dabbrev~: swap ~M-/~ and ~C-M-/~:1 ends here
+;; ~dabbrev~:1 ends here
 
-;; [[file:README.org::*dired][dired:1]]
+;; [[file:README.org::*~dired~][~dired~:1]]
 (use-package dired
   :hook (dired-mode . dired-hide-details-mode)
   :config
   (setq dired-listing-switches "-alFh")
   (setq dired-dwim-target t))
-;; dired:1 ends here
+;; ~dired~:1 ends here
 
 ;; [[file:README.org::*Visual fill column][Visual fill column:1]]
 (use-package visual-fill-column
