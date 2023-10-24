@@ -525,7 +525,7 @@
 ;; [[file:README.org::*Completion in the minibuffer and at point][Completion in the minibuffer and at point:2]]
 (setq icomplete-in-buffer t)
 (setq icomplete-prospects-height 10)
-(fido-vertical-mode t)
+(icomplete-vertical-mode t)
 ;; Completion in the minibuffer and at point:2 ends here
 
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
@@ -751,9 +751,7 @@ Jumps to an Org src block from tangled code."
   (require 'eglot)
   (setq python-check-command "ruff")
   (add-hook 'python-mode-hook #'flymake-mode)
-  (add-hook 'python-mode-hook #'blacken-mode)
   (add-hook 'python-ts-mode-hook #'flymake-mode)
-  (add-hook 'python-ts-mode-hook #'blacken-mode)
   ;; (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) "ruff-lsp"))
   )
 ;; Python check with "ruff":1 ends here
@@ -789,14 +787,6 @@ Jumps to an Org src block from tangled code."
   :config
   (pyvenv-mode))
 ;; Pyvenv for virtual environments:1 ends here
-
-;; [[file:README.org::*Executing cell-by-cell][Executing cell-by-cell:1]]
-(use-package code-cells
-  :hook ((python-mode . code-cells-mode-maybe)
-         (python-ts-mode . code-cells-mode-maybe))
-  :config
-  (add-to-list 'code-cells-eval-region-commands '(python-ts-mode . python-shell-send-region)))
-;; Executing cell-by-cell:1 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:1]]
 (when (and (not (executable-find "markdown")) (executable-find "markdown_py"))

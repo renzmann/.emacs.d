@@ -1206,7 +1206,7 @@ then it will still come up on the second TAB press.
 #+begin_src emacs-lisp
   (setq icomplete-in-buffer t)
   (setq icomplete-prospects-height 10)
-  (fido-vertical-mode t)
+  (icomplete-vertical-mode t)
 #+end_src
 
 In the case that we need to enter a new file name, but =fido= is still showing a
@@ -1571,9 +1571,7 @@ programs exist is a small time saver.
     (require 'eglot)
     (setq python-check-command "ruff")
     (add-hook 'python-mode-hook #'flymake-mode)
-    (add-hook 'python-mode-hook #'blacken-mode)
     (add-hook 'python-ts-mode-hook #'flymake-mode)
-    (add-hook 'python-ts-mode-hook #'blacken-mode)
     ;; (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) "ruff-lsp"))
     )
 #+end_src
@@ -1652,16 +1650,6 @@ virtual environment.
      ("C-c p a" . pyvenv-activate))
     :config
     (pyvenv-mode))
-#+end_src
-
-*** TODO Executing cell-by-cell
-
-#+begin_src emacs-lisp
-  (use-package code-cells
-    :hook ((python-mode . code-cells-mode-maybe)
-           (python-ts-mode . code-cells-mode-maybe))
-    :config
-    (add-to-list 'code-cells-eval-region-commands '(python-ts-mode . python-shell-send-region)))
 #+end_src
 
 ** Markdown
