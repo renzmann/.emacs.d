@@ -43,6 +43,8 @@
 ;; [[file:README.org::*Packages][Packages:1]]
 (require 'package)
 (setq package-enable-at-startup nil)
+(add-to-list 'package-archives
+             '("melpa" . "https://melpa.org/packages/") t)
 ;; Packages:1 ends here
 
 ;; [[file:README.org::*Packages][Packages:2]]

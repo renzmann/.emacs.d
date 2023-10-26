@@ -229,6 +229,8 @@ To avoid loading packages twice, [[https://www.gnu.org/software/emacs/manual/htm
 #+begin_src emacs-lisp
   (require 'package)
   (setq package-enable-at-startup nil)
+  (add-to-list 'package-archives
+               '("melpa" . "https://melpa.org/packages/") t)
 #+end_src
 
 I do not use the =:ensure t= keyword in =use-package= declarations to install
