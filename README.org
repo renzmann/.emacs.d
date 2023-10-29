@@ -285,15 +285,18 @@ handled at the hardware level.
     (setq shell-file-name "pwsh"))
 #+end_src
 
-There are a few things I set up independent of Emacs.  Namely, =find=, =xargs=, and
-=rg=.  These days, I can usually install these things with =winget=:
+There are a few things I set up independent of Emacs.  Namely, =find=, =xargs=,
+and =rg=.  While not perfect, =winget= tends to do the trick nowadays.  Usually
+this still requires futzing with my PATH manually after installation.
 
 #+begin_src shell
-  winget install BurntSushi.ripgrep.GNU
+  winget install Git.Git
+  winget install BurntSushi.ripgrep.GNU  # A faster `grep`
   winget install GnuWin32.FindUtils
   winget install GnuWin32.Grep
   winget install RubyInstallerTeam.RubyWithDevKit.3.2  # For building my website with Jekyll
   winget install Python.Python.3.11  # I work a lot in python
+  winget install sharkdp.fd  # A faster `find`
 #+end_src
 
 You can use Emacs without these, but some commands like =M-x grep= or =M-x
@@ -383,19 +386,15 @@ wonderful themes.
     (modus-themes-subtle-line-numbers t)
     (modus-themes-syntax '(alt-syntax faint green-strings yellow-comments))
     (modus-themes-diffs 'desaturated)
-    ;; (modus-themes-hl-line 'intense)
+    (modus-themes-hl-line 'intense)
     (modus-themes-deuteranopia nil)
     (modus-themes-bold-constructs t)
     (modus-themes-italic-constructs t)
-    ;; (modus-themes-mode-line 'borderless)
-    (modus-themes-fringes 'subtle)
+    (modus-themes-mode-line 'borderless)
     (modus-themes-org-blocks 'gray-background)
-    (modus-themes-vivendi-color-overrides '((bg-main . "#010101")))
     :bind   ("<f5>" . modus-themes-toggle)
     :config
-    (if (version< emacs-version "29.0")
-        (load-theme 'leuven-dark)
-      (load-theme 'modus-vivendi-tinted t)))
+    (load-theme 'modus-vivendi-tinted t))
 #+end_src
 
 * Emacs' Built-in Settings
@@ -535,8 +534,7 @@ By default, though, I prefer it to be off when I start Emacs.
 
 ** Window margins and fringe
 This hunk adds some space around all sides of each window so that we get a clear
-space between the edge of the screen and the fringe.  This helps ~src~ blocks look
-clean and well delineated for [[=org-modern=][org-modern]].
+space between the edge of the screen and the fringe.
 
 #+begin_src emacs-lisp
   (defun renz/modify-margins ()
@@ -771,16 +769,17 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
   (advice-add 'risky-local-variable-p :override #'ignore)
 #+end_src
 
-** Prefer =rg= over =grep=
+** =grep= and =find=
 
 #+begin_src emacs-lisp
   (use-package grep
+    :bind ("C-c g" . grep-find)
     :config
     (when (executable-find "rg")
       (setq grep-program "rg")
       (grep-apply-setting
        'grep-find-command
-       '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27))))
+       '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))))
 #+end_src
 
 If you're on Windows, this command assumes you're running =pwsh= version 7 or higher.

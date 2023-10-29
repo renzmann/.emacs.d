@@ -6,7 +6,7 @@
  '(column-number-mode t)
  '(mode-line-in-non-selected-windows t)
  '(package-selected-packages
-   '(groovy-mode treesit-auto yaml-mode visual-fill-column sql-indent package-lint markdown-mode exec-path-from-shell csv-mode modus-themes))
+   '(rust-mode go-mode treesit-auto yaml-mode visual-fill-column sql-indent package-lint markdown-mode exec-path-from-shell csv-mode modus-themes))
  '(package-vc-selected-packages
    '((treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
  '(safe-local-variable-values

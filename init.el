@@ -101,19 +101,15 @@
   (modus-themes-subtle-line-numbers t)
   (modus-themes-syntax '(alt-syntax faint green-strings yellow-comments))
   (modus-themes-diffs 'desaturated)
-  ;; (modus-themes-hl-line 'intense)
+  (modus-themes-hl-line 'intense)
   (modus-themes-deuteranopia nil)
   (modus-themes-bold-constructs t)
   (modus-themes-italic-constructs t)
-  ;; (modus-themes-mode-line 'borderless)
-  (modus-themes-fringes 'subtle)
+  (modus-themes-mode-line 'borderless)
   (modus-themes-org-blocks 'gray-background)
-  (modus-themes-vivendi-color-overrides '((bg-main . "#010101")))
   :bind   ("<f5>" . modus-themes-toggle)
   :config
-  (if (version< emacs-version "29.0")
-      (load-theme 'leuven-dark)
-    (load-theme 'modus-vivendi-tinted t)))
+  (load-theme 'modus-vivendi-tinted t))
 ;; Theme:1 ends here
 
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
@@ -300,15 +296,16 @@
 (advice-add 'risky-local-variable-p :override #'ignore)
 ;; Ignore risky .dir-locals.el:1 ends here
 
-;; [[file:README.org::*Prefer =rg= over =grep=][Prefer =rg= over =grep=:1]]
+;; [[file:README.org::*=grep= and =find=][=grep= and =find=:1]]
 (use-package grep
+  :bind ("C-c g" . grep-find)
   :config
   (when (executable-find "rg")
     (setq grep-program "rg")
     (grep-apply-setting
      'grep-find-command
-     '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 27))))
-;; Prefer =rg= over =grep=:1 ends here
+     '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))))
+;; =grep= and =find=:1 ends here
 
 ;; [[file:README.org::*Shorter file paths in grep/compilation buffers][Shorter file paths in grep/compilation buffers:1]]
 (use-package scf-mode
