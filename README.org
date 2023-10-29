@@ -318,6 +318,20 @@ The duplicate =$PROFILE= thing is so we can access that file through =C-x C-f
 $PROFILE= within Emacs.  Check out the [[*Spellchecking][Spellchecking]] section on the Hunspell
 stuff.
 
+For compiling things like tree-sitter grammars, we'll need =cc= installed and on
+=PATH=, which unfortunately still requires a detour through =MINGW64=.
+
+#+begin_src powershell :tangle no
+  winget install MSYS2.MSYS2
+#+end_src
+
+Then, we open up the MINGW64 command prompt, and use =pacman= to get the
+standard toolchain.
+
+#+begin_src shell :tangle no
+  pacman -S --needed base-devel mingw-w64-x86_64-toolchain
+#+end_src
+
 *** On the winkey
 
 For a time I considered enabling the use of the winkey like this:
