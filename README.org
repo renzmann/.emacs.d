@@ -99,7 +99,7 @@ Instead, I've started simply downloading emacs from these sources on each of the
 platforms:
 
 ** Windows
-I go to the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/emacs-29/][pretest FTP]] to get the latest version of Emacs.  Usually not quite
+I go to the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/][pretest FTP]] to get the latest version of Emacs.  Usually not quite
 up-to-date with the master branch, but still one version number ahead of the
 most recent official release.
 
@@ -374,10 +374,10 @@ information on how checking and setting default fonts works:
 
 * Theme
 
-With the introduction of =modus-vivendi-tinted= in Emacs 29, I really have no need for any
-external themes now.  It is accessible, well optimized for =org-mode= and
-=prog-mode=, and distributed with vanilla Emacs.  Hats off to [[https://protesilaos.com/][Prot]] for these
-wonderful themes.
+With the introduction of =modus-vivendi-tinted= in Emacs 29, I really have no
+need for any external themes now.  It is accessible, well optimized for
+=org-mode= and =prog-mode=, and distributed with vanilla Emacs.  Hats off to
+[[https://protesilaos.com/][Prot]] for these wonderful themes.
 
 #+begin_src emacs-lisp
   (use-package emacs
