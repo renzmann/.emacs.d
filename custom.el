@@ -6,9 +6,11 @@
  '(column-number-mode t)
  '(mode-line-in-non-selected-windows t)
  '(package-selected-packages
-   '(awk-ts-mode vhdl-ts-mode verilog-ts-mode dart-ts-mode powershell rust-mode go-mode treesit-auto yaml-mode visual-fill-column sql-indent package-lint markdown-mode exec-path-from-shell csv-mode modus-themes))
+   '(clojure-ts-mode awk-ts-mode vhdl-ts-mode verilog-ts-mode dart-ts-mode powershell rust-mode go-mode treesit-auto yaml-mode visual-fill-column sql-indent package-lint markdown-mode exec-path-from-shell csv-mode modus-themes))
  '(package-vc-selected-packages
-   '((treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
+   '((clojure-ts-mode :vc-backend Git :url "https://github.com/clojure-emacs/clojure-ts-mode")
+     (dart-ts-mode :vc-backend Git :url "https://github.com/50ways2sayhard/dart-ts-mode")
+     (treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
  '(safe-local-variable-values
    '((vc-prepare-patches-separately)
      (diff-add-log-use-relative-names . t)
