@@ -393,9 +393,21 @@
 (global-set-key (kbd "C-c B") #'recompile)
 ;; =C-c b= build / compile:1 ends here
 
-;; [[file:README.org::*=C-c c= Calendar][=C-c c= Calendar:1]]
-(global-set-key (kbd "C-c c") #'calendar)
-;; =C-c c= Calendar:1 ends here
+;; [[file:README.org::*=C-c c= Insert current dir/file at point][=C-c c= Insert current dir/file at point:1]]
+(defun renz/insert-current-dir ()
+  "Insert the current `default-directory' at point."
+  (interactive)
+  (insert default-directory))
+
+(defun renz/insert-current-file ()
+  "Insert the current buffer's full file name at point."
+  (interactive)
+  ;; https://unix.stackexchange.com/a/45381
+  (insert (buffer-file-name (window-buffer (minibuffer-selected-window)))))
+
+(global-set-key (kbd "C-c c d") #'renz/insert-current-dir)
+(global-set-key (kbd "C-c c f") #'renz/insert-current-file)
+;; =C-c c= Insert current dir/file at point:1 ends here
 
 ;; [[file:README.org::*=C-c d= Navigating to symbols using old-school TAGS][=C-c d= Navigating to symbols using old-school TAGS:2]]
 (defun renz/find-tag ()
@@ -506,7 +518,7 @@
 
 ;; [[file:README.org::*Nicer Display and Behavior of ~*Completions*~][Nicer Display and Behavior of ~*Completions*~:3]]
 (unless (version< emacs-version "29.0")
-  (setq completion-auto-help 'lazy
+  (setq completion-auto-help 'always
         completion-auto-select 'second-tab
         completion-show-help nil
         completions-sort nil
@@ -516,12 +528,6 @@
 ;; [[file:README.org::*Completion in the minibuffer and at point][Completion in the minibuffer and at point:1]]
 (setq tab-always-indent 'complete)
 ;; Completion in the minibuffer and at point:1 ends here
-
-;; [[file:README.org::*Completion in the minibuffer and at point][Completion in the minibuffer and at point:2]]
-(setq icomplete-in-buffer t)
-(setq icomplete-prospects-height 10)
-(icomplete-vertical-mode t)
-;; Completion in the minibuffer and at point:2 ends here
 
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()

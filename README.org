@@ -828,6 +828,18 @@ Then move these files to wherever hunspell is.  For instance, =C:\Program Files\
                ispell-really-hunspell t)))
 #+end_src
 
+Also on windows, you'll need to set up two things in your "System Environment
+Variables," if you are able to edit it.  Assuming you installed Hunspell to
+=%PROGRAMFILES%\Hunspell=, and you moved the =.dic= and =.aff= files to the same
+directory, you'd set up your variables like this:
+
+1. Add =%PROGRAMFILES%\Hunspell\bin= to your user =PATH=
+2. Add a new variable =DICPATH= under "User variables" with value =%PROGRAMFILES%\Hunspell=
+
+If you can't edit your System's environment variables through the GUI, say,
+because you're on a VM you don't administer, then you'll have to set these two
+environment variables through your powershell or CMD profiles.
+
 ** Backup and auto-save files
 Keep all backup files in a temporary folder.  At the moment I have some "file
 not found" errors popping up during auto-save on Windows.  Once I debug that,
@@ -964,10 +976,22 @@ probably using it in a ~:bind~ statement with ~use-package~ somewhere else.
   (global-set-key (kbd "C-c B") #'recompile)
 #+end_src
 
-*** =C-c c= Calendar
+*** =C-c c= Insert current dir/file at point
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c c") #'calendar)
+  (defun renz/insert-current-dir ()
+    "Insert the current `default-directory' at point."
+    (interactive)
+    (insert default-directory))
+
+  (defun renz/insert-current-file ()
+    "Insert the current buffer's full file name at point."
+    (interactive)
+    ;; https://unix.stackexchange.com/a/45381
+    (insert (buffer-file-name (window-buffer (minibuffer-selected-window)))))
+
+  (global-set-key (kbd "C-c c d") #'renz/insert-current-dir)
+  (global-set-key (kbd "C-c c f") #'renz/insert-current-file)
 #+end_src
 
 *** =C-c d= Navigating to symbols using old-school TAGS
@@ -1170,7 +1194,7 @@ options in question.
 
 #+begin_src emacs-lisp
   (unless (version< emacs-version "29.0")
-    (setq completion-auto-help 'lazy
+    (setq completion-auto-help 'always
           completion-auto-select 'second-tab
           completion-show-help nil
           completions-sort nil
@@ -1191,7 +1215,7 @@ since TAB-completion will still cause the \ast{}Completions\ast{} buffer to pop 
 while Icomplete is active, unless we set =completion-auto-help= to =lazy=; and even
 then it will still come up on the second TAB press.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (setq icomplete-in-buffer t)
   (setq icomplete-prospects-height 10)
   (icomplete-vertical-mode t)
