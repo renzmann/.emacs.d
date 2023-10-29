@@ -779,18 +779,13 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
       (setq grep-program "rg")
       (grep-apply-setting
        'grep-find-command
-       '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))))
+       '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42)))
+    (when (executable-find "fd")
+      (setq find-program "fd")))
+
 #+end_src
 
 If you're on Windows, this command assumes you're running =pwsh= version 7 or higher.
-
-** Shorter file paths in grep/compilation buffers
-
-#+begin_src emacs-lisp
-  (use-package scf-mode
-    :load-path "site-lisp"
-    :hook (grep-mode . (lambda () (scf-mode 1))))
-#+end_src
 
 ** Confirm when exiting Emacs
 It's very annoying when I'm working and suddenly I meant to do ~C-c C-x~, but

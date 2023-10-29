@@ -304,14 +304,10 @@
     (setq grep-program "rg")
     (grep-apply-setting
      'grep-find-command
-     '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))))
+     '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42)))
+  (when (executable-find "fd")
+    (setq find-program "fd")))
 ;; =grep= and =find=:1 ends here
-
-;; [[file:README.org::*Shorter file paths in grep/compilation buffers][Shorter file paths in grep/compilation buffers:1]]
-(use-package scf-mode
-  :load-path "site-lisp"
-  :hook (grep-mode . (lambda () (scf-mode 1))))
-;; Shorter file paths in grep/compilation buffers:1 ends here
 
 ;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
 (setq confirm-kill-emacs 'yes-or-no-p)
