@@ -739,6 +739,25 @@ Jumps to an Org src block from tangled code."
 (add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
 ;; Python:1 ends here
 
+;; [[file:README.org::*Respect virtual environments in =python-check=][Respect virtual environments in =python-check=:1]]
+(defun renz/python-add-path-to-process-environment (res)
+  (when-let* ((virtualenv (when python-shell-virtualenv-root
+                            (directory-file-name python-shell-virtualenv-root)))
+              (bin-dir (expand-file-name (if (eq system-type 'windows-nt) "Scripts" "bin") virtualenv)))
+    (push (format "PATH=%s" (mapconcat
+                             #'identity
+                             (reverse
+                              (cons (getenv "PATH")
+                                    (list bin-dir)))
+                             ":"))
+          res)
+    res))
+
+(advice-add 'python-shell--calculate-process-environment
+            :filter-return
+            #'renz/python-add-path-to-process-environment)
+;; Respect virtual environments in =python-check=:1 ends here
+
 ;; [[file:README.org::*Pyright error links in =*compilation*=][Pyright error links in =*compilation*=:1]]
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
@@ -760,34 +779,13 @@ Jumps to an Org src block from tangled code."
 ;; [[file:README.org::*Make check command and virtualenv root safe for .dir-locals.el][Make check command and virtualenv root safe for .dir-locals.el:2]]
 (put 'python-check-command 'safe-local-variable #'stringp)
 (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
-(put 'pyvenv-default-virtual-env-name 'safe-local-variable #'stringp)
+(put 'python-interpreter 'safe-local-variable #'stringp)
 ;; Make check command and virtualenv root safe for .dir-locals.el:2 ends here
 
 ;; [[file:README.org::*pyrightconfig.json][pyrightconfig.json:1]]
 (use-package pyrightconfig
   :after (python))
 ;; pyrightconfig.json:1 ends here
-
-;; [[file:README.org::*Activating Virtual Environments Over Tramp][Activating Virtual Environments Over Tramp:1]]
-(use-package tramp-venv
-  :bind
-  (("C-c t v a" . tramp-venv-activate)
-   ("C-c t v d" . tramp-venv-deactivate)))
-;; Activating Virtual Environments Over Tramp:1 ends here
-
-;; [[file:README.org::*Pyvenv for virtual environments][Pyvenv for virtual environments:1]]
-(use-package pyvenv
-  :init
-  (if (eq system-type 'darwin)
-      (setenv "WORKON_HOME" "~/micromamba/envs/")
-    (setenv "WORKON_HOME" "~/.conda/envs/"))
-  :bind
-  (("C-c p w" . pyvenv-workon)
-   ("C-c p d" . pyvenv-deactivate)
-   ("C-c p a" . pyvenv-activate))
-  :config
-  (pyvenv-mode))
-;; Pyvenv for virtual environments:1 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:1]]
 (when (and (not (executable-find "markdown")) (executable-find "markdown_py"))

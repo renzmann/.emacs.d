@@ -1560,6 +1560,27 @@ error markers to jump directly to the issue.
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
 #+end_src
+*** Respect virtual environments in =python-check=
+
+#+begin_src emacs-lisp
+  (defun renz/python-add-path-to-process-environment (res)
+    (when-let* ((virtualenv (when python-shell-virtualenv-root
+                              (directory-file-name python-shell-virtualenv-root)))
+                (bin-dir (expand-file-name (if (eq system-type 'windows-nt) "Scripts" "bin") virtualenv)))
+      (push (format "PATH=%s" (mapconcat
+                               #'identity
+                               (reverse
+                                (cons (getenv "PATH")
+                                      (list bin-dir)))
+                               ":"))
+            res)
+      res))
+
+  (advice-add 'python-shell--calculate-process-environment
+              :filter-return
+              #'renz/python-add-path-to-process-environment)
+#+end_src
+
 *** Pyright error links in =*compilation*=
 The =M-x compile= feature does not recognize or parse ~pyright~ error messages out
 of the box, so I add that support myself.  Here's an example error message:
@@ -1602,7 +1623,6 @@ programs exist is a small time saver.
     )
 #+end_src
 
-
 *** Fix Microsoft Windows Issues
 At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The
 culprit was "App Execution Aliases" with python and python3 redirecting to the
@@ -1626,9 +1646,9 @@ However, this only operates on `run-python' shells.  Also, for projects, we need
 make sure that setting the virtualenv root is marked as safe.
 
 #+begin_src emacs-lisp
-(put 'python-check-command 'safe-local-variable #'stringp)
-(put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
-(put 'pyvenv-default-virtual-env-name 'safe-local-variable #'stringp)
+  (put 'python-check-command 'safe-local-variable #'stringp)
+  (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
+  (put 'python-interpreter 'safe-local-variable #'stringp)
 #+end_src
 
 *** Emacs Jupyter?
@@ -1652,31 +1672,6 @@ Configuring pyright this way rather than "activating" an environment through
 Emacs (ala =pythonic-activate= or similar) means we can be running the language
 server in more than one project at a time, each pointing to its respective
 virtual environment.
-
-*** Activating Virtual Environments Over Tramp
-
-#+begin_src emacs-lisp
-  (use-package tramp-venv
-    :bind
-    (("C-c t v a" . tramp-venv-activate)
-     ("C-c t v d" . tramp-venv-deactivate)))
-#+end_src
-
-*** Pyvenv for virtual environments
-
-#+begin_src emacs-lisp
-  (use-package pyvenv
-    :init
-    (if (eq system-type 'darwin)
-        (setenv "WORKON_HOME" "~/micromamba/envs/")
-      (setenv "WORKON_HOME" "~/.conda/envs/"))
-    :bind
-    (("C-c p w" . pyvenv-workon)
-     ("C-c p d" . pyvenv-deactivate)
-     ("C-c p a" . pyvenv-activate))
-    :config
-    (pyvenv-mode))
-#+end_src
 
 ** Markdown
 When installing =markdown= through Anaconda, the executable is actually called
