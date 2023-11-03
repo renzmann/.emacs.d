@@ -87,11 +87,6 @@
       ;; ((x-list-fonts "Segoe UI Emoji")
       ;;  (add-to-list 'default-frame-alist '(font . "Segoe UI Emoji-12")))
       )
-
-(defun renz/change-font-size (new-size)
-  "Change the default font size to the given size."
-  (interactive "nNew font size: ")
-  (set-face-attribute 'default nil :height (* 10 new-size)))
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
@@ -739,6 +734,16 @@ Jumps to an Org src block from tangled code."
 (add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
 ;; Python:1 ends here
 
+;; [[file:README.org::*Flatten items in =imenu=][Flatten items in =imenu=:1]]
+(add-hook 'python-mode-hook
+          (lambda () (setq-local imenu-create-index-function
+                                 'python-imenu-create-flat-index)))
+
+(add-hook 'python-ts-mode-hook
+          (lambda () (setq-local imenu-create-index-function
+                                 'python-imenu-treesit-create-flat-index)))
+;; Flatten items in =imenu=:1 ends here
+
 ;; [[file:README.org::*Respect virtual environments in =python-check=][Respect virtual environments in =python-check=:1]]
 (defun renz/python-add-path-to-process-environment (res)
   (when-let* ((virtualenv (when python-shell-virtualenv-root
@@ -749,9 +754,7 @@ Jumps to an Org src block from tangled code."
                              (reverse
                               (cons (getenv "PATH")
                                     (list bin-dir)))
-                             ":"))
-          res)
-    res))
+                             ":")) res) res))
 
 (advice-add 'python-shell--calculate-process-environment
             :filter-return
@@ -808,13 +811,6 @@ Jumps to an Org src block from tangled code."
 ;; [[file:README.org::*Markdown][Markdown:4]]
 (setq markdown-fontify-code-blocks-natively t)
 ;; Markdown:4 ends here
-
-;; [[file:README.org::*Missing auto-modes][Missing auto-modes:1]]
-(add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-(add-to-list 'auto-mode-alist '("\\.dockerfile\\'" . dockerfile-ts-mode))
-;; Missing auto-modes:1 ends here
 
 ;; [[file:README.org::*csv-mode][csv-mode:1]]
 (use-package csv-mode
@@ -881,9 +877,11 @@ Jumps to an Org src block from tangled code."
 
 ;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
 (use-package treesit-auto
+  :load-path "site-lisp/treesit-auto"
   :custom
   (treesit-auto-install 'prompt)
   :config
+  (treesit-auto-add-to-auto-mode-alist)
   (global-treesit-auto-mode))
 ;; Automatically Using TreeSitter Modes:1 ends here
 

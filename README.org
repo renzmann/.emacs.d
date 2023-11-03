@@ -379,12 +379,10 @@ information on how checking and setting default fonts works:
         ;; ((x-list-fonts "Segoe UI Emoji")
         ;;  (add-to-list 'default-frame-alist '(font . "Segoe UI Emoji-12")))
         )
-
-  (defun renz/change-font-size (new-size)
-    "Change the default font size to the given size."
-    (interactive "nNew font size: ")
-    (set-face-attribute 'default nil :height (* 10 new-size)))
 #+end_src
+
+If the font is the wrong size, starting with Emacs 29.1 you can use =C-x C-M-+=
+and =C-x C-M--= to change the size /globally/.
 
 * Theme
 
@@ -1560,6 +1558,18 @@ error markers to jump directly to the issue.
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
 #+end_src
+*** Flatten items in =imenu=
+
+#+begin_src emacs-lisp
+  (add-hook 'python-mode-hook
+            (lambda () (setq-local imenu-create-index-function
+                                   'python-imenu-create-flat-index)))
+
+  (add-hook 'python-ts-mode-hook
+            (lambda () (setq-local imenu-create-index-function
+                                   'python-imenu-treesit-create-flat-index)))
+#+end_src
+
 *** Respect virtual environments in =python-check=
 
 #+begin_src emacs-lisp
@@ -1572,9 +1582,7 @@ error markers to jump directly to the issue.
                                (reverse
                                 (cons (getenv "PATH")
                                       (list bin-dir)))
-                               ":"))
-            res)
-      res))
+                               ":")) res) res))
 
   (advice-add 'python-shell--calculate-process-environment
               :filter-return
@@ -1705,16 +1713,6 @@ And I like to see language syntax highlighting within code fences.
 
 #+begin_src emacs-lisp
   (setq markdown-fontify-code-blocks-natively t)
-#+end_src
-
-** Missing auto-modes
-These really should already be in =auto-mode-alist=, but aren't for some reason.
-
-#+begin_src emacs-lisp
-  (add-to-list 'auto-mode-alist '("\\.rs\\'" . rust-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.go\\'" . go-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.ts\\'" . typescript-ts-mode))
-  (add-to-list 'auto-mode-alist '("\\.dockerfile\\'" . dockerfile-ts-mode))
 #+end_src
 
 ** csv-mode
@@ -1865,9 +1863,11 @@ I've posted this to GitHub and MELPA as [[https://github.com/renzmann/treesit-au
 
 #+begin_src emacs-lisp
   (use-package treesit-auto
+    :load-path "site-lisp/treesit-auto"
     :custom
     (treesit-auto-install 'prompt)
     :config
+    (treesit-auto-add-to-auto-mode-alist)
     (global-treesit-auto-mode))
 #+end_src
 
