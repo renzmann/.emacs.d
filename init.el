@@ -107,6 +107,27 @@
   (load-theme 'modus-vivendi-tinted t))
 ;; Theme:1 ends here
 
+;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
+(defun renz/modify-margins ()
+  "Add some space around each window."
+  (interactive)
+  (modify-all-frames-parameters
+   '((right-divider-width . 40)
+     (internal-border-width . 40)))
+  (dolist (face '(window-divider
+                  window-divider-first-pixel
+                  window-divider-last-pixel))
+    (face-spec-reset-face face)
+    (set-face-foreground face (face-attribute 'default :background)))
+  (set-face-background 'fringe (face-attribute 'default :background)))
+
+(renz/modify-margins)
+;; Window margins and fringe:1 ends here
+
+;; [[file:README.org::*Window margins and fringe][Window margins and fringe:2]]
+(add-hook 'ef-themes-post-load-hook 'renz/modify-margins)
+;; Window margins and fringe:2 ends here
+
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
 ;; Stop stupid bell
 (setq ring-bell-function 'ignore)
@@ -135,7 +156,6 @@
 ;; Mode line:2 ends here
 
 ;; [[file:README.org::*Remember minibuffer history][Remember minibuffer history:1]]
-(setq history-length 25)
 (savehist-mode 1)
 ;; Remember minibuffer history:1 ends here
 
@@ -173,27 +193,6 @@
 (scroll-bar-mode -1)
 ;; Scroll bar:1 ends here
 
-;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
-(defun renz/modify-margins ()
-  "Add some space around each window."
-  (interactive)
-  (modify-all-frames-parameters
-   '((right-divider-width . 40)
-     (internal-border-width . 40)))
-  (dolist (face '(window-divider
-                  window-divider-first-pixel
-                  window-divider-last-pixel))
-    (face-spec-reset-face face)
-    (set-face-foreground face (face-attribute 'default :background)))
-  (set-face-background 'fringe (face-attribute 'default :background)))
-
-(renz/modify-margins)
-;; Window margins and fringe:1 ends here
-
-;; [[file:README.org::*Window margins and fringe][Window margins and fringe:2]]
-(add-hook 'ef-themes-post-load-hook 'renz/modify-margins)
-;; Window margins and fringe:2 ends here
-
 ;; [[file:README.org::*Automatically visit symlink sources][Automatically visit symlink sources:1]]
 (setq find-file-visit-truename t)
 (setq vc-follow-symlinks t)
@@ -208,8 +207,7 @@
 ;; Enable horizontal scrolling with mouse:1 ends here
 
 ;; [[file:README.org::*Window management][Window management:1]]
-(unless (version< emacs-version "27.1")
-  (setq switch-to-buffer-obey-display-actions t))
+(setq switch-to-buffer-obey-display-actions t)
 ;; Window management:1 ends here
 
 ;; [[file:README.org::*Automatically update buffers when contents change on disk][Automatically update buffers when contents change on disk:1]]
@@ -230,10 +228,10 @@
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 ;; Always turn on flymake in prog mode:2 ends here
 
-;; [[file:README.org::*Automatically create matching parens in programming modes][Automatically create matching parens in programming modes:1]]
+;; [[file:README.org::*Automatically create matching parentheses in programming modes][Automatically create matching parentheses in programming modes:1]]
 (add-hook 'prog-mode-hook (electric-pair-mode t))
 (add-hook 'prog-mode-hook (show-paren-mode t))
-;; Automatically create matching parens in programming modes:1 ends here
+;; Automatically create matching parentheses in programming modes:1 ends here
 
 ;; [[file:README.org::*Shorten yes/no prompts to y/n][Shorten yes/no prompts to y/n:1]]
 (setq use-short-answers t)
@@ -244,9 +242,7 @@
 ;; Delete whitespace on save:1 ends here
 
 ;; [[file:README.org::*Killing buffers with a running process][Killing buffers with a running process:1]]
-(setq kill-buffer-query-functions
-  (remq 'process-kill-buffer-query-function
-         kill-buffer-query-functions))
+(delete 'process-kill-buffer-query-function kill-buffer-query-functions)
 ;; Killing buffers with a running process:1 ends here
 
 ;; [[file:README.org::*Don't wrap lines][Don't wrap lines:1]]
@@ -261,9 +257,7 @@
 
 (add-hook 'prog-mode-hook #'renz/display-relative-lines)
 (add-hook 'yaml-mode-hook #'renz/display-relative-lines)
-
-(unless (display-graphic-p)
-  (add-hook 'text-mode-hook #'renz/display-relative-lines))
+(add-hook 'text-mode-hook #'renz/display-relative-lines)
 ;; Relative line numbers:1 ends here
 
 ;; [[file:README.org::*Delete region when we yank on top of it][Delete region when we yank on top of it:1]]
@@ -292,16 +286,13 @@
 ;; Ignore risky .dir-locals.el:1 ends here
 
 ;; [[file:README.org::*=grep= and =find=][=grep= and =find=:1]]
-(use-package grep
-  :bind ("C-c g" . grep-find)
-  :config
-  (when (executable-find "rg")
-    (setq grep-program "rg")
-    (grep-apply-setting
-     'grep-find-command
-     '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42)))
-  (when (executable-find "fd")
-    (setq find-program "fd")))
+(when (executable-find "rg")
+  (setq grep-program "rg")
+  (grep-apply-setting 'grep-find-command
+                      '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))
+
+(when (executable-find "fd")
+  (setq find-program "fd")))
 ;; =grep= and =find=:1 ends here
 
 ;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
@@ -353,6 +344,79 @@
 (set-register ?I `(file . ,(expand-file-name "README.org" user-emacs-directory)))
 (set-register ?B `(file . "~/.bashrc"))
 ;; Mark rings and registers: bigger, faster, stronger:3 ends here
+
+;; [[file:README.org::*=eldoc=][=eldoc=:1]]
+(setq eldoc-echo-area-use-multiline-p nil)
+;; =eldoc=:1 ends here
+
+;; [[file:README.org::*~imenu~][~imenu~:1]]
+(use-package imenu
+  :config
+  (setq imenu-auto-rescan t
+        org-imenu-depth 3))
+;; ~imenu~:1 ends here
+
+;; [[file:README.org::*~dabbrev~][~dabbrev~:1]]
+(use-package dabbrev
+  :custom
+  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
+;; ~dabbrev~:1 ends here
+
+;; [[file:README.org::*~dired~][~dired~:1]]
+(use-package dired
+  :hook (dired-mode . dired-hide-details-mode)
+  :config
+  (setq dired-listing-switches "-alFh")
+  (setq dired-dwim-target t))
+;; ~dired~:1 ends here
+
+;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
+(use-package eww
+  :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
+;; eww - search engine and browser:1 ends here
+
+;; [[file:README.org::*Language Server Protocol (LSP) with ~eglot~][Language Server Protocol (LSP) with ~eglot~:1]]
+(use-package eglot
+  :bind (("C-c l c" . eglot-reconnect)
+         ("C-c l d" . flymake-show-buffer-diagnostics)
+         ("C-c l f f" . eglot-format)
+         ("C-c l f b" . eglot-format-buffer)
+         ("C-c l l" . eglot)
+         ("C-c l r n" . eglot-rename)
+         ("C-c l s" . eglot-shutdown)))
+;; Language Server Protocol (LSP) with ~eglot~:1 ends here
+
+;; [[file:README.org::*Shell commands][Shell commands:1]]
+(defun renz/async-shell-command-filter-hook ()
+  "Filter async shell command output via `comint-output-filter'."
+  (when (equal (buffer-name (current-buffer)) "*Async Shell Command*")
+    ;; When `comint-output-filter' is non-nil, the carriage return characters ^M
+    ;; are displayed
+    (setq-local comint-inhibit-carriage-motion nil)
+    (when-let ((proc (get-buffer-process (current-buffer))))
+      ;; Attempting a solution found here:
+      ;; https://gnu.emacs.help.narkive.com/2PEYGWfM/m-chars-in-async-command-output
+      (set-process-filter proc 'comint-output-filter))))
+
+
+(add-hook 'shell-mode-hook #'renz/async-shell-command-filter-hook)
+;; Shell commands:1 ends here
+
+;; [[file:README.org::*Tramp][Tramp:1]]
+(use-package tramp
+  :defer t
+  :config
+  (setq vc-handled-backends '(Git)
+        file-name-inhibit-locks t
+        tramp-inline-compress-start-size 1000
+        tramp-copy-size-limit 10000
+        tramp-verbose 1)
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+;; Tramp:1 ends here
+
+;; [[file:README.org::*Tramp][Tramp:2]]
+(setq tramp-use-ssh-controlmaster-options nil)
+;; Tramp:2 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
@@ -418,6 +482,10 @@
 ;; [[file:README.org::*=C-c f= find file at point (ffap)][=C-c f= find file at point (ffap):1]]
 (global-set-key (kbd "C-c f") #'ffap)
 ;; =C-c f= find file at point (ffap):1 ends here
+
+;; [[file:README.org::*=C-c g= grep and find][=C-c g= grep and find:1]]
+(global-set-key (kbd "C-c g") #'grep-find)
+;; =C-c g= grep and find:1 ends here
 
 ;; [[file:README.org::*=C-c i= browse url of buffer][=C-c i= browse url of buffer:1]]
 (global-set-key (kbd "C-c i") #'browse-url-of-buffer)
@@ -488,6 +556,10 @@
 ;; [[file:README.org::*=C-c w= whitespace mode][=C-c w= whitespace mode:1]]
 (global-set-key (kbd "C-c w") #'whitespace-mode)
 ;; =C-c w= whitespace mode:1 ends here
+
+;; [[file:README.org::*=C-c x= misc. "execute" commands][=C-c x= misc. "execute" commands:1]]
+(global-set-key (kbd "C-c x r") #'restart-emacs)
+;; =C-c x= misc. "execute" commands:1 ends here
 
 ;; [[file:README.org::*=C-c= Other bindings][=C-c= Other bindings:1]]
 (global-set-key (kbd "C-c <DEL>") #'backward-kill-sexp)  ;; TTY-frindly
@@ -817,63 +889,11 @@ Jumps to an Org src block from tangled code."
   :mode "\\.csv\\'")
 ;; csv-mode:1 ends here
 
-;; [[file:README.org::*=eldoc=][=eldoc=:1]]
-(setq eldoc-echo-area-use-multiline-p nil)
-;; =eldoc=:1 ends here
-
-;; [[file:README.org::*~imenu~][~imenu~:1]]
-(use-package imenu
-  :config
-  (setq imenu-auto-rescan t
-        org-imenu-depth 3))
-;; ~imenu~:1 ends here
-
-;; [[file:README.org::*~dabbrev~][~dabbrev~:1]]
-(use-package dabbrev
-  :custom
-  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
-;; ~dabbrev~:1 ends here
-
-;; [[file:README.org::*~dired~][~dired~:1]]
-(use-package dired
-  :hook (dired-mode . dired-hide-details-mode)
-  :config
-  (setq dired-listing-switches "-alFh")
-  (setq dired-dwim-target t))
-;; ~dired~:1 ends here
-
 ;; [[file:README.org::*Visual fill column][Visual fill column:1]]
 (use-package visual-fill-column
   :config
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 ;; Visual fill column:1 ends here
-
-;; [[file:README.org::*eww - search engine and browser][eww - search engine and browser:1]]
-(use-package eww
-  :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
-;; eww - search engine and browser:1 ends here
-
-;; [[file:README.org::*Reloading Emacs][Reloading Emacs:1]]
-(use-package restart-emacs
-  :bind ("C-c x r" . restart-emacs))
-;; Reloading Emacs:1 ends here
-
-;; [[file:README.org::*Language Server Protocol (LSP) with ~eglot~][Language Server Protocol (LSP) with ~eglot~:1]]
-(use-package eglot
-  :bind (("C-c l c" . eglot-reconnect)
-         ("C-c l d" . flymake-show-buffer-diagnostics)
-         ("C-c l f f" . eglot-format)
-         ("C-c l f b" . eglot-format-buffer)
-         ("C-c l l" . eglot)
-         ("C-c l r n" . eglot-rename)
-         ("C-c l s" . eglot-shutdown)))
-;; Language Server Protocol (LSP) with ~eglot~:1 ends here
-
-;; [[file:README.org::*About TreeSitter and its Load Paths][About TreeSitter and its Load Paths:1]]
-(when (boundp 'treesit-extra-load-path)
-  (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
-  (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
-;; About TreeSitter and its Load Paths:1 ends here
 
 ;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
 (use-package treesit-auto
@@ -884,42 +904,6 @@ Jumps to an Org src block from tangled code."
   (treesit-auto-add-to-auto-mode-alist)
   (global-treesit-auto-mode))
 ;; Automatically Using TreeSitter Modes:1 ends here
-
-;; [[file:README.org::*Ooo, aaah, shiny colors][Ooo, aaah, shiny colors:1]]
-(setq-default treesit-font-lock-level 3)
-;; Ooo, aaah, shiny colors:1 ends here
-
-;; [[file:README.org::*Tramp][Tramp:1]]
-(use-package tramp
-  :defer t
-  :config
-  (setq vc-handled-backends '(Git)
-        file-name-inhibit-locks t
-        tramp-inline-compress-start-size 1000
-        tramp-copy-size-limit 10000
-        tramp-verbose 1)
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
-;; Tramp:1 ends here
-
-;; [[file:README.org::*Tramp][Tramp:2]]
-(setq tramp-use-ssh-controlmaster-options nil)
-;; Tramp:2 ends here
-
-;; [[file:README.org::*Shell commands][Shell commands:1]]
-(defun renz/async-shell-command-filter-hook ()
-  "Filter async shell command output via `comint-output-filter'."
-  (when (equal (buffer-name (current-buffer)) "*Async Shell Command*")
-    ;; When `comint-output-filter' is non-nil, the carriage return characters ^M
-    ;; are displayed
-    (setq-local comint-inhibit-carriage-motion nil)
-    (when-let ((proc (get-buffer-process (current-buffer))))
-      ;; Attempting a solution found here:
-      ;; https://gnu.emacs.help.narkive.com/2PEYGWfM/m-chars-in-async-command-output
-      (set-process-filter proc 'comint-output-filter))))
-
-
-(add-hook 'shell-mode-hook #'renz/async-shell-command-filter-hook)
-;; Shell commands:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here

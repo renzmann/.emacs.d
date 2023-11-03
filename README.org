@@ -1,4 +1,4 @@
-#+TITLE: My Literate =.emacs.d=
+ #+TITLE: My Literate =.emacs.d=
 #+AUTHOR: Robb Enzmann
 #+PROPERTY: header-args:emacs-lisp :tangle init.el :results none :eval never-export :comments link
 #+OPTIONS: toc:1 num:nil
@@ -23,10 +23,9 @@ the [[https://github.com/renzmann/.emacs.d/][source code on GitHub]].
 
 * Goals
 If I had to sum up the theme of my configuration, it would be "vanilla extract,"
-because in only a few instances do I change the overt behavior of Emacs.  Even
-with those, though, I want a configuration that fits my hands in such a way that
-I remain comfortable using =emacs -Q= with very little disruption to my normal
-muscle memory and workflow.
+because in only a few instances do I change the overt behavior of Emacs.  I want
+a configuration that fits my hands in such a way that I remain comfortable using
+=emacs -Q= with very little disruption to my normal muscle memory and workflow.
 
 Aside from these aesthetic and philosophical reasons, there are practical
 concerns this configuration needs to address.  I spend my time on Windows for
@@ -59,12 +58,11 @@ these sections.
 I do make changes to things that I feel "should have been included."  Some
 examples of this are:
 
-1. Additional major modes for common filetypes like Markdown, CSV, and YAML
+1. Additional major modes for common file types like Markdown and CSV
 2. Error message support for =pyright= in a =*Compilation*= buffer
 3. Reasonable indentation behavior for SQL files
 4. Updating buffers automatically if their contents change on disk
-5. Syntax highlighting for Source blocks in Markdown
-6. Handling ANSI color escape codes in shell output, compilation, and VC buffers
+5. Handling ANSI color escape codes in shell output, compilation, and VC buffers
 
 * Tangling
 My configuration is a single literate programming document, which is tangled
@@ -95,7 +93,7 @@ such as:
 * Getting Emacs
 For a while I would try to compile Emacs myself, but installing the whole
 compilation toolchain hasn't been worth it lately, especially on Windows.
-Instead, I've started simply downloading emacs from these sources on each of the
+Instead, I've started simply downloading Emacs from these sources on each of the
 platforms:
 
 ** Windows
@@ -123,7 +121,8 @@ Very nice!
 Depending on the machine, I get Emacs one of several ways in a GNU/Linux setup.
 These rank from highest to lowest priority:
 
-1. Through my system package manager, such as =sudo apt-get install emacs= or =pacman -S emacs=
+1. Through my system package manager, such as =sudo apt-get install emacs= or
+   =pacman -S emacs=
 2. Through the [[https://ftp.gnu.org/gnu/emacs/][official FTP]]
 3. Through the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/emacs-29/][pretest FTP]]
 4. Through [[https://github.com/mariusvniekerk/condax][condax]]
@@ -301,9 +300,10 @@ this still requires futzing with my PATH manually after installation.
 
 You can use Emacs without these, but some commands like =M-x grep= or =M-x
 project-find-regexp= will not work without making sure the GNU version of =find=
-and =grep= (or a suitable replacement) are on your PATH.  I tend not to muck with
-PATH inside Emacs if I can help it, and instead launch Emacs from powershell
-where things are properly set.  Usually I'll have some things like this in my =$PROFILE=:
+and =grep= (or a suitable replacement) are on your PATH.  I tend not to muck
+with PATH inside Emacs if I can help it, and instead launch Emacs from
+powershell where things are properly set.  Usually I'll have some things like
+this in my =$PROFILE=:
 
 #+begin_src powershell :tangle no
   $ENV:Path = "${ENV:ProgramFiles}\Hunspell\bin\;" + $ENV:Path
@@ -409,11 +409,40 @@ need for any external themes now.  It is accessible, well optimized for
     (load-theme 'modus-vivendi-tinted t))
 #+end_src
 
+** Window margins and fringe
+This hunk adds some space around all sides of each window so that we get a clear
+space between the edge of the screen and the fringe.
+
+#+begin_src emacs-lisp
+  (defun renz/modify-margins ()
+    "Add some space around each window."
+    (interactive)
+    (modify-all-frames-parameters
+     '((right-divider-width . 40)
+       (internal-border-width . 40)))
+    (dolist (face '(window-divider
+                    window-divider-first-pixel
+                    window-divider-last-pixel))
+      (face-spec-reset-face face)
+      (set-face-foreground face (face-attribute 'default :background)))
+    (set-face-background 'fringe (face-attribute 'default :background)))
+
+  (renz/modify-margins)
+#+end_src
+
+We also need to make sure this runs each time we change the =ef-theme=, otherwise
+the old background color will linger in the margins.
+
+#+begin_src emacs-lisp
+  (add-hook 'ef-themes-post-load-hook 'renz/modify-margins)
+#+end_src
+
+
 * Emacs' Built-in Settings
 My settings for base Emacs behavior.  Assuming I ran with /no/ plugins (ala ~emacs
 -Q~), I would still set most of these by hand at one point or another.  This
 section is designed for variables that modify Emacs and its editing behavior
-directly.  Configuation for built-in tools, such as Dired, Tramp, and
+directly.  Configuration for built-in tools, such as Dired, Tramp, and
 Tree-sitter are located under [[* Tool configuration][Tool configuration]].
 
 ** Stop stupid bell
@@ -478,7 +507,6 @@ and a dimmed mode line in non-selected windows.
 Found this on a [[https://www.youtube.com/watch?v=51eSeqcaikM][System Crafters video]].
 
 #+begin_src emacs-lisp
-  (setq history-length 25)
   (savehist-mode 1)
 #+end_src
 
@@ -544,34 +572,6 @@ currently on.
 
 By default, though, I prefer it to be off when I start Emacs.
 
-** Window margins and fringe
-This hunk adds some space around all sides of each window so that we get a clear
-space between the edge of the screen and the fringe.
-
-#+begin_src emacs-lisp
-  (defun renz/modify-margins ()
-    "Add some space around each window."
-    (interactive)
-    (modify-all-frames-parameters
-     '((right-divider-width . 40)
-       (internal-border-width . 40)))
-    (dolist (face '(window-divider
-                    window-divider-first-pixel
-                    window-divider-last-pixel))
-      (face-spec-reset-face face)
-      (set-face-foreground face (face-attribute 'default :background)))
-    (set-face-background 'fringe (face-attribute 'default :background)))
-
-  (renz/modify-margins)
-#+end_src
-
-We also need to make sure this runs each time we change the =ef-theme=, otherwise
-the old background color will linger in the margins.
-
-#+begin_src emacs-lisp
-  (add-hook 'ef-themes-post-load-hook 'renz/modify-margins)
-#+end_src
-
 ** Automatically visit symlink sources
 When navigating to a file that is a symlink, this automatically redirects us to
 the source file it's pointing to.
@@ -601,7 +601,7 @@ trying to find the functions behind indentation in shell mode, I came across
   `smie-indent-keyword' function is still pretty obscure.
 #+end_quote
 
-Even the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto_002dIndentation.html][GNU manual]] speaks of it in the same way:
+Even the [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Auto_002dIndentation.html][GNU Emacs manual]] speaks of it in the same way:
 
 #+begin_quote
   Writing a good indentation function can be difficult and to a large extent it is
@@ -628,8 +628,7 @@ both are open in the current frame.  This is more frequently the behavior I
 intend when I'm trying to get a window to display a specific buffer.
 
 #+begin_src emacs-lisp
-  (unless (version< emacs-version "27.1")
-    (setq switch-to-buffer-obey-display-actions t))
+  (setq switch-to-buffer-obey-display-actions t)
 #+end_src
 
 ** Automatically update buffers when contents change on disk
@@ -664,7 +663,7 @@ comments and strings.
   (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 #+end_src
 
-** Automatically create matching parens in programming modes
+** Automatically create matching parentheses in programming modes
 
 #+begin_src emacs-lisp
   (add-hook 'prog-mode-hook (electric-pair-mode t))
@@ -680,8 +679,8 @@ comments and strings.
 ** Delete whitespace on save
 I would also like to have a good-looking display for trailing whitespace and
 leading tabs like in my Neovim setup, but it has proven challenging to just
-narrow down to those two faces.  In the interim, I toggle ~M-x whitespace-mode~ to
-check for mixed tabs, spaces, and line endings.
+narrow down to those two faces.  In the interim, I toggle ~M-x whitespace-mode~
+to check for mixed tabs, spaces, and line endings.
 
 #+begin_src emacs-lisp
   (add-hook 'before-save-hook 'delete-trailing-whitespace)
@@ -689,13 +688,11 @@ check for mixed tabs, spaces, and line endings.
 
 ** Killing buffers with a running process
 Typically, Emacs will ask you to confirm before killing a buffer that has a
-running process, such as with ~run-python~, a =*shell*= buffer, or a =*compilation*=
-buffer.
+running process, such as with ~run-python~, a =*shell*= buffer, or a
+=*compilation*= buffer.
 
 #+begin_src emacs-lisp
-(setq kill-buffer-query-functions
-  (remq 'process-kill-buffer-query-function
-         kill-buffer-query-functions))
+(delete 'process-kill-buffer-query-function kill-buffer-query-functions)
 #+end_src
 
 ** Don't wrap lines
@@ -712,22 +709,13 @@ see wrapped line content, like in one of the shell modes.
 ** Relative line numbers
 For programming and prose/writing modes.
 
-Unfortunately, line numbers are displayed in the text area of the buffer, but
-org-modern uses the fringe to display source blocks.  [[https://www.reddit.com/r/emacs/comments/ymprwi/comment/iv5iafb/?utm_source=share&utm_medium=web2x&context=3][There's no way to display
-them to the left]] of the fringe, so I'm careful about only turning on line
-numbers in modes that I think I'll benefit from it.  It's been working pretty
-well in org-mode without the line numbers so far, since for each of the code
-blocks I can always use =C-c '= to edit in ~prog-mode~, where I /do/ get line numbers.
-
 #+begin_src emacs-lisp
   (defun renz/display-relative-lines ()
     (setq display-line-numbers 'relative))
 
   (add-hook 'prog-mode-hook #'renz/display-relative-lines)
   (add-hook 'yaml-mode-hook #'renz/display-relative-lines)
-
-  (unless (display-graphic-p)
-    (add-hook 'text-mode-hook #'renz/display-relative-lines))
+  (add-hook 'text-mode-hook #'renz/display-relative-lines)
 #+end_src
 
 ** Delete region when we yank on top of it
@@ -784,20 +772,17 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
 ** =grep= and =find=
 
 #+begin_src emacs-lisp
-  (use-package grep
-    :bind ("C-c g" . grep-find)
-    :config
-    (when (executable-find "rg")
-      (setq grep-program "rg")
-      (grep-apply-setting
-       'grep-find-command
-       '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42)))
-    (when (executable-find "fd")
-      (setq find-program "fd")))
+  (when (executable-find "rg")
+    (setq grep-program "rg")
+    (grep-apply-setting 'grep-find-command
+                        '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))
 
+  (when (executable-find "fd")
+    (setq find-program "fd")))
 #+end_src
 
-If you're on Windows, this command assumes you're running =pwsh= version 7 or higher.
+If you're on Windows, this command assumes you're running =pwsh= version 7 or
+higher.
 
 ** Confirm when exiting Emacs
 It's very annoying when I'm working and suddenly I meant to do ~C-c C-x~, but
@@ -919,6 +904,193 @@ letters for ones I've set permanently here.
 Before I was aware of this feature I had created my own ~jump-to-X~ style
 functions, but this is much better!  You even get a handy pop-up if you wait a
 second after typing =C-x r j= to see all the available registers.
+
+** =eldoc=
+I find it very distracting when =eldoc= suddenly pops up and consumes a large part
+of the screen for docstrings in python.
+
+#+begin_src emacs-lisp
+  (setq eldoc-echo-area-use-multiline-p nil)
+#+end_src
+
+** ~imenu~
+
+#+begin_src emacs-lisp
+  (use-package imenu
+    :config
+    (setq imenu-auto-rescan t
+          org-imenu-depth 3))
+#+end_src
+
+** ~dabbrev~
+
+#+begin_src emacs-lisp
+  (use-package dabbrev
+    :custom
+    (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
+  #+end_src
+
+** ~dired~
+By default, ~dired~ uses bytes instead of "K", "Mb", or "G" for file sizes.  I
+also have it hide the mode, size, and owner of each file by default.
+
+#+begin_src emacs-lisp
+  (use-package dired
+    :hook (dired-mode . dired-hide-details-mode)
+    :config
+    (setq dired-listing-switches "-alFh")
+    (setq dired-dwim-target t))
+#+end_src
+
+Also enabled above is Do-What-I-Mean (DWIM) copying.  This is for when two dired
+windows are open, and we want to copy something from one location to the other.
+By enabling ~dired-dwim-target~, it auto-populates the minibuffer with the other
+dired window's path when issuing a copy command with ~C~.
+
+** eww - search engine and browser
+
+Ecosia requires JavaScript, unfortunately.
+
+#+begin_src emacs-lisp
+  (use-package eww
+    :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
+#+end_src
+
+** Language Server Protocol (LSP) with ~eglot~
+As of version 29, [[https://github.com/joaotavora/eglot][eglot]] (Emacs polyGLOT) is bundled with Emacs.  It provides Emacs with the
+client side configuration for the [[https://microsoft.github.io/language-server-protocol/][language server protocol]].
+
+#+begin_src emacs-lisp
+  (use-package eglot
+    :bind (("C-c l c" . eglot-reconnect)
+           ("C-c l d" . flymake-show-buffer-diagnostics)
+           ("C-c l f f" . eglot-format)
+           ("C-c l f b" . eglot-format-buffer)
+           ("C-c l l" . eglot)
+           ("C-c l r n" . eglot-rename)
+           ("C-c l s" . eglot-shutdown)))
+#+end_src
+
+To have ~eglot~ always start up for a python buffer, we would tangle this line
+into ~init.el~.  However, this can cause a significant loading delay over Tramp,
+and I would prefer snappy, simple access with LSP provided on an as-needed
+basis.
+
+#+begin_src emacs-lisp :tangle no :eval never
+(add-hook 'python-mode-hook 'eglot-ensure)
+#+end_src
+
+*** Side show: ~semantic-mode~
+For a while, it looks like Emacs was trying out something called [[https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html][semantic-mode]],
+which looks a lot like a precursor to what we now know as the [[https://microsoft.github.io/language-server-protocol/][Language Server
+Protocol]].  Enabling it was done through adding the ~semantic-mode~ hook to your
+language's major mode hook:
+
+#+begin_src emacs-lisp :tangle no :eval never
+(add-hook 'python-mode-hook 'semantic-mode)
+#+end_src
+
+** Shell commands
+
+The Async command buffer's default behavior is to print =^M= characters (the
+carriage return) instead of actually clearing text.  This is problematic for
+spinners and progress bars, so I have a little hack to work around that.
+
+#+begin_src emacs-lisp
+  (defun renz/async-shell-command-filter-hook ()
+    "Filter async shell command output via `comint-output-filter'."
+    (when (equal (buffer-name (current-buffer)) "*Async Shell Command*")
+      ;; When `comint-output-filter' is non-nil, the carriage return characters ^M
+      ;; are displayed
+      (setq-local comint-inhibit-carriage-motion nil)
+      (when-let ((proc (get-buffer-process (current-buffer))))
+        ;; Attempting a solution found here:
+        ;; https://gnu.emacs.help.narkive.com/2PEYGWfM/m-chars-in-async-command-output
+        (set-process-filter proc 'comint-output-filter))))
+
+
+  (add-hook 'shell-mode-hook #'renz/async-shell-command-filter-hook)
+#+end_src
+
+There might be a better way, but this mostly works for now.
+
+** Tramp
+Tramp (Transparent Remote Access Multiple Protocol) allows us to access files on
+a remote machine, and edit them locally.  This is great for simple changes or
+quickly testing out some Python on a VM somewhere.  It isn't as snappy as using
+the TTY version or an X-forwarded Emacs from the server directly, so if I /can/
+set up Emacs remotely, I usually do.  When I don't want to or don't have the
+time, Tramp is a godsend.  There are, however, many foibles to guard against,
+particularly with how interacts with version control and ~.dir-locals~.  The
+Tramp manual (distributed with Emacs) recommends adjusting these for some speed
+improvements:
+
+#+begin_src emacs-lisp
+  (use-package tramp
+    :defer t
+    :config
+    (setq vc-handled-backends '(Git)
+          file-name-inhibit-locks t
+          tramp-inline-compress-start-size 1000
+          tramp-copy-size-limit 10000
+          tramp-verbose 1)
+    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
+#+end_src
+
+eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden
+reentrant call of Tramp" message and freezing.  In the meantime, this setting
+was recommended.
+
+#+begin_src emacs-lisp
+  (setq tramp-use-ssh-controlmaster-options nil)
+#+end_src
+
+For some time I was having a lot of trouble with prohibitive slowness over
+Tramp, and after careful scrutiny of the logs on (I believe) =tramp-verbose 6=, I
+found out that enabling remote dir-locals was causing a huge bottleneck.  On
+every operation it would trace up the filesystem tree back to the root
+directory, scanning for a ~.dir-locals~ file.  Since some of the drives were
+network-mounted, this caused thousands of network calls per file operation,
+obviously slowing things down a lot.  Because of this, I've opted to simply
+disable ~.dir-locals~ over Tramp entirely, since I don't really use it much, if at
+all.
+
+#+begin_src emacs-lisp :tangle no :eval never
+;; (setq enable-remote-dir-locals t)
+#+end_src
+
+[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable
+thing to put in, since I so frequently use VC over tramp.  Fully disabling VC
+would include this snippet:
+
+#+begin_src emacs-lisp :tangle no :eval never
+(remove-hook 'find-file-hook 'vc-find-file-hook)
+
+(setq vc-ignore-dir-regexp
+      (format "\\(%s\\)\\|\\(%s\\)"
+              vc-ignore-dir-regexp
+              tramp-file-name-regexp))
+#+end_src
+
+Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs
+issues]], which I do not currently include.
+
+#+begin_src emacs-lisp :tangle no :eval never
+(setq tramp-default-method "scp")
+(setq projectile--mode-line "Projectile")
+#+end_src
+
+I often need to set these in ~/.ssh/config for TRAMP to speed up
+
+#+begin_example
+Host *
+     ControlMaster auto
+     ControlPath ~/.ssh/master-%h:%p
+     ControlPersist 10m
+     ForwardAgent yes
+     ServerAliveInterval 60
+#+end_example
+
 
 * Keybindings
 
@@ -1046,6 +1218,12 @@ completion, with just a little help from =xref-find-definitions=.
   (global-set-key (kbd "C-c f") #'ffap)
 #+end_src
 
+*** =C-c g= grep and find
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c g") #'grep-find)
+#+end_src
+
 *** =C-c i= browse url of buffer
 
 #+begin_src emacs-lisp
@@ -1133,6 +1311,12 @@ completion, with just a little help from =xref-find-definitions=.
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c w") #'whitespace-mode)
+#+end_src
+
+*** =C-c x= misc. "execute" commands
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c x r") #'restart-emacs)
 #+end_src
 
 *** =C-c= Other bindings
@@ -1724,50 +1908,7 @@ Handy for viewing data quickly.
 #+end_src
 
 * Tool configuration
-These are tweaks for self-contained tooling, such as third party packages or
-built-in packages that have a well-defined scope and namespace.
-
-** =eldoc=
-I find it very distracting when =eldoc= suddenly pops up and consumes a large part
-of the screen for docstrings in python.
-
-#+begin_src emacs-lisp
-  (setq eldoc-echo-area-use-multiline-p nil)
-#+end_src
-
-** ~imenu~
-
-#+begin_src emacs-lisp
-  (use-package imenu
-    :config
-    (setq imenu-auto-rescan t
-          org-imenu-depth 3))
-#+end_src
-
-** ~dabbrev~
-
-#+begin_src emacs-lisp
-  (use-package dabbrev
-    :custom
-    (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
-  #+end_src
-
-** ~dired~
-By default, ~dired~ uses bytes instead of "K", "Mb", or "G" for file sizes.  I
-also have it hide the mode, size, and owner of each file by default.
-
-#+begin_src emacs-lisp
-  (use-package dired
-    :hook (dired-mode . dired-hide-details-mode)
-    :config
-    (setq dired-listing-switches "-alFh")
-    (setq dired-dwim-target t))
-#+end_src
-
-Also enabled above is Do-What-I-Mean (DWIM) copying.  This is for when two dired
-windows are open, and we want to copy something from one location to the other.
-By enabling ~dired-dwim-target~, it auto-populates the minibuffer with the other
-dired window's path when issuing a copy command with ~C~.
+These are tweaks for third party packages.
 
 ** Visual fill column
 For visual lines, this adds line breaks at the fill-column value.  Especially
@@ -1780,85 +1921,7 @@ word.
     (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 #+end_src
 
-** eww - search engine and browser
-
-Ecosia requires JavaScript, unfortunately.
-
-#+begin_src emacs-lisp
-  (use-package eww
-    :config (setq eww-search-prefix "https://duckduckgo.com/html/?q="))
-#+end_src
-
-** Reloading Emacs
-Often used when changing up my ~init.el~.
-
-#+begin_src emacs-lisp
-  (use-package restart-emacs
-    :bind ("C-c x r" . restart-emacs))
-#+end_src
-
-** Language Server Protocol (LSP) with ~eglot~
-As of version 29, [[https://github.com/joaotavora/eglot][eglot]] (Emacs polyGLOT) is bundled with Emacs.  It provides Emacs with the
-client side configuration for the [[https://microsoft.github.io/language-server-protocol/][language server protocol]].
-
-#+begin_src emacs-lisp
-  (use-package eglot
-    :bind (("C-c l c" . eglot-reconnect)
-           ("C-c l d" . flymake-show-buffer-diagnostics)
-           ("C-c l f f" . eglot-format)
-           ("C-c l f b" . eglot-format-buffer)
-           ("C-c l l" . eglot)
-           ("C-c l r n" . eglot-rename)
-           ("C-c l s" . eglot-shutdown)))
-#+end_src
-
-To have ~eglot~ always start up for a python buffer, we would tangle this line
-into ~init.el~.  However, this can cause a significant loading delay over Tramp,
-and I would prefer snappy, simple access with LSP provided on an as-needed
-basis.
-
-#+begin_src emacs-lisp :tangle no :eval never
-(add-hook 'python-mode-hook 'eglot-ensure)
-#+end_src
-
-*** Side show: ~semantic-mode~
-For a while, it looks like Emacs was trying out something called [[https://www.gnu.org/software/emacs/manual/html_node/semantic/Semantic-mode.html][semantic-mode]],
-which looks a lot like a precursor to what we now know as the [[https://microsoft.github.io/language-server-protocol/][Language Server
-Protocol]].  Enabling it was done through adding the ~semantic-mode~ hook to your
-language's major mode hook:
-
-#+begin_src emacs-lisp :tangle no :eval never
-(add-hook 'python-mode-hook 'semantic-mode)
-#+end_src
-
-** TreeSitter
-*** About TreeSitter and its Load Paths
-Emacs 29 added native [[https://tree-sitter.github.io/tree-sitter/][TreeSitter]] support.  TreeSitter is a new way of
-incrementally parsing source code that offers superior navigation and syntax
-highlighting.  To fully realize this benefit, however, it requires that we
-install =tree-sitter= grammars independently from Emacs.  Right now, I'm using
-[[https://github.com/casouri/tree-sitter-module][casouri's modules]], which I build and install under =~/.emacs.d/tree-sitter=, if
-they don't already exist under =/usr/local/lib/= or =~/.local/lib=.  In case of the
-latter, I just add extra paths to =treesit-extra-load-path= explicitly.
-
-#+begin_src emacs-lisp
-  (when (boundp 'treesit-extra-load-path)
-    (add-to-list 'treesit-extra-load-path "/usr/local/lib/")
-    (add-to-list 'treesit-extra-load-path "~/.local/lib/"))
-#+end_src
-
-For the full instructions, the commit history of adding the =tree-sitter= modules
-to Emacs included a [[https://git.savannah.gnu.org/cgit/emacs.git/plain/admin/notes/tree-sitter/starter-guide?h=feature/tree-sitter][full guide]], which can be read in Info under "Parsing Program
-Source".
-
-#+begin_example
-C-h i d m elisp RET g Parsing Program Source RET
-#+end_example
-
-Enabling TreeSitter is done on a per-language basis to override the default
-major mode with the corresponding TreeSitter version.
-
-*** Automatically Using TreeSitter Modes
+** Automatically Using TreeSitter Modes
 I've posted this to GitHub and MELPA as [[https://github.com/renzmann/treesit-auto][treesit-auto]].
 
 #+begin_src emacs-lisp
@@ -1886,113 +1949,6 @@ Fetching updates is a similar command.
   git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
 #+end_src
 
-*** Ooo, aaah, shiny colors
-I like to program "in Skittles":
-
-#+begin_src emacs-lisp
-  (setq-default treesit-font-lock-level 3)
-#+end_src
-
-** Tramp
-Tramp (Transparent Remote Access Multiple Protocol) allows us to access files on
-a remote machine, and edit them locally.  This is great for simple changes or
-quickly testing out some Python on a VM somewhere.  It isn't as snappy as using
-the TTY version or an X-forwarded Emacs from the server directly, so if I /can/
-set up Emacs remotely, I usually do.  When I don't want to or don't have the
-time, Tramp is a godsend.  There are, however, many foibles to guard against,
-particularly with how interacts with version control and ~.dir-locals~.  The
-Tramp manual (distributed with Emacs) recommends adjusting these for some speed
-improvements:
-
-#+begin_src emacs-lisp
-  (use-package tramp
-    :defer t
-    :config
-    (setq vc-handled-backends '(Git)
-          file-name-inhibit-locks t
-          tramp-inline-compress-start-size 1000
-          tramp-copy-size-limit 10000
-          tramp-verbose 1)
-    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
-#+end_src
-
-eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden
-reentrant call of Tramp" message and freezing.  In the meantime, this setting
-was recommended.
-
-#+begin_src emacs-lisp
-  (setq tramp-use-ssh-controlmaster-options nil)
-#+end_src
-
-For some time I was having a lot of trouble with prohibitive slowness over
-Tramp, and after careful scrutiny of the logs on (I believe) =tramp-verbose 6=, I
-found out that enabling remote dir-locals was causing a huge bottleneck.  On
-every operation it would trace up the filesystem tree back to the root
-directory, scanning for a ~.dir-locals~ file.  Since some of the drives were
-network-mounted, this caused thousands of network calls per file operation,
-obviously slowing things down a lot.  Because of this, I've opted to simply
-disable ~.dir-locals~ over Tramp entirely, since I don't really use it much, if at
-all.
-
-#+begin_src emacs-lisp :tangle no :eval never
-;; (setq enable-remote-dir-locals t)
-#+end_src
-
-[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable
-thing to put in, since I so frequently use VC over tramp.  Fully disabling VC
-would include this snippet:
-
-#+begin_src emacs-lisp :tangle no :eval never
-(remove-hook 'find-file-hook 'vc-find-file-hook)
-
-(setq vc-ignore-dir-regexp
-      (format "\\(%s\\)\\|\\(%s\\)"
-              vc-ignore-dir-regexp
-              tramp-file-name-regexp))
-#+end_src
-
-Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs
-issues]], which I do not currently include.
-
-#+begin_src emacs-lisp :tangle no :eval never
-(setq tramp-default-method "scp")
-(setq projectile--mode-line "Projectile")
-#+end_src
-
-I often need to set these in ~/.ssh/config for TRAMP to speed up
-
-#+begin_example
-Host *
-     ControlMaster auto
-     ControlPath ~/.ssh/master-%h:%p
-     ControlPersist 10m
-     ForwardAgent yes
-     ServerAliveInterval 60
-#+end_example
-
-** Shell commands
-
-The Async command buffer's default behavior is to print =^M= characters (the
-carriage return) instead of actually clearing text.  This is problematic for
-spinners and progress bars, so I have a little hack to work around that.
-
-#+begin_src emacs-lisp
-  (defun renz/async-shell-command-filter-hook ()
-    "Filter async shell command output via `comint-output-filter'."
-    (when (equal (buffer-name (current-buffer)) "*Async Shell Command*")
-      ;; When `comint-output-filter' is non-nil, the carriage return characters ^M
-      ;; are displayed
-      (setq-local comint-inhibit-carriage-motion nil)
-      (when-let ((proc (get-buffer-process (current-buffer))))
-        ;; Attempting a solution found here:
-        ;; https://gnu.emacs.help.narkive.com/2PEYGWfM/m-chars-in-async-command-output
-        (set-process-filter proc 'comint-output-filter))))
-
-
-  (add-hook 'shell-mode-hook #'renz/async-shell-command-filter-hook)
-#+end_src
-
-There might be a better way, but this mostly works for now.
 
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an
