@@ -1471,6 +1471,7 @@ if we use =RET=, and will open a new buffer for =hell.py= if we use =C-d=.
   (add-hook 'sh-mode-hook #'renz/sh-indentation)
   (add-hook 'bash-ts-mode-hook #'renz/sh-indentation)
 #+end_src
+
 ** HTML
 
 This changes the behavior of a few commonly-used tags in web pages that I write.
@@ -1487,6 +1488,7 @@ This changes the behavior of a few commonly-used tags in web pages that I write.
       (add-to-list 'html-tag-alist '("code"))))
 
 #+end_src
+
 ** CSS
 
 #+begin_src emacs-lisp
@@ -1496,7 +1498,7 @@ This changes the behavior of a few commonly-used tags in web pages that I write.
 For validation, grab [[https://github.com/w3c/css-validator/releases/download/cssval-20220105/css-validator.jar][css-validator.jar]] and execute it with java:
 
 #+begin_example
-java -jar ~/.local/jars/css-validator.jar file:///home/me/my/site/index.html
+  java -jar ~/.local/jars/css-validator.jar file:///home/me/my/site/index.html
 #+end_example
 
 ** Org-mode
@@ -1696,24 +1698,6 @@ interactive SQL CLI.
     :demand t
     :mode ("\\.hql" . sql-mode))
 #+end_src
-
-**** TODO COMMENT sql-formatter
-I've modified [[https://github.com/purcell/sqlformat][sqlformat]] for use with [[https://www.npmjs.com/package/sql-formatter][sql-formatter]], but I need to find a way to
-pass in a JSON of configuration values to the command line interface when we
-call it.
-
-#+begin_src emacs-lisp
-  (use-package sqlformat
-    :after (sql))
-#+end_src
-
-When I get to it, I think what I'll do instead is rewrite this to simply pipe
-the current buffer into ~sql-formatter~, and use a bit of elisp to determine whether
-a ~.sql-formatter-config.json~ exists in the VC root directory.
-
-For the time being, though, I just pipe the file to an external ~sql-formatter~
-process and redirect the output either to a new buffer, or the current buffer if
-I'm happy with the results.
 
 *** Interactive =bq shell=
 The SQL interactive commands are looking for a single executable file, so let's
