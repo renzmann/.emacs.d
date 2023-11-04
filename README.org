@@ -921,13 +921,6 @@ bit.
   (setq global-mark-ring-max 32)
 #+end_src
 
-Another handy shortcut is continually popping marks by repeated =C-<SPC>= after
-the first =C-u C-<SPC>= through the ~set-mark-command-repeat-pop~ setting.
-
-#+begin_src emacs-lisp
-  (setq set-mark-command-repeat-pop t)
-#+end_src
-
 And, because I always forget it, to pop a global mark you use =C-x C-<SPC>=.  The
 local version, =C-u C-<SPC>= will only pop marks from the current buffer.  So the
 =C-x C-<SPC>= version is much closer to how Vim's jump stack works.

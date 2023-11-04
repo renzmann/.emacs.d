@@ -341,14 +341,10 @@
 ;; Mark rings and registers: bigger, faster, stronger:1 ends here
 
 ;; [[file:README.org::*Mark rings and registers: bigger, faster, stronger][Mark rings and registers: bigger, faster, stronger:2]]
-(setq set-mark-command-repeat-pop t)
-;; Mark rings and registers: bigger, faster, stronger:2 ends here
-
-;; [[file:README.org::*Mark rings and registers: bigger, faster, stronger][Mark rings and registers: bigger, faster, stronger:3]]
 (set-register ?S '(buffer . "*scratch*"))
 (set-register ?I `(file . ,(expand-file-name "README.org" user-emacs-directory)))
 (set-register ?B `(file . "~/.bashrc"))
-;; Mark rings and registers: bigger, faster, stronger:3 ends here
+;; Mark rings and registers: bigger, faster, stronger:2 ends here
 
 ;; [[file:README.org::*=eldoc=][=eldoc=:1]]
 (setq eldoc-echo-area-use-multiline-p nil)
