@@ -253,6 +253,7 @@
 
 ;; [[file:README.org::*Relative line numbers][Relative line numbers:1]]
 (defun renz/display-relative-lines ()
+  (setq display-line-numbers-width 3)
   (setq display-line-numbers 'relative))
 
 (add-hook 'prog-mode-hook #'renz/display-relative-lines)
@@ -286,13 +287,16 @@
 ;; Ignore risky .dir-locals.el:1 ends here
 
 ;; [[file:README.org::*=grep= and =find=][=grep= and =find=:1]]
-(when (executable-find "rg")
-  (setq grep-program "rg")
-  (grep-apply-setting 'grep-find-command
-                      '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))
+(use-package grep
+  :bind ("C-c g" . grep-find)
+  :config
+  (when (executable-find "rg")
+    (setq grep-program "rg")
+    (grep-apply-setting 'grep-find-command
+                        '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))
 
-(when (executable-find "fd")
-  (setq find-program "fd")))
+  (when (executable-find "fd")
+    (setq find-program "fd"))))
 ;; =grep= and =find=:1 ends here
 
 ;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
@@ -482,10 +486,6 @@
 ;; [[file:README.org::*=C-c f= find file at point (ffap)][=C-c f= find file at point (ffap):1]]
 (global-set-key (kbd "C-c f") #'ffap)
 ;; =C-c f= find file at point (ffap):1 ends here
-
-;; [[file:README.org::*=C-c g= grep and find][=C-c g= grep and find:1]]
-(global-set-key (kbd "C-c g") #'grep-find)
-;; =C-c g= grep and find:1 ends here
 
 ;; [[file:README.org::*=C-c i= browse url of buffer][=C-c i= browse url of buffer:1]]
 (global-set-key (kbd "C-c i") #'browse-url-of-buffer)
