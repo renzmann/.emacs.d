@@ -1018,7 +1018,7 @@ and I would prefer snappy, simple access with LSP provided on an as-needed
 basis.
 
 #+begin_src emacs-lisp :tangle no :eval never
-(add-hook 'python-mode-hook 'eglot-ensure)
+  (add-hook 'python-mode-hook 'eglot-ensure)
 #+end_src
 
 *** Side show: ~semantic-mode~
@@ -1028,7 +1028,7 @@ Protocol]].  Enabling it was done through adding the ~semantic-mode~ hook to you
 language's major mode hook:
 
 #+begin_src emacs-lisp :tangle no :eval never
-(add-hook 'python-mode-hook 'semantic-mode)
+  (add-hook 'python-mode-hook 'semantic-mode)
 #+end_src
 
 ** Shell commands
