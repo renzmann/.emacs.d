@@ -962,6 +962,9 @@ of the screen for docstrings in python.
 
 ** ~dabbrev~
 
+Skip over image and PDF buffers when collecting candidates for dynamic
+abbreviation.
+
 #+begin_src emacs-lisp
   (use-package dabbrev
     :custom
