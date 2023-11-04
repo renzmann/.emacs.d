@@ -1049,7 +1049,6 @@ spinners and progress bars, so I have a little hack to work around that.
         ;; https://gnu.emacs.help.narkive.com/2PEYGWfM/m-chars-in-async-command-output
         (set-process-filter proc 'comint-output-filter))))
 
-
   (add-hook 'shell-mode-hook #'renz/async-shell-command-filter-hook)
 #+end_src
 
