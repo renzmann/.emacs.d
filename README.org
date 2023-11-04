@@ -1,4 +1,4 @@
- #+TITLE: My Literate =.emacs.d=
+#+TITLE: My Literate =.emacs.d=
 #+AUTHOR: Robb Enzmann
 #+PROPERTY: header-args:emacs-lisp :tangle init.el :results none :eval never-export :comments link
 #+OPTIONS: toc:1 num:nil
@@ -269,9 +269,10 @@ There are also a few hand-made packages I keep around in a special
 
 * OS-specific Configuration
 ** Microsoft Windows
-Windows, funnily enough, has some trouble registering the Windows key as a
-usable modifier for Emacs.  In fact, =s-l= will /never/ be an option, since it's
-handled at the hardware level.
+
+While /usable/ out of the box, Emacs will be far less productive without some
+additional setup on a Windows machine.  First thing's first, though; I need a
+way within my lisp code to tell if we're running Windows.
 
 #+begin_src emacs-lisp
   (defun renz/windowsp ()
@@ -279,47 +280,9 @@ handled at the hardware level.
     (memq system-type '(windows-nt cygwin ms-dos)))
 #+end_src
 
-#+begin_src emacs-lisp
-  (when (and (renz/windowsp) (executable-find "pwsh"))
-    (setq shell-file-name "pwsh"))
-#+end_src
-
-There are a few things I set up independent of Emacs.  Namely, =find=, =xargs=,
-and =rg=.  While not perfect, =winget= tends to do the trick nowadays.  Usually
-this still requires futzing with my PATH manually after installation.
-
-#+begin_src shell
-  winget install Git.Git
-  winget install BurntSushi.ripgrep.GNU  # A faster `grep`
-  winget install GnuWin32.FindUtils
-  winget install GnuWin32.Grep
-  winget install RubyInstallerTeam.RubyWithDevKit.3.2  # For building my website with Jekyll
-  winget install Python.Python.3.11  # I work a lot in python
-  winget install sharkdp.fd  # A faster `find`
-#+end_src
-
-You can use Emacs without these, but some commands like =M-x grep= or =M-x
-project-find-regexp= will not work without making sure the GNU version of =find=
-and =grep= (or a suitable replacement) are on your PATH.  I tend not to muck
-with PATH inside Emacs if I can help it, and instead launch Emacs from
-powershell where things are properly set.  Usually I'll have some things like
-this in my =$PROFILE=:
-
-#+begin_src powershell :tangle no
-  $ENV:Path = "${ENV:ProgramFiles}\Hunspell\bin\;" + $ENV:Path
-  $ENV:Path = "${ENV:ProgramFiles(x86)}\GnuWin32\bin\;" + $ENV:Path
-  $ENV:Path = "${ENV:ProgramFiles}\Emacs\emacs-29.1\bin\;" + $ENV:Path
-  $ENV:PROFILE = $PROFILE
-  $ENV:LANG = "en_US"
-  $ENV:DICPATH = "$ENV:ProgramFiles\Hunspell\"
-#+end_src
-
-The duplicate =$PROFILE= thing is so we can access that file through =C-x C-f
-$PROFILE= within Emacs.  Check out the [[*Spellchecking][Spellchecking]] section on the Hunspell
-stuff.
-
-For compiling things like tree-sitter grammars, we'll need =cc= installed and on
-=PATH=, which unfortunately still requires a detour through =MINGW64=.
+Then, there are a few things I set up independent of Emacs.  Namely, =find=,
+=xargs=, =gcc=, and =rg=, which unfortunately requires a detour through
+=MINGW64=.
 
 #+begin_src powershell :tangle no
   winget install MSYS2.MSYS2
@@ -332,9 +295,67 @@ standard toolchain.
   pacman -S --needed base-devel mingw-w64-x86_64-toolchain
 #+end_src
 
-*** On the winkey
+I often forget these obtuse package names, so I'll search for them like this:
 
-For a time I considered enabling the use of the winkey like this:
+#+begin_src shell :tangle no
+  pacman -Ss ripgrep
+#+end_src
+
+#+RESULTS:
+| clangarm64/mingw-w64-clang-aarch64-ripgrep | 13.0.0-1                                 |      |      |             |          |      |         |           |     |   |       |         |             |
+| line-oriented                              | search                                   | tool | that | recursively | searches | your | current | directory | for | a | regex | pattern | (mingw-w64) |
+| mingw32/mingw-w64-i686-ripgrep             | 13.0.0-1                                 |      |      |             |          |      |         |           |     |   |       |         |             |
+| line-oriented                              | search                                   | tool | that | recursively | searches | your | current | directory | for | a | regex | pattern | (mingw-w64) |
+| mingw64/mingw-w64-x86_64-ripgrep           | 13.0.0-1                                 |      |      |             |          |      |         |           |     |   |       |         |             |
+| line-oriented                              | search                                   | tool | that | recursively | searches | your | current | directory | for | a | regex | pattern | (mingw-w64) |
+| ucrt64/mingw-w64-ucrt-x86_64-ripgrep       | 13.0.0-1                                 |      |      |             |          |      |         |           |     |   |       |         |             |
+| line-oriented                              | search                                   | tool | that | recursively | searches | your | current | directory | for | a | regex | pattern | (mingw-w64) |
+| clang64/mingw-w64-clang-x86_64-ripgrep     | 13.0.0-1                                 |      |      |             |          |      |         |           |     |   |       |         |             |
+| line-oriented                              | search                                   | tool | that | recursively | searches | your | current | directory | for | a | regex | pattern | (mingw-w64) |
+
+Copy the desired version with my mouse, and install it:
+
+#+begin_src shell :tangle no
+  pacman -S mingw-w64-x86_64-ripgrep
+#+end_src
+
+Finally, we have to modify the Windows PATH through the GUI (ew).  I haven't
+found any good method yet that avoids administrator privilages, since Windows
+places the System PATH before the user PATH.  I typically have to add these two
+to the very front of the System PATH (/before/ =%SystemRoot%\system32=).  This
+is so the GNU version of =find= appears before the Windows default =FIND=
+command, which is incompatible with Emacs.
+
++ =C:\msys64\usr\bin=
++ =C:\msys64\mingw64\bin=
+
+Even with all of this setup in place, it's still tough to get Powershell to play
+nicely with some of the shell quoting Emacs has to do when running external
+programs like =find= and =grep=. For instance, if we were to set the
+=shell-file-name= like this:
+
+#+begin_src emacs-lisp :tangle no
+  (when (and (renz/windowsp) (executable-find "pwsh"))
+    (setq shell-file-name "pwsh"))
+#+end_src
+
+Then running =C-u C-x p f= (=project-find-file=), which augments the =find=
+command to include files that would normally be ignored by =.gitignore=, we get
+this nasty message:
+
+#+begin_example
+  project--files-in-directory: File listing failed: -path: The term '-path' is not recognized as a name of a cmdlet, function, script file, or executable program.
+  Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
+#+end_example
+
+If we don't have admin privilages, there are some lisp alternatives to =find=
+and =grep=, such as =M-x find-lisp-find-dired=
+
+*** On the winkey
+Windows, funnily enough, has some trouble registering the Windows key as a
+usable modifier for Emacs.  In fact, =s-l= will /never/ be an option, since it's
+handled at the hardware level.  For a time I considered enabling the use of the
+winkey like this:
 
 #+begin_src emacs-lisp :tangle no :eval never
 (setq w32-pass-lwindow-to-system nil)
@@ -794,9 +815,15 @@ From an [[https://emacs.stackexchange.com/a/44604][Emacs stackexchange]] answer.
       (setq grep-program "rg")
       (grep-apply-setting 'grep-find-command
                           '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))
+      (setq xref-search-program 'ripgrep)
 
-    (when (executable-find "fd")
-      (setq find-program "fd"))))
+      ;; "find . {}" is hard coded into `find-dired', so unfortunately getting
+      ;; this to work won't be quite as simple.
+      ;;
+      ;; (when (executable-find "fd")
+      ;;   (setq find-program "fd")
+      ;;   (setq find-ls-option nil))
+    ))
 #+end_src
 
 If you're on Windows, this command assumes you're running =pwsh= version 7 or

@@ -70,11 +70,6 @@
   (memq system-type '(windows-nt cygwin ms-dos)))
 ;; Microsoft Windows:1 ends here
 
-;; [[file:README.org::*Microsoft Windows][Microsoft Windows:2]]
-(when (and (renz/windowsp) (executable-find "pwsh"))
-  (setq shell-file-name "pwsh"))
-;; Microsoft Windows:2 ends here
-
 ;; [[file:README.org::*macOS][macOS:1]]
 (when (eq system-type 'darwin)
   (setq exec-path-from-shell-arguments '("-l"))
@@ -294,9 +289,15 @@
     (setq grep-program "rg")
     (grep-apply-setting 'grep-find-command
                         '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))
+    (setq xref-search-program 'ripgrep)
 
-  (when (executable-find "fd")
-    (setq find-program "fd"))))
+    ;; "find . {}" is hard coded into `find-dired', so unfortunately getting
+    ;; this to work won't be quite as simple.
+    ;;
+    ;; (when (executable-find "fd")
+    ;;   (setq find-program "fd")
+    ;;   (setq find-ls-option nil))
+  ))
 ;; =grep= and =find=:1 ends here
 
 ;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
