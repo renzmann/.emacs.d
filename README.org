@@ -1077,14 +1077,6 @@ improvements:
     (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 #+end_src
 
-eglot is [[https://github.com/joaotavora/eglot/issues/859][actively working]] on an issue related to timers causing a "Forbidden
-reentrant call of Tramp" message and freezing.  In the meantime, this setting
-was recommended.
-
-#+begin_src emacs-lisp
-  (setq tramp-use-ssh-controlmaster-options nil)
-#+end_src
-
 For some time I was having a lot of trouble with prohibitive slowness over
 Tramp, and after careful scrutiny of the logs on (I believe) =tramp-verbose 6=, I
 found out that enabling remote dir-locals was causing a huge bottleneck.  On
@@ -1134,12 +1126,9 @@ Host *
 * Keybindings
 
 ** Expanded/better defaults
-These convenient chords allow for fast text replacement by holding =C-M-= and
-rapidly typing =k= and =h= in succession.
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
-  (global-set-key (kbd "C-M-h") 'backward-kill-sexp)
 #+end_src
 
 The next line UNBINDS the suspend-frame keybinding.  Accidentally minimizing on

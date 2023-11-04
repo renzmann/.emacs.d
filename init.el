@@ -399,7 +399,6 @@
       ;; https://gnu.emacs.help.narkive.com/2PEYGWfM/m-chars-in-async-command-output
       (set-process-filter proc 'comint-output-filter))))
 
-
 (add-hook 'shell-mode-hook #'renz/async-shell-command-filter-hook)
 ;; Shell commands:1 ends here
 
@@ -415,13 +414,8 @@
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 ;; Tramp:1 ends here
 
-;; [[file:README.org::*Tramp][Tramp:2]]
-(setq tramp-use-ssh-controlmaster-options nil)
-;; Tramp:2 ends here
-
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
-(global-set-key (kbd "C-M-h") 'backward-kill-sexp)
 ;; Expanded/better defaults:1 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:2]]
