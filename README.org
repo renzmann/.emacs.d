@@ -1600,15 +1600,6 @@ latter over the former, I've removed the =org-startup-indented= call.
        )))
 #+end_src
 
-*** Converting JSON to Org Tables
-I use a small external dependency for this:
-
-#+begin_src emacs-lisp
-  (use-package json-to-org-table
-    :load-path "site-lisp/json-to-org-table/"
-    :after org)
-#+end_src
-
 ** SQL
 *** DDL is SQL
 
@@ -1780,7 +1771,15 @@ error markers to jump directly to the issue.
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
 #+end_src
+
 *** Flatten items in =imenu=
+
+The default behavior in large Python buffers is to nest symbols, so after using
+=C-c C-j= (=imenu=), you first have to complete what /kind/ of symbol you're
+looking for, such as a "Function", "Class", or "Variable", /then/ complete the
+symbol itself.  I'd much rather just search for the symbol to begin with, and by
+using this flat index it will show me the symbol's type when I go to complete
+it.
 
 #+begin_src emacs-lisp
   (add-hook 'python-mode-hook
@@ -1792,7 +1791,11 @@ error markers to jump directly to the issue.
                                    'python-imenu-treesit-create-flat-index)))
 #+end_src
 
-*** Respect virtual environments in =python-check=
+*** Respect =python-shell-virtualenv-root= when using =python-check=
+
+Despite what the documentation in =python.el= says, it does not actually affect
+your shell's =PATH= when running compilation through =python-check=.  This chunk
+remedies this possible mistake.
 
 #+begin_src emacs-lisp
   (defun renz/python-add-path-to-process-environment (res)
@@ -1809,6 +1812,27 @@ error markers to jump directly to the issue.
   (advice-add 'python-shell--calculate-process-environment
               :filter-return
               #'renz/python-add-path-to-process-environment)
+#+end_src
+
+*** Interactively setting the virtual environment for =pyrightconfig.json=
+
+#+begin_src emacs-lisp
+  (defun pyrightconfig-write (virtualenv)
+    "Write a `pyrightconfig.json' file at the Git root of a project
+  with `venvPath' and `venv' set to the absolute path of
+  `virtualenv'.  When run interactively, prompts for a directory to
+  select."
+    (interactive "DEnv: ")
+    ;; Naming convention for venvPath matches the field for pyrightconfig.json
+    (let* ((venv-dir (tramp-file-local-name (file-truename virtualenv)))
+           (venv-file-name (directory-file-name venv-dir))
+           (venvPath (file-name-directory venv-file-name))
+           (venv (file-name-base venv-file-name))
+           (base-dir (vc-git-root default-directory))
+           (out-file (expand-file-name "pyrightconfig.json" base-dir))
+           (out-contents (json-encode (list :venvPath venvPath :venv venv))))
+      (with-temp-file out-file (insert out-contents))
+      (message (concat "Configured `" out-file "` to use environment `" venv-dir))))
 #+end_src
 
 *** Pyright error links in =*compilation*=
@@ -1964,7 +1988,6 @@ I've posted this to GitHub and MELPA as [[https://github.com/renzmann/treesit-au
 
 #+begin_src emacs-lisp
   (use-package treesit-auto
-    :load-path "site-lisp/treesit-auto"
     :custom
     (treesit-auto-install 'prompt)
     :config

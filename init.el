@@ -710,12 +710,6 @@ Jumps to an Org src block from tangled code."
      )))
 ;; Org-mode:3 ends here
 
-;; [[file:README.org::*Converting JSON to Org Tables][Converting JSON to Org Tables:1]]
-(use-package json-to-org-table
-  :load-path "site-lisp/json-to-org-table/"
-  :after org)
-;; Converting JSON to Org Tables:1 ends here
-
 ;; [[file:README.org::*DDL is SQL][DDL is SQL:1]]
 (add-to-list 'auto-mode-alist '("\\.ddl\\'" . sql-mode))
 (add-to-list 'auto-mode-alist '("\\.bql\\'" . sql-mode))
@@ -817,7 +811,7 @@ Jumps to an Org src block from tangled code."
                                  'python-imenu-treesit-create-flat-index)))
 ;; Flatten items in =imenu=:1 ends here
 
-;; [[file:README.org::*Respect virtual environments in =python-check=][Respect virtual environments in =python-check=:1]]
+;; [[file:README.org::*Respect =python-shell-virtualenv-root= when using =python-check=][Respect =python-shell-virtualenv-root= when using =python-check=:1]]
 (defun renz/python-add-path-to-process-environment (res)
   (when-let* ((virtualenv (when python-shell-virtualenv-root
                             (directory-file-name python-shell-virtualenv-root)))
@@ -832,7 +826,26 @@ Jumps to an Org src block from tangled code."
 (advice-add 'python-shell--calculate-process-environment
             :filter-return
             #'renz/python-add-path-to-process-environment)
-;; Respect virtual environments in =python-check=:1 ends here
+;; Respect =python-shell-virtualenv-root= when using =python-check=:1 ends here
+
+;; [[file:README.org::*Interactively setting the virtual environment for =pyrightconfig.json=][Interactively setting the virtual environment for =pyrightconfig.json=:1]]
+(defun pyrightconfig-write (virtualenv)
+  "Write a `pyrightconfig.json' file at the Git root of a project
+with `venvPath' and `venv' set to the absolute path of
+`virtualenv'.  When run interactively, prompts for a directory to
+select."
+  (interactive "DEnv: ")
+  ;; Naming convention for venvPath matches the field for pyrightconfig.json
+  (let* ((venv-dir (tramp-file-local-name (file-truename virtualenv)))
+         (venv-file-name (directory-file-name venv-dir))
+         (venvPath (file-name-directory venv-file-name))
+         (venv (file-name-base venv-file-name))
+         (base-dir (vc-git-root default-directory))
+         (out-file (expand-file-name "pyrightconfig.json" base-dir))
+         (out-contents (json-encode (list :venvPath venvPath :venv venv))))
+    (with-temp-file out-file (insert out-contents))
+    (message (concat "Configured `" out-file "` to use environment `" venv-dir))))
+;; Interactively setting the virtual environment for =pyrightconfig.json=:1 ends here
 
 ;; [[file:README.org::*Pyright error links in =*compilation*=][Pyright error links in =*compilation*=:1]]
 (with-eval-after-load 'compile
@@ -898,7 +911,6 @@ Jumps to an Org src block from tangled code."
 
 ;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
 (use-package treesit-auto
-  :load-path "site-lisp/treesit-auto"
   :custom
   (treesit-auto-install 'prompt)
   :config
