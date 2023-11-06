@@ -965,11 +965,23 @@ of the screen for docstrings in python.
 Skip over image and PDF buffers when collecting candidates for dynamic
 abbreviation.
 
+
 #+begin_src emacs-lisp
   (use-package dabbrev
     :custom
     (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
-  #+end_src
+#+end_src
+
+Hippie-expand [[https://www.masteringemacs.org/article/text-expansion-hippie-expand][is purported]] to be a better version of ~dabbrev~.
+
+#+begin_src emacs-lisp
+  (use-package hippie-exp
+    :config
+    (global-set-key [remap dabbrev-expand] 'hippie-expand)
+    (delete 'try-expand-line hippie-expand-try-functions-list)
+    (delete 'try-complete-lisp-symbol-partially hippie-expand-try-functions-list)
+    (delete 'try-complete-lisp-symbol hippie-expand-try-functions-list))
+#+end_src
 
 ** ~dired~
 By default, ~dired~ uses bytes instead of "K", "Mb", or "G" for file sizes.  I
@@ -1137,13 +1149,6 @@ suspend the frame.
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-z") #'zap-up-to-char)
-#+end_src
-
-Hippie-expand [[https://www.masteringemacs.org/article/text-expansion-hippie-expand][is purported]] to be a better version of ~dabbrev~, but I rather like
-the default behavior of ~dabbrev~.
-
-#+begin_src emacs-lisp
-  (global-set-key [remap dabbrev-expand] 'hippie-expand)
 #+end_src
 
 ~ibuffer~ is a strictly superior, built-in version of its counterpart.
