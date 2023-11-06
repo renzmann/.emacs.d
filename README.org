@@ -1789,6 +1789,12 @@ remedies this possible mistake.
 
 *** Interactively setting the virtual environment for =pyrightconfig.json=
 
+The most consistent way to get =eglot= to properly configure the python virtual
+environment with =pyright= is to have a static file at the root of the project,
+called ~pyrightconfig.json~.  I wrote a short plugin that allows me to select a
+directory using =completing-read= and have Emacs write the content of
+~pyrightconfig.json~ based on what I selected, in the appropriate directory.
+
 #+begin_src emacs-lisp
   (defun pyrightconfig-write (virtualenv)
     "Write a `pyrightconfig.json' file at the Git root of a project
@@ -1807,6 +1813,11 @@ remedies this possible mistake.
       (with-temp-file out-file (insert out-contents))
       (message (concat "Configured `" out-file "` to use environment `" venv-dir))))
 #+end_src
+
+Configuring pyright this way rather than "activating" an environment through
+Emacs (ala =pythonic-activate= or similar) means we can be running the language
+server in more than one project at a time, each pointing to its respective
+virtual environment.
 
 *** Pyright error links in =*compilation*=
 The =M-x compile= feature does not recognize or parse ~pyright~ error messages out
@@ -1881,24 +1892,6 @@ make sure that setting the virtualenv root is marked as safe.
 *** Emacs Jupyter?
 Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with
 Jupyter kernels from org-mode.
-
-*** pyrightconfig.json
-
-The most consistent way to get =eglot= to properly configure the python virtual
-environment with =pyright= is to have a static file at the root of the project,
-called ~pyrightconfig.json~.  I wrote a short plugin that allows me to select a
-directory using =completing-read= and have Emacs write the content of
-~pyrightconfig.json~ based on what I selected, in the appropriate directory.
-
-#+begin_src emacs-lisp
-  (use-package pyrightconfig
-    :after (python))
-#+end_src
-
-Configuring pyright this way rather than "activating" an environment through
-Emacs (ala =pythonic-activate= or similar) means we can be running the language
-server in more than one project at a time, each pointing to its respective
-virtual environment.
 
 ** Markdown
 When installing =markdown= through Anaconda, the executable is actually called
