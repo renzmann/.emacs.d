@@ -6,7 +6,7 @@
  '(column-number-mode t)
  '(mode-line-in-non-selected-windows t)
  '(package-selected-packages
-   '(treesit-auto clojure-ts-mode awk-ts-mode vhdl-ts-mode verilog-ts-mode dart-ts-mode powershell visual-fill-column sql-indent package-lint markdown-mode exec-path-from-shell csv-mode modus-themes))
+   '(groovy-mode treesit-auto clojure-ts-mode awk-ts-mode vhdl-ts-mode verilog-ts-mode dart-ts-mode powershell visual-fill-column sql-indent package-lint markdown-mode exec-path-from-shell csv-mode modus-themes))
  '(package-vc-selected-packages
    '((treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
  '(safe-local-variable-values
