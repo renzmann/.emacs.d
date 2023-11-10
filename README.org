@@ -1168,15 +1168,6 @@ next/previous on easy to reach chords.
            ("C-c p" . flymake-goto-prev-error)))
 #+end_src
 
-** Overriding defaults
-Some default bindings aren't useful for me, so I bind them to actions I take
-more frequently.
-
-#+begin_src emacs-lisp
-  (global-set-key (kbd "C-x C-p") 'previous-buffer)  ; Overrides `mark-page'
-  (global-set-key (kbd "C-x C-n") 'next-buffer)      ; Overrides `set-goal-column'
-#+end_src
-
 ** C-c bindings
 Emacs has [[https://www.gnu.org/software/emacs/manual/html_node/emacs/Key-Bindings.html][some standards]] about where user-configured keys should go; =C-c
 <letter>= is always free for users.  It may seem like overkill how I set a header
@@ -1764,29 +1755,6 @@ it.
                                    'python-imenu-treesit-create-flat-index)))
 #+end_src
 
-*** Respect =python-shell-virtualenv-root= when using =python-check=
-
-Despite what the documentation in =python.el= says, it does not actually affect
-your shell's =PATH= when running compilation through =python-check=.  This chunk
-remedies this possible mistake.
-
-#+begin_src emacs-lisp
-  (defun renz/python-add-path-to-process-environment (res)
-    (when-let* ((virtualenv (when python-shell-virtualenv-root
-                              (directory-file-name python-shell-virtualenv-root)))
-                (bin-dir (expand-file-name (if (eq system-type 'windows-nt) "Scripts" "bin") virtualenv)))
-      (push (format "PATH=%s" (mapconcat
-                               #'identity
-                               (reverse
-                                (cons (getenv "PATH")
-                                      (list bin-dir)))
-                               ":")) res) res))
-
-  (advice-add 'python-shell--calculate-process-environment
-              :filter-return
-              #'renz/python-add-path-to-process-environment)
-#+end_src
-
 *** Interactively setting the virtual environment for =pyrightconfig.json=
 
 The most consistent way to get =eglot= to properly configure the python virtual
@@ -1974,6 +1942,28 @@ Fetching updates is a similar command.
 
 #+begin_src shell :results none
   git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
+#+end_src
+
+** =pyvenv=
+
+The case for including this package is incredibly strong after trying my hand at
+getting Python virtual environments working in a vanilla way that's platform
+independent.  In the end, we'd just wind up re-creating =pyvenv=.  The main bug
+in =python.el= is that it assumes that the interpreter lives under
+=.venv/Scripts/= if we're on Windows, which is not true if the environment was
+created with MinGW (it uses the standard =bin/= directory).  =pyvenv=, on the
+other hand, simply checks what folders exists, and uses the first one it finds,
+so it works equally well on macOS, Linux, Windows native, and MinGW.  On top of
+all this, it is only ~600 lines of code, so it is a very small dependency to
+include.
+
+#+begin_src emacs-lisp
+  (use-package pyvenv
+    ;; Overrides `mark-page'
+    :bind ("C-x C-p")
+    :config
+    (pyvenv-tracking-mode 1)
+    (pyvenv-mode 1))
 #+end_src
 
 * Footer

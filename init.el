@@ -442,11 +442,6 @@
          ("C-c p" . flymake-goto-prev-error)))
 ;; Expanded/better defaults:4 ends here
 
-;; [[file:README.org::*Overriding defaults][Overriding defaults:1]]
-(global-set-key (kbd "C-x C-p") 'previous-buffer)  ; Overrides `mark-page'
-(global-set-key (kbd "C-x C-n") 'next-buffer)      ; Overrides `set-goal-column'
-;; Overriding defaults:1 ends here
-
 ;; [[file:README.org::*=C-c b= build / compile][=C-c b= build / compile:1]]
 (global-set-key (kbd "C-c b") #'compile)
 (global-set-key (kbd "C-c B") #'recompile)
@@ -806,23 +801,6 @@ Jumps to an Org src block from tangled code."
                                  'python-imenu-treesit-create-flat-index)))
 ;; Flatten items in =imenu=:1 ends here
 
-;; [[file:README.org::*Respect =python-shell-virtualenv-root= when using =python-check=][Respect =python-shell-virtualenv-root= when using =python-check=:1]]
-(defun renz/python-add-path-to-process-environment (res)
-  (when-let* ((virtualenv (when python-shell-virtualenv-root
-                            (directory-file-name python-shell-virtualenv-root)))
-              (bin-dir (expand-file-name (if (eq system-type 'windows-nt) "Scripts" "bin") virtualenv)))
-    (push (format "PATH=%s" (mapconcat
-                             #'identity
-                             (reverse
-                              (cons (getenv "PATH")
-                                    (list bin-dir)))
-                             ":")) res) res))
-
-(advice-add 'python-shell--calculate-process-environment
-            :filter-return
-            #'renz/python-add-path-to-process-environment)
-;; Respect =python-shell-virtualenv-root= when using =python-check=:1 ends here
-
 ;; [[file:README.org::*Interactively setting the virtual environment for =pyrightconfig.json=][Interactively setting the virtual environment for =pyrightconfig.json=:1]]
 (defun pyrightconfig-write (virtualenv)
   "Write a `pyrightconfig.json' file at the Git root of a project
@@ -907,6 +885,15 @@ select."
   (treesit-auto-add-to-auto-mode-alist)
   (global-treesit-auto-mode))
 ;; Automatically Using TreeSitter Modes:1 ends here
+
+;; [[file:README.org::*=pyvenv=][=pyvenv=:1]]
+(use-package pyvenv
+  ;; Overrides `mark-page'
+  :bind ("C-x C-p")
+  :config
+  (pyvenv-tracking-mode 1)
+  (pyvenv-mode 1))
+;; =pyvenv=:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here
