@@ -1,0 +1,12 @@
+(define-package "pyvenv" "20211014.707" "Python virtual environment interface" 'nil :commit "31ea715f2164dd611e7fc77b26390ef3ca93509b" :authors
+  '(("Jorgen Schaefer" . "contact@jorgenschaefer.de"))
+  :maintainers
+  '(("Jorgen Schaefer" . "contact@jorgenschaefer.de"))
+  :maintainer
+  '("Jorgen Schaefer" . "contact@jorgenschaefer.de")
+  :keywords
+  '("python" "virtualenv" "tools")
+  :url "http://github.com/jorgenschaefer/pyvenv")
+;; Local Variables:
+;; no-byte-compile: t
+;; End:
