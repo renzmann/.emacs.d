@@ -284,10 +284,6 @@ With all that out of the way, though, we can sync up our packages.
     (package-autoremove)
     (package-install-selected-packages)
     (package-vc-install-selected-packages))
-
-  (when (and (cl-notevery 'package-installed-p package-selected-packages)
-             (yes-or-no-p "Sync packages?"))
-    (renz/package-sync))
 #+end_src
 
 There are also a few hand-made packages I keep around in a special
@@ -429,27 +425,14 @@ and =C-x C-M--= to change the size /globally/.
 
 * Theme
 
-With the introduction of =modus-vivendi-tinted= in Emacs 29, I really have no
-need for any external themes now.  It is accessible, well optimized for
-=org-mode= and =prog-mode=, and distributed with vanilla Emacs.  Hats off to
-[[https://protesilaos.com/][Prot]] for these wonderful themes.
+Hats off to [[https://protesilaos.com/][Prot]] for his wonderful themes.  I use ef-cherie because of how clear
+it is in well-lit and dark areas.  It also has a low blue-light emission, in
+case I'm working later at night.
 
 #+begin_src emacs-lisp
-  (use-package emacs
-    :custom
-    (modus-themes-inhibit-reload nil)
-    (modus-themes-subtle-line-numbers t)
-    (modus-themes-syntax '(alt-syntax faint green-strings yellow-comments))
-    (modus-themes-diffs 'desaturated)
-    (modus-themes-hl-line 'intense)
-    (modus-themes-deuteranopia nil)
-    (modus-themes-bold-constructs t)
-    (modus-themes-italic-constructs t)
-    (modus-themes-mode-line 'borderless)
-    (modus-themes-org-blocks 'gray-background)
-    :bind   ("<f5>" . modus-themes-toggle)
+  (use-package ef-themes
     :config
-    (load-theme 'modus-vivendi-tinted t))
+    (load-theme 'ef-cherie t))
 #+end_src
 
 ** Window margins and fringe

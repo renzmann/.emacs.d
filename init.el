@@ -71,10 +71,6 @@
   (package-autoremove)
   (package-install-selected-packages)
   (package-vc-install-selected-packages))
-
-(when (and (cl-notevery 'package-installed-p package-selected-packages)
-           (yes-or-no-p "Sync packages?"))
-  (renz/package-sync))
 ;; Packages:4 ends here
 
 ;; [[file:README.org::*Packages][Packages:5]]
@@ -96,21 +92,9 @@
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
-(use-package emacs
-  :custom
-  (modus-themes-inhibit-reload nil)
-  (modus-themes-subtle-line-numbers t)
-  (modus-themes-syntax '(alt-syntax faint green-strings yellow-comments))
-  (modus-themes-diffs 'desaturated)
-  (modus-themes-hl-line 'intense)
-  (modus-themes-deuteranopia nil)
-  (modus-themes-bold-constructs t)
-  (modus-themes-italic-constructs t)
-  (modus-themes-mode-line 'borderless)
-  (modus-themes-org-blocks 'gray-background)
-  :bind   ("<f5>" . modus-themes-toggle)
+(use-package ef-themes
   :config
-  (load-theme 'modus-vivendi-tinted t))
+  (load-theme 'ef-cherie t))
 ;; Theme:1 ends here
 
 ;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
