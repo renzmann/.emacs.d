@@ -48,6 +48,23 @@
 ;; Packages:1 ends here
 
 ;; [[file:README.org::*Packages][Packages:2]]
+(defun renz/windowsp ()
+  "Are we on Microsoft Windows?"
+  (memq system-type '(windows-nt cygwin ms-dos)))
+;; Packages:2 ends here
+
+;; [[file:README.org::*Packages][Packages:3]]
+(when-let* ((on-win (renz/windowsp))
+            (has-uname (executable-find "uname"))
+            (uname (shell-command-to-string "uname"))
+            (is-msys (string-prefix-p "MSYS" uname))
+            (package-dir-expandable (string-prefix-p "~" package-user-dir))
+            (expand-package-dir (expand-file-name "gnupg" package-user-dir))
+            (new-package-user-dir (replace-regexp-in-string "^\\([a-zA-Z]\\):/" "/\\1/" expand-package-dir)))
+  (setq package-gnupghome-dir new-package-user-dir))
+;; Packages:3 ends here
+
+;; [[file:README.org::*Packages][Packages:4]]
 (defun renz/package-sync ()
   "Remove unused sources and install any missing ones."
   (interactive)
@@ -56,19 +73,13 @@
   (package-vc-install-selected-packages))
 
 (when (and (cl-notevery 'package-installed-p package-selected-packages)
-           (yes-or-no-p "Install VC packages?"))
-  (package-vc-install-selected-packages))
-;; Packages:2 ends here
+           (yes-or-no-p "Sync packages?"))
+  (renz/package-sync))
+;; Packages:4 ends here
 
-;; [[file:README.org::*Packages][Packages:3]]
+;; [[file:README.org::*Packages][Packages:5]]
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
-;; Packages:3 ends here
-
-;; [[file:README.org::*Microsoft Windows][Microsoft Windows:1]]
-(defun renz/windowsp ()
-  "Are we on Microsoft Windows?"
-  (memq system-type '(windows-nt cygwin ms-dos)))
-;; Microsoft Windows:1 ends here
+;; Packages:5 ends here
 
 ;; [[file:README.org::*macOS][macOS:1]]
 (when (eq system-type 'darwin)
@@ -877,19 +888,19 @@ select."
   (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 ;; Visual fill column:1 ends here
 
-;; [[file:README.org::*Automatically Using TreeSitter Modes][Automatically Using TreeSitter Modes:1]]
+;; [[file:README.org::*=treesit-auto=: Automatically Using TreeSitter Modes][=treesit-auto=: Automatically Using TreeSitter Modes:1]]
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
   :config
   (treesit-auto-add-to-auto-mode-alist)
   (global-treesit-auto-mode))
-;; Automatically Using TreeSitter Modes:1 ends here
+;; =treesit-auto=: Automatically Using TreeSitter Modes:1 ends here
 
 ;; [[file:README.org::*=pyvenv=][=pyvenv=:1]]
 (use-package pyvenv
   ;; Overrides `mark-page'
-  :bind ("C-x C-p")
+  :bind ("C-x C-p" . pyvenv-activate)
   :config
   (pyvenv-tracking-mode 1)
   (pyvenv-mode 1))

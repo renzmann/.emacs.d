@@ -247,6 +247,36 @@ a previous commit.  So far, this method has been reliable for keeping my
 =init.el= (this README), =custom.el=, the =package-selected-packages= variable,
 and =elpa/= directory all in sync with one another.
 
+First thing's first, though; I need a way within my lisp code to tell if we're
+running Windows.
+
+#+begin_src emacs-lisp
+  (defun renz/windowsp ()
+    "Are we on Microsoft Windows?"
+    (memq system-type '(windows-nt cygwin ms-dos)))
+#+end_src
+
+One "feature" of MSYS is that paths take on a unix-like format.  So
+=C:/Users/...= becomes =/c/Users/...=.  The MSYS installation of =gpg=, which is
+what Emacs would use to verify package signatures when running under MSYS, only
+undertands this latter expansion; and not the former style of Windows path (even
+though Emacs itself is perfectly happy with them).
+
+#+begin_src emacs-lisp
+  (when-let* ((on-win (renz/windowsp))
+              (has-uname (executable-find "uname"))
+              (uname (shell-command-to-string "uname"))
+              (is-msys (string-prefix-p "MSYS" uname))
+              (package-dir-expandable (string-prefix-p "~" package-user-dir))
+              (expand-package-dir (expand-file-name "gnupg" package-user-dir))
+              (new-package-user-dir (replace-regexp-in-string "^\\([a-zA-Z]\\):/" "/\\1/" expand-package-dir)))
+    (setq package-gnupghome-dir new-package-user-dir))
+#+end_src
+
+Without modifying the =package-user-dir= in this way, we get a nasty error [[https://emacs.stackexchange.com/q/60278][like this]].
+
+With all that out of the way, though, we can sync up our packages.
+
 #+begin_src emacs-lisp
   (defun renz/package-sync ()
     "Remove unused sources and install any missing ones."
@@ -256,8 +286,8 @@ and =elpa/= directory all in sync with one another.
     (package-vc-install-selected-packages))
 
   (when (and (cl-notevery 'package-installed-p package-selected-packages)
-             (yes-or-no-p "Install VC packages?"))
-    (package-vc-install-selected-packages))
+             (yes-or-no-p "Sync packages?"))
+    (renz/package-sync))
 #+end_src
 
 There are also a few hand-made packages I keep around in a special
@@ -271,15 +301,7 @@ There are also a few hand-made packages I keep around in a special
 ** Microsoft Windows
 
 While /usable/ out of the box, Emacs will be far less productive without some
-additional setup on a Windows machine.  First thing's first, though; I need a
-way within my lisp code to tell if we're running Windows.
-
-#+begin_src emacs-lisp
-  (defun renz/windowsp ()
-    "Are we on Microsoft Windows?"
-    (memq system-type '(windows-nt cygwin ms-dos)))
-#+end_src
-
+additional setup on a Windows machine.
 Then, there are a few things I set up independent of Emacs.  Namely, =find=,
 =xargs=, =gcc=, and =rg=, which unfortunately requires a detour through
 =MINGW64=.
@@ -1917,7 +1939,7 @@ word.
     (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
 #+end_src
 
-** Automatically Using TreeSitter Modes
+** =treesit-auto=: Automatically Using TreeSitter Modes
 I've posted this to GitHub and MELPA as [[https://github.com/renzmann/treesit-auto][treesit-auto]].
 
 #+begin_src emacs-lisp
@@ -1960,7 +1982,7 @@ include.
 #+begin_src emacs-lisp
   (use-package pyvenv
     ;; Overrides `mark-page'
-    :bind ("C-x C-p")
+    :bind ("C-x C-p" . pyvenv-activate)
     :config
     (pyvenv-tracking-mode 1)
     (pyvenv-mode 1))
