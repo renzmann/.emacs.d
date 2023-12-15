@@ -582,6 +582,11 @@
 (setq tab-always-indent 'complete)
 ;; Completion in the minibuffer and at point:1 ends here
 
+;; [[file:README.org::*Corfu][Corfu:1]]
+(setq corfu-auto t
+      corfu-quit-no-match 'separator) ;; or t
+;; Corfu:1 ends here
+
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
   ;; (setq indent-tabs-mode t)

@@ -1446,6 +1446,11 @@ is currently in the prompt.  For instance, if we are editing a file =hello.py=,
 and then use =C-x C-f hell.py=, the minibuffer will complete =hell.py= into =hello.py=
 if we use =RET=, and will open a new buffer for =hell.py= if we use =C-d=.
 
+** Corfu
+#+begin_src emacs-lisp
+  (setq corfu-auto t
+        corfu-quit-no-match 'separator) ;; or t
+#+end_src
 * Language-specific major modes
 ** Shell (Bash, sh, ...)
 #+begin_src emacs-lisp
