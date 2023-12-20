@@ -439,7 +439,7 @@ case I'm working later at night.
 This hunk adds some space around all sides of each window so that we get a clear
 space between the edge of the screen and the fringe.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (defun renz/modify-margins ()
     "Add some space around each window."
     (interactive)
@@ -459,7 +459,7 @@ space between the edge of the screen and the fringe.
 We also need to make sure this runs each time we change the =ef-theme=, otherwise
 the old background color will linger in the margins.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (add-hook 'ef-themes-post-load-hook 'renz/modify-margins)
 #+end_src
 
@@ -1930,7 +1930,7 @@ I've posted this to GitHub and MELPA as [[https://github.com/renzmann/treesit-au
     :custom
     (treesit-auto-install 'prompt)
     :config
-    (treesit-auto-add-to-auto-mode-alist)
+    (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
 #+end_src
 
