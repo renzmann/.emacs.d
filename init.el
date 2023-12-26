@@ -562,8 +562,12 @@
 ;; Completion in the minibuffer and at point:1 ends here
 
 ;; [[file:README.org::*Corfu][Corfu:1]]
-(setq corfu-auto t
-      corfu-quit-no-match 'separator) ;; or t
+(use-package corfu
+:custom
+(corfu-auto t)
+(corfu-quit-no-match 'separator)
+:config
+(global-corfu-mode))
 ;; Corfu:1 ends here
 
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
