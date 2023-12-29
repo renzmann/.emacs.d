@@ -1447,14 +1447,25 @@ and then use =C-x C-f hell.py=, the minibuffer will complete =hell.py= into =hel
 if we use =RET=, and will open a new buffer for =hell.py= if we use =C-d=.
 
 ** Corfu
+For in-buffer pop-up completion.
+
 #+begin_src emacs-lisp
   (use-package corfu
-  :custom
-  (corfu-auto t)
-  (corfu-quit-no-match 'separator)
-  :config
-  (global-corfu-mode))
+    :custom
+    (corfu-auto t)
+    (corfu-quit-no-match 'separator)
+    :config
+    (global-corfu-mode))
 #+end_src
+
+** Vertico
+For fast minibuffer completion.
+
+#+begin_src emacs-lisp
+  (use-package vertico
+    :custom (vertico-mode))
+#+end_src
+
 * Language-specific major modes
 ** Shell (Bash, sh, ...)
 #+begin_src emacs-lisp

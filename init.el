@@ -563,12 +563,17 @@
 
 ;; [[file:README.org::*Corfu][Corfu:1]]
 (use-package corfu
-:custom
-(corfu-auto t)
-(corfu-quit-no-match 'separator)
-:config
-(global-corfu-mode))
+  :custom
+  (corfu-auto t)
+  (corfu-quit-no-match 'separator)
+  :config
+  (global-corfu-mode))
 ;; Corfu:1 ends here
+
+;; [[file:README.org::*Vertico][Vertico:1]]
+(use-package vertico
+  :custom (vertico-mode))
+;; Vertico:1 ends here
 
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
