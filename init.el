@@ -572,7 +572,8 @@
 
 ;; [[file:README.org::*Vertico][Vertico:1]]
 (use-package vertico
-  :custom (vertico-mode))
+  :config
+  (vertico-mode))
 ;; Vertico:1 ends here
 
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]

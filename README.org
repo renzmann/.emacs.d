@@ -1463,7 +1463,8 @@ For fast minibuffer completion.
 
 #+begin_src emacs-lisp
   (use-package vertico
-    :custom (vertico-mode))
+    :config
+    (vertico-mode))
 #+end_src
 
 * Language-specific major modes
