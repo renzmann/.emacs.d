@@ -262,16 +262,8 @@
   (when (executable-find "rg")
     (setq grep-program "rg")
     (grep-apply-setting 'grep-find-command
-                        '("rg -n -H --color always --no-heading -e '' $(git rev-parse --show-toplevel || pwd)" . 42))
-    (setq xref-search-program 'ripgrep)
-
-    ;; "find . {}" is hard coded into `find-dired', so unfortunately getting
-    ;; this to work won't be quite as simple.
-    ;;
-    ;; (when (executable-find "fd")
-    ;;   (setq find-program "fd")
-    ;;   (setq find-ls-option nil))
-  ))
+                        '("rg -n -H --color always --no-heading -e ''" . 42))
+    (setq xref-search-program 'ripgrep)))
 ;; =grep= and =find=:1 ends here
 
 ;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
@@ -878,7 +870,8 @@ select."
 ;; [[file:README.org::*=pyvenv=][=pyvenv=:1]]
 (use-package pyvenv
   ;; Overrides `mark-page'
-  :bind ("C-x C-p" . pyvenv-activate)
+  :bind (("C-x p a" . pyvenv-activate)
+         ("C-x p u" . pyvenv-deactivate))
   :config
   (pyvenv-tracking-mode 1)
   (pyvenv-mode 1))
