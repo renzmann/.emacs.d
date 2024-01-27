@@ -1292,7 +1292,9 @@ completion, with just a little help from =xref-find-definitions=.
 
 *** =C-c k= kill all but one space
 
-#+begin_src emacs-lisp
+I used to bind this before I knew about =M-SPC= (~cycle-spacing~):
+
+#+begin_src emacs-lisp :tangle no
   (global-set-key (kbd "C-c k") #'just-one-space)
 #+end_src
 
@@ -1993,9 +1995,20 @@ include.
     :bind (("C-x p a" . pyvenv-activate)
            ("C-x p u" . pyvenv-deactivate))
     :config
+    (put 'pyvenv-mode 'safe-local-variable #'stringp)
     (pyvenv-tracking-mode 1)
     (pyvenv-mode 1))
 #+end_src
+
+* Wishlist
++ A good tmux-like workflow for running multiple async compilation jobs, with an
+  easy way to kill and restart each
++ A prettier eshell, with colors from git
+  - Setting TERM correctly, and getting rid of "not fully functional" warnings
++ Think about efficient editing motions with a cheatsheet that translates from
+  vim
++ Enable proxy for a single Eshell instance
++ Convert many of my shell methods to eshell
 
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an

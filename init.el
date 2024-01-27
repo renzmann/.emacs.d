@@ -478,10 +478,6 @@
 (global-set-key (kbd "C-c j") #'toggle-window-split)
 ;; =C-c j= Toggle window split:1 ends here
 
-;; [[file:README.org::*=C-c k= kill all but one space][=C-c k= kill all but one space:1]]
-(global-set-key (kbd "C-c k") #'just-one-space)
-;; =C-c k= kill all but one space:1 ends here
-
 ;; [[file:README.org::*=C-c q= replace regexp][=C-c q= replace regexp:1]]
 (global-set-key (kbd "C-c q") #'replace-regexp)
 ;; =C-c q= replace regexp:1 ends here
@@ -873,6 +869,7 @@ select."
   :bind (("C-x p a" . pyvenv-activate)
          ("C-x p u" . pyvenv-deactivate))
   :config
+  (put 'pyvenv-mode 'safe-local-variable #'stringp)
   (pyvenv-tracking-mode 1)
   (pyvenv-mode 1))
 ;; =pyvenv=:1 ends here
