@@ -1433,18 +1433,19 @@ options in question.
 #+end_src
 
 ** Completion in the minibuffer and at point
-By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.
-I'd much prefer to use the easier and more intuitive =TAB=.
+By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for
+~completion-at-point~.  I'd much prefer to use the easier and more intuitive
+=TAB=.
 
 #+begin_src emacs-lisp
   (setq tab-always-indent 'complete)
 #+end_src
 
-Something I might try is to use =icomplete= along with =icomplete-in-buffer= to get
-something like a little window that updates as I type.  It seems a little wonky,
-since TAB-completion will still cause the \ast{}Completions\ast{} buffer to pop up, even
-while Icomplete is active, unless we set =completion-auto-help= to =lazy=; and even
-then it will still come up on the second TAB press.
+Something I once tried is to use =icomplete= along with =icomplete-in-buffer= to
+get something like a little window that updates as I type.  It seems a little
+wonky, since TAB-completion will still cause the \ast{}Completions\ast{} buffer
+to pop up, even while Icomplete is active, unless we set =completion-auto-help=
+to =lazy=; and even then it will still come up on the second TAB press.
 
 #+begin_src emacs-lisp :tangle no
   (setq icomplete-in-buffer t)
@@ -1453,10 +1454,11 @@ then it will still come up on the second TAB press.
 #+end_src
 
 In the case that we need to enter a new file name, but =fido= is still showing a
-completion candidate, you have to use =C-d= to refuse completion and take whatever
-is currently in the prompt.  For instance, if we are editing a file =hello.py=,
-and then use =C-x C-f hell.py=, the minibuffer will complete =hell.py= into =hello.py=
-if we use =RET=, and will open a new buffer for =hell.py= if we use =C-d=.
+completion candidate, you have to use =C-d= to refuse completion and take
+whatever is currently in the prompt.  For instance, if we are editing a file
+=hello.py=, and then use =C-x C-f hell.py=, the minibuffer will complete
+=hell.py= into =hello.py= if we use =RET=, and will open a new buffer for
+=hell.py= if we use =C-d=.
 
 ** Corfu
 For in-buffer pop-up completion.
@@ -1477,6 +1479,17 @@ For fast minibuffer completion.
   (use-package vertico
     :config
     (vertico-mode))
+#+end_src
+
+** Marginalia
+For more details when displaying candidates with ~vertico~
+
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :bind
+    (:map minibuffer-local-map ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
 #+end_src
 
 * Language-specific major modes

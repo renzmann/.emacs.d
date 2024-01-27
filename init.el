@@ -570,6 +570,14 @@
   (vertico-mode))
 ;; Vertico:1 ends here
 
+;; [[file:README.org::*Marginalia][Marginalia:1]]
+(use-package marginalia
+  :bind
+  (:map minibuffer-local-map ("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
+;; Marginalia:1 ends here
+
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
   ;; (setq indent-tabs-mode t)
