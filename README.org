@@ -1391,12 +1391,15 @@ though, we first need to oil the engine with an enhanced /completion style/
 ** Completion style
 For both the minibuffer and ~completion-at-point~, I use the same /completion
 style/.  Completion style is the method of assigning completion candidates to a
-given input string.  ~flex~ is the built-in "fuzzy" completion style, familiar to
-us from symbol completion in IDEs and VSCode's command palette.  ~basic~ functions
-much like your default TAB-complete at a Bash shell.
+given input string.  ~flex~ is the built-in "fuzzy" completion style, familiar
+to us from symbol completion in IDEs and VSCode's command palette.  ~basic~
+functions much like your default TAB-complete at a Bash shell.
 
 #+begin_src emacs-lisp
-  (setq completion-styles '(flex basic partial-completion emacs22))
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless flex basic))
+    (completion-category-overrides '((file (flex styles basic partial-completion)))))
 #+end_src
 
 ** Nicer Display and Behavior of ~*Completions*~

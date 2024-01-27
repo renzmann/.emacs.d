@@ -530,7 +530,10 @@
 ;; Super bindings:1 ends here
 
 ;; [[file:README.org::*Completion style][Completion style:1]]
-(setq completion-styles '(flex basic partial-completion emacs22))
+(use-package orderless
+  :custom
+  (completion-styles '(orderless flex basic))
+  (completion-category-overrides '((file (flex styles basic partial-completion)))))
 ;; Completion style:1 ends here
 
 ;; [[file:README.org::*Nicer Display and Behavior of ~*Completions*~][Nicer Display and Behavior of ~*Completions*~:1]]
