@@ -827,9 +827,7 @@ select."
   (require 'eglot)
   (setq python-check-command "ruff")
   (add-hook 'python-mode-hook #'flymake-mode)
-  (add-hook 'python-ts-mode-hook #'flymake-mode)
-  ;; (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) "ruff-lsp"))
-  )
+  (add-hook 'python-ts-mode-hook #'flymake-mode))
 ;; Python check with "ruff":1 ends here
 
 ;; [[file:README.org::*Make check command and virtualenv root safe for .dir-locals.el][Make check command and virtualenv root safe for .dir-locals.el:2]]
@@ -864,6 +862,15 @@ select."
 (use-package csv-mode
   :mode "\\.csv\\'")
 ;; csv-mode:1 ends here
+
+;; [[file:README.org::*Eshell][Eshell:1]]
+(use-package eshell
+  :custom
+  (eshell-visual-subcommands '(("git" "log" "diff" "show" "status")
+                               ("micromamba" "install" "update" "upgrade")
+                               ("mamba" "install" "update" "upgrade")
+                               ("poetry" "install" "update" "upgrade"))))
+;; Eshell:1 ends here
 
 ;; [[file:README.org::*Visual fill column][Visual fill column:1]]
 (use-package visual-fill-column

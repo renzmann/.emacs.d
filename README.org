@@ -4,56 +4,25 @@
 #+OPTIONS: toc:1 num:nil
 #+STARTUP: overview indent
 
-Want to use it? Go ahead!
+Want to use it? Go ahead!  You can give it a try without affecting any existing
+configuration like this:
 
 #+begin_src shell :eval never
-  git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
+  git clone https://github.com/renzmann/.emacs.d ~/renzmann.emacs.d
+  emacs --init-directory=~/renzmann.emacs.d
 #+end_src
 
-All external dependency sources are explicitly included under the ~elpa/~
-directory, meaning it's as simple as "clone-n-go".  Opening this document under
-my configuration looks like so:
-
-#+attr_html: :width 800px
-[[https://raw.githubusercontent.com/renzmann/.emacs.d/e93d5ea85896745ed5e79fa725278cd37f09f727/img/emacs-screen.png]]
-
-If you prefer a prettier reading experience, check out this same document weaved
-into [[https://robbmann.io/emacsd/][my website.]]  Or, if you're already reading this on my website, check out
-the [[https://github.com/renzmann/.emacs.d/][source code on GitHub]].
-
-* Goals
-If I had to sum up the theme of my configuration, it would be "vanilla extract,"
-because in only a few instances do I change the overt behavior of Emacs.  I want
-a configuration that fits my hands in such a way that I remain comfortable using
-=emacs -Q= with very little disruption to my normal muscle memory and workflow.
-
-Aside from these aesthetic and philosophical reasons, there are practical
-concerns this configuration needs to address.  I spend my time on Windows for
-games, macOS or Linux with remote machines for work, and desktop Linux for
-personal projects like building my website.  Some of these situations enforce a
-very slow internet connection and tight security measures for Tramp, which can
-cause modern, "live updating" features like =corfu= and =consult= to hang Emacs.
-In other cases, I have no access to the outside internet at all (so no ELPA or
-MELPA updates).  Hence, keeping only a small number of external dependencies
-under =elpa/= maximizes portability and maintainability between systems.
-
-Altogether, I wind up using Emacs 29+ on all three of the major platforms, in
-both GUI and TTY mode.  So this config is designed to work equally well for:
-
-|----------+----------+-----+-----------+-------|
-| platform | terminal | GUI | ssh + TTY | Tramp |
-|----------+----------+-----+-----------+-------|
-| Linux    | ✅       | ✅  | ✅        | ✅    |
-| macOS    | ✅       | ✅  | ✅        | ✅    |
-| Windows  | ❌       | ✅  | ❌        | ✅    |
-|----------+----------+-----+-----------+-------|
+All external dependencies, except for Fonts, are explicitly included under the
+~elpa/~ directory, meaning it's as simple as "clone-n-go".  Getting a font you
+like is left to you.
 
 * Notable Features
-You may notice that despite the laudable goal of intended minimalism, this
-document is is still quite long, as I have found many (ever increasing) quirky
-behaviors of Emacs that I tweak.  Most of my time is spent in Org, SQL, Python,
-Bash, YAML, TOML, and Markdown, so the majority of configuration lies around
-these sections.
+This configuration is largely based on tools designed to integrate well with
+Emacs 29+'s built-in APIs.  See sections for "Tools" and "Text completion" for
+up-to-date commentary on what I'm choosing lately that fits this description.
+
+Most of my time is spent in Org, SQL, Python, Bash, YAML, TOML, and Markdown, so
+the majority of configuration lies around these sections.
 
 I do make changes to things that I feel "should have been included."  Some
 examples of this are:
@@ -1878,10 +1847,15 @@ programs exist is a small time saver.
     (require 'eglot)
     (setq python-check-command "ruff")
     (add-hook 'python-mode-hook #'flymake-mode)
-    (add-hook 'python-ts-mode-hook #'flymake-mode)
-    ;; (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) "ruff-lsp"))
-    )
+    (add-hook 'python-ts-mode-hook #'flymake-mode))
 #+end_src
+
+I do not run =ruff format= on save for one reason: If I am patching code in a
+project that is not currently formatted using the ~black~ (~ruff format~) style,
+I do not want to introduce formatting changes alongside any logic changes I'm
+suggesting.  I'd rather issue a formatting command through a project-level shell
+command or =python-check= on-demand, rather than disable formatting after
+realizing it was a problem.
 
 *** Fix Microsoft Windows Issues
 At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The
@@ -1910,10 +1884,6 @@ make sure that setting the virtualenv root is marked as safe.
   (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
   (put 'python-interpreter 'safe-local-variable #'stringp)
 #+end_src
-
-*** Emacs Jupyter?
-Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with
-Jupyter kernels from org-mode.
 
 ** Markdown
 When installing =markdown= through Anaconda, the executable is actually called
@@ -1957,6 +1927,15 @@ Handy for viewing data quickly.
     :mode "\\.csv\\'")
 #+end_src
 
+* Eshell
+#+begin_src emacs-lisp
+  (use-package eshell
+    :custom
+    (eshell-visual-subcommands '(("git" "log" "diff" "show" "status")
+                                 ("micromamba" "install" "update" "upgrade")
+                                 ("mamba" "install" "update" "upgrade")
+                                 ("poetry" "install" "update" "upgrade"))))
+#+end_src
 * Tool configuration
 These are tweaks for third party packages.
 
@@ -2031,6 +2010,7 @@ include.
   vim
 + Enable proxy for a single Eshell instance
 + Convert many of my shell methods to eshell
++ Eshell commands for creating/managing virtualenvs
 
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an
