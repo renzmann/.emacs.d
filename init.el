@@ -38,6 +38,12 @@
               (cons renz/proxy-login
                     (base64-encode-string
                      (concat renz/proxy-login ":" (password-read "Proxy password: "))))))))))
+
+(defun renz/disable-proxy ()
+  (interactive)
+  "Turn off HTTP proxy."
+  (setq url-proxy-services nil)
+  (setq url-http-proxy-basic-auth-storage nil))
 ;; Proxy settings:1 ends here
 
 ;; [[file:README.org::*Packages][Packages:1]]

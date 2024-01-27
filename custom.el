@@ -6,11 +6,14 @@
  '(column-number-mode t)
  '(mode-line-in-non-selected-windows t)
  '(package-selected-packages
-   '(caddyfile-mode vertico corfu ef-themes treesit-auto pyvenv groovy-mode clojure-ts-mode awk-ts-mode dart-ts-mode powershell visual-fill-column sql-indent package-lint markdown-mode exec-path-from-shell csv-mode))
+   '(marginalia caddyfile-mode vertico corfu ef-themes treesit-auto pyvenv groovy-mode clojure-ts-mode awk-ts-mode dart-ts-mode powershell visual-fill-column sql-indent package-lint markdown-mode exec-path-from-shell csv-mode))
  '(package-vc-selected-packages
    '((treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
  '(safe-local-variable-values
-   '((vc-prepare-patches-separately)
+   '((pyvenv-activate . "/Users/a834991/repos/llm-core/.venv/")
+     (pyvenv-activate . "/Users/a834991/repos/growth-gpt/.venv/")
+     (pyvenv-activate . "/Users/a834991/repos/hello-app/.venv/")
+     (vc-prepare-patches-separately)
      (diff-add-log-use-relative-names . t)
      (vc-git-annotate-switches . "-w"))))
 (custom-set-faces
