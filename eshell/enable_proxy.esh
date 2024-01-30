@@ -1,5 +1,7 @@
+setq proxy_host $(read-string "Proxy host: ")
+setq proxy_port $(read-string "Proxy port: ")
 setq mypass { urlencode $(read-passwd "Proxy password: ") } > /dev/null
-export HTTP_PROXY='http://'$USER':'$mypass'@proxy.aetna.com:9119/'
+export HTTP_PROXY='http://'$USER':'$mypass'@'$proxy_host:$proxy_port'/'
 export HTTPS_PROXY=$HTTP_PROXY
 export http_proxy=$HTTP_PROXY
 export https_proxy=$HTTP_PROXY
