@@ -870,7 +870,7 @@ select."
 ;; [[file:README.org::*Eshell][Eshell:1]]
 (use-package eshell
   :custom
-  (eshell-visual-subcommands '(("git" "log" "diff" "show" "status")
+  (eshell-visual-subcommands '(("git" "log" "diff" "show")
                                ("micromamba" "install" "update" "upgrade")
                                ("mamba" "install" "update" "upgrade")
                                ("poetry" "install" "update" "upgrade")
