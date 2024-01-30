@@ -484,6 +484,10 @@
 (global-set-key (kbd "C-c j") #'toggle-window-split)
 ;; =C-c j= Toggle window split:1 ends here
 
+;; [[file:README.org::*=C-c k= kill all but one space][=C-c k= kill all but one space:1]]
+(global-set-key (kbd "C-c k") #'bury-buffer)
+;; =C-c k= kill all but one space:1 ends here
+
 ;; [[file:README.org::*=C-c q= replace regexp][=C-c q= replace regexp:1]]
 (global-set-key (kbd "C-c q") #'replace-regexp)
 ;; =C-c q= replace regexp:1 ends here
@@ -533,7 +537,7 @@
 (use-package orderless
   :custom
   (completion-styles '(orderless flex basic))
-  (completion-category-overrides '((file (flex styles basic partial-completion)))))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 ;; Completion style:1 ends here
 
 ;; [[file:README.org::*Nicer Display and Behavior of ~*Completions*~][Nicer Display and Behavior of ~*Completions*~:1]]
@@ -869,7 +873,8 @@ select."
   (eshell-visual-subcommands '(("git" "log" "diff" "show" "status")
                                ("micromamba" "install" "update" "upgrade")
                                ("mamba" "install" "update" "upgrade")
-                               ("poetry" "install" "update" "upgrade"))))
+                               ("poetry" "install" "update" "upgrade")
+                               ("docker" "build"))))
 ;; Eshell:1 ends here
 
 ;; [[file:README.org::*Visual fill column][Visual fill column:1]]

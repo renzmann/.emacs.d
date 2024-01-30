@@ -1267,10 +1267,11 @@ completion, with just a little help from =xref-find-definitions=.
 
 *** =C-c k= kill all but one space
 
-I used to bind this before I knew about =M-SPC= (~cycle-spacing~):
+I used to bind this to ~just-one-space~ before I knew about =M-SPC=
+(~cycle-spacing~).  Now I use it to bury buffers instead of killing them.
 
-#+begin_src emacs-lisp :tangle no
-  (global-set-key (kbd "C-c k") #'just-one-space)
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c k") #'bury-buffer)
 #+end_src
 
 *** =C-c q= replace regexp
@@ -1368,7 +1369,7 @@ functions much like your default TAB-complete at a Bash shell.
   (use-package orderless
     :custom
     (completion-styles '(orderless flex basic))
-    (completion-category-overrides '((file (flex styles basic partial-completion)))))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
 ** Nicer Display and Behavior of ~*Completions*~
@@ -1934,7 +1935,8 @@ Handy for viewing data quickly.
     (eshell-visual-subcommands '(("git" "log" "diff" "show" "status")
                                  ("micromamba" "install" "update" "upgrade")
                                  ("mamba" "install" "update" "upgrade")
-                                 ("poetry" "install" "update" "upgrade"))))
+                                 ("poetry" "install" "update" "upgrade")
+                                 ("docker" "build"))))
 #+end_src
 * Tool configuration
 These are tweaks for third party packages.
@@ -2004,13 +2006,14 @@ include.
 * Wishlist
 + A good tmux-like workflow for running multiple async compilation jobs, with an
   easy way to kill and restart each
-+ A prettier eshell, with colors from git
-  - Setting TERM correctly, and getting rid of "not fully functional" warnings
 + Think about efficient editing motions with a cheatsheet that translates from
   vim
 + Enable proxy for a single Eshell instance
 + Convert many of my shell methods to eshell
 + Eshell commands for creating/managing virtualenvs
++ Remove my keybinding section and put it under a =use-package emacs= block
++ Replicate my bash PS1 for =eshell-prompt-function= and =eshell-prompt-regex=
+  - see [[https://github.com/zwild/eshell-prompt-extras/blob/master/eshell-prompt-extras.el][eshell-prompt-extras]] for examples
 
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an
