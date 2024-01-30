@@ -26,7 +26,7 @@ org/
 history
 diary
 tutorial/
-eshell/
+eshell/lastdir
 url/
 semanticdb/
 ede-projects.el
