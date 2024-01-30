@@ -1,0 +1,5 @@
+setq mypass { urlencode $(read-passwd "Proxy password: ") } > /dev/null
+export HTTP_PROXY='http://'$USER':'$mypass'@proxy.aetna.com:9119/'
+export HTTPS_PROXY=$HTTP_PROXY
+export http_proxy=$HTTP_PROXY
+export https_proxy=$HTTP_PROXY
