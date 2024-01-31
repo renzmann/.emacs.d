@@ -1,1 +1,3 @@
-alias evi eshell-exec-visual $*
+alias glogin gcloud auth application-default login && gcloud auth login
+alias urldecode python -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))" $1
+alias urlencode python -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]))" $1
