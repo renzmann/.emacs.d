@@ -785,9 +785,13 @@ Jumps to an Org src block from tangled code."
 (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 ;; BigQuery ~sql~ Blocks in Org-Babel:1 ends here
 
-;; [[file:README.org::*Python][Python:1]]
+;; [[file:README.org::*Pipfiles are TOML][Pipfiles are TOML:1]]
 (add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
-;; Python:1 ends here
+;; Pipfiles are TOML:1 ends here
+
+;; [[file:README.org::*Ignore =.venv= in VC operations][Ignore =.venv= in VC operations:1]]
+(add-to-list 'vc-directory-exclusion-list ".venv")
+;; Ignore =.venv= in VC operations:1 ends here
 
 ;; [[file:README.org::*Flatten items in =imenu=][Flatten items in =imenu=:1]]
 (add-hook 'python-mode-hook

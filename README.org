@@ -1756,8 +1756,15 @@ When running BigQuery from a =*compilation*= buffer, it would be nice if I could
 error markers to jump directly to the issue.
 
 ** Python
+*** Pipfiles are TOML
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
+#+end_src
+
+*** Ignore =.venv= in VC operations
+
+#+begin_src emacs-lisp
+  (add-to-list 'vc-directory-exclusion-list ".venv")
 #+end_src
 
 *** Flatten items in =imenu=
@@ -2014,6 +2021,7 @@ include.
 + Remove my keybinding section and put it under a =use-package emacs= block
 + Replicate my bash PS1 for =eshell-prompt-function= and =eshell-prompt-regex=
   - see [[https://github.com/zwild/eshell-prompt-extras/blob/master/eshell-prompt-extras.el][eshell-prompt-extras]] for examples
++ In eshell, a way to search history through completing-read (vertico minibuffer completion)
 
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an
