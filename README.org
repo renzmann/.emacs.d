@@ -1999,7 +1999,7 @@ so it works equally well on macOS, Linux, Windows native, and MinGW.  On top of
 all this, it is only ~600 lines of code, so it is a very small dependency to
 include.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package pyvenv
     ;; Overrides `mark-page'
     :bind (("C-x p a" . pyvenv-activate)
@@ -2022,6 +2022,7 @@ include.
 + Replicate my bash PS1 for =eshell-prompt-function= and =eshell-prompt-regex=
   - see [[https://github.com/zwild/eshell-prompt-extras/blob/master/eshell-prompt-extras.el][eshell-prompt-extras]] for examples
 + In eshell, a way to search history through completing-read (vertico minibuffer completion)
++ Is an LSP-less python experience good or desirable?
 
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an

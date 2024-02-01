@@ -896,16 +896,5 @@ select."
   (global-treesit-auto-mode))
 ;; =treesit-auto=: Automatically Using TreeSitter Modes:1 ends here
 
-;; [[file:README.org::*=pyvenv=][=pyvenv=:1]]
-(use-package pyvenv
-  ;; Overrides `mark-page'
-  :bind (("C-x p a" . pyvenv-activate)
-         ("C-x p u" . pyvenv-deactivate))
-  :config
-  (put 'pyvenv-mode 'safe-local-variable #'stringp)
-  (pyvenv-tracking-mode 1)
-  (pyvenv-mode 1))
-;; =pyvenv=:1 ends here
-
 (provide 'init.el)
 ;;; init.el ends here
