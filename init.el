@@ -435,17 +435,6 @@
 (global-set-key (kbd "C-c c f") #'renz/insert-current-file)
 ;; =C-c c= Insert current dir/file at point:1 ends here
 
-;; [[file:README.org::*=C-c d= Navigating to symbols using old-school TAGS][=C-c d= Navigating to symbols using old-school TAGS:2]]
-(defun renz/find-tag ()
-  "Use `completing-read' to navigate to a tag."
-  (interactive)
-  (require 'etags)
-  (tags-completion-table)
-  (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
-
-(global-set-key (kbd "C-c d") #'renz/find-tag)
-;; =C-c d= Navigating to symbols using old-school TAGS:2 ends here
-
 ;; [[file:README.org::*=C-c f= find file at point (ffap)][=C-c f= find file at point (ffap):1]]
 (global-set-key (kbd "C-c f") #'ffap)
 ;; =C-c f= find file at point (ffap):1 ends here

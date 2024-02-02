@@ -1119,6 +1119,30 @@ Host *
      ServerAliveInterval 60
 #+end_example
 
+** TAGS
+Before the whole language server revolution, we had TAGS files for caching the
+location of symbol definitions.  =etags= comes with Emacs, and combining some
+clever use of =find= with it can render a pretty good symbol search experience.
+To generate the TAGS file, I usually have a =TAGS= recipe that looks something
+similar to this in each project's =Makefile=:
+
+#+begin_src shell :tangle no :results none
+  find . -type d -name ".venv" -prune \
+      -o -type d -name ".ipynb_checkpoints" -prune \
+      -o -type d -name ".node_modules" -prune \
+      -o -type d -name "elpa" -prune \
+      -o -type f -name "*.py" -print \
+      -o -type f -name "*.sql" -print \
+      -o -type f -name "*.el" -print \
+      | etags -
+#+end_src
+
+Then, =M-x project-compile RET make TAGS= builds a tags table.  At which point,
+I can use =M-x visit-tags-table RET RET= to build a list of symbols I can
+navigate to with completion.  The built-in ~xref~ works with the tags table, so
+commands like =xref-find-definitions= will offer jump-to-definition behavior in
+tandem with =completing-read=.
+
 * Keybindings
 
 ** Expanded/better defaults
@@ -1184,40 +1208,6 @@ probably using it in a ~:bind~ statement with ~use-package~ somewhere else.
 
   (global-set-key (kbd "C-c c d") #'renz/insert-current-dir)
   (global-set-key (kbd "C-c c f") #'renz/insert-current-file)
-#+end_src
-
-*** =C-c d= Navigating to symbols using old-school TAGS
-
-Before the whole language server revolution, we had TAGS files for caching the
-location of symbol definitions.  =etags= comes with Emacs, and combining some
-clever use of =find= with it can render a pretty good symbol search experience.
-To generate the TAGS file, I usually have a =TAGS= recipe that looks something
-similar to this in each project's =Makefile=:
-
-#+begin_src shell
-  find . -type d -name ".venv" -prune \
-      -o -type d -name ".ipynb_checkpoints" -prune \
-      -o -type d -name ".node_modules" -prune \
-      -o -type d -name "elpa" -prune \
-      -o -type f -name "*.py" -print \
-      -o -type f -name "*.sql" -print \
-      -o -type f -name "*.el" -print \
-      | etags -
-#+end_src
-
-Then, =M-x project-compile RET make TAGS= builds a tags table.  At which point, I
-can use =tags-completion-table= to build a list of symbols I can navigate to with
-completion, with just a little help from =xref-find-definitions=.
-
-#+begin_src emacs-lisp
-  (defun renz/find-tag ()
-    "Use `completing-read' to navigate to a tag."
-    (interactive)
-    (require 'etags)
-    (tags-completion-table)
-    (xref-find-definitions (completing-read "Find tag: " tags-completion-table)))
-
-  (global-set-key (kbd "C-c d") #'renz/find-tag)
 #+end_src
 
 *** =C-c f= find file at point (ffap)
@@ -1751,10 +1741,6 @@ with it.
 This also typically requires =#+OPTIONS: ^:nil= at the top of the Org document to
 stop underscores from messing up how column names are displayed.
 
-*** TODO BigQuery exception markers
-When running BigQuery from a =*compilation*= buffer, it would be nice if I could get
-error markers to jump directly to the issue.
-
 ** Python
 *** Pipfiles are TOML
 #+begin_src emacs-lisp
@@ -2023,7 +2009,8 @@ include.
   - see [[https://github.com/zwild/eshell-prompt-extras/blob/master/eshell-prompt-extras.el][eshell-prompt-extras]] for examples
 + In eshell, a way to search history through completing-read (vertico minibuffer completion)
 + Is an LSP-less python experience good or desirable?
-
++ When running BigQuery from a =*compilation*= buffer, it would be nice if I
+  could get error markers to jump directly to the issue
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an
 Emacs package.  So that's it, let's gracefully finish tangling everything:
