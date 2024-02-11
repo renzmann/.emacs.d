@@ -26,7 +26,7 @@ org/
 history
 diary
 tutorial/
-eshell/
+eshell/lastdir
 url/
 semanticdb/
 ede-projects.el
@@ -66,6 +66,7 @@ site-lisp/bigquery-mode
 site-lisp/python-venv
 site-lisp/treesit-auto
 org-persist/
+token
 
 # VC Packages
 elpa/treesit-auto

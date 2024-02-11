@@ -38,6 +38,12 @@
               (cons renz/proxy-login
                     (base64-encode-string
                      (concat renz/proxy-login ":" (password-read "Proxy password: "))))))))))
+
+(defun renz/disable-proxy ()
+  (interactive)
+  "Turn off HTTP proxy."
+  (setq url-proxy-services nil)
+  (setq url-http-proxy-basic-auth-storage nil))
 ;; Proxy settings:1 ends here
 
 ;; [[file:README.org::*Packages][Packages:1]]
@@ -483,7 +489,7 @@
 ;; =C-c j= Toggle window split:1 ends here
 
 ;; [[file:README.org::*=C-c k= kill all but one space][=C-c k= kill all but one space:1]]
-(global-set-key (kbd "C-c k") #'just-one-space)
+(global-set-key (kbd "C-c k") #'bury-buffer)
 ;; =C-c k= kill all but one space:1 ends here
 
 ;; [[file:README.org::*=C-c q= replace regexp][=C-c q= replace regexp:1]]
@@ -532,7 +538,10 @@
 ;; Super bindings:1 ends here
 
 ;; [[file:README.org::*Completion style][Completion style:1]]
-(setq completion-styles '(flex basic partial-completion emacs22))
+(use-package orderless
+  :custom
+  (completion-styles '(orderless flex basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
 ;; Completion style:1 ends here
 
 ;; [[file:README.org::*Nicer Display and Behavior of ~*Completions*~][Nicer Display and Behavior of ~*Completions*~:1]]
@@ -571,6 +580,14 @@
   :config
   (vertico-mode))
 ;; Vertico:1 ends here
+
+;; [[file:README.org::*Marginalia][Marginalia:1]]
+(use-package marginalia
+  :bind
+  (:map minibuffer-local-map ("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
+;; Marginalia:1 ends here
 
 ;; [[file:README.org::*Shell (Bash, sh, ...)][Shell (Bash, sh, ...):1]]
 (defun renz/sh-indentation ()
@@ -772,9 +789,13 @@ Jumps to an Org src block from tangled code."
 (advice-add 'org-babel-execute:sql :around #'org-babel-execute:bq)
 ;; BigQuery ~sql~ Blocks in Org-Babel:1 ends here
 
-;; [[file:README.org::*Python][Python:1]]
+;; [[file:README.org::*Pipfiles are TOML][Pipfiles are TOML:1]]
 (add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
-;; Python:1 ends here
+;; Pipfiles are TOML:1 ends here
+
+;; [[file:README.org::*Ignore =.venv= in VC operations][Ignore =.venv= in VC operations:1]]
+(add-to-list 'vc-directory-exclusion-list ".venv")
+;; Ignore =.venv= in VC operations:1 ends here
 
 ;; [[file:README.org::*Flatten items in =imenu=][Flatten items in =imenu=:1]]
 (add-hook 'python-mode-hook
@@ -818,9 +839,7 @@ select."
   (require 'eglot)
   (setq python-check-command "ruff")
   (add-hook 'python-mode-hook #'flymake-mode)
-  (add-hook 'python-ts-mode-hook #'flymake-mode)
-  ;; (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) "ruff-lsp"))
-  )
+  (add-hook 'python-ts-mode-hook #'flymake-mode))
 ;; Python check with "ruff":1 ends here
 
 ;; [[file:README.org::*Make check command and virtualenv root safe for .dir-locals.el][Make check command and virtualenv root safe for .dir-locals.el:2]]
@@ -856,6 +875,16 @@ select."
   :mode "\\.csv\\'")
 ;; csv-mode:1 ends here
 
+;; [[file:README.org::*Eshell][Eshell:1]]
+(use-package eshell
+  :custom
+  (eshell-visual-subcommands '(("git" "log" "diff" "show")
+                               ("micromamba" "install" "update" "upgrade")
+                               ("mamba" "install" "update" "upgrade")
+                               ("poetry" "install" "update" "upgrade")
+                               ("docker" "build"))))
+;; Eshell:1 ends here
+
 ;; [[file:README.org::*Visual fill column][Visual fill column:1]]
 (use-package visual-fill-column
   :config
@@ -870,16 +899,6 @@ select."
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 ;; =treesit-auto=: Automatically Using TreeSitter Modes:1 ends here
-
-;; [[file:README.org::*=pyvenv=][=pyvenv=:1]]
-(use-package pyvenv
-  ;; Overrides `mark-page'
-  :bind (("C-x p a" . pyvenv-activate)
-         ("C-x p u" . pyvenv-deactivate))
-  :config
-  (pyvenv-tracking-mode 1)
-  (pyvenv-mode 1))
-;; =pyvenv=:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here

@@ -4,56 +4,25 @@
 #+OPTIONS: toc:1 num:nil
 #+STARTUP: overview indent
 
-Want to use it? Go ahead!
+Want to use it? Go ahead!  You can give it a try without affecting any existing
+configuration like this:
 
 #+begin_src shell :eval never
-  git clone https://github.com/renzmann/.emacs.d ~/.emacs.d
+  git clone https://github.com/renzmann/.emacs.d ~/renzmann.emacs.d
+  emacs --init-directory=~/renzmann.emacs.d
 #+end_src
 
-All external dependency sources are explicitly included under the ~elpa/~
-directory, meaning it's as simple as "clone-n-go".  Opening this document under
-my configuration looks like so:
-
-#+attr_html: :width 800px
-[[https://raw.githubusercontent.com/renzmann/.emacs.d/e93d5ea85896745ed5e79fa725278cd37f09f727/img/emacs-screen.png]]
-
-If you prefer a prettier reading experience, check out this same document weaved
-into [[https://robbmann.io/emacsd/][my website.]]  Or, if you're already reading this on my website, check out
-the [[https://github.com/renzmann/.emacs.d/][source code on GitHub]].
-
-* Goals
-If I had to sum up the theme of my configuration, it would be "vanilla extract,"
-because in only a few instances do I change the overt behavior of Emacs.  I want
-a configuration that fits my hands in such a way that I remain comfortable using
-=emacs -Q= with very little disruption to my normal muscle memory and workflow.
-
-Aside from these aesthetic and philosophical reasons, there are practical
-concerns this configuration needs to address.  I spend my time on Windows for
-games, macOS or Linux with remote machines for work, and desktop Linux for
-personal projects like building my website.  Some of these situations enforce a
-very slow internet connection and tight security measures for Tramp, which can
-cause modern, "live updating" features like =corfu= and =consult= to hang Emacs.
-In other cases, I have no access to the outside internet at all (so no ELPA or
-MELPA updates).  Hence, keeping only a small number of external dependencies
-under =elpa/= maximizes portability and maintainability between systems.
-
-Altogether, I wind up using Emacs 29+ on all three of the major platforms, in
-both GUI and TTY mode.  So this config is designed to work equally well for:
-
-|----------+----------+-----+-----------+-------|
-| platform | terminal | GUI | ssh + TTY | Tramp |
-|----------+----------+-----+-----------+-------|
-| Linux    | ✅       | ✅  | ✅        | ✅    |
-| macOS    | ✅       | ✅  | ✅        | ✅    |
-| Windows  | ❌       | ✅  | ❌        | ✅    |
-|----------+----------+-----+-----------+-------|
+All external dependencies, except for Fonts, are explicitly included under the
+~elpa/~ directory, meaning it's as simple as "clone-n-go".  Getting a font you
+like is left to you.
 
 * Notable Features
-You may notice that despite the laudable goal of intended minimalism, this
-document is is still quite long, as I have found many (ever increasing) quirky
-behaviors of Emacs that I tweak.  Most of my time is spent in Org, SQL, Python,
-Bash, YAML, TOML, and Markdown, so the majority of configuration lies around
-these sections.
+This configuration is largely based on tools designed to integrate well with
+Emacs 29+'s built-in APIs.  See sections for "Tools" and "Text completion" for
+up-to-date commentary on what I'm choosing lately that fits this description.
+
+Most of my time is spent in Org, SQL, Python, Bash, YAML, TOML, and Markdown, so
+the majority of configuration lies around these sections.
 
 I do make changes to things that I feel "should have been included."  Some
 examples of this are:
@@ -215,6 +184,12 @@ grab the password interactively when such a file exists.
                 (cons renz/proxy-login
                       (base64-encode-string
                        (concat renz/proxy-login ":" (password-read "Proxy password: "))))))))))
+
+  (defun renz/disable-proxy ()
+    (interactive)
+    "Turn off HTTP proxy."
+    (setq url-proxy-services nil)
+    (setq url-http-proxy-basic-auth-storage nil))
 #+end_src
 
 * Packages
@@ -1296,8 +1271,11 @@ completion, with just a little help from =xref-find-definitions=.
 
 *** =C-c k= kill all but one space
 
+I used to bind this to ~just-one-space~ before I knew about =M-SPC=
+(~cycle-spacing~).  Now I use it to bury buffers instead of killing them.
+
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c k") #'just-one-space)
+  (global-set-key (kbd "C-c k") #'bury-buffer)
 #+end_src
 
 *** =C-c q= replace regexp
@@ -1387,12 +1365,15 @@ though, we first need to oil the engine with an enhanced /completion style/
 ** Completion style
 For both the minibuffer and ~completion-at-point~, I use the same /completion
 style/.  Completion style is the method of assigning completion candidates to a
-given input string.  ~flex~ is the built-in "fuzzy" completion style, familiar to
-us from symbol completion in IDEs and VSCode's command palette.  ~basic~ functions
-much like your default TAB-complete at a Bash shell.
+given input string.  ~flex~ is the built-in "fuzzy" completion style, familiar
+to us from symbol completion in IDEs and VSCode's command palette.  ~basic~
+functions much like your default TAB-complete at a Bash shell.
 
 #+begin_src emacs-lisp
-  (setq completion-styles '(flex basic partial-completion emacs22))
+  (use-package orderless
+    :custom
+    (completion-styles '(orderless flex basic))
+    (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
 ** Nicer Display and Behavior of ~*Completions*~
@@ -1429,18 +1410,19 @@ options in question.
 #+end_src
 
 ** Completion in the minibuffer and at point
-By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for ~completion-at-point~.
-I'd much prefer to use the easier and more intuitive =TAB=.
+By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for
+~completion-at-point~.  I'd much prefer to use the easier and more intuitive
+=TAB=.
 
 #+begin_src emacs-lisp
   (setq tab-always-indent 'complete)
 #+end_src
 
-Something I might try is to use =icomplete= along with =icomplete-in-buffer= to get
-something like a little window that updates as I type.  It seems a little wonky,
-since TAB-completion will still cause the \ast{}Completions\ast{} buffer to pop up, even
-while Icomplete is active, unless we set =completion-auto-help= to =lazy=; and even
-then it will still come up on the second TAB press.
+Something I once tried is to use =icomplete= along with =icomplete-in-buffer= to
+get something like a little window that updates as I type.  It seems a little
+wonky, since TAB-completion will still cause the \ast{}Completions\ast{} buffer
+to pop up, even while Icomplete is active, unless we set =completion-auto-help=
+to =lazy=; and even then it will still come up on the second TAB press.
 
 #+begin_src emacs-lisp :tangle no
   (setq icomplete-in-buffer t)
@@ -1449,10 +1431,11 @@ then it will still come up on the second TAB press.
 #+end_src
 
 In the case that we need to enter a new file name, but =fido= is still showing a
-completion candidate, you have to use =C-d= to refuse completion and take whatever
-is currently in the prompt.  For instance, if we are editing a file =hello.py=,
-and then use =C-x C-f hell.py=, the minibuffer will complete =hell.py= into =hello.py=
-if we use =RET=, and will open a new buffer for =hell.py= if we use =C-d=.
+completion candidate, you have to use =C-d= to refuse completion and take
+whatever is currently in the prompt.  For instance, if we are editing a file
+=hello.py=, and then use =C-x C-f hell.py=, the minibuffer will complete
+=hell.py= into =hello.py= if we use =RET=, and will open a new buffer for
+=hell.py= if we use =C-d=.
 
 ** Corfu
 For in-buffer pop-up completion.
@@ -1473,6 +1456,17 @@ For fast minibuffer completion.
   (use-package vertico
     :config
     (vertico-mode))
+#+end_src
+
+** Marginalia
+For more details when displaying candidates with ~vertico~
+
+#+begin_src emacs-lisp
+  (use-package marginalia
+    :bind
+    (:map minibuffer-local-map ("M-A" . marginalia-cycle))
+    :init
+    (marginalia-mode))
 #+end_src
 
 * Language-specific major modes
@@ -1766,8 +1760,15 @@ When running BigQuery from a =*compilation*= buffer, it would be nice if I could
 error markers to jump directly to the issue.
 
 ** Python
+*** Pipfiles are TOML
 #+begin_src emacs-lisp
   (add-to-list 'auto-mode-alist '("Pipfile" . toml-ts-mode))
+#+end_src
+
+*** Ignore =.venv= in VC operations
+
+#+begin_src emacs-lisp
+  (add-to-list 'vc-directory-exclusion-list ".venv")
 #+end_src
 
 *** Flatten items in =imenu=
@@ -1858,10 +1859,15 @@ programs exist is a small time saver.
     (require 'eglot)
     (setq python-check-command "ruff")
     (add-hook 'python-mode-hook #'flymake-mode)
-    (add-hook 'python-ts-mode-hook #'flymake-mode)
-    ;; (add-to-list 'eglot-server-programs '((python-mode python-ts-mode) "ruff-lsp"))
-    )
+    (add-hook 'python-ts-mode-hook #'flymake-mode))
 #+end_src
+
+I do not run =ruff format= on save for one reason: If I am patching code in a
+project that is not currently formatted using the ~black~ (~ruff format~) style,
+I do not want to introduce formatting changes alongside any logic changes I'm
+suggesting.  I'd rather issue a formatting command through a project-level shell
+command or =python-check= on-demand, rather than disable formatting after
+realizing it was a problem.
 
 *** Fix Microsoft Windows Issues
 At one point, I ran into something similar to this [[https://github.com/jorgenschaefer/elpy/issues/733][elpy issue]] on Windows.  The
@@ -1890,10 +1896,6 @@ make sure that setting the virtualenv root is marked as safe.
   (put 'python-shell-virtualenv-root 'safe-local-variable #'stringp)
   (put 'python-interpreter 'safe-local-variable #'stringp)
 #+end_src
-
-*** Emacs Jupyter?
-Eventually, I would like to try the [[https://github.com/dzop/emacs-jupyter][emacs-jupyter]] package to interface with
-Jupyter kernels from org-mode.
 
 ** Markdown
 When installing =markdown= through Anaconda, the executable is actually called
@@ -1937,6 +1939,16 @@ Handy for viewing data quickly.
     :mode "\\.csv\\'")
 #+end_src
 
+* Eshell
+#+begin_src emacs-lisp
+  (use-package eshell
+    :custom
+    (eshell-visual-subcommands '(("git" "log" "diff" "show")
+                                 ("micromamba" "install" "update" "upgrade")
+                                 ("mamba" "install" "update" "upgrade")
+                                 ("poetry" "install" "update" "upgrade")
+                                 ("docker" "build"))))
+#+end_src
 * Tool configuration
 These are tweaks for third party packages.
 
@@ -1991,15 +2003,30 @@ so it works equally well on macOS, Linux, Windows native, and MinGW.  On top of
 all this, it is only ~600 lines of code, so it is a very small dependency to
 include.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
   (use-package pyvenv
     ;; Overrides `mark-page'
     :bind (("C-x p a" . pyvenv-activate)
            ("C-x p u" . pyvenv-deactivate))
     :config
+    (put 'pyvenv-mode 'safe-local-variable #'stringp)
     (pyvenv-tracking-mode 1)
     (pyvenv-mode 1))
 #+end_src
+
+* Wishlist
++ A good tmux-like workflow for running multiple async compilation jobs, with an
+  easy way to kill and restart each
++ Think about efficient editing motions with a cheatsheet that translates from
+  vim
++ Enable proxy for a single Eshell instance
++ Convert many of my shell methods to eshell
++ Eshell commands for creating/managing virtualenvs
++ Remove my keybinding section and put it under a =use-package emacs= block
++ Replicate my bash PS1 for =eshell-prompt-function= and =eshell-prompt-regex=
+  - see [[https://github.com/zwild/eshell-prompt-extras/blob/master/eshell-prompt-extras.el][eshell-prompt-extras]] for examples
++ In eshell, a way to search history through completing-read (vertico minibuffer completion)
++ Is an LSP-less python experience good or desirable?
 
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an
