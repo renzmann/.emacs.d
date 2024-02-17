@@ -863,11 +863,13 @@ select."
 ;; [[file:README.org::*Eshell][Eshell:1]]
 (use-package eshell
   :custom
+  (eshell-visual-commands '("make" "vi" "vim" "screen" "tmux" "top" "htop" "less" "more" "lynx" "links" "ncftp" "mutt" "pine" "tin" "trn" "elm"))
   (eshell-visual-subcommands '(("git" "log" "diff" "show")
-                               ("micromamba" "install" "update" "upgrade")
+                               ("micromamba" "install" "update" "upgrade" "create" "run")
                                ("mamba" "install" "update" "upgrade")
                                ("poetry" "install" "update" "upgrade")
-                               ("docker" "build"))))
+                               ("docker" "build")
+                               ("uv" "pip"))))
 ;; Eshell:1 ends here
 
 ;; [[file:README.org::*Visual fill column][Visual fill column:1]]
@@ -880,6 +882,7 @@ select."
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
+  (treesit-auto-langs '(awk bash c css go html javascript json make markdown python r ruby rust toml typescript yaml))
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))

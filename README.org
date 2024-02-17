@@ -1925,11 +1925,13 @@ Handy for viewing data quickly.
 #+begin_src emacs-lisp
   (use-package eshell
     :custom
+    (eshell-visual-commands '("make" "vi" "vim" "screen" "tmux" "top" "htop" "less" "more" "lynx" "links" "ncftp" "mutt" "pine" "tin" "trn" "elm"))
     (eshell-visual-subcommands '(("git" "log" "diff" "show")
-                                 ("micromamba" "install" "update" "upgrade")
+                                 ("micromamba" "install" "update" "upgrade" "create" "run")
                                  ("mamba" "install" "update" "upgrade")
                                  ("poetry" "install" "update" "upgrade")
-                                 ("docker" "build"))))
+                                 ("docker" "build")
+                                 ("uv" "pip"))))
 #+end_src
 * Tool configuration
 These are tweaks for third party packages.
@@ -1952,6 +1954,7 @@ I've posted this to GitHub and MELPA as [[https://github.com/renzmann/treesit-au
   (use-package treesit-auto
     :custom
     (treesit-auto-install 'prompt)
+    (treesit-auto-langs '(awk bash c css go html javascript json make markdown python r ruby rust toml typescript yaml))
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))
@@ -1971,6 +1974,9 @@ Fetching updates is a similar command.
 #+begin_src shell :results none
   git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
 #+end_src
+
+You can get pre-compiled grammars here, as well:
+[[https://github.com/emacs-tree-sitter/tree-sitter-langs/releases][emacs-tree-sitter/tree-sitter-langs @ GitHub]]
 
 ** =pyvenv=
 
@@ -2001,7 +2007,6 @@ include.
   easy way to kill and restart each
 + Think about efficient editing motions with a cheatsheet that translates from
   vim
-+ Enable proxy for a single Eshell instance
 + Convert many of my shell methods to eshell
 + Eshell commands for creating/managing virtualenvs
 + Remove my keybinding section and put it under a =use-package emacs= block
@@ -2011,6 +2016,8 @@ include.
 + Is an LSP-less python experience good or desirable?
 + When running BigQuery from a =*compilation*= buffer, it would be nice if I
   could get error markers to jump directly to the issue
++ How do we use local emacs as EDITOR for tramp connections?  Things like
+  default git messages from merges are difficult
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an
 Emacs package.  So that's it, let's gracefully finish tangling everything:
