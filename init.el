@@ -267,8 +267,12 @@
   :config
   (when (executable-find "rg")
     (setq grep-program "rg")
-    (grep-apply-setting 'grep-find-command
-                        '("rg -n -H --color always --no-heading -e ''" . 42))
+    (if (renz/windowsp)
+        (grep-apply-setting 'grep-find-command
+                            '("rg --vimgrep --color always  ." . 29))
+      (grep-apply-setting 'grep-find-command
+                        '("rg --vimgrep --color always -e '' ." . 33)))
+
     (setq xref-search-program 'ripgrep)))
 ;; =grep= and =find=:1 ends here
 
