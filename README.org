@@ -414,7 +414,7 @@ case I'm working later at night.
 This hunk adds some space around all sides of each window so that we get a clear
 space between the edge of the screen and the fringe.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (defun renz/modify-margins ()
     "Add some space around each window."
     (interactive)
