@@ -314,9 +314,8 @@
 ;; Spellchecking:2 ends here
 
 ;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
-(setq backup-directory-alist '(("." . "~/.emacs.d/backups/"))
-      ;; auto-save-file-name-transforms '(("." ,temporary-file-directory t))
-      )
+(setq backup-directory-alist '(("." . ,(concat user-emacs-directory "backups")))
+      backup-by-copying t)
 ;; Backup and auto-save files:1 ends here
 
 ;; [[file:README.org::*Enable ~narrow-to-region~][Enable ~narrow-to-region~:1]]
@@ -415,6 +414,35 @@
         tramp-verbose 1)
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
 ;; Tramp:1 ends here
+
+;; [[file:README.org::*'Uniquify' using slash instead of brackets]['Uniquify' using slash instead of brackets:1]]
+(use-package uniquify
+  :custom (uniquify-buffer-name-style 'forward))
+;; 'Uniquify' using slash instead of brackets:1 ends here
+
+;; [[file:README.org::*Save our place in files when we re-visit them][Save our place in files when we re-visit them:1]]
+(save-place-mode 1)
+;; Save our place in files when we re-visit them:1 ends here
+
+;; [[file:README.org::*Keep existing clipboard text in kill ring][Keep existing clipboard text in kill ring:1]]
+(setq save-interprogram-paste-before-kill t)
+;; Keep existing clipboard text in kill ring:1 ends here
+
+;; [[file:README.org::*More extensive apropos search][More extensive apropos search:1]]
+(setq apropos-do-all t)
+;; More extensive apropos search:1 ends here
+
+;; [[file:README.org::*Disable implied frame resizing][Disable implied frame resizing:1]]
+(setq frame-inhibit-implied-resize t)
+;; Disable implied frame resizing:1 ends here
+
+;; [[file:README.org::*Use one frame for ~ediff~][Use one frame for ~ediff~:1]]
+(setq ediff-window-setup-function 'ediff-setup-windows-plain)
+;; Use one frame for ~ediff~:1 ends here
+
+;; [[file:README.org::*Prefer newer files on load][Prefer newer files on load:1]]
+(setq load-prefer-newer t)
+;; Prefer newer files on load:1 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
@@ -576,6 +604,7 @@
 (use-package corfu
   :custom
   (corfu-auto t)
+  (corfu-auto-delay 0.1)
   (corfu-quit-no-match 'separator)
   :config
   (global-corfu-mode))
@@ -903,7 +932,7 @@ select."
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
-  (treesit-auto-langs '(awk bash c css go html javascript json make markdown python r ruby rust toml typescript yaml))
+  (treesit-auto-langs '(awk bash c css go html javascript json make markdown r ruby rust toml typescript yaml))
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
