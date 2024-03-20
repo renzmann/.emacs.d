@@ -876,9 +876,8 @@ not found" errors popping up during auto-save on Windows.  Once I debug that,
 I'll uncomment the second part.
 
 #+begin_src emacs-lisp
-  (setq backup-directory-alist '(("." . "~/.emacs.d/backups/"))
-        ;; auto-save-file-name-transforms '(("." ,temporary-file-directory t))
-        )
+  (setq backup-directory-alist '(("." . ,(concat user-emacs-directory "backups")))
+        backup-by-copying t)
 #+end_src
 
 ** Enable ~narrow-to-region~
@@ -1146,6 +1145,49 @@ I can use =M-x visit-tags-table RET RET= to build a list of symbols I can
 navigate to with completion.  The built-in ~xref~ works with the tags table, so
 commands like =xref-find-definitions= will offer jump-to-definition behavior in
 tandem with =completing-read=.
+
+** 'Uniquify' using slash instead of brackets
+
+#+begin_src emacs-lisp
+  (use-package uniquify
+    :custom (uniquify-buffer-name-style 'forward))
+#+end_src
+
+** Save our place in files when we re-visit them
+
+#+begin_src emacs-lisp
+  (save-place-mode 1)
+#+end_src
+
+** Keep existing clipboard text in kill ring
+
+#+begin_src emacs-lisp
+  (setq save-interprogram-paste-before-kill t)
+#+end_src
+
+** More extensive apropos search
+
+#+begin_src emacs-lisp
+  (setq apropos-do-all t)
+#+end_src
+
+** Disable implied frame resizing
+
+#+begin_src emacs-lisp
+  (setq frame-inhibit-implied-resize t)
+#+end_src
+
+** Use one frame for ~ediff~
+
+#+begin_src emacs-lisp
+  (setq ediff-window-setup-function 'ediff-setup-windows-plain)
+#+end_src
+
+** Prefer newer files on load
+
+#+begin_src emacs-lisp
+  (setq load-prefer-newer t)
+#+end_src
 
 * Keybindings
 
@@ -2011,13 +2053,15 @@ include.
 + A good tmux-like workflow for running multiple async compilation jobs, with an
   easy way to kill and restart each
 + Think about efficient editing motions with a cheatsheet that translates from
-  vim
+  Vim
 + Convert many of my shell methods to eshell
 + Eshell commands for creating/managing virtualenvs
 + Remove my keybinding section and put it under a =use-package emacs= block
 + Replicate my bash PS1 for =eshell-prompt-function= and =eshell-prompt-regex=
   - see [[https://github.com/zwild/eshell-prompt-extras/blob/master/eshell-prompt-extras.el][eshell-prompt-extras]] for examples
 + In eshell, a way to search history through completing-read (vertico minibuffer completion)
++ ~fzf~-like general completion for paths and files.  ~project-switch-project~
+  is pretty close, but only good for known projects
 + Is an LSP-less python experience good or desirable?
 + When running BigQuery from a =*compilation*= buffer, it would be nice if I
   could get error markers to jump directly to the issue
