@@ -576,6 +576,7 @@
 (use-package corfu
   :custom
   (corfu-auto t)
+  (corfu-auto-delay 0.1)
   (corfu-quit-no-match 'separator)
   :config
   (global-corfu-mode))
@@ -903,7 +904,7 @@ select."
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
-  (treesit-auto-langs '(awk bash c css go html javascript json make markdown python r ruby rust toml typescript yaml))
+  (treesit-auto-langs '(awk bash c css go html javascript json make markdown r ruby rust toml typescript yaml))
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
