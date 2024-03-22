@@ -872,7 +872,7 @@ select."
 (use-package python
   :config
   (require 'eglot)
-  (setq python-check-command "ruff")
+  (setq python-check-command "ruff check")
   (add-hook 'python-mode-hook #'flymake-mode)
   (add-hook 'python-ts-mode-hook #'flymake-mode))
 ;; Python check with "ruff":1 ends here
@@ -915,7 +915,7 @@ select."
   :custom
   (eshell-visual-commands '("make" "vi" "vim" "screen" "tmux" "top" "htop" "less" "more" "lynx" "links" "ncftp" "mutt" "pine" "tin" "trn" "elm"))
   (eshell-visual-subcommands '(("git" "log" "diff" "show")
-                               ("micromamba" "install" "update" "upgrade" "create" "run")
+                               ("micromamba" "install" "update" "upgrade" "create" "run" "self-update")
                                ("mamba" "install" "update" "upgrade")
                                ("poetry" "install" "update" "upgrade")
                                ("docker" "build")

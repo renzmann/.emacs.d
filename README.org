@@ -1886,7 +1886,7 @@ programs exist is a small time saver.
   (use-package python
     :config
     (require 'eglot)
-    (setq python-check-command "ruff")
+    (setq python-check-command "ruff check")
     (add-hook 'python-mode-hook #'flymake-mode)
     (add-hook 'python-ts-mode-hook #'flymake-mode))
 #+end_src
@@ -1974,7 +1974,7 @@ Handy for viewing data quickly.
     :custom
     (eshell-visual-commands '("make" "vi" "vim" "screen" "tmux" "top" "htop" "less" "more" "lynx" "links" "ncftp" "mutt" "pine" "tin" "trn" "elm"))
     (eshell-visual-subcommands '(("git" "log" "diff" "show")
-                                 ("micromamba" "install" "update" "upgrade" "create" "run")
+                                 ("micromamba" "install" "update" "upgrade" "create" "run" "self-update")
                                  ("mamba" "install" "update" "upgrade")
                                  ("poetry" "install" "update" "upgrade")
                                  ("docker" "build")
@@ -2059,6 +2059,9 @@ include.
 + Remove my keybinding section and put it under a =use-package emacs= block
 + Replicate my bash PS1 for =eshell-prompt-function= and =eshell-prompt-regex=
   - see [[https://github.com/zwild/eshell-prompt-extras/blob/master/eshell-prompt-extras.el][eshell-prompt-extras]] for examples
+  - The ~epe-theme-pipeline~ has the structure I want, but the colors are
+    hideous.  Need to customize them with ef-theme faces.
+
 + In eshell, a way to search history through completing-read (vertico minibuffer completion)
 + ~fzf~-like general completion for paths and files.  ~project-switch-project~
   is pretty close, but only good for known projects
