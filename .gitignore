@@ -67,6 +67,7 @@ site-lisp/python-venv
 site-lisp/treesit-auto
 org-persist/
 token
+places
 
 # VC Packages
 elpa/treesit-auto
