@@ -876,7 +876,7 @@ not found" errors popping up during auto-save on Windows.  Once I debug that,
 I'll uncomment the second part.
 
 #+begin_src emacs-lisp
-  (setq backup-directory-alist '(("." . ,(concat user-emacs-directory "backups")))
+  (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
         backup-by-copying t)
 #+end_src
 
