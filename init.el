@@ -314,7 +314,7 @@
 ;; Spellchecking:2 ends here
 
 ;; [[file:README.org::*Backup and auto-save files][Backup and auto-save files:1]]
-(setq backup-directory-alist '(("." . ,(concat user-emacs-directory "backups")))
+(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
       backup-by-copying t)
 ;; Backup and auto-save files:1 ends here
 
