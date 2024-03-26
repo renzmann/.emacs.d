@@ -651,6 +651,7 @@
 
 ;; [[file:README.org::*Org-mode][Org-mode:1]]
 (setq renz/org-home "~/.emacs.d/org/")
+(put 'org-publish-project-alist 'safe-local-variable #'listp)
 ;; Org-mode:1 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:2]]

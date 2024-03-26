@@ -1546,6 +1546,7 @@ For validation, grab [[https://github.com/w3c/css-validator/releases/download/cs
 
 #+begin_src emacs-lisp
   (setq renz/org-home "~/.emacs.d/org/")
+  (put 'org-publish-project-alist 'safe-local-variable #'listp)
 #+end_src
 
 ~org-mode~ provides =org-babel-tangle-jump-to-org=, which jumps back to an Org
