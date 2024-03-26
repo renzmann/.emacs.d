@@ -1972,17 +1972,6 @@ Handy for viewing data quickly.
 * Tool configuration
 These are tweaks for third party packages.
 
-** Visual fill column
-For visual lines, this adds line breaks at the fill-column value.  Especially
-useful for prose that is meant to be copied to other mediums, such as email or
-word.
-
-#+begin_src emacs-lisp
-  (use-package visual-fill-column
-    :config
-    (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
-#+end_src
-
 ** =treesit-auto=: Automatically Using TreeSitter Modes
 I've posted this to GitHub and MELPA as [[https://github.com/renzmann/treesit-auto][treesit-auto]].
 

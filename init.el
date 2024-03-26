@@ -915,12 +915,6 @@ select."
                                ("uv" "pip"))))
 ;; Eshell:1 ends here
 
-;; [[file:README.org::*Visual fill column][Visual fill column:1]]
-(use-package visual-fill-column
-  :config
-  (add-hook 'visual-line-mode-hook #'visual-fill-column-mode))
-;; Visual fill column:1 ends here
-
 ;; [[file:README.org::*=treesit-auto=: Automatically Using TreeSitter Modes][=treesit-auto=: Automatically Using TreeSitter Modes:1]]
 (use-package treesit-auto
   :custom
