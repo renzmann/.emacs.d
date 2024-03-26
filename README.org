@@ -1936,18 +1936,6 @@ When installing =markdown= through Anaconda, the executable is actually called
     (setq markdown-command "markdown_py"))
 #+end_src
 
-Some folks like to write markdown without hard line breaks.  When viewing those
-documents, I can use ~M-x renz/md-hook~ to view it as if there were line breaks in
-it.
-
-#+begin_src emacs-lisp
-  (defun renz/md-hook ()
-    "View buffer in visual fill mode with 80 character width."
-    (interactive)
-    (visual-fill-column-mode)
-    (setq-local fill-column 80))
-#+end_src
-
 I make a lot of spelling mistakes as I type...
 
 #+begin_src emacs-lisp

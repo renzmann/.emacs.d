@@ -890,21 +890,13 @@ select."
 ;; Markdown:1 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:2]]
-(defun renz/md-hook ()
-  "View buffer in visual fill mode with 80 character width."
-  (interactive)
-  (visual-fill-column-mode)
-  (setq-local fill-column 80))
+(add-hook 'markdown-mode-hook 'flyspell-mode)
+(add-hook 'markdown-mode-hook 'auto-fill-mode)
 ;; Markdown:2 ends here
 
 ;; [[file:README.org::*Markdown][Markdown:3]]
-(add-hook 'markdown-mode-hook 'flyspell-mode)
-(add-hook 'markdown-mode-hook 'auto-fill-mode)
-;; Markdown:3 ends here
-
-;; [[file:README.org::*Markdown][Markdown:4]]
 (setq markdown-fontify-code-blocks-natively t)
-;; Markdown:4 ends here
+;; Markdown:3 ends here
 
 ;; [[file:README.org::*csv-mode][csv-mode:1]]
 (use-package csv-mode
