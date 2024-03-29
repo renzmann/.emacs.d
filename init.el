@@ -83,6 +83,16 @@
 (add-to-list 'load-path (expand-file-name "site-lisp/" user-emacs-directory))
 ;; Packages:5 ends here
 
+;; [[file:README.org::*Microsoft Windows][Microsoft Windows:2]]
+(defun renz/find-file (chosen-dir regex)
+  (interactive "DSearch dir: \nsRegexp: ")
+  (let ((chosen-file (completing-read "File: " (find-lisp-find-files chosen-dir regex))))
+    (find-file chosen-file)))
+
+(global-set-key (kbd "C-c f f") #'renz/find)
+(global-set-key (kbd "C-c f d") #'find-lisp-find-dired)
+;; Microsoft Windows:2 ends here
+
 ;; [[file:README.org::*macOS][macOS:1]]
 (when (eq system-type 'darwin)
   (setq exec-path-from-shell-arguments '("-l"))
@@ -286,7 +296,7 @@
     (setq grep-program "rg")
     (if (renz/windowsp)
         (grep-apply-setting 'grep-find-command
-                            '("rg --vimgrep --color always  ." . 29))
+                            '("rg --vimgrep --color never --ignore-case  ." . 42))
       (grep-apply-setting 'grep-find-command
                         '("rg --vimgrep --color always -e '' ." . 33)))
 
@@ -385,7 +395,8 @@
          ("C-c l f b" . eglot-format-buffer)
          ("C-c l l" . eglot)
          ("C-c l r n" . eglot-rename)
-         ("C-c l s" . eglot-shutdown)))
+         ("C-c l s" . eglot-shutdown)
+         ("C-c l i" . eglot-inlay-hints-mode)))
 ;; Language Server Protocol (LSP) with ~eglot~:1 ends here
 
 ;; [[file:README.org::*Shell commands][Shell commands:1]]
@@ -484,9 +495,10 @@
 (global-set-key (kbd "C-c c f") #'renz/insert-current-file)
 ;; =C-c c= Insert current dir/file at point:1 ends here
 
-;; [[file:README.org::*=C-c f= find file at point (ffap)][=C-c f= find file at point (ffap):1]]
-(global-set-key (kbd "C-c f") #'ffap)
-;; =C-c f= find file at point (ffap):1 ends here
+;; [[file:README.org::*=C-c d= delete pairs of surrounding characters][=C-c d= delete pairs of surrounding characters:1]]
+(global-set-key (kbd "C-c d") #'delete-pair)
+(setq delete-pair-blink-delay 0.0)
+;; =C-c d= delete pairs of surrounding characters:1 ends here
 
 ;; [[file:README.org::*=C-c i= browse url of buffer][=C-c i= browse url of buffer:1]]
 (global-set-key (kbd "C-c i") #'browse-url-of-buffer)
@@ -924,6 +936,17 @@ select."
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
 ;; =treesit-auto=: Automatically Using TreeSitter Modes:1 ends here
+
+;; [[file:README.org::*=pyvenv=][=pyvenv=:1]]
+(use-package pyvenv
+  ;; Overrides `mark-page'
+  :bind (("C-x p a" . pyvenv-activate)
+         ("C-x p u" . pyvenv-deactivate))
+  :config
+  (put 'pyvenv-mode 'safe-local-variable #'stringp)
+  (pyvenv-tracking-mode 1)
+  (pyvenv-mode 1))
+;; =pyvenv=:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here
