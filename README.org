@@ -66,9 +66,9 @@ Instead, I've started simply downloading Emacs from these sources on each of the
 platforms:
 
 ** Windows
-I go to the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/][pretest FTP]] to get the latest version of Emacs.  Usually not quite
-up-to-date with the master branch, but still one version number ahead of the
-most recent official release.
+I go to the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/][pretest FTP]] to get the latest version of Emacs.
+Usually not quite up-to-date with the master branch, but still one version
+number ahead of the most recent official release on the [[https://ftp.gnu.org/gnu/emacs/windows/][main FTP]].
 
 ** Mac
 On macOS, I've had the best luck with [[https://github.com/jimeh/emacs-builds/releases][jimeh's nightly builds]].  These Emacs.app
@@ -272,60 +272,12 @@ There are also a few hand-made packages I keep around in a special
 ** Microsoft Windows
 
 While /usable/ out of the box, Emacs will be far less productive without some
-additional setup on a Windows machine.
-Then, there are a few things I set up independent of Emacs.  Namely, =find=,
-=xargs=, =gcc=, and =rg=, which unfortunately requires a detour through
-=MINGW64=.
-
-#+begin_src powershell :tangle no
-  winget install MSYS2.MSYS2
-#+end_src
-
-Then, we open up the MINGW64 command prompt, and use =pacman= to get the
-standard toolchain.
-
-#+begin_src shell :tangle no
-  pacman -S --needed base-devel mingw-w64-x86_64-toolchain
-#+end_src
-
-I often forget these obtuse package names, so I'll search for them like this:
-
-#+begin_src shell :tangle no
-  pacman -Ss ripgrep
-#+end_src
-
-#+RESULTS:
-| clangarm64/mingw-w64-clang-aarch64-ripgrep | 13.0.0-1                                 |      |      |             |          |      |         |           |     |   |       |         |             |
-| line-oriented                              | search                                   | tool | that | recursively | searches | your | current | directory | for | a | regex | pattern | (mingw-w64) |
-| mingw32/mingw-w64-i686-ripgrep             | 13.0.0-1                                 |      |      |             |          |      |         |           |     |   |       |         |             |
-| line-oriented                              | search                                   | tool | that | recursively | searches | your | current | directory | for | a | regex | pattern | (mingw-w64) |
-| mingw64/mingw-w64-x86_64-ripgrep           | 13.0.0-1                                 |      |      |             |          |      |         |           |     |   |       |         |             |
-| line-oriented                              | search                                   | tool | that | recursively | searches | your | current | directory | for | a | regex | pattern | (mingw-w64) |
-| ucrt64/mingw-w64-ucrt-x86_64-ripgrep       | 13.0.0-1                                 |      |      |             |          |      |         |           |     |   |       |         |             |
-| line-oriented                              | search                                   | tool | that | recursively | searches | your | current | directory | for | a | regex | pattern | (mingw-w64) |
-| clang64/mingw-w64-clang-x86_64-ripgrep     | 13.0.0-1                                 |      |      |             |          |      |         |           |     |   |       |         |             |
-| line-oriented                              | search                                   | tool | that | recursively | searches | your | current | directory | for | a | regex | pattern | (mingw-w64) |
-
-Copy the desired version with my mouse, and install it:
-
-#+begin_src shell :tangle no
-  pacman -S mingw-w64-x86_64-ripgrep
-#+end_src
-
-Finally, we have to modify the Windows PATH through the GUI (ew).  I haven't
-found any good method yet that avoids administrator privilages, since Windows
-places the System PATH before the user PATH.  I typically have to add these two
-to the very front of the System PATH (/before/ =%SystemRoot%\system32=).  This
-is so the GNU version of =find= appears before the Windows default =FIND=
-command, which is incompatible with Emacs.
-
-+ =C:\msys64\usr\bin=
-+ =C:\msys64\mingw64\bin=
-
-Even with all of this setup in place, it's still tough to get Powershell to play
-nicely with some of the shell quoting Emacs has to do when running external
-programs like =find= and =grep=. For instance, if we were to set the
-=shell-file-name= like this:
+additional setup on a Windows machine.  Then, there are a few things I set up
+independent of Emacs.  Namely, =find=, =xargs=, =gcc=, and =rg=.  Even with all
+of this setup in place, it's still tough to get Powershell to play nicely with
+some of the shell quoting Emacs has to do when running external programs like
+=find= and =grep=. For instance, if we were to set the =shell-file-name= like
+this:
 
 #+begin_src emacs-lisp :tangle no
   (when (and (renz/windowsp) (executable-find "pwsh"))
@@ -343,6 +295,20 @@ this nasty message:
 
 If we don't have admin privilages, there are some lisp alternatives to =find=
 and =grep=, such as =M-x find-lisp-find-dired=
+
+With a little work, we can make a =completing-read= find files using lisp:
+
+#+begin_src emacs-lisp
+  (defun renz/find-file (chosen-dir regex)
+    (interactive "DSearch dir: \nsRegexp: ")
+    (let ((chosen-file (completing-read "File: " (find-lisp-find-files chosen-dir regex))))
+      (find-file chosen-file)))
+
+  (global-set-key (kbd "C-c f f") #'renz/find)
+  (global-set-key (kbd "C-c f d") #'find-lisp-find-dired)
+#+end_src
+
+With a little polish this might actually even work /well/.
 
 *** On the winkey
 Windows, funnily enough, has some trouble registering the Windows key as a
@@ -801,7 +767,7 @@ project-wide grep searching, I use one of these combinations:
       (setq grep-program "rg")
       (if (renz/windowsp)
           (grep-apply-setting 'grep-find-command
-                              '("rg --vimgrep --color always  ." . 29))
+                              '("rg --vimgrep --color never --ignore-case  ." . 42))
         (grep-apply-setting 'grep-find-command
                           '("rg --vimgrep --color always -e '' ." . 33)))
 
@@ -1008,7 +974,8 @@ client side configuration for the [[https://microsoft.github.io/language-server-
            ("C-c l f b" . eglot-format-buffer)
            ("C-c l l" . eglot)
            ("C-c l r n" . eglot-rename)
-           ("C-c l s" . eglot-shutdown)))
+           ("C-c l s" . eglot-shutdown)
+           ("C-c l i" . eglot-inlay-hints-mode)))
 #+end_src
 
 To have ~eglot~ always start up for a python buffer, we would tangle this line
@@ -1256,10 +1223,11 @@ probably using it in a ~:bind~ statement with ~use-package~ somewhere else.
   (global-set-key (kbd "C-c c f") #'renz/insert-current-file)
 #+end_src
 
-*** =C-c f= find file at point (ffap)
+*** =C-c d= delete pairs of surrounding characters
 
 #+begin_src emacs-lisp
-  (global-set-key (kbd "C-c f") #'ffap)
+  (global-set-key (kbd "C-c d") #'delete-pair)
+  (setq delete-pair-blink-delay 0.0)
 #+end_src
 
 *** =C-c i= browse url of buffer
@@ -2016,7 +1984,7 @@ so it works equally well on macOS, Linux, Windows native, and MinGW.  On top of
 all this, it is only ~600 lines of code, so it is a very small dependency to
 include.
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp
   (use-package pyvenv
     ;; Overrides `mark-page'
     :bind (("C-x p a" . pyvenv-activate)
@@ -2028,26 +1996,32 @@ include.
 #+end_src
 
 * Wishlist
-+ A good tmux-like workflow for running multiple async compilation jobs, with an
-  easy way to kill and restart each
 + Think about efficient editing motions with a cheatsheet that translates from
   Vim
-+ Convert many of my shell methods to eshell
-+ Eshell commands for creating/managing virtualenvs
 + Remove my keybinding section and put it under a =use-package emacs= block
 + Replicate my bash PS1 for =eshell-prompt-function= and =eshell-prompt-regex=
   - see [[https://github.com/zwild/eshell-prompt-extras/blob/master/eshell-prompt-extras.el][eshell-prompt-extras]] for examples
   - The ~epe-theme-pipeline~ has the structure I want, but the colors are
     hideous.  Need to customize them with ef-theme faces.
-
 + In eshell, a way to search history through completing-read (vertico minibuffer completion)
 + ~fzf~-like general completion for paths and files.  ~project-switch-project~
   is pretty close, but only good for known projects
-+ Is an LSP-less python experience good or desirable?
 + When running BigQuery from a =*compilation*= buffer, it would be nice if I
   could get error markers to jump directly to the issue
 + How do we use local emacs as EDITOR for tramp connections?  Things like
   default git messages from merges are difficult
+
+* Completed from wishlist
++ A good tmux-like workflow for running multiple async compilation jobs, with an
+  easy way to kill and restart each
+  - Best way to do this is to use =C-x p M-&=, or =C-x p c= to start an async or
+    compilation job, then rename the buffer using =C-x x r=.  When visiting this
+    buffer, =g= will kill and restart the job.
++ Is an LSP-less python experience good or desirable?
+  - Fuck no.
++ Eshell commands for creating/managing virtualenvs
+  - =uv= has completely annihilated this requirement
+
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an
 Emacs package.  So that's it, let's gracefully finish tangling everything:
