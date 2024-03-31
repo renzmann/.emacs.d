@@ -6,7 +6,7 @@
  '(column-number-mode t)
  '(mode-line-in-non-selected-windows t)
  '(package-selected-packages
-   '(consult dockerfile-mode orderless marginalia caddyfile-mode vertico corfu ef-themes treesit-auto groovy-mode clojure-ts-mode dart-ts-mode powershell sql-indent package-lint markdown-mode exec-path-from-shell csv-mode))
+   '(yasnippet consult dockerfile-mode orderless marginalia caddyfile-mode vertico corfu ef-themes treesit-auto groovy-mode clojure-ts-mode dart-ts-mode powershell sql-indent package-lint markdown-mode exec-path-from-shell csv-mode))
  '(package-vc-selected-packages
    '((treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
  '(safe-local-variable-values
