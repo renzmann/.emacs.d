@@ -783,6 +783,19 @@ is hardcoded into =find-dired=, so unfortunately getting something like this to 
     (setq find-ls-option nil))
 #+end_src
 
+At least on Windows we can attempt to point to a GnuWin version of ~find~,
+though.  At some point I should probably parameterize this better, but right now
+I'm always putting Gnu utilities under =Program Files (x86)\GnuWin32= on my
+Windows machines.
+
+#+begin_src emacs-lisp
+  (when-let ((on-windows (renz/windowsp))
+             (prog-files (getenv "PROGRAMFILES(x86)"))
+             (find-prg (expand-file-name "GnuWin32/bin/find.exe" prog-files))
+             (find-exists (executable-find find-prg)))
+    (setq find-program "C:\\\"Program Files (x86)\"\\GnuWin32\\bin\\find.exe"))
+#+end_src
+
 ** Confirm when exiting Emacs
 It's very annoying when I'm working and suddenly I meant to do ~C-c C-x~, but
 instead hit ~C-x C-c~.  This helps prevent that.
@@ -1515,6 +1528,10 @@ For validation, grab [[https://github.com/w3c/css-validator/releases/download/cs
 #+begin_src emacs-lisp
   (setq renz/org-home "~/.emacs.d/org/")
   (put 'org-publish-project-alist 'safe-local-variable #'listp)
+  (put 'org-html-validation-link 'safe-local-variable #'symbolp)
+  (put 'org-html-head-include-scripts 'safe-local-variable #'symbolp)
+  (put 'org-html-head-include-default-style 'safe-local-variable #'symbolp)
+  (put 'org-html-head 'safe-local-variable #'stringp)
 #+end_src
 
 ~org-mode~ provides =org-babel-tangle-jump-to-org=, which jumps back to an Org

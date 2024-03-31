@@ -303,6 +303,14 @@
     (setq xref-search-program 'ripgrep)))
 ;; =grep= and =find=:1 ends here
 
+;; [[file:README.org::*=grep= and =find=][=grep= and =find=:3]]
+(when-let ((on-windows (renz/windowsp))
+           (prog-files (getenv "PROGRAMFILES(x86)"))
+           (find-prg (expand-file-name "GnuWin32/bin/find.exe" prog-files))
+           (find-exists (executable-find find-prg)))
+  (setq find-program "C:\\\"Program Files (x86)\"\\GnuWin32\\bin\\find.exe"))
+;; =grep= and =find=:3 ends here
+
 ;; [[file:README.org::*Confirm when exiting Emacs][Confirm when exiting Emacs:1]]
 (setq confirm-kill-emacs 'yes-or-no-p)
 ;; Confirm when exiting Emacs:1 ends here
@@ -664,6 +672,10 @@
 ;; [[file:README.org::*Org-mode][Org-mode:1]]
 (setq renz/org-home "~/.emacs.d/org/")
 (put 'org-publish-project-alist 'safe-local-variable #'listp)
+(put 'org-html-validation-link 'safe-local-variable #'symbolp)
+(put 'org-html-head-include-scripts 'safe-local-variable #'symbolp)
+(put 'org-html-head-include-default-style 'safe-local-variable #'symbolp)
+(put 'org-html-head 'safe-local-variable #'stringp)
 ;; Org-mode:1 ends here
 
 ;; [[file:README.org::*Org-mode][Org-mode:2]]
