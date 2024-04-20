@@ -89,9 +89,34 @@ Very nice!
 ** Linux
 Often the version of Emacs that comes through my system package manager, such as
 =sudo apt-get install emacs=, is out of date.  So, typically, I'll get a release
-tarball from the FTP and compile it myself.  I typically run into trouble
-(different every time) when installing to system-wide locations like =/usr= or
-=/usr/local=, so I'll just opt for a user install under =~/.local=.
+tarball from the FTP and compile it myself.  On Debian, that requires an =apt-get= install of the following dev libraries:
+
+#+begin_src shell
+  sudo apt-get install \
+      autoconf \
+      automake \
+      build-essential \
+      curl \
+      libgccjit-12-dev \
+      libgif-dev \
+      libgnutls28-dev \
+      libgtk-4-dev \
+      libgtk2.0-dev \
+      libjpeg-dev \
+      libncurses-dev \
+      libpng-dev \
+      libtiff-dev \
+      libtree-sitter-dev \
+      libx11-dev \
+      libxpm-dev \
+      libxpm-dev \
+      make \
+      texinfo
+#+end_src
+
+I typically run into trouble (different every time) when installing to
+system-wide locations like =/usr= or =/usr/local=, so I'll just opt for a user
+install under =~/.local=.
 
 #+begin_src shell
   curl -O https://ftp.gnu.org/gnu/emacs/emacs-29.3.tar.xz
