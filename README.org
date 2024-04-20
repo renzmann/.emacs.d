@@ -60,11 +60,6 @@ such as:
 - [[https://www.lucacambiaghi.com/vanilla-emacs/readme.html][Luca's Literate Config]]
 
 * Getting Emacs
-For a while I would try to compile Emacs myself, but installing the whole
-compilation toolchain hasn't been worth it lately, especially on Windows.
-Instead, I've started simply downloading Emacs from these sources on each of the
-platforms:
-
 ** Windows
 I go to the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/][pretest FTP]] to get the latest version of Emacs.
 Usually not quite up-to-date with the master branch, but still one version
@@ -89,7 +84,8 @@ Very nice!
 ** Linux
 Often the version of Emacs that comes through my system package manager, such as
 =sudo apt-get install emacs=, is out of date.  So, typically, I'll get a release
-tarball from the FTP and compile it myself.  On Debian, that requires an =apt-get= install of the following dev libraries:
+tarball from the FTP and compile it myself.  On Debian, that requires an
+=apt-get= install of the following dev libraries:
 
 #+begin_src shell
   sudo apt-get install \
