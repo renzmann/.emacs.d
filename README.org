@@ -87,26 +87,18 @@ Emacs.app is signed with a developer certificate and notarized by Apple.
 Very nice!
 
 ** Linux
-Depending on the machine, I get Emacs one of several ways in a GNU/Linux setup.
-These rank from highest to lowest priority:
-
-1. Through my system package manager, such as =sudo apt-get install emacs= or
-   =pacman -S emacs=
-2. Through the [[https://ftp.gnu.org/gnu/emacs/][official FTP]]
-3. Through the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/emacs-29/][pretest FTP]]
-4. Through [[https://github.com/mariusvniekerk/condax][condax]]
-5. Compiling it myself
-
-*** Compiling
-If I do ever want to compile it myself, these are the options I use, making sure
-to export the correct =CC= and =GCC= variables:
+Often the version of Emacs that comes through my system package manager, such as
+=sudo apt-get install emacs=, is out of date.  So, typically, I'll get a release
+tarball from the FTP and compile it myself.  I typically run into trouble
+(different every time) when installing to system-wide locations like =/usr= or
+=/usr/local=, so I'll just opt for a user install under =~/.local=.
 
 #+begin_src shell
-  git clone git://git.savannah.gnu.org/emacs.git --branch emacs-29 --depth 1
-  export CC=/usr/bin/gcc-10 CXX=/usr/bin/gcc-10
-  ./autogen.sh
+  curl -O https://ftp.gnu.org/gnu/emacs/emacs-29.3.tar.xz
+  tar xf emacs-29.3.tar.xz
+  cd emacs-29.3
   ./configure \
-    --prefix=/c/emacs-29 \
+    --prefix=$HOME/.local \
     --with-native-compilation \
     --with-tree-sitter \
     --with-gnutls \
@@ -120,8 +112,8 @@ to export the correct =CC= and =GCC= variables:
     --with-xpm \
     --without-dbus \
     --without-pop
-  make --jobs=$(nproc)
-  sudo make install
+  make -j
+  make install
 #+end_src
 
 * Header
