@@ -1321,7 +1321,7 @@ I used to bind this to ~just-one-space~ before I knew about =M-SPC=
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c s s") #'shell)
   (global-set-key (kbd "C-c s e") #'eshell)
-  (global-set-key (kbd "C-c s t") #'term)
+  (global-set-key (kbd "C-c s t") #'eat)
 #+end_src
 
 *** =C-c u= open URL at point in browser
