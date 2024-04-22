@@ -1,4 +1,3 @@
-alias glogin gcloud auth application-default login && gcloud auth login
-alias urldecode python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))" $1
 alias urlencode python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]))" $1
-alias so python3 -m venv .venv && .venv/bin/python -m pip install --upgrade pip wheel pip-tools
+alias urldecode python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))" $1
+alias glogin gcloud auth login --update-adc
