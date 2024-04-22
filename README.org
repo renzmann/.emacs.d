@@ -2020,6 +2020,13 @@ include.
     (pyvenv-mode 1))
 #+end_src
 
+** =eat= Terminal emulation
+
+#+begin_src emacs-lisp
+  (use-package eat
+    :bind ("C-x p t" . eat-project))
+#+end_src
+
 * Wishlist
 + Think about efficient editing motions with a cheatsheet that translates from
   Vim

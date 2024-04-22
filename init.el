@@ -955,5 +955,10 @@ select."
   (pyvenv-mode 1))
 ;; =pyvenv=:1 ends here
 
+;; [[file:README.org::*=eat= Terminal emulation][=eat= Terminal emulation:1]]
+(use-package eat
+  :bind ("C-x p t" . eat-project))
+;; =eat= Terminal emulation:1 ends here
+
 (provide 'init.el)
 ;;; init.el ends here
