@@ -292,15 +292,9 @@
 (use-package grep
   :bind ("C-c g" . grep-find)
   :config
-  (when (executable-find "rg")
-    (setq grep-program "rg")
-    (if (renz/windowsp)
-        (grep-apply-setting 'grep-find-command
-                            '("rg --vimgrep --color never --ignore-case  ." . 42))
-      (grep-apply-setting 'grep-find-command
-                        '("rg --vimgrep --color always -e '' ." . 33)))
-
-    (setq xref-search-program 'ripgrep)))
+  (when (and (executable-find "rg") (renz/windowsp))
+    (grep-apply-setting 'grep-find-command
+                        '("rg --vimgrep --color never --ignore-case  ." . 42))))
 ;; =grep= and =find=:1 ends here
 
 ;; [[file:README.org::*=grep= and =find=][=grep= and =find=:3]]
@@ -626,6 +620,7 @@
   (corfu-auto t)
   (corfu-auto-delay 0.1)
   (corfu-quit-no-match 'separator)
+  (global-corfu-modes '((not shell-mode) (not eshell-mode) t))
   :config
   (global-corfu-mode))
 ;; Corfu:1 ends here
