@@ -60,11 +60,6 @@ such as:
 - [[https://www.lucacambiaghi.com/vanilla-emacs/readme.html][Luca's Literate Config]]
 
 * Getting Emacs
-For a while I would try to compile Emacs myself, but installing the whole
-compilation toolchain hasn't been worth it lately, especially on Windows.
-Instead, I've started simply downloading Emacs from these sources on each of the
-platforms:
-
 ** Windows
 I go to the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/][pretest FTP]] to get the latest version of Emacs.
 Usually not quite up-to-date with the master branch, but still one version
@@ -87,26 +82,44 @@ Emacs.app is signed with a developer certificate and notarized by Apple.
 Very nice!
 
 ** Linux
-Depending on the machine, I get Emacs one of several ways in a GNU/Linux setup.
-These rank from highest to lowest priority:
-
-1. Through my system package manager, such as =sudo apt-get install emacs= or
-   =pacman -S emacs=
-2. Through the [[https://ftp.gnu.org/gnu/emacs/][official FTP]]
-3. Through the [[https://alpha.gnu.org/gnu/emacs/pretest/windows/emacs-29/][pretest FTP]]
-4. Through [[https://github.com/mariusvniekerk/condax][condax]]
-5. Compiling it myself
-
-*** Compiling
-If I do ever want to compile it myself, these are the options I use, making sure
-to export the correct =CC= and =GCC= variables:
+Often the version of Emacs that comes through my system package manager, such as
+=sudo apt-get install emacs=, is out of date.  So, typically, I'll get a release
+tarball from the FTP and compile it myself.  On Debian, that requires an
+=apt-get= install of the following dev libraries:
 
 #+begin_src shell
-  git clone git://git.savannah.gnu.org/emacs.git --branch emacs-29 --depth 1
-  export CC=/usr/bin/gcc-10 CXX=/usr/bin/gcc-10
-  ./autogen.sh
+  sudo apt-get install \
+      autoconf \
+      automake \
+      build-essential \
+      curl \
+      libgccjit-12-dev \
+      libgif-dev \
+      libgnutls28-dev \
+      libgtk-4-dev \
+      libgtk2.0-dev \
+      libjpeg-dev \
+      libncurses-dev \
+      libpng-dev \
+      libtiff-dev \
+      libtree-sitter-dev \
+      libx11-dev \
+      libxpm-dev \
+      libxpm-dev \
+      make \
+      texinfo
+#+end_src
+
+I typically run into trouble (different every time) when installing to
+system-wide locations like =/usr= or =/usr/local=, so I'll just opt for a user
+install under =~/.local=.
+
+#+begin_src shell
+  curl -O https://ftp.gnu.org/gnu/emacs/emacs-29.3.tar.xz
+  tar xf emacs-29.3.tar.xz
+  cd emacs-29.3
   ./configure \
-    --prefix=/c/emacs-29 \
+    --prefix=$HOME/.local \
     --with-native-compilation \
     --with-tree-sitter \
     --with-gnutls \
@@ -120,8 +133,8 @@ to export the correct =CC= and =GCC= variables:
     --with-xpm \
     --without-dbus \
     --without-pop
-  make --jobs=$(nproc)
-  sudo make install
+  make -j
+  make install
 #+end_src
 
 * Header
@@ -1302,7 +1315,7 @@ I used to bind this to ~just-one-space~ before I knew about =M-SPC=
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c s s") #'shell)
   (global-set-key (kbd "C-c s e") #'eshell)
-  (global-set-key (kbd "C-c s t") #'term)
+  (global-set-key (kbd "C-c s t") #'eat)
 #+end_src
 
 *** =C-c u= open URL at point in browser

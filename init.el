@@ -551,7 +551,7 @@
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s e") #'eshell)
-(global-set-key (kbd "C-c s t") #'term)
+(global-set-key (kbd "C-c s t") #'eat)
 ;; =C-c s= shell:1 ends here
 
 ;; [[file:README.org::*=C-c u= open URL at point in browser][=C-c u= open URL at point in browser:1]]
