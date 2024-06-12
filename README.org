@@ -1463,7 +1463,7 @@ For in-buffer pop-up completion.
 #+begin_src emacs-lisp
   (use-package corfu
     :custom
-    (corfu-auto t)
+    (corfu-auto nil)
     (corfu-auto-delay 0.1)
     (corfu-quit-no-match 'separator)
     (global-corfu-modes '((not shell-mode) (not eshell-mode) t))
@@ -1509,6 +1509,8 @@ This changes the behavior of a few commonly-used tags in web pages that I write.
 #+begin_src emacs-lisp
   (use-package sgml-mode
     :defer t
+    :custom
+    (electric-pair-local-mode nil)
     :config
     (let* ((p-tag-old (assoc "p" html-tag-alist))
            ;; Close the <p> tag and open on a new line.
@@ -2020,11 +2022,18 @@ include.
     (pyvenv-mode 1))
 #+end_src
 
-** =eat= Terminal emulation
+** =direnv= Managing project environment variables
 
 #+begin_src emacs-lisp
-  (use-package eat
-    :bind ("C-x p t" . eat-project))
+  (use-package direnv
+    :config (direnv-mode))
+#+end_src
+
+** =vterm= Terminal emulation
+
+#+begin_src emacs-lisp
+  (use-package vterm
+    :bind ("C-x p t" . vterm))
 #+end_src
 
 * Wishlist
@@ -2042,6 +2051,16 @@ include.
   could get error markers to jump directly to the issue
 + How do we use local emacs as EDITOR for tramp connections?  Things like
   default git messages from merges are difficult
++ Make corfu less invasive.  Common issues:
+  - Enter accepts something when I wanted to go to a new line
+  - pop-up blocking what I wanted
++ History of Async commands + results just for today.  Much like having a
+  terminal session that I can scroll back through.  Sometimes I just want to see
+  what I did earlier - a big benefit of having a long-running Bash session in
+  the terminal.
+  - Write history to a file in ~/.emacs.d
+  - Have a rolling "max size"
+  - Maybe also do this for =*compilation*=?
 
 * Completed from wishlist
 + A good tmux-like workflow for running multiple async compilation jobs, with an

@@ -617,7 +617,7 @@
 ;; [[file:README.org::*Corfu][Corfu:1]]
 (use-package corfu
   :custom
-  (corfu-auto t)
+  (corfu-auto nil)
   (corfu-auto-delay 0.1)
   (corfu-quit-no-match 'separator)
   (global-corfu-modes '((not shell-mode) (not eshell-mode) t))
@@ -651,6 +651,8 @@
 ;; [[file:README.org::*HTML][HTML:1]]
 (use-package sgml-mode
   :defer t
+  :custom
+  (electric-pair-local-mode nil)
   :config
   (let* ((p-tag-old (assoc "p" html-tag-alist))
          ;; Close the <p> tag and open on a new line.
@@ -955,10 +957,15 @@ select."
   (pyvenv-mode 1))
 ;; =pyvenv=:1 ends here
 
-;; [[file:README.org::*=eat= Terminal emulation][=eat= Terminal emulation:1]]
-(use-package eat
-  :bind ("C-x p t" . eat-project))
-;; =eat= Terminal emulation:1 ends here
+;; [[file:README.org::*=direnv= Managing project environment variables][=direnv= Managing project environment variables:1]]
+(use-package direnv
+  :config (direnv-mode))
+;; =direnv= Managing project environment variables:1 ends here
+
+;; [[file:README.org::*=vterm= Terminal emulation][=vterm= Terminal emulation:1]]
+(use-package vterm
+  :bind ("C-x p t" . vterm))
+;; =vterm= Terminal emulation:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here
