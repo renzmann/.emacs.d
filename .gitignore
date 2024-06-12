@@ -68,6 +68,7 @@ site-lisp/treesit-auto
 org-persist/
 token
 places
+.DS_Store
 
 # VC Packages
 elpa/treesit-auto
