@@ -2031,6 +2031,9 @@ include.
 
 ** =vterm= Terminal emulation
 
+Binding the terminal to an unused =C-x= allows for things like =C-x 4 p t=
+to open the terminal in a new split.
+
 #+begin_src emacs-lisp
   (use-package vterm
     :bind ("C-x p t" . vterm))
@@ -2061,6 +2064,9 @@ include.
   - Write history to a file in ~/.emacs.d
   - Have a rolling "max size"
   - Maybe also do this for =*compilation*=?
++ The ~__PYTHON_EL_eval_file~ thing is still really fucking annoying
++ *Elisp*: advise =M-&= to insert the command run in buffer name
+
 
 * Completed from wishlist
 + A good tmux-like workflow for running multiple async compilation jobs, with an
