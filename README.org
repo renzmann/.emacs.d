@@ -1310,12 +1310,18 @@ I used to bind this to ~just-one-space~ before I knew about =M-SPC=
   (global-set-key (kbd "C-c r") #'renz/find-recent-file)
 #+end_src
 
+*** =C-c t= visit tags table
+
+#+begin_src emacs-lisp
+  (global-set-key (kbd "C-c t") #'visit-tags-table)
+#+end_src
+
 *** =C-c s= shell
 
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c s s") #'shell)
   (global-set-key (kbd "C-c s e") #'eshell)
-  (global-set-key (kbd "C-c s t") #'eat)
+  (global-set-key (kbd "C-c s t") #'vterm)
 #+end_src
 
 *** =C-c u= open URL at point in browser
@@ -2037,6 +2043,14 @@ to open the terminal in a new split.
 #+begin_src emacs-lisp
   (use-package vterm
     :bind ("C-x p t" . vterm))
+#+end_src
+
+** Cloud stuff
+#+begin_src emacs-lisp
+  (defun renz/glogin ()
+    "Log in to GCP"
+    (interactive)
+    (shell-command "gcloud auth login --update-adc"))
 #+end_src
 
 * Wishlist
