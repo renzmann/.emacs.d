@@ -548,10 +548,14 @@
 (global-set-key (kbd "C-c r") #'renz/find-recent-file)
 ;; =C-c r= find recent files:1 ends here
 
+;; [[file:README.org::*=C-c t= visit tags table][=C-c t= visit tags table:1]]
+(global-set-key (kbd "C-c t") #'visit-tags-table)
+;; =C-c t= visit tags table:1 ends here
+
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s e") #'eshell)
-(global-set-key (kbd "C-c s t") #'eat)
+(global-set-key (kbd "C-c s t") #'vterm)
 ;; =C-c s= shell:1 ends here
 
 ;; [[file:README.org::*=C-c u= open URL at point in browser][=C-c u= open URL at point in browser:1]]
@@ -966,6 +970,13 @@ select."
 (use-package vterm
   :bind ("C-x p t" . vterm))
 ;; =vterm= Terminal emulation:1 ends here
+
+;; [[file:README.org::*Cloud stuff][Cloud stuff:1]]
+(defun renz/glogin ()
+  "Log in to GCP"
+  (interactive)
+  (shell-command "gcloud auth login --update-adc"))
+;; Cloud stuff:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here
