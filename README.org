@@ -1040,75 +1040,6 @@ spinners and progress bars, so I have a little hack to work around that.
 
 There might be a better way, but this mostly works for now.
 
-** Tramp
-Tramp (Transparent Remote Access Multiple Protocol) allows us to access files on
-a remote machine, and edit them locally.  This is great for simple changes or
-quickly testing out some Python on a VM somewhere.  It isn't as snappy as using
-the TTY version or an X-forwarded Emacs from the server directly, so if I /can/
-set up Emacs remotely, I usually do.  When I don't want to or don't have the
-time, Tramp is a godsend.  There are, however, many foibles to guard against,
-particularly with how interacts with version control and ~.dir-locals~.  The
-Tramp manual (distributed with Emacs) recommends adjusting these for some speed
-improvements:
-
-#+begin_src emacs-lisp
-  (use-package tramp
-    :defer t
-    :config
-    (setq vc-handled-backends '(Git)
-          file-name-inhibit-locks t
-          tramp-inline-compress-start-size 1000
-          tramp-copy-size-limit 10000
-          tramp-verbose 1)
-    (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
-#+end_src
-
-For some time I was having a lot of trouble with prohibitive slowness over
-Tramp, and after careful scrutiny of the logs on (I believe) =tramp-verbose 6=, I
-found out that enabling remote dir-locals was causing a huge bottleneck.  On
-every operation it would trace up the filesystem tree back to the root
-directory, scanning for a ~.dir-locals~ file.  Since some of the drives were
-network-mounted, this caused thousands of network calls per file operation,
-obviously slowing things down a lot.  Because of this, I've opted to simply
-disable ~.dir-locals~ over Tramp entirely, since I don't really use it much, if at
-all.
-
-#+begin_src emacs-lisp :tangle no :eval never
-;; (setq enable-remote-dir-locals t)
-#+end_src
-
-[[https://www.gnu.org/software/emacs/manual/html_node/tramp/Frequently-Asked-Questions.html][Disabling VC]] /does/ seem to speed things up a little, but it's not an acceptable
-thing to put in, since I so frequently use VC over tramp.  Fully disabling VC
-would include this snippet:
-
-#+begin_src emacs-lisp :tangle no :eval never
-(remove-hook 'find-file-hook 'vc-find-file-hook)
-
-(setq vc-ignore-dir-regexp
-      (format "\\(%s\\)\\|\\(%s\\)"
-              vc-ignore-dir-regexp
-              tramp-file-name-regexp))
-#+end_src
-
-Additionally, these came up as other potential options [[https://github.com/doomemacs/doomemacs/issues/3909][from the doom-emacs
-issues]], which I do not currently include.
-
-#+begin_src emacs-lisp :tangle no :eval never
-(setq tramp-default-method "scp")
-(setq projectile--mode-line "Projectile")
-#+end_src
-
-I often need to set these in ~/.ssh/config for TRAMP to speed up
-
-#+begin_example
-Host *
-     ControlMaster auto
-     ControlPath ~/.ssh/master-%h:%p
-     ControlPersist 10m
-     ForwardAgent yes
-     ServerAliveInterval 60
-#+end_example
-
 ** TAGS
 Before the whole language server revolution, we had TAGS files for caching the
 location of symbol definitions.  =etags= comes with Emacs, and combining some
@@ -2042,7 +1973,8 @@ to open the terminal in a new split.
 
 #+begin_src emacs-lisp
   (use-package vterm
-    :bind ("C-x p t" . vterm))
+    :bind ("C-x p t" . vterm)
+    :custom (vterm-tramp-shells . (("docker", "/bin/bash"))))
 #+end_src
 
 ** Cloud stuff
@@ -2054,6 +1986,8 @@ to open the terminal in a new split.
 #+end_src
 
 * Wishlist
++ Tramp is hanging, but not when using =emacs -q=.  Prune any docker stuff from
+  my config
 + Think about efficient editing motions with a cheatsheet that translates from
   Vim
 + Remove my keybinding section and put it under a =use-package emacs= block

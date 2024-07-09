@@ -416,18 +416,6 @@
 (add-hook 'shell-mode-hook #'renz/async-shell-command-filter-hook)
 ;; Shell commands:1 ends here
 
-;; [[file:README.org::*Tramp][Tramp:1]]
-(use-package tramp
-  :defer t
-  :config
-  (setq vc-handled-backends '(Git)
-        file-name-inhibit-locks t
-        tramp-inline-compress-start-size 1000
-        tramp-copy-size-limit 10000
-        tramp-verbose 1)
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path))
-;; Tramp:1 ends here
-
 ;; [[file:README.org::*'Uniquify' using slash instead of brackets]['Uniquify' using slash instead of brackets:1]]
 (use-package uniquify
   :custom (uniquify-buffer-name-style 'forward))
@@ -968,7 +956,8 @@ select."
 
 ;; [[file:README.org::*=vterm= Terminal emulation][=vterm= Terminal emulation:1]]
 (use-package vterm
-  :bind ("C-x p t" . vterm))
+  :bind ("C-x p t" . vterm)
+  :custom (vterm-tramp-shells . (("docker", "/bin/bash"))))
 ;; =vterm= Terminal emulation:1 ends here
 
 ;; [[file:README.org::*Cloud stuff][Cloud stuff:1]]
