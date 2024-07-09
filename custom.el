@@ -10,10 +10,7 @@
  '(package-vc-selected-packages
    '((treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
  '(safe-local-variable-values
-   '((pyvenv-activate . "/Users/a834991/repos/llm-core/.venv/")
-     (pyvenv-activate . "/Users/a834991/repos/growth-gpt/.venv/")
-     (pyvenv-activate . "/Users/a834991/repos/hello-app/.venv/")
-     (vc-prepare-patches-separately)
+   '((vc-prepare-patches-separately)
      (diff-add-log-use-relative-names . t)
      (vc-git-annotate-switches . "-w"))))
 (custom-set-faces
