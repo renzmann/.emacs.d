@@ -1974,7 +1974,7 @@ to open the terminal in a new split.
 #+begin_src emacs-lisp
   (use-package vterm
     :bind ("C-x p t" . vterm)
-    :custom (vterm-tramp-shells . (("docker", "/bin/bash"))))
+    :custom (vterm-tramp-shells '(("docker" "/bin/bash"))))
 #+end_src
 
 ** Cloud stuff

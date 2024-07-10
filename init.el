@@ -957,7 +957,7 @@ select."
 ;; [[file:README.org::*=vterm= Terminal emulation][=vterm= Terminal emulation:1]]
 (use-package vterm
   :bind ("C-x p t" . vterm)
-  :custom (vterm-tramp-shells . (("docker", "/bin/bash"))))
+  :custom (vterm-tramp-shells '(("docker" "/bin/bash"))))
 ;; =vterm= Terminal emulation:1 ends here
 
 ;; [[file:README.org::*Cloud stuff][Cloud stuff:1]]
