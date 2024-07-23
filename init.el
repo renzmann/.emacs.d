@@ -108,9 +108,7 @@
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
-(use-package ef-themes
-  :config
-  (load-theme 'ef-cherie t))
+(load-theme 'modus-vivendi t)
 ;; Theme:1 ends here
 
 ;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]

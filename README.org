@@ -379,14 +379,10 @@ and =C-x C-M--= to change the size /globally/.
 
 * Theme
 
-Hats off to [[https://protesilaos.com/][Prot]] for his wonderful themes.  I use ef-cherie because of how clear
-it is in well-lit and dark areas.  It also has a low blue-light emission, in
-case I'm working later at night.
+Hats off to [[https://protesilaos.com/][Prot]] for his wonderful themes.
 
 #+begin_src emacs-lisp
-  (use-package ef-themes
-    :config
-    (load-theme 'ef-cherie t))
+  (load-theme 'modus-vivendi t)
 #+end_src
 
 ** Window margins and fringe
@@ -1991,17 +1987,10 @@ to open the terminal in a new split.
 + Think about efficient editing motions with a cheatsheet that translates from
   Vim
 + Remove my keybinding section and put it under a =use-package emacs= block
-+ Replicate my bash PS1 for =eshell-prompt-function= and =eshell-prompt-regex=
-  - see [[https://github.com/zwild/eshell-prompt-extras/blob/master/eshell-prompt-extras.el][eshell-prompt-extras]] for examples
-  - The ~epe-theme-pipeline~ has the structure I want, but the colors are
-    hideous.  Need to customize them with ef-theme faces.
-+ In eshell, a way to search history through completing-read (vertico minibuffer completion)
 + ~fzf~-like general completion for paths and files.  ~project-switch-project~
   is pretty close, but only good for known projects
 + When running BigQuery from a =*compilation*= buffer, it would be nice if I
   could get error markers to jump directly to the issue
-+ How do we use local emacs as EDITOR for tramp connections?  Things like
-  default git messages from merges are difficult
 + Make corfu less invasive.  Common issues:
   - Enter accepts something when I wanted to go to a new line
   - pop-up blocking what I wanted
@@ -2025,7 +2014,13 @@ to open the terminal in a new split.
   - Fuck no.
 + Eshell commands for creating/managing virtualenvs
   - =uv= has completely annihilated this requirement
-
+  - I just can't find a good workflow on eshell.  The =M-!= and =M-&= do
+    everything I would do from eshell, but also track my environment better.
+    Vterm is also very good for actual terminal emulation.
++ How do we use local emacs as EDITOR for tramp connections?  Things like
+  default git messages from merges are difficult
+  - This just requires a workflow change.  Do it from a terminal or ensure we're
+    always using VC mode.
 * Footer
 Thank you for reading 'till the end or for being interested on how to end an
 Emacs package.  So that's it, let's gracefully finish tangling everything:
