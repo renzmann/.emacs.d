@@ -406,13 +406,6 @@ space between the edge of the screen and the fringe.
   (renz/modify-margins)
 #+end_src
 
-We also need to make sure this runs each time we change the =ef-theme=, otherwise
-the old background color will linger in the margins.
-
-#+begin_src emacs-lisp :tangle no
-  (add-hook 'ef-themes-post-load-hook 'renz/modify-margins)
-#+end_src
-
 * Emacs' Built-in Settings
 My settings for base Emacs behavior.  Assuming I ran with /no/ plugins (ala ~emacs
 -Q~), I would still set most of these by hand at one point or another.  This
@@ -422,7 +415,7 @@ Tree-sitter are located under [[* Tool configuration][Tool configuration]].
 
 ** Stop stupid bell
 This snippet has a special place in my heart, because it was the first two lines
-of elisp I wrote when first learning Emacs.  It is the central kernel around
+of elisp I wrote when first learning Emacs.  It is the kernel around
 which my =~/.emacs= and later =~/.emacs.d/init.el= grew.
 
 #+begin_src emacs-lisp
@@ -498,7 +491,7 @@ colors in-buffer.  Provided by a [[https://stackoverflow.com/a/3072831/13215205]
       (ansi-color-apply-on-region (point-min) (point-max))))
 #+end_src
 
-*** Colored output in ~eshell~ and =*compilation*=
+*** Color output in ~eshell~ and =*compilation*=
 In =*compilation*= mode, we just use the "display colors" function from above.
 Enable colors in the =*compilation*= buffer.
 
@@ -641,8 +634,8 @@ comments and strings.
 ** Automatically create matching parentheses in programming modes
 
 #+begin_src emacs-lisp
-  (add-hook 'prog-mode-hook (electric-pair-mode t))
-  (add-hook 'prog-mode-hook (show-paren-mode t))
+  (add-hook 'prog-mode-hook (lambda () (electric-pair-mode t)))
+  (add-hook 'prog-mode-hook (lambda () (show-paren-mode t)))
 #+end_src
 
 ** Shorten yes/no prompts to y/n

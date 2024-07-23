@@ -168,13 +168,13 @@
     (ansi-color-apply-on-region (point-min) (point-max))))
 ;; Render ASCII color escape codes:1 ends here
 
-;; [[file:README.org::*Colored output in ~eshell~ and =*compilation*=][Colored output in ~eshell~ and =*compilation*=:1]]
+;; [[file:README.org::*Color output in ~eshell~ and =*compilation*=][Color output in ~eshell~ and =*compilation*=:1]]
 (add-hook 'compilation-filter-hook #'renz/display-ansi-colors)
-;; Colored output in ~eshell~ and =*compilation*=:1 ends here
+;; Color output in ~eshell~ and =*compilation*=:1 ends here
 
-;; [[file:README.org::*Colored output in ~eshell~ and =*compilation*=][Colored output in ~eshell~ and =*compilation*=:2]]
+;; [[file:README.org::*Color output in ~eshell~ and =*compilation*=][Color output in ~eshell~ and =*compilation*=:2]]
 (add-hook 'eshell-preoutput-filter-functions  #'ansi-color-apply)
-;; Colored output in ~eshell~ and =*compilation*=:2 ends here
+;; Color output in ~eshell~ and =*compilation*=:2 ends here
 
 ;; [[file:README.org::*Recent files menu][Recent files menu:1]]
 (recentf-mode t)
@@ -229,8 +229,8 @@
 ;; Always turn on flymake in prog mode:2 ends here
 
 ;; [[file:README.org::*Automatically create matching parentheses in programming modes][Automatically create matching parentheses in programming modes:1]]
-(add-hook 'prog-mode-hook (electric-pair-mode t))
-(add-hook 'prog-mode-hook (show-paren-mode t))
+(add-hook 'prog-mode-hook (lambda () (electric-pair-mode t)))
+(add-hook 'prog-mode-hook (lambda () (show-paren-mode t)))
 ;; Automatically create matching parentheses in programming modes:1 ends here
 
 ;; [[file:README.org::*Shorten yes/no prompts to y/n][Shorten yes/no prompts to y/n:1]]
