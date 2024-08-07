@@ -634,8 +634,8 @@ comments and strings.
 ** Automatically create matching parentheses in programming modes
 
 #+begin_src emacs-lisp
-  (add-hook 'prog-mode-hook (lambda () (electric-pair-mode t)))
-  (add-hook 'prog-mode-hook (lambda () (show-paren-mode t)))
+  (add-hook 'prog-mode-hook 'electric-pair-local-mode)
+  (add-hook 'prog-mode-hook 'show-paren-local-mode)
 #+end_src
 
 ** Shorten yes/no prompts to y/n
@@ -1096,6 +1096,8 @@ tandem with =completing-read=.
   (setq load-prefer-newer t)
 #+end_src
 
+* My own little tools
+** Open current selection in GitHub
 * Keybindings
 
 ** Expanded/better defaults

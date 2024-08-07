@@ -229,8 +229,8 @@
 ;; Always turn on flymake in prog mode:2 ends here
 
 ;; [[file:README.org::*Automatically create matching parentheses in programming modes][Automatically create matching parentheses in programming modes:1]]
-(add-hook 'prog-mode-hook (lambda () (electric-pair-mode t)))
-(add-hook 'prog-mode-hook (lambda () (show-paren-mode t)))
+(add-hook 'prog-mode-hook 'electric-pair-local-mode)
+(add-hook 'prog-mode-hook 'show-paren-local-mode)
 ;; Automatically create matching parentheses in programming modes:1 ends here
 
 ;; [[file:README.org::*Shorten yes/no prompts to y/n][Shorten yes/no prompts to y/n:1]]
