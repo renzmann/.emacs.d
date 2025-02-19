@@ -1880,6 +1880,13 @@ Handy for viewing data quickly.
     :mode "\\.csv\\'")
 #+end_src
 
+** JavaScript
+#+begin_src emacs-lisp
+  (use-package js
+    :config
+    (setq js-mode-map (define-keymap "M-." #'xref-find-definitions))
+    (setq js-ts-mode-map (copy-keymap js-mode-map)))
+#+end_src
 * Eshell
 #+begin_src emacs-lisp
   (use-package eshell
@@ -1902,7 +1909,7 @@ I've posted this to GitHub and MELPA as [[https://github.com/renzmann/treesit-au
   (use-package treesit-auto
     :custom
     (treesit-auto-install 'prompt)
-    (treesit-auto-langs '(awk bash c css go html javascript json make markdown r ruby rust toml typescript yaml))
+    (treesit-auto-langs '(awk bash c css go html make markdown r ruby rust toml yaml))
     :config
     (treesit-auto-add-to-auto-mode-alist 'all)
     (global-treesit-auto-mode))

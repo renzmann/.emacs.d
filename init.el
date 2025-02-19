@@ -914,6 +914,13 @@ select."
   :mode "\\.csv\\'")
 ;; csv-mode:1 ends here
 
+;; [[file:README.org::*JavaScript][JavaScript:1]]
+(use-package js
+  :config
+  (setq js-mode-map (define-keymap "M-." #'xref-find-definitions))
+  (setq js-ts-mode-map (copy-keymap js-mode-map)))
+;; JavaScript:1 ends here
+
 ;; [[file:README.org::*Eshell][Eshell:1]]
 (use-package eshell
   :custom
@@ -930,7 +937,7 @@ select."
 (use-package treesit-auto
   :custom
   (treesit-auto-install 'prompt)
-  (treesit-auto-langs '(awk bash c css go html javascript json make markdown r ruby rust toml typescript yaml))
+  (treesit-auto-langs '(awk bash c css go html make markdown r ruby rust toml yaml))
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
