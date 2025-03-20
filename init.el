@@ -541,7 +541,6 @@
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s e") #'eshell)
-(global-set-key (kbd "C-c s t") #'vterm)
 ;; =C-c s= shell:1 ends here
 
 ;; [[file:README.org::*=C-c u= open URL at point in browser][=C-c u= open URL at point in browser:1]]
@@ -958,12 +957,6 @@ select."
 (use-package direnv
   :config (direnv-mode))
 ;; =direnv= Managing project environment variables:1 ends here
-
-;; [[file:README.org::*=vterm= Terminal emulation][=vterm= Terminal emulation:1]]
-(use-package vterm
-  :bind ("C-x p t" . vterm)
-  :custom (vterm-tramp-shells '(("docker" "/bin/bash"))))
-;; =vterm= Terminal emulation:1 ends here
 
 ;; [[file:README.org::*Cloud stuff][Cloud stuff:1]]
 (defun renz/glogin ()

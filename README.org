@@ -1096,8 +1096,6 @@ tandem with =completing-read=.
   (setq load-prefer-newer t)
 #+end_src
 
-* My own little tools
-** Open current selection in GitHub
 * Keybindings
 
 ** Expanded/better defaults
@@ -1243,7 +1241,6 @@ I used to bind this to ~just-one-space~ before I knew about =M-SPC=
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c s s") #'shell)
   (global-set-key (kbd "C-c s e") #'eshell)
-  (global-set-key (kbd "C-c s t") #'vterm)
 #+end_src
 
 *** =C-c u= open URL at point in browser
@@ -1368,7 +1365,7 @@ By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for
 
 Something I once tried is to use =icomplete= along with =icomplete-in-buffer= to
 get something like a little window that updates as I type.  It seems a little
-wonky, since TAB-completion will still cause the \ast{}Completions\ast{} buffer
+wonky, since TAB-completion will still cause the ~*Completions*~ buffer
 to pop up, even while Icomplete is active, unless we set =completion-auto-help=
 to =lazy=; and even then it will still come up on the second TAB press.
 
@@ -1962,17 +1959,6 @@ include.
 #+begin_src emacs-lisp
   (use-package direnv
     :config (direnv-mode))
-#+end_src
-
-** =vterm= Terminal emulation
-
-Binding the terminal to an unused =C-x= allows for things like =C-x 4 p t=
-to open the terminal in a new split.
-
-#+begin_src emacs-lisp
-  (use-package vterm
-    :bind ("C-x p t" . vterm)
-    :custom (vterm-tramp-shells '(("docker" "/bin/bash"))))
 #+end_src
 
 ** Cloud stuff
