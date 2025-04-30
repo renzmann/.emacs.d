@@ -6,12 +6,14 @@
  '(column-number-mode t)
  '(mode-line-in-non-selected-windows t)
  '(package-selected-packages
-   '(vterm direnv jq-mode yasnippet dockerfile-mode orderless marginalia caddyfile-mode vertico corfu treesit-auto groovy-mode clojure-ts-mode dart-ts-mode powershell sql-indent package-lint markdown-mode exec-path-from-shell csv-mode))
+   '(caddyfile-mode clojure-ts-mode corfu csv-mode dart-ts-mode direnv
+                    dockerfile-mode exec-path-from-shell go-mode groovy-mode
+                    jq-mode marginalia markdown-mode orderless package-lint
+                    powershell sql-indent treesit-auto vertico vterm yasnippet))
  '(package-vc-selected-packages
    '((treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
  '(safe-local-variable-values
-   '((vc-prepare-patches-separately)
-     (diff-add-log-use-relative-names . t)
+   '((vc-prepare-patches-separately) (diff-add-log-use-relative-names . t)
      (vc-git-annotate-switches . "-w"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.

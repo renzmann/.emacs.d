@@ -1884,6 +1884,7 @@ Handy for viewing data quickly.
     (setq js-mode-map (define-keymap "M-." #'xref-find-definitions))
     (setq js-ts-mode-map (copy-keymap js-mode-map)))
 #+end_src
+
 * Eshell
 #+begin_src emacs-lisp
   (use-package eshell
