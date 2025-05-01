@@ -81,6 +81,52 @@ Emacs.app is signed with a developer certificate and notarized by Apple.
 
 Very nice!
 
+*** If Jimeh's build doesn't work
+Some security updates from Apple can cause issues with native compilation
+(notably 15.4.1).  In that case, this is how I compile on mac.
+
+#+begin_src shell
+  brew install \
+    pkg-config \
+    texinfo \
+    libgccjit \
+    autoconf \
+    automake \
+    make \
+    jansson \
+    gnutls \
+    mailutils \
+    imagemagick \
+    tree-sitter \
+    mailutils
+
+  CFLAGS="-O3 \
+    -march=native \
+    -I/opt/local/include/gcc13 \
+    -L/opt/local/lib/gcc13 \
+    -Wl,-rpath,/opt/local/lib/gcc13 "
+
+  export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/opt/local/lib/pkgconfig"
+  git clone git://git.savannah.gnu.org/emacs.git
+  cd emacs
+  ./autogen.sh
+
+  # Change "--prefix=..." as you wish
+  ./configure \
+      --prefix="${HOME}/.local" \
+      --with-ns \
+      --disable-ns-self-contained \
+      --with-json \
+      --with-tree-sitter \
+      --without-native-compilation \
+      --with-imagemagick \
+      --with-mailutils \
+      --without-compress-install \
+      CFLAGS="${CFLAGS}"
+  gmake -j $(sysctl -n hw.ncpu)
+  gmake install
+#+end_src
+
 ** Linux
 Often the version of Emacs that comes through my system package manager, such as
 =sudo apt-get install emacs=, is out of date.  So, typically, I'll get a release
