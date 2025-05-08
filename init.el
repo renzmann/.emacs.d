@@ -108,25 +108,11 @@
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
-(load-theme 'modus-vivendi t)
+(if (version< emacs-version "31.0")
+    (load-theme 'modus-vivendi)
+  (load-theme 'modus-vivendi-tinted t)
+  (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted)))
 ;; Theme:1 ends here
-
-;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
-(defun renz/modify-margins ()
-  "Add some space around each window."
-  (interactive)
-  (modify-all-frames-parameters
-   '((right-divider-width . 40)
-     (internal-border-width . 40)))
-  (dolist (face '(window-divider
-                  window-divider-first-pixel
-                  window-divider-last-pixel))
-    (face-spec-reset-face face)
-    (set-face-foreground face (face-attribute 'default :background)))
-  (set-face-background 'fringe (face-attribute 'default :background)))
-
-(renz/modify-margins)
-;; Window margins and fringe:1 ends here
 
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
 ;; Stop stupid bell

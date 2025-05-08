@@ -428,28 +428,10 @@ and =C-x C-M--= to change the size /globally/.
 Hats off to [[https://protesilaos.com/][Prot]] for his wonderful themes.
 
 #+begin_src emacs-lisp
-  (load-theme 'modus-vivendi t)
-#+end_src
-
-** Window margins and fringe
-This hunk adds some space around all sides of each window so that we get a clear
-space between the edge of the screen and the fringe.
-
-#+begin_src emacs-lisp
-  (defun renz/modify-margins ()
-    "Add some space around each window."
-    (interactive)
-    (modify-all-frames-parameters
-     '((right-divider-width . 40)
-       (internal-border-width . 40)))
-    (dolist (face '(window-divider
-                    window-divider-first-pixel
-                    window-divider-last-pixel))
-      (face-spec-reset-face face)
-      (set-face-foreground face (face-attribute 'default :background)))
-    (set-face-background 'fringe (face-attribute 'default :background)))
-
-  (renz/modify-margins)
+  (if (version< emacs-version "31.0")
+      (load-theme 'modus-vivendi)
+    (load-theme 'modus-vivendi-tinted t)
+    (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted)))
 #+end_src
 
 * Emacs' Built-in Settings
@@ -2038,7 +2020,7 @@ include.
   - Maybe also do this for =*compilation*=?
 + The ~__PYTHON_EL_eval_file~ thing is still really fucking annoying
 + *Elisp*: advise =M-&= to insert the command run in buffer name
-
+** TODO Replace my =C-c j= with built-in =window-layout-rotate--=
 * Completed from wishlist
 + A good tmux-like workflow for running multiple async compilation jobs, with an
   easy way to kill and restart each
