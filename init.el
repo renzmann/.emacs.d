@@ -111,7 +111,8 @@
 (if (version< emacs-version "31.0")
     (load-theme 'modus-vivendi)
   (load-theme 'modus-vivendi-tinted t)
-  (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted)))
+  (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted))
+  (global-set-key (kbd "C-c m") #'modus-themes-toggle))
 ;; Theme:1 ends here
 
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
