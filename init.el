@@ -602,7 +602,11 @@
 
 ;; [[file:README.org::*Completion previews][Completion previews:1]]
 (unless (version< emacs-version "31")
-  (global-completion-preview-mode))
+  (global-completion-preview-mode)
+  (define-key completion-preview-active-mode-map (kbd "M-p") #'completion-preview-prev-candidate)
+  (define-key completion-preview-active-mode-map (kbd "M-n") #'completion-preview-next-candidate)
+  (define-key completion-preview-active-mode-map (kbd "M-f") #'completion-preview-insert-word)
+  (define-key completion-preview-active-mode-map (kbd "C-M-f") #'completion-preview-insert-sexp))
 ;; Completion previews:1 ends here
 
 ;; [[file:README.org::*Corfu][Corfu:1]]
@@ -878,7 +882,7 @@ select."
 (use-package python
   :config
   (require 'eglot)
-  (setq python-check-command "ruff check")
+  (setq python-check-command "uv run ruff format && uv run ruff check --fix")
   (add-hook 'python-mode-hook #'flymake-mode)
   (add-hook 'python-ts-mode-hook #'flymake-mode))
 ;; Python check with "ruff":1 ends here

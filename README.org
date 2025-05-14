@@ -1421,14 +1421,20 @@ whatever is currently in the prompt.  For instance, if we are editing a file
 =hello.py=, and then use =C-x C-f hell.py=, the minibuffer will complete
 =hell.py= into =hello.py= if we use =RET=, and will open a new buffer for
 =hell.py= if we use =C-d=.
+
 ** Completion previews
 Emacs 30 introduced in-line completion previews, which are separate from your
 usual drop-down menu style of preview.
 
 #+begin_src emacs-lisp
   (unless (version< emacs-version "31")
-    (global-completion-preview-mode))
+    (global-completion-preview-mode)
+    (define-key completion-preview-active-mode-map (kbd "M-p") #'completion-preview-prev-candidate)
+    (define-key completion-preview-active-mode-map (kbd "M-n") #'completion-preview-next-candidate)
+    (define-key completion-preview-active-mode-map (kbd "M-f") #'completion-preview-insert-word)
+    (define-key completion-preview-active-mode-map (kbd "C-M-f") #'completion-preview-insert-sexp))
 #+end_src
+
 ** Corfu
 For in-buffer pop-up completion.
 
@@ -1842,7 +1848,7 @@ programs exist is a small time saver.
   (use-package python
     :config
     (require 'eglot)
-    (setq python-check-command "ruff check")
+    (setq python-check-command "uv run ruff format && uv run ruff check --fix")
     (add-hook 'python-mode-hook #'flymake-mode)
     (add-hook 'python-ts-mode-hook #'flymake-mode))
 #+end_src
