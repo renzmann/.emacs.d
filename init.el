@@ -108,7 +108,7 @@
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
-(if (version< emacs-version "31.0")
+(if (version< emacs-version "30.0")
     (load-theme 'modus-vivendi)
   (load-theme 'modus-vivendi-tinted t)
   (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted))
@@ -601,7 +601,7 @@
 ;; Completion in the minibuffer and at point:1 ends here
 
 ;; [[file:README.org::*Completion previews][Completion previews:1]]
-(unless (version< emacs-version "31")
+(unless (version< emacs-version "30.0")
   (global-completion-preview-mode)
   (define-key completion-preview-active-mode-map (kbd "M-p") #'completion-preview-prev-candidate)
   (define-key completion-preview-active-mode-map (kbd "M-n") #'completion-preview-next-candidate)

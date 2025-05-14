@@ -428,7 +428,7 @@ and =C-x C-M--= to change the size /globally/.
 Hats off to [[https://protesilaos.com/][Prot]] for his wonderful themes.
 
 #+begin_src emacs-lisp
-  (if (version< emacs-version "31.0")
+  (if (version< emacs-version "30.0")
       (load-theme 'modus-vivendi)
     (load-theme 'modus-vivendi-tinted t)
     (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted))
@@ -1427,7 +1427,7 @@ Emacs 30 introduced in-line completion previews, which are separate from your
 usual drop-down menu style of preview.
 
 #+begin_src emacs-lisp
-  (unless (version< emacs-version "31")
+  (unless (version< emacs-version "30.0")
     (global-completion-preview-mode)
     (define-key completion-preview-active-mode-map (kbd "M-p") #'completion-preview-prev-candidate)
     (define-key completion-preview-active-mode-map (kbd "M-n") #'completion-preview-next-candidate)
