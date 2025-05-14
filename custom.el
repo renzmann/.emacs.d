@@ -1,3 +1,4 @@
+;; -*- lexical-binding: t; -*-
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
@@ -9,7 +10,7 @@
    '(caddyfile-mode clojure-ts-mode corfu csv-mode dart-ts-mode direnv
                     dockerfile-mode exec-path-from-shell go-mode groovy-mode
                     jq-mode marginalia markdown-mode orderless package-lint
-                    powershell sql-indent treesit-auto vertico vterm yasnippet))
+                    powershell sql-indent vertico vterm yasnippet))
  '(package-vc-selected-packages
    '((treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
  '(safe-local-variable-values

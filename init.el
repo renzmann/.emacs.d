@@ -430,6 +430,16 @@
 (setq load-prefer-newer t)
 ;; Prefer newer files on load:1 ends here
 
+;; [[file:README.org::*Keep some executables in this config directory][Keep some executables in this config directory:1]]
+(defun renz/add-relative-to-exec-path (dir)
+  "Add DIR relative to user Emacs configuration directory to 'exec-path'."
+  (let ((dir-path (expand-file-name dir user-emacs-directory)))
+    (mkdir dir-path t)
+    (add-to-list 'exec-path dir-path)))
+
+(renz/add-relative-to-exec-path "scripts")
+;; Keep some executables in this config directory:1 ends here
+
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 ;; Expanded/better defaults:1 ends here
@@ -589,6 +599,11 @@
 ;; [[file:README.org::*Completion in the minibuffer and at point][Completion in the minibuffer and at point:1]]
 (setq tab-always-indent 'complete)
 ;; Completion in the minibuffer and at point:1 ends here
+
+;; [[file:README.org::*Completion previews][Completion previews:1]]
+(unless (version< emacs-version "31")
+  (global-completion-preview-mode))
+;; Completion previews:1 ends here
 
 ;; [[file:README.org::*Corfu][Corfu:1]]
 (use-package corfu
@@ -798,13 +813,6 @@ Jumps to an Org src block from tangled code."
          (sql-mode . sqlind-minor-mode)))
 ;; Indentation:2 ends here
 
-;; [[file:README.org::*Interactive ~hive2~ mode][Interactive ~hive2~ mode:1]]
-(use-package hive2
-  :load-path "site-lisp/"
-  :demand t
-  :mode ("\\.hql" . sql-mode))
-;; Interactive ~hive2~ mode:1 ends here
-
 ;; [[file:README.org::*Interactive =bq shell=][Interactive =bq shell=:3]]
 (use-package bq
   :load-path "site-lisp"
@@ -918,27 +926,6 @@ select."
                                ("docker" "build")
                                ("uv" "pip"))))
 ;; Eshell:1 ends here
-
-;; [[file:README.org::*=treesit-auto=: Automatically Using TreeSitter Modes][=treesit-auto=: Automatically Using TreeSitter Modes:1]]
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  (treesit-auto-langs '(awk bash c css go html make markdown r ruby rust toml yaml))
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
-;; =treesit-auto=: Automatically Using TreeSitter Modes:1 ends here
-
-;; [[file:README.org::*=pyvenv=][=pyvenv=:1]]
-(use-package pyvenv
-  ;; Overrides `mark-page'
-  :bind (("C-x p a" . pyvenv-activate)
-         ("C-x p u" . pyvenv-deactivate))
-  :config
-  (put 'pyvenv-mode 'safe-local-variable #'stringp)
-  (pyvenv-tracking-mode 1)
-  (pyvenv-mode 1))
-;; =pyvenv=:1 ends here
 
 ;; [[file:README.org::*=direnv= Managing project environment variables][=direnv= Managing project environment variables:1]]
 (use-package direnv
