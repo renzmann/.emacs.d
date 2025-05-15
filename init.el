@@ -575,7 +575,8 @@
 (use-package orderless
   :custom
   (completion-styles '(orderless flex basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+  (completion-category-overrides '((file (styles basic partial-completion))))
+  (orderless-component-separator "[ &.]"))
 ;; Completion style:1 ends here
 
 ;; [[file:README.org::*Nicer Display and Behavior of ~*Completions*~][Nicer Display and Behavior of ~*Completions*~:1]]
@@ -592,13 +593,9 @@
   (setq completion-auto-help 'always
         completion-auto-select 'second-tab
         completion-show-help nil
-        completions-sort nil
+        completions-sort 'historical
         completions-header-format nil))
 ;; Nicer Display and Behavior of ~*Completions*~:3 ends here
-
-;; [[file:README.org::*Completion in the minibuffer and at point][Completion in the minibuffer and at point:1]]
-(setq tab-always-indent 'complete)
-;; Completion in the minibuffer and at point:1 ends here
 
 ;; [[file:README.org::*Completion previews][Completion previews:1]]
 (unless (version< emacs-version "30.0")

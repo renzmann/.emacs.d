@@ -1358,7 +1358,8 @@ functions much like your default TAB-complete at a Bash shell.
   (use-package orderless
     :custom
     (completion-styles '(orderless flex basic))
-    (completion-category-overrides '((file (styles basic partial-completion)))))
+    (completion-category-overrides '((file (styles basic partial-completion))))
+    (orderless-component-separator "[ &.]"))
 #+end_src
 
 ** Nicer Display and Behavior of ~*Completions*~
@@ -1390,28 +1391,16 @@ options in question.
     (setq completion-auto-help 'always
           completion-auto-select 'second-tab
           completion-show-help nil
-          completions-sort nil
+          completions-sort 'historical
           completions-header-format nil))
 #+end_src
 
 ** Completion in the minibuffer and at point
-By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for
-~completion-at-point~.  I'd much prefer to use the easier and more intuitive
-=TAB=.
-
-#+begin_src emacs-lisp
-  (setq tab-always-indent 'complete)
-#+end_src
-
-Something I once tried is to use =icomplete= along with =icomplete-in-buffer= to
-get something like a little window that updates as I type.  It seems a little
-wonky, since TAB-completion will still cause the ~*Completions*~ buffer
-to pop up, even while Icomplete is active, unless we set =completion-auto-help=
-to =lazy=; and even then it will still come up on the second TAB press.
 
 #+begin_src emacs-lisp :tangle no
   (setq icomplete-in-buffer t)
   (setq icomplete-prospects-height 10)
+  (advice-add 'completion-at-point :after #'minibuffer-hide-completions)
   (icomplete-vertical-mode t)
 #+end_src
 
