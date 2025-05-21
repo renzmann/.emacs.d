@@ -489,36 +489,6 @@
 (global-set-key (kbd "C-c i") #'browse-url-of-buffer)
 ;; =C-c i= browse url of buffer:1 ends here
 
-;; [[file:README.org::*=C-c j= Toggle window split][=C-c j= Toggle window split:1]]
-(defun toggle-window-split ()
-  "Switch between horizontal and vertical split window layout."
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
-
-(global-set-key (kbd "C-c j") #'toggle-window-split)
-;; =C-c j= Toggle window split:1 ends here
-
 ;; [[file:README.org::*=C-c k= kill all but one space][=C-c k= kill all but one space:1]]
 (global-set-key (kbd "C-c k") #'bury-buffer)
 ;; =C-c k= kill all but one space:1 ends here

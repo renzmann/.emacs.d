@@ -1216,39 +1216,6 @@ probably using it in a ~:bind~ statement with ~use-package~ somewhere else.
   (global-set-key (kbd "C-c i") #'browse-url-of-buffer)
 #+end_src
 
-*** =C-c j= Toggle window split
-[[https://www.emacswiki.org/emacs/ToggleWindowSplit][Toggling windows]] from vertical to horizontal splits and vice-versa.
-
-#+begin_src emacs-lisp
-  (defun toggle-window-split ()
-    "Switch between horizontal and vertical split window layout."
-    (interactive)
-    (if (= (count-windows) 2)
-        (let* ((this-win-buffer (window-buffer))
-               (next-win-buffer (window-buffer (next-window)))
-               (this-win-edges (window-edges (selected-window)))
-               (next-win-edges (window-edges (next-window)))
-               (this-win-2nd (not (and (<= (car this-win-edges)
-                                           (car next-win-edges))
-                                       (<= (cadr this-win-edges)
-                                           (cadr next-win-edges)))))
-               (splitter
-                (if (= (car this-win-edges)
-                       (car (window-edges (next-window))))
-                    'split-window-horizontally
-                  'split-window-vertically)))
-          (delete-other-windows)
-          (let ((first-win (selected-window)))
-            (funcall splitter)
-            (if this-win-2nd (other-window 1))
-            (set-window-buffer (selected-window) this-win-buffer)
-            (set-window-buffer (next-window) next-win-buffer)
-            (select-window first-win)
-            (if this-win-2nd (other-window 1))))))
-
-  (global-set-key (kbd "C-c j") #'toggle-window-split)
-#+end_src
-
 *** =C-c k= kill all but one space
 
 I used to bind this to ~just-one-space~ before I knew about =M-SPC=
@@ -1967,7 +1934,6 @@ These are tweaks for third party packages.
   - Maybe also do this for =*compilation*=?
 + The ~__PYTHON_EL_eval_file~ thing is still really fucking annoying
 + *Elisp*: advise =M-&= to insert the command run in buffer name
-** TODO Replace my =C-c j= with built-in =window-layout-rotate--=
 * Completed from wishlist
 + A good tmux-like workflow for running multiple async compilation jobs, with an
   easy way to kill and restart each
