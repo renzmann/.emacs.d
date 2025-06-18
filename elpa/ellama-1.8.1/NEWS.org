@@ -1,0 +1,504 @@
+* Version 1.8.1
+- Use direct interfacing with Ollama's API instead of local installation.
+* Version 1.8.0
+- Added ~create-session~ optional parameter to ~ellama-ask-about~,
+  ~ellama-ask-selection~, ~ellama-ask-line~, and ~ellama-code-review~ commands,
+  and added ~--new-session~ option to transient commands. These changes allow
+  creating a new session even if one is already active.
+- Added the ability to create an ephemeral session by adding a new ~:ephemeral~
+  argument to various functions and added the ~--ephemeral~ option to several
+  transient commands in ~ellama-transient.el~.
+- Implemented ephemeral context elements that are cleared after a single LLM
+  request. Added corresponding functions and transient suffixes to manage
+  ephemeral context elements, updating existing functions to handle both global
+  and ephemeral contexts.
+- Set up the transient menu to ensure the Ollama model is filled if it's empty.
+- Added ~use-hard-newlines~ variable and updated text insertion to use hard
+  newlines. Ensured that text is inserted only if there is a delta, and improved
+  the conditional logic for filling paragraphs.
+* Version 1.7.2
+- Added detailed context management documentation.
+* Version 1.7.1
+- Set default directory for new sessions.
+- Added functionality to set the file name before saving a session.
+- Enhanced session ID generation to prevent overwriting existing session files.
+* Version 1.7.0
+- Added manual generation functionality for Ellama, including a new .gitignore
+  entry to exclude ellama.texi, created ellama-manual.el for exporting an info
+  manual from the README, and added the file ellama.info.
+- Added the GNU Free Documentation License (FDL) text to README.org and updated
+  ellama-manual.el to include FDL information ensuring compliance with FDL
+  requirements. Added GNU Free Documentation License document to the project,
+  ensuring that manuals remain free in terms of freedom to copy, distribute, and
+  modify.
+- Refactored the marker creation logic in ellama.el to use copy-marker for both
+  beg-marker and end-marker, reducing redundancy and improving readability.
+* Version 1.6.2
+- Fix marker handling in block processing to correctly handle block boundaries
+  during text processing and updated tests to include inline code translation
+  from Markdown to Org.
+- Improve text processing in ~ellama.el~ by adding markers for beginning and end
+  of the text range to handle text transformation more accurately. Updated
+  paragraph filling logic to avoid unwanted behavior in ~org-mode~.
+- Remove redundant group parameter from all defcustom definitions in ellama.el.
+- Refactor session line update functions by removing redundant show and hide
+  functions for header and mode lines, simplifying the update functions using a
+  let-bound element variable.
+- Removed hooks from ellama minor modes.
+* Version 1.6.1
+- Added functionality to display the current Ellama session ID in both the
+  header line and the mode line.
+- Added globalized minor modes for enabling this feature across all buffers.
+* Version 1.6.0
+- Refactored the text insertion and handling logic in ~ellama.el~.
+- Added new customization variables ~ellama-show-reasoning~ and
+  ~ellama-reasoning-display-action-function~ to control the display of
+  reasoning. Updated ~ellama.el~ to use these new variables when displaying
+  reasoning buffers.
+- Added ~ellama-disable-scroll~ and ~ellama-enable-scroll~ functions to control
+  auto-scroll behavior.
+- Added a new face ~ellama-key-face~ to style the context line keys in both
+  ~ellama-blueprint.el~ and ~ellama-context.el~. Updated header line formats to
+  use this new face for better visual distinction.
+* Version 1.5.6
+- Fix support for translating inline code from markdown to org format by
+  handling backticks.
+- Updated tests to include cases with inline code.
+* Version 1.5.5
+- Added an explicit autoload form to fix non package.el installations for Emacs
+  28 and 29.
+* Version 1.5.4
+- Added an autoloadable alias ~ellama~ that points to the main menu function
+  ~ellama-transient-main-menu~, providing a convenient way to access the
+  feature.
+* Version 1.5.3
+- Added ~ellama-completion-provider~ custom variable to specify the LLM provider
+  for completions. Updated ~ellama-stream~ call in ~ellama-complete~ to use this new
+  provider and modified the filter function to handle prefix trimming correctly.
+* Version 1.5.2
+- Fixed a bug in session delete or kill that deletes or kills the current file
+  or buffer when no session is selected.
+* Version 1.5.1
+- Renamed the variable ~ellama-transient-system~ to ~ellama-global-system~ to
+  reflect its broader scope and updated all references in ~ellama.el~,
+  ~ellama-transient.el~ and ~ellama-blueprint.el~. Moved it from
+  ellama-transient to ellama. Fix symbol’s value as variable is void bug.
+* Version 1.5.0
+**** Code Refactoring and Modularity
+- Moved transient menu-related functions and variables from ~ellama.el~ to
+  ~ellama-transient.el~.
+- Created ~ellama-context.el~ for context-related functions, variables, and
+  classes.
+- Moved blueprint-related code from ~ellama.el~ to ~ellama-blueprint.el~.
+
+**** System Message Support
+- Added system message support with new functions and variables in
+  ~ellama-blueprint.el~ and ~ellama-transient.el~.
+- Updated keybindings and transient menus to include system message options.
+- Modified ~ellama-stream~ to use the transient system message if not provided
+  explicitly.
+
+**** Functionality Enhancements
+- Updated ~ellama-summarize-prompt-template~ with new summarization
+  instructions.
+- Modified ~ellama-instant~ calls in ~ellama-summarize~ and
+  ~ellama-summarize-kill-ring~.
+- Updated translation template for better structure and added Org-mode to
+  Markdown conversion.
+- Added ~ellama-fix-parens~ function to remove unnecessary parentheses after
+  template insertion.
+- Refined ~ellama-complete~ function for more accurate response trimming.
+
+**** Blueprints Support Enhancements
+- Added ~ellama-blueprint-run~ function to run a chat with an LLM using a
+  specified blueprint and optional pre-filled variables.
+- Added documentation for blueprints in the README file.
+- Added a new transient prefix command ~ellama-transient-blueprint-menu~ for
+  managing blueprint-related commands, including creating blueprints from buffer
+  or as new ones, and chatting with selected blueprints.
+- Added a main menu option for chatting with blueprints.
+- Added custom variable ~ellama-blueprints~ to store user-defined blueprints.
+- Created commands ~ellama-create-blueprint~ and ~ellama-new-blueprint~ for
+  creating new blueprints from an existing one and from scratch.
+
+* Version 1.4.5
+- Fix compat dependency version.
+* Version 1.4.4
+- Ensured that the buffer ~ellama--context-buffer~ is created if it does not
+  exist before attempting to update and show context to prevent errors related
+  to non-existent buffers.
+- Added calls to ~ellama-update-context-show~ in both header line and mode line
+  minor modes to ensure context is shown when these modes are toggled.
+* Version 1.4.3
+- Added fallback mechanism to use the first available Ollama chat model when no
+  specific provider is defined for various ellama functions, ensuring that a
+  valid provider is always used and preventing potential errors in scenarios
+  where providers are not explicitly set.
+- Refactored ~ellama--scroll~ to accept an optional POINT argument, allowing the
+  function to go to that specific point before scrolling. Updated the caller
+  ~ellama-update-buffer~ to pass the new point.
+- Refactored the ~ellama-preview-context-mode~ by renaming the quit command key
+  binding to use a custom function ~ellama-kill-current-buffer~. Added a header
+  line format that displays the quit command instruction.
+- Added a new function ~ellama-send-buffer-to-new-chat-then-kill~ to send the
+  current buffer to a new chat session and then kill it. Updated the keybinding
+  in ~ellama-blueprint-mode-map~ to use this new function instead of the old
+  one.
+- Added a new function ~ellama-kill-current-buffer~ and updated the keymap in
+  ~ellama-blueprint-mode-map~ to use this function instead of an anonymous
+  lambda. Also, updated the header line format to display the correct command
+  names using ~substitute-command-keys~.
+- Removed redisplay call to prevent flickering.
+- Ensure ~llm-ollama~ dependency are loaded.
+* Version 1.4.2
+- Fixed the auto-scroll logic in ~ellama.el~ to ensure it correctly sets and
+  resets ~stop-scroll~ based on cursor position changes.
+- Added a ~redisplay~ call at the end of ~ellama--scroll~ to force a refresh of
+  the window display to correctly handle auto-scroll of unfocused windows.
+* Version 1.4.1
+- Fixed a bug where users couldn't move the cursor during generation when
+  auto-scroll was enabled.
+* Version 1.4.0
+- Improved transient menus.
+- Added ellama-session-kill functionality.
+- Added community prompt collection feature.
+- Refactored ~ellama-context-mode~ to be a major mode.
+- Added functionality to remove context elements by name.
+- Added option to always show context line in header or mode line.
+* Version 1.3.0
+- Implemented ellama context header line and mode line features.
+- Added ~ellama-context-header-line-mode~, ~ellama-context-mode-line-mode~ and
+  its global versions.
+- Session renaming functionality improvements.
+- Improved session deletion.
+- Renamed ~ellama-session-remove~ to ~ellama-session-delete~.
+- Removed ~ellama-long-lines-length~ customization and related usage
+* Version 1.2.5
+- Fix scroll function.
+* Version 1.2.4
+- Improve the default behavior of auto-scroll. It will now move the
+  cursor to the end of the ellama-chat buffer and enable auto-scroll
+  for all buffers, not just chat buffers.
+* Version 1.2.3
+- Remove default ellama provider.
+- Use first available ollama chat model if ellama provider not set.
+  Ensure ~ellama~ is usable with zero configuration.
+* Version 1.2.2
+- Fix org to markdown conversion with broken links.
+* Version 1.2.1
+- Add ~ellama-context-add-directory~ command.
+* Version 1.2.0
+- Add interactive context management in special buffer with preview.
+- Fix context element ordering.
+- Deprecate local session context.
+- Add option to toggle posframe showing global context.
+- Add instruction document for simplify help from ellama.
+* Version 1.1.7
+- Added transient suffix to load model from the current session.
+* Version 1.1.6
+- Add system message support to ~ellama-stream~, ~ellama-chat~ and
+  ~ellama-instant~.
+- Fix think tag handling for some models.
+- Provide buffer to all ~kill-buffer~ calls. Tried to fix an
+  unreproducible in my environment bug.
+* Version 1.1.5
+- Fix cancel current stream by pressing ~C-g~ in buffer with active
+  streaming.
+* Version 1.1.4
+- Improve the accuracy and reliability of the
+  ~ellama-semantic-similar-p~ function.
+* Version 1.1.3
+- Ensure unique elements in session and global contexts.
+- Change default transient host and port to fix ollama provider setup.
+- Deactivate ellama session on setting ellama-provider.
+- Added functionality to convert Org mode content to Markdown when
+  extracting buffer or file content for the context. This ensures that
+  any Org mode files are properly formatted as Markdown before being
+  processed further.
+* Version 1.1.2
+- Clear session context when resetting context to prevent unexpected
+  behavior.
+* Version 1.1.1
+- Improve ~ellama-add-selection~.
+- Add buffer quote context element.
+* Version 1.1.0
+- Enhancing interaction with reasoning models. Thinking tags within
+  session buffers will be collapsed by default after generation.
+  Outside of ellama sessions reasoning will be removed from model
+  output. This ensures a seamless experience for users interacting
+  with reasoning models.
+* Version 1.0.3
+- Unquote symbols in ~ellama-provider-list~.
+* Version 1.0.2
+- Add ollama model selection to transient menu.
+* Version 1.0.1
+- Refactor ellama-code-add function for better efficiency. Remove
+  redundant context handling in ~ellama-code-add~. Simplify the prompt
+  template by removing unnecessary context instructions. Improve
+  function documentation for clarity. Add region selection handling
+  outside of ~ellama-stream~ call.
+* Version 1.0.0
+- Added ~ellama-write~ command.
+- Added ~ellama-proofread~ command.
+- Added global context management, including functions to reset context.
+* Version 0.13.11
+- Add function ~ellama-make-semantic-similar-p-with-context~ that
+  return test function for checking if two provided texts are meaning
+  the same in provided context. It can be useful for creating
+  semantically uniq lists of strings.
+* Version 0.13.10
+- Refactor file name fixing logic. Change the regular expression for
+  handling forbidden filename characters to improve efficiency.
+* Version 0.13.9
+- Fix adding buffer to context.
+* Version 0.13.8
+- Fixed file name generation for all operating systems.
+- Fix disable paragraphs filling.
+- Add ~ellama-define-word~ command to transient menu.
+- Add ~ellama-generate-name-by-reasoning-llm~ funtion to use
+r1 distilled models for naming new sessions.
+* Version 0.13.7
+- Add missing requires for integration tests.
+* Version 0.13.6
+- Add function ~ellama-semantic-similar-p~. It can be useful for
+  creating lists without duplicates by meaning.
+- Add integration tests.
+* Version 0.13.5
+- Fix defcustom validation. Remove unnecessary quote.
+* Version 0.13.4
+- Add string list extraction functions. Can be useful for creating LLM workflows.
+* Version 0.13.3
+- Refactor markdown to org translation.
+- Fix bug when transformations was applied inside code blocks.
+* Version 0.13.2
+- Fix inline latex translation during markdown to org transformations.
+* Version 0.13.1
+- Add support for extra information in ellama session.
+* Version 0.13.0
+- Add command ~ellama-chat-send-last-message~ to compose and modify
+  messages within the chat buffer and send them directly from there.
+- Add ~ellama-chat-display-action-function~ and
+  ~ellama-instant-display-action-function~ custom variables to
+  customize display buffers behaviour.
+* Version 0.12.8
+- Provide code review in chat session.
+- Improve code review prompt template.
+* Version 0.12.7
+- Add change command to transient menu.
+* Version 0.12.6
+- Fixed transient dependency version.
+- Refined the code for lazy loading some dependencies.
+* Version 0.12.5
+- Add coding provider customization option.
+* Version 0.12.4
+- Fix documentation.
+- Improve translation template.
+- Improve commit message template.
+* Version 0.12.3
+- Add separated summarization provider customization option.
+- Improve summarization prompt template.
+* Version 0.12.2
+- Add problem solving chains to transient menu.
+* Version 0.12.1
+- Fix bug when user can't create new session with universal prefix argument.
+* Version 0.12.0
+- Add transient menu.
+* Version 0.11.14
+- Add interactive template modification for ellama-improve-* functions
+  with universal prefix argument.
+* Version 0.11.13
+- Add ability to use sessions in other elisp packages.
+* Version 0.11.12
+- Fix ellama providers validation.
+* Version 0.11.11
+- Fix llm provider custom variables types.
+* Version 0.11.10
+- Fix commit message generation for partial commits.
+* Version 0.11.9
+- Fix issue when current window was changed after calling
+  ~ellama-generate-commit-message~.
+- Add ~ellama-generate-commit-message~ to keymap.
+* Version 0.11.8
+- Allow ollama-binary to accept the executable's base name.
+* Version 0.11.7
+- Add commit message generation.
+* Version 0.11.6
+- Add link to quoted content in a separate buffer.
+* Version 0.11.5
+- Prevent unnecessary line breaks at the end of generated text.
+* Version 0.11.4
+- Improve code templates and auto-naming.
+* Version 0.11.3
+- Fix autoscrolling for editing commands.
+* Version 0.11.2
+- Inability to use closures on stream done is fixed.
+* Version 0.11.1
+- Add function ~ellama-context-add-text~ for non-intercative usage.
+* Version 0.11.0
+- Refactor markdown to org conversion code. Now all transformations
+  will be applied only outside of code blocks.
+* Version 0.10.2
+- Fix bug when translation from markdown to org syntax breaks python
+  code blocks.
+* Version 0.10.1
+- Add ~ellama-solve-domain-specific-problem~ command. It leverages the
+  popular "act like a professional" prompt engineering method,
+  enhanced by an automated planning step.
+* Version 0.10.0
+- Add ~ellama-solve-reasoning-problem~ command that implements
+  [[https://arxiv.org/pdf/2406.12442][Absctraction of Thought]] technique. It uses a chain of multiple
+  messages to LLM and help it to provide much better answers on
+  reasoning problems. Even small LLMs like [[https://ollama.com/library/phi3][phi3-mini]] provides much
+  better results on reasoning tasks using AoT.
+* Version 0.9.11
+- Transform org quote content to avoid rendering issues.
+* Version 0.9.10
+- Add file quote context elements.
+* Version 0.9.9
+- Add info node quote context elements.
+* Version 0.9.8
+- Copy context from previous session on creating new session. This is
+  useful when you create new session by calling ~ellama-ask-about~
+  with prefix argument.
+* Version 0.9.7
+- Add webpage quote context elements.
+* Version 0.9.6
+- Improve code blocks translation from markdown to org.
+* Version 0.9.5
+- Establish a fresh chat session whenever the ~ellama-chat~ function
+  is invoked with a provider different from the one currently in use.
+* Version 0.9.4
+- Improve code blocks translation from markdown to org.
+* Version 0.9.3
+- Support summarize shr url at point (eww and elfeed).
+- Add ellama-chain function for chaining multiple calls to LLMs.
+* Version 0.9.2
+- Allow summarizing urls withoud doctype tag.
+- Summarize url at point.
+* Version 0.9.1
+- Add summarize killring command.
+* Version 0.9.0
+- Improve context management. Make it extendable.
+* Version 0.8.14
+- Don't insert blank line on code change actions.
+* Version 0.8.13
+- Simplify switching between org and markdown.
+* Version 0.8.12
+- Construct a local list instead of pushin to global one.
+* Version 0.8.11
+- Remove ~dash~ dependency.
+- Remove function ~ellama--fill-string~.
+- Rewrite function ~ellama--fill-long-lines~ to use ~fill-region~.
+- Use ~thread-last~ instead of ~->>~ from ~dash~.
+* Version 0.8.10
+- Fix context for chat translation.
+- Refactor translations.
+- Add command for current buffer translation.
+* Version 0.8.9
+- Add chat translation.
+* Version 0.8.8
+- Fix some bad markdown to org translations.
+* Version 0.8.7
+- Fix interactive local model selection for emacs 28.
+* Version 0.8.6
+- Add provider to ~ellama-chat~ arguments.
+* Version 0.8.5
+- Improve working with context:
+  - Fix some ~org-mode~ links.
+  - Add command for adding info nodes into context.
+  - Fix keybindings documentation.
+* Version 0.8.4
+- Fix keybindings. Keymap prefix now not set by default to prevent
+  usage of reserved for end user customisation keys.
+* Version 0.8.3
+- Fix non-chat commands.
+* Version 0.8.2
+- Fix chat on model switching.
+* Version 0.8.1
+- Add naming scheme user option.
+* Version 0.8.0
+- Add context management.
+* Version 0.7.7
+- Apply markdown-to-org filter consistently.
+* Version 0.7.6
+- Eliminate eval call.
+* Version 0.7.5
+- Make ellama-request-mode for cancel active requests.
+* Version 0.7.4
+- Avoid advising global functions. Use minor modes instead.
+* Version 0.7.3
+- Add sessions auto save. If not set will not use named files for new
+  sessions. Enabled by default.
+- ~ellama-major-mode~ used instead of ~ellama-instant-mode~ and used
+  not only for ellama instant buffers, but also for ellama chat
+  buffers.
+* Version 0.7.2
+- Replace / with _ in new note filenames to prevent errors.
+* Version 0.7.1
+- Improve markdown to org conversion.
+- Move readme from markdown to org.
+* Version 0.7.0
+- Switch from markdown to org-mode.
+- Fix bug in session management on buffer kill.
+- Decrease pressure to garbage collector during text generation.
+* Version 0.6.0
+- Implement session management.
+* Version 0.5.8
+- Fix typo in predefined prompts.
+* Version 0.5.7
+- Add ellama-nick-prefix custom variable.
+* Version 0.5.6
+- Add llm name to generated ellama name.
+* Version 0.5.5
+- Add ellama-chat-done-callback.
+* Version 0.5.4
+- Support interactive switch models on remote host.
+* Version 0.5.3
+- Support cancellation.
+* Version 0.5.2
+- Make default prompt templates customizable.
+* Version 0.5.1
+- Use more meaningful buffer names.
+* Version 0.5.0
+- Eliminate aliases.
+* Version 0.4.14
+- Extract ellama-chat-done to separate function.
+* Version 0.4.13
+- Use custom-set-default in set function for custom variables.
+* Version 0.4.12
+- Add option to customize paragraphs filling behaviour.
+* Version 0.4.11
+- Fix compilation
+* Version 0.4.10
+- Add customization group.
+- Call ellama-setup-keymap on prefix change.
+* Version 0.4.9
+- Call fill-region only for non-programming modes.
+* Version 0.4.8
+- Improve lines wrapping.
+* Version 0.4.7
+- Simplify scroll logic.
+* Version 0.4.6
+- Fix code trimming.
+* Version 0.4.5
+- Refactoring. Eliminate duplicated code.
+- Fix minor bugs with error handling.
+* Version 0.4.4
+- Fix ellama-render interactive spec.
+* Version 0.4.3
+- Fix scrolling during generation.
+- Add auto scrolling for all commands.
+* Version 0.4.2
+- Add auto scrolling. Disabled by default.
+* Version 0.4.1
+- Fix adding and completing code. Do it inline instead of end of buffer.
+* Version 0.4.0
+- Add interactive provider selection.
+* Version 0.3.2
+- Change keymap prefix to prevent default binding overwriting.
+* Version 0.3.1
+- Minor fixes in custom variables.
+* Version 0.3.0
+- Add keymap.
+* Version 0.2.0
+- Move to GNU ELPA.

@@ -1,0 +1,2 @@
+;; Generated package description from .el  -*- plz-media-typeno-byte-compile: t -*-
+(define-package "plz-media-type" "0.2.4" "Plz Media Types" '((emacs "26.3") (plz "0.9.1")) :commit "4a0621e6d76860b0c331d58845af11c150e5f19a" :authors '(("r0man" . "roman@burningswell.com")) :maintainer '("r0man" . "roman@burningswell.com") :keywords '("comm" "network" "http") :url "https://github.com/r0man/plz-media-type")

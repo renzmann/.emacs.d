@@ -1,0 +1,2 @@
+;; Generated package description from .el  -*- plz-event-sourceno-byte-compile: t -*-
+(define-package "plz-event-source" "0.1.3" "Plz Event Source" '((emacs "26.3") (plz-media-type "0.2.4")) :commit "236235a14cd33ab3d458627a3c169b1a0c7a887e" :authors '(("r0man" . "roman@burningswell.com")) :maintainer '("r0man" . "roman@burningswell.com") :keywords '("comm" "network" "http") :url "https://github.com/r0man/plz-event-source")
