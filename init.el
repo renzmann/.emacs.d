@@ -883,7 +883,11 @@ select."
 (use-package js
   :config
   (setq js-mode-map (define-keymap "M-." #'xref-find-definitions))
-  (setq js-ts-mode-map (copy-keymap js-mode-map)))
+  (setq js-ts-mode-map (copy-keymap js-mode-map))
+  (add-hook 'js-mode-hook (lambda ()
+                            (setq indent-tabs-mode nil)
+                            (setq tab-width 2)
+                            (setq js-indent-level 2))))
 ;; JavaScript:1 ends here
 
 ;; [[file:README.org::*Eshell][Eshell:1]]
@@ -909,6 +913,19 @@ select."
   (interactive)
   (shell-command "gcloud auth login --update-adc"))
 ;; Cloud stuff:1 ends here
+
+;; [[file:README.org::*LLM interaction][LLM interaction:1]]
+(use-package ellama
+  :init
+  (require 'llm-vertex)
+  (let ((vertex-file (expand-file-name "ellama-vertex-config.el" user-emacs-directory)))
+    (when (file-exists-p vertex-file)
+      (load-file proxy-file)
+      (setopt ellama-provider
+              (make-llm-vertex
+               :project vertex-project
+               :chat-model vertex-model)))))
+;; LLM interaction:1 ends here
 
 (provide 'init.el)
 ;;; init.el ends here

@@ -1,3 +1,4 @@
-alias urlencode python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]))" $1
-alias urldecode python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))" $1
+alias dcp docker compose --progress=plain
 alias glogin gcloud auth login --update-adc
+alias urldecode python3 -c "import sys, urllib.parse as ul; print(ul.unquote_plus(sys.argv[1]))" $1
+alias urlencode python3 -c "import sys, urllib.parse as ul; print(ul.quote_plus(sys.argv[1]))" $1

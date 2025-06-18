@@ -1879,7 +1879,11 @@ Handy for viewing data quickly.
   (use-package js
     :config
     (setq js-mode-map (define-keymap "M-." #'xref-find-definitions))
-    (setq js-ts-mode-map (copy-keymap js-mode-map)))
+    (setq js-ts-mode-map (copy-keymap js-mode-map))
+    (add-hook 'js-mode-hook (lambda ()
+                              (setq indent-tabs-mode nil)
+                              (setq tab-width 2)
+                              (setq js-indent-level 2))))
 #+end_src
 
 * Eshell
@@ -1910,6 +1914,20 @@ These are tweaks for third party packages.
     "Log in to GCP"
     (interactive)
     (shell-command "gcloud auth login --update-adc"))
+#+end_src
+
+** LLM interaction
+#+begin_src emacs-lisp
+  (use-package ellama
+    :init
+    (require 'llm-vertex)
+    (let ((vertex-file (expand-file-name "ellama-vertex-config.el" user-emacs-directory)))
+      (when (file-exists-p vertex-file)
+        (load-file proxy-file)
+        (setopt ellama-provider
+                (make-llm-vertex
+                 :project vertex-project
+                 :chat-model vertex-model)))))
 #+end_src
 
 * Wishlist
