@@ -62,6 +62,8 @@ pyrightconfig.json
 tree-sitter/
 TAGS
 proxy.el
+ellama-vertex-config.el
+ellama-sessions/
 site-lisp/bigquery-mode
 site-lisp/python-venv
 site-lisp/treesit-auto
