@@ -62,7 +62,7 @@ pyrightconfig.json
 tree-sitter/
 TAGS
 proxy.el
-ellama-vertex-config.el
+ellama-config.el
 ellama-sessions/
 site-lisp/bigquery-mode
 site-lisp/python-venv
@@ -71,6 +71,7 @@ org-persist/
 token
 places
 .DS_Store
+
 
 # VC Packages
 elpa/treesit-auto

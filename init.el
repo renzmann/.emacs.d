@@ -918,13 +918,13 @@ select."
 (use-package ellama
   :init
   (require 'llm-vertex)
-  (let ((vertex-file (expand-file-name "ellama-vertex-config.el" user-emacs-directory)))
-    (when (file-exists-p vertex-file)
-      (load-file proxy-file)
-      (setopt ellama-provider
-              (make-llm-vertex
-               :project vertex-project
-               :chat-model vertex-model)))))
+  (when-let* ((config-file (expand-file-name "ellama-config.el" user-emacs-directory))
+              (file-exists-p config-file))
+    (load-file config-file)
+    (setopt ellama-provider
+            (make-llm-vertex
+             :project vertex-project
+             :chat-model vertex-model))))
 ;; LLM interaction:1 ends here
 
 (provide 'init.el)
