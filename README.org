@@ -437,10 +437,7 @@ Hats off to [[https://protesilaos.com/][Prot]] for his wonderful themes.
 
 * Emacs' Built-in Settings
 My settings for base Emacs behavior.  Assuming I ran with /no/ plugins (ala ~emacs
--Q~), I would still set most of these by hand at one point or another.  This
-section is designed for variables that modify Emacs and its editing behavior
-directly.  Configuration for built-in tools, such as Dired, Tramp, and
-Tree-sitter are located under [[* Tool configuration][Tool configuration]].
+-Q~), I would still set most of these by hand at one point or another.
 
 ** Stop stupid bell
 This snippet has a special place in my heart, because it was the first two lines
@@ -1406,7 +1403,7 @@ For in-buffer pop-up completion.
 #+end_src
 
 ** Vertico
-For fast minibuffer completion.
+Still the GOAT for fast minibuffer completion.
 
 #+begin_src emacs-lisp
   (use-package vertico
@@ -1940,16 +1937,6 @@ These are tweaks for third party packages.
   is pretty close, but only good for known projects
 + When running BigQuery from a =*compilation*= buffer, it would be nice if I
   could get error markers to jump directly to the issue
-+ Make corfu less invasive.  Common issues:
-  - Enter accepts something when I wanted to go to a new line
-  - pop-up blocking what I wanted
-+ History of Async commands + results just for today.  Much like having a
-  terminal session that I can scroll back through.  Sometimes I just want to see
-  what I did earlier - a big benefit of having a long-running Bash session in
-  the terminal.
-  - Write history to a file in ~/.emacs.d
-  - Have a rolling "max size"
-  - Maybe also do this for =*compilation*=?
 + The ~__PYTHON_EL_eval_file~ thing is still really fucking annoying
 + *Elisp*: advise =M-&= to insert the command run in buffer name
 * Completed from wishlist
@@ -1964,14 +1951,11 @@ These are tweaks for third party packages.
   - =uv= has completely annihilated this requirement
   - I just can't find a good workflow on eshell.  The =M-!= and =M-&= do
     everything I would do from eshell, but also track my environment better.
-    Vterm is also very good for actual terminal emulation.
 + How do we use local emacs as EDITOR for tramp connections?  Things like
   default git messages from merges are difficult
   - This just requires a workflow change.  Do it from a terminal or ensure we're
     always using VC mode.
 * Footer
-Thank you for reading 'till the end or for being interested on how to end an
-Emacs package.  So that's it, let's gracefully finish tangling everything:
 
 #+begin_src emacs-lisp :comments no
 (provide 'init.el)
