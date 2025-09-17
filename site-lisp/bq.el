@@ -1,4 +1,4 @@
-;;; bq.el --- BigQuery SQL mode extension
+;;; bq.el --- BigQuery SQL mode extension  -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2023 Robb Enzmann
 

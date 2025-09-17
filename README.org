@@ -81,6 +81,52 @@ Emacs.app is signed with a developer certificate and notarized by Apple.
 
 Very nice!
 
+*** If Jimeh's build doesn't work
+Some security updates from Apple can cause issues with native compilation
+(notably 15.4.1).  In that case, this is how I compile on mac.
+
+#+begin_src shell
+  brew install \
+    pkg-config \
+    texinfo \
+    libgccjit \
+    autoconf \
+    automake \
+    make \
+    jansson \
+    gnutls \
+    mailutils \
+    imagemagick \
+    tree-sitter \
+    mailutils
+
+  CFLAGS="-O3 \
+    -march=native \
+    -I/opt/local/include/gcc13 \
+    -L/opt/local/lib/gcc13 \
+    -Wl,-rpath,/opt/local/lib/gcc13 "
+
+  export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig:/opt/local/lib/pkgconfig"
+  git clone git://git.savannah.gnu.org/emacs.git
+  cd emacs
+  ./autogen.sh
+
+  # Change "--prefix=..." as you wish
+  ./configure \
+      --prefix="${HOME}/.local" \
+      --with-ns \
+      --disable-ns-self-contained \
+      --with-json \
+      --with-tree-sitter \
+      --without-native-compilation \
+      --with-imagemagick \
+      --with-mailutils \
+      --without-compress-install \
+      CFLAGS="${CFLAGS}"
+  gmake -j $(sysctl -n hw.ncpu)
+  gmake install
+#+end_src
+
 ** Linux
 Often the version of Emacs that comes through my system package manager, such as
 =sudo apt-get install emacs=, is out of date.  So, typically, I'll get a release
@@ -382,28 +428,11 @@ and =C-x C-M--= to change the size /globally/.
 Hats off to [[https://protesilaos.com/][Prot]] for his wonderful themes.
 
 #+begin_src emacs-lisp
-  (load-theme 'modus-vivendi t)
-#+end_src
-
-** Window margins and fringe
-This hunk adds some space around all sides of each window so that we get a clear
-space between the edge of the screen and the fringe.
-
-#+begin_src emacs-lisp
-  (defun renz/modify-margins ()
-    "Add some space around each window."
-    (interactive)
-    (modify-all-frames-parameters
-     '((right-divider-width . 40)
-       (internal-border-width . 40)))
-    (dolist (face '(window-divider
-                    window-divider-first-pixel
-                    window-divider-last-pixel))
-      (face-spec-reset-face face)
-      (set-face-foreground face (face-attribute 'default :background)))
-    (set-face-background 'fringe (face-attribute 'default :background)))
-
-  (renz/modify-margins)
+  (if (version< emacs-version "30.0")
+      (load-theme 'modus-vivendi)
+    (load-theme 'modus-vivendi-tinted t)
+    (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted))
+    (global-set-key (kbd "C-c m") #'modus-themes-toggle))
 #+end_src
 
 * Emacs' Built-in Settings
@@ -634,8 +663,8 @@ comments and strings.
 ** Automatically create matching parentheses in programming modes
 
 #+begin_src emacs-lisp
-  (add-hook 'prog-mode-hook (lambda () (electric-pair-mode t)))
-  (add-hook 'prog-mode-hook (lambda () (show-paren-mode t)))
+  (add-hook 'prog-mode-hook 'electric-pair-local-mode)
+  (add-hook 'prog-mode-hook 'show-paren-local-mode)
 #+end_src
 
 ** Shorten yes/no prompts to y/n
@@ -1096,6 +1125,17 @@ tandem with =completing-read=.
   (setq load-prefer-newer t)
 #+end_src
 
+** Keep some executables in this config directory
+
+#+begin_src emacs-lisp
+  (defun renz/add-relative-to-exec-path (dir)
+    "Add DIR relative to user Emacs configuration directory to 'exec-path'."
+    (let ((dir-path (expand-file-name dir user-emacs-directory)))
+      (mkdir dir-path t)
+      (add-to-list 'exec-path dir-path)))
+
+  (renz/add-relative-to-exec-path "scripts")
+#+end_src
 * Keybindings
 
 ** Expanded/better defaults
@@ -1176,39 +1216,6 @@ probably using it in a ~:bind~ statement with ~use-package~ somewhere else.
   (global-set-key (kbd "C-c i") #'browse-url-of-buffer)
 #+end_src
 
-*** =C-c j= Toggle window split
-[[https://www.emacswiki.org/emacs/ToggleWindowSplit][Toggling windows]] from vertical to horizontal splits and vice-versa.
-
-#+begin_src emacs-lisp
-  (defun toggle-window-split ()
-    "Switch between horizontal and vertical split window layout."
-    (interactive)
-    (if (= (count-windows) 2)
-        (let* ((this-win-buffer (window-buffer))
-               (next-win-buffer (window-buffer (next-window)))
-               (this-win-edges (window-edges (selected-window)))
-               (next-win-edges (window-edges (next-window)))
-               (this-win-2nd (not (and (<= (car this-win-edges)
-                                           (car next-win-edges))
-                                       (<= (cadr this-win-edges)
-                                           (cadr next-win-edges)))))
-               (splitter
-                (if (= (car this-win-edges)
-                       (car (window-edges (next-window))))
-                    'split-window-horizontally
-                  'split-window-vertically)))
-          (delete-other-windows)
-          (let ((first-win (selected-window)))
-            (funcall splitter)
-            (if this-win-2nd (other-window 1))
-            (set-window-buffer (selected-window) this-win-buffer)
-            (set-window-buffer (next-window) next-win-buffer)
-            (select-window first-win)
-            (if this-win-2nd (other-window 1))))))
-
-  (global-set-key (kbd "C-c j") #'toggle-window-split)
-#+end_src
-
 *** =C-c k= kill all but one space
 
 I used to bind this to ~just-one-space~ before I knew about =M-SPC=
@@ -1241,7 +1248,6 @@ I used to bind this to ~just-one-space~ before I knew about =M-SPC=
 #+begin_src emacs-lisp
   (global-set-key (kbd "C-c s s") #'shell)
   (global-set-key (kbd "C-c s e") #'eshell)
-  (global-set-key (kbd "C-c s t") #'vterm)
 #+end_src
 
 *** =C-c u= open URL at point in browser
@@ -1319,7 +1325,8 @@ functions much like your default TAB-complete at a Bash shell.
   (use-package orderless
     :custom
     (completion-styles '(orderless flex basic))
-    (completion-category-overrides '((file (styles basic partial-completion)))))
+    (completion-category-overrides '((file (styles basic partial-completion))))
+    (orderless-component-separator "[ &.]"))
 #+end_src
 
 ** Nicer Display and Behavior of ~*Completions*~
@@ -1351,28 +1358,16 @@ options in question.
     (setq completion-auto-help 'always
           completion-auto-select 'second-tab
           completion-show-help nil
-          completions-sort nil
+          completions-sort 'historical
           completions-header-format nil))
 #+end_src
 
 ** Completion in the minibuffer and at point
-By default, Emacs uses =M-TAB=, or the equivalent =C-M-i= for
-~completion-at-point~.  I'd much prefer to use the easier and more intuitive
-=TAB=.
-
-#+begin_src emacs-lisp
-  (setq tab-always-indent 'complete)
-#+end_src
-
-Something I once tried is to use =icomplete= along with =icomplete-in-buffer= to
-get something like a little window that updates as I type.  It seems a little
-wonky, since TAB-completion will still cause the \ast{}Completions\ast{} buffer
-to pop up, even while Icomplete is active, unless we set =completion-auto-help=
-to =lazy=; and even then it will still come up on the second TAB press.
 
 #+begin_src emacs-lisp :tangle no
   (setq icomplete-in-buffer t)
   (setq icomplete-prospects-height 10)
+  (advice-add 'completion-at-point :after #'minibuffer-hide-completions)
   (icomplete-vertical-mode t)
 #+end_src
 
@@ -1382,6 +1377,19 @@ whatever is currently in the prompt.  For instance, if we are editing a file
 =hello.py=, and then use =C-x C-f hell.py=, the minibuffer will complete
 =hell.py= into =hello.py= if we use =RET=, and will open a new buffer for
 =hell.py= if we use =C-d=.
+
+** Completion previews
+Emacs 30 introduced in-line completion previews, which are separate from your
+usual drop-down menu style of preview.
+
+#+begin_src emacs-lisp
+  (unless (version< emacs-version "30.0")
+    (global-completion-preview-mode)
+    (define-key completion-preview-active-mode-map (kbd "M-p") #'completion-preview-prev-candidate)
+    (define-key completion-preview-active-mode-map (kbd "M-n") #'completion-preview-next-candidate)
+    (define-key completion-preview-active-mode-map (kbd "M-f") #'completion-preview-insert-word)
+    (define-key completion-preview-active-mode-map (kbd "C-M-f") #'completion-preview-insert-sexp))
+#+end_src
 
 ** Corfu
 For in-buffer pop-up completion.
@@ -1649,22 +1657,10 @@ The configuration of =sql-indent= below achieves that nicely when using =RET= an
            (sql-mode . sqlind-minor-mode)))
 #+end_src
 
-*** Interactive ~hive2~ mode
-This "hive2" package came from the days where I was working on an on-prem system
-that used ~hive2~ as the main command-line interface to Hive.  I don't use this
-much now, but it's a good reference for implementing a plug-in to a new
-interactive SQL CLI.
-
-#+begin_src emacs-lisp
-  (use-package hive2
-    :load-path "site-lisp/"
-    :demand t
-    :mode ("\\.hql" . sql-mode))
-#+end_src
-
 *** Interactive =bq shell=
 The SQL interactive commands are looking for a single executable file, so let's
-set that up somewhere common, like =~/.local/bin/bq-shell=.
+set that up somewhere common, like =~/.local/bin/bq-shell=, and =chmod +x= on
+it.
 
 #+begin_src shell :tangle no
   #!/usr/bin/env sh
@@ -1675,7 +1671,7 @@ Also, we don't want to use "legacy SQL" in our queries, which requires us to
 configure the ~bq query~ statically in a =~/.bigqueryrc= file, according to the
 Google [[https://issuetracker.google.com/issues/35905841][issue tracker]].
 
-#+begin_src :tangle ~/.bigqueryrc
+#+begin_src :tangle no
 [query]
 --use_legacy_sql=false
 #+end_src
@@ -1808,7 +1804,7 @@ programs exist is a small time saver.
   (use-package python
     :config
     (require 'eglot)
-    (setq python-check-command "ruff check")
+    (setq python-check-command "uv run ruff format && uv run ruff check --fix")
     (add-hook 'python-mode-hook #'flymake-mode)
     (add-hook 'python-ts-mode-hook #'flymake-mode))
 #+end_src
@@ -1878,6 +1874,14 @@ Handy for viewing data quickly.
     :mode "\\.csv\\'")
 #+end_src
 
+** JavaScript
+#+begin_src emacs-lisp
+  (use-package js
+    :config
+    (setq js-mode-map (define-keymap "M-." #'xref-find-definitions))
+    (setq js-ts-mode-map (copy-keymap js-mode-map)))
+#+end_src
+
 * Eshell
 #+begin_src emacs-lisp
   (use-package eshell
@@ -1893,77 +1897,11 @@ Handy for viewing data quickly.
 * Tool configuration
 These are tweaks for third party packages.
 
-** =treesit-auto=: Automatically Using TreeSitter Modes
-I've posted this to GitHub and MELPA as [[https://github.com/renzmann/treesit-auto][treesit-auto]].
-
-#+begin_src emacs-lisp
-  (use-package treesit-auto
-    :custom
-    (treesit-auto-install 'prompt)
-    (treesit-auto-langs '(awk bash c css go html javascript json make markdown r ruby rust toml typescript yaml))
-    :config
-    (treesit-auto-add-to-auto-mode-alist 'all)
-    (global-treesit-auto-mode))
-#+end_src
-
-Before it was published to MELPA, I used a git subtree to manage the plugin.
-This is a pretty useful technique, so I keep these two one-liners around in case
-I need to reference or copy them.  To get a copy of something as a subtree, I
-use this:
-
-#+begin_src shell :results none
-  git subtree add -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
-#+end_src
-
-Fetching updates is a similar command.
-
-#+begin_src shell :results none
-  git subtree pull -P site-lisp/treesit-auto git@github.com:renzmann/treesit-auto main --squash
-#+end_src
-
-You can get pre-compiled grammars here, as well:
-[[https://github.com/emacs-tree-sitter/tree-sitter-langs/releases][emacs-tree-sitter/tree-sitter-langs @ GitHub]]
-
-** =pyvenv=
-
-The case for including this package is incredibly strong after trying my hand at
-getting Python virtual environments working in a vanilla way that's platform
-independent.  In the end, we'd just wind up re-creating =pyvenv=.  The main bug
-in =python.el= is that it assumes that the interpreter lives under
-=.venv/Scripts/= if we're on Windows, which is not true if the environment was
-created with MinGW (it uses the standard =bin/= directory).  =pyvenv=, on the
-other hand, simply checks what folders exists, and uses the first one it finds,
-so it works equally well on macOS, Linux, Windows native, and MinGW.  On top of
-all this, it is only ~600 lines of code, so it is a very small dependency to
-include.
-
-#+begin_src emacs-lisp
-  (use-package pyvenv
-    ;; Overrides `mark-page'
-    :bind (("C-x p a" . pyvenv-activate)
-           ("C-x p u" . pyvenv-deactivate))
-    :config
-    (put 'pyvenv-mode 'safe-local-variable #'stringp)
-    (pyvenv-tracking-mode 1)
-    (pyvenv-mode 1))
-#+end_src
-
 ** =direnv= Managing project environment variables
 
 #+begin_src emacs-lisp
   (use-package direnv
     :config (direnv-mode))
-#+end_src
-
-** =vterm= Terminal emulation
-
-Binding the terminal to an unused =C-x= allows for things like =C-x 4 p t=
-to open the terminal in a new split.
-
-#+begin_src emacs-lisp
-  (use-package vterm
-    :bind ("C-x p t" . vterm)
-    :custom (vterm-tramp-shells '(("docker" "/bin/bash"))))
 #+end_src
 
 ** Cloud stuff
@@ -1996,7 +1934,6 @@ to open the terminal in a new split.
   - Maybe also do this for =*compilation*=?
 + The ~__PYTHON_EL_eval_file~ thing is still really fucking annoying
 + *Elisp*: advise =M-&= to insert the command run in buffer name
-
 * Completed from wishlist
 + A good tmux-like workflow for running multiple async compilation jobs, with an
   easy way to kill and restart each

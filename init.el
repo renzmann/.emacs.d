@@ -108,25 +108,12 @@
 ;; Font:1 ends here
 
 ;; [[file:README.org::*Theme][Theme:1]]
-(load-theme 'modus-vivendi t)
+(if (version< emacs-version "30.0")
+    (load-theme 'modus-vivendi)
+  (load-theme 'modus-vivendi-tinted t)
+  (setq modus-themes-to-toggle '(modus-vivendi-tinted modus-operandi-tinted))
+  (global-set-key (kbd "C-c m") #'modus-themes-toggle))
 ;; Theme:1 ends here
-
-;; [[file:README.org::*Window margins and fringe][Window margins and fringe:1]]
-(defun renz/modify-margins ()
-  "Add some space around each window."
-  (interactive)
-  (modify-all-frames-parameters
-   '((right-divider-width . 40)
-     (internal-border-width . 40)))
-  (dolist (face '(window-divider
-                  window-divider-first-pixel
-                  window-divider-last-pixel))
-    (face-spec-reset-face face)
-    (set-face-foreground face (face-attribute 'default :background)))
-  (set-face-background 'fringe (face-attribute 'default :background)))
-
-(renz/modify-margins)
-;; Window margins and fringe:1 ends here
 
 ;; [[file:README.org::*Stop stupid bell][Stop stupid bell:1]]
 ;; Stop stupid bell
@@ -229,8 +216,8 @@
 ;; Always turn on flymake in prog mode:2 ends here
 
 ;; [[file:README.org::*Automatically create matching parentheses in programming modes][Automatically create matching parentheses in programming modes:1]]
-(add-hook 'prog-mode-hook (lambda () (electric-pair-mode t)))
-(add-hook 'prog-mode-hook (lambda () (show-paren-mode t)))
+(add-hook 'prog-mode-hook 'electric-pair-local-mode)
+(add-hook 'prog-mode-hook 'show-paren-local-mode)
 ;; Automatically create matching parentheses in programming modes:1 ends here
 
 ;; [[file:README.org::*Shorten yes/no prompts to y/n][Shorten yes/no prompts to y/n:1]]
@@ -443,6 +430,16 @@
 (setq load-prefer-newer t)
 ;; Prefer newer files on load:1 ends here
 
+;; [[file:README.org::*Keep some executables in this config directory][Keep some executables in this config directory:1]]
+(defun renz/add-relative-to-exec-path (dir)
+  "Add DIR relative to user Emacs configuration directory to 'exec-path'."
+  (let ((dir-path (expand-file-name dir user-emacs-directory)))
+    (mkdir dir-path t)
+    (add-to-list 'exec-path dir-path)))
+
+(renz/add-relative-to-exec-path "scripts")
+;; Keep some executables in this config directory:1 ends here
+
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 ;; Expanded/better defaults:1 ends here
@@ -492,36 +489,6 @@
 (global-set-key (kbd "C-c i") #'browse-url-of-buffer)
 ;; =C-c i= browse url of buffer:1 ends here
 
-;; [[file:README.org::*=C-c j= Toggle window split][=C-c j= Toggle window split:1]]
-(defun toggle-window-split ()
-  "Switch between horizontal and vertical split window layout."
-  (interactive)
-  (if (= (count-windows) 2)
-      (let* ((this-win-buffer (window-buffer))
-             (next-win-buffer (window-buffer (next-window)))
-             (this-win-edges (window-edges (selected-window)))
-             (next-win-edges (window-edges (next-window)))
-             (this-win-2nd (not (and (<= (car this-win-edges)
-                                         (car next-win-edges))
-                                     (<= (cadr this-win-edges)
-                                         (cadr next-win-edges)))))
-             (splitter
-              (if (= (car this-win-edges)
-                     (car (window-edges (next-window))))
-                  'split-window-horizontally
-                'split-window-vertically)))
-        (delete-other-windows)
-        (let ((first-win (selected-window)))
-          (funcall splitter)
-          (if this-win-2nd (other-window 1))
-          (set-window-buffer (selected-window) this-win-buffer)
-          (set-window-buffer (next-window) next-win-buffer)
-          (select-window first-win)
-          (if this-win-2nd (other-window 1))))))
-
-(global-set-key (kbd "C-c j") #'toggle-window-split)
-;; =C-c j= Toggle window split:1 ends here
-
 ;; [[file:README.org::*=C-c k= kill all but one space][=C-c k= kill all but one space:1]]
 (global-set-key (kbd "C-c k") #'bury-buffer)
 ;; =C-c k= kill all but one space:1 ends here
@@ -541,7 +508,6 @@
 ;; [[file:README.org::*=C-c s= shell][=C-c s= shell:1]]
 (global-set-key (kbd "C-c s s") #'shell)
 (global-set-key (kbd "C-c s e") #'eshell)
-(global-set-key (kbd "C-c s t") #'vterm)
 ;; =C-c s= shell:1 ends here
 
 ;; [[file:README.org::*=C-c u= open URL at point in browser][=C-c u= open URL at point in browser:1]]
@@ -579,7 +545,8 @@
 (use-package orderless
   :custom
   (completion-styles '(orderless flex basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
+  (completion-category-overrides '((file (styles basic partial-completion))))
+  (orderless-component-separator "[ &.]"))
 ;; Completion style:1 ends here
 
 ;; [[file:README.org::*Nicer Display and Behavior of ~*Completions*~][Nicer Display and Behavior of ~*Completions*~:1]]
@@ -596,13 +563,18 @@
   (setq completion-auto-help 'always
         completion-auto-select 'second-tab
         completion-show-help nil
-        completions-sort nil
+        completions-sort 'historical
         completions-header-format nil))
 ;; Nicer Display and Behavior of ~*Completions*~:3 ends here
 
-;; [[file:README.org::*Completion in the minibuffer and at point][Completion in the minibuffer and at point:1]]
-(setq tab-always-indent 'complete)
-;; Completion in the minibuffer and at point:1 ends here
+;; [[file:README.org::*Completion previews][Completion previews:1]]
+(unless (version< emacs-version "30.0")
+  (global-completion-preview-mode)
+  (define-key completion-preview-active-mode-map (kbd "M-p") #'completion-preview-prev-candidate)
+  (define-key completion-preview-active-mode-map (kbd "M-n") #'completion-preview-next-candidate)
+  (define-key completion-preview-active-mode-map (kbd "M-f") #'completion-preview-insert-word)
+  (define-key completion-preview-active-mode-map (kbd "C-M-f") #'completion-preview-insert-sexp))
+;; Completion previews:1 ends here
 
 ;; [[file:README.org::*Corfu][Corfu:1]]
 (use-package corfu
@@ -812,13 +784,6 @@ Jumps to an Org src block from tangled code."
          (sql-mode . sqlind-minor-mode)))
 ;; Indentation:2 ends here
 
-;; [[file:README.org::*Interactive ~hive2~ mode][Interactive ~hive2~ mode:1]]
-(use-package hive2
-  :load-path "site-lisp/"
-  :demand t
-  :mode ("\\.hql" . sql-mode))
-;; Interactive ~hive2~ mode:1 ends here
-
 ;; [[file:README.org::*Interactive =bq shell=][Interactive =bq shell=:3]]
 (use-package bq
   :load-path "site-lisp"
@@ -884,7 +849,7 @@ select."
 (use-package python
   :config
   (require 'eglot)
-  (setq python-check-command "ruff check")
+  (setq python-check-command "uv run ruff format && uv run ruff check --fix")
   (add-hook 'python-mode-hook #'flymake-mode)
   (add-hook 'python-ts-mode-hook #'flymake-mode))
 ;; Python check with "ruff":1 ends here
@@ -914,6 +879,13 @@ select."
   :mode "\\.csv\\'")
 ;; csv-mode:1 ends here
 
+;; [[file:README.org::*JavaScript][JavaScript:1]]
+(use-package js
+  :config
+  (setq js-mode-map (define-keymap "M-." #'xref-find-definitions))
+  (setq js-ts-mode-map (copy-keymap js-mode-map)))
+;; JavaScript:1 ends here
+
 ;; [[file:README.org::*Eshell][Eshell:1]]
 (use-package eshell
   :custom
@@ -926,37 +898,10 @@ select."
                                ("uv" "pip"))))
 ;; Eshell:1 ends here
 
-;; [[file:README.org::*=treesit-auto=: Automatically Using TreeSitter Modes][=treesit-auto=: Automatically Using TreeSitter Modes:1]]
-(use-package treesit-auto
-  :custom
-  (treesit-auto-install 'prompt)
-  (treesit-auto-langs '(awk bash c css go html javascript json make markdown r ruby rust toml typescript yaml))
-  :config
-  (treesit-auto-add-to-auto-mode-alist 'all)
-  (global-treesit-auto-mode))
-;; =treesit-auto=: Automatically Using TreeSitter Modes:1 ends here
-
-;; [[file:README.org::*=pyvenv=][=pyvenv=:1]]
-(use-package pyvenv
-  ;; Overrides `mark-page'
-  :bind (("C-x p a" . pyvenv-activate)
-         ("C-x p u" . pyvenv-deactivate))
-  :config
-  (put 'pyvenv-mode 'safe-local-variable #'stringp)
-  (pyvenv-tracking-mode 1)
-  (pyvenv-mode 1))
-;; =pyvenv=:1 ends here
-
 ;; [[file:README.org::*=direnv= Managing project environment variables][=direnv= Managing project environment variables:1]]
 (use-package direnv
   :config (direnv-mode))
 ;; =direnv= Managing project environment variables:1 ends here
-
-;; [[file:README.org::*=vterm= Terminal emulation][=vterm= Terminal emulation:1]]
-(use-package vterm
-  :bind ("C-x p t" . vterm)
-  :custom (vterm-tramp-shells '(("docker" "/bin/bash"))))
-;; =vterm= Terminal emulation:1 ends here
 
 ;; [[file:README.org::*Cloud stuff][Cloud stuff:1]]
 (defun renz/glogin ()
