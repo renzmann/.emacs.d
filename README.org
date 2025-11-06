@@ -161,9 +161,10 @@ system-wide locations like =/usr= or =/usr/local=, so I'll just opt for a user
 install under =~/.local=.
 
 #+begin_src shell
-  curl -O https://ftp.gnu.org/gnu/emacs/emacs-29.3.tar.xz
-  tar xf emacs-29.3.tar.xz
-  cd emacs-29.3
+  EMACS_VERSION=29.3
+  curl -O https://ftp.gnu.org/gnu/emacs/emacs-${EMACS_VERSION}.tar.xz
+  tar xf emacs-${EMACS_VERSION}.tar.xz
+  cd emacs-${EMACS_VERSION}
   ./configure \
     --prefix=$HOME/.local \
     --with-native-compilation \
@@ -1003,14 +1004,19 @@ client side configuration for the [[https://microsoft.github.io/language-server-
 
 #+begin_src emacs-lisp
   (use-package eglot
-    :bind (("C-c l c" . eglot-reconnect)
-           ("C-c l d" . flymake-show-buffer-diagnostics)
-           ("C-c l f f" . eglot-format)
-           ("C-c l f b" . eglot-format-buffer)
-           ("C-c l l" . eglot)
-           ("C-c l r n" . eglot-rename)
-           ("C-c l s" . eglot-shutdown)
-           ("C-c l i" . eglot-inlay-hints-mode)))
+    :bind
+    (("C-c l c" . eglot-reconnect)
+     ("C-c l d" . flymake-show-buffer-diagnostics)
+     ("C-c l f f" . eglot-format)
+     ("C-c l f b" . eglot-format-buffer)
+     ("C-c l l" . eglot)
+     ("C-c l r n" . eglot-rename)
+     ("C-c l s" . eglot-shutdown)
+     ("C-c l i" . eglot-inlay-hints-mode))
+    :config
+    (add-to-list 'eglot-server-programs
+                 '((python-mode python-ts-mode)
+                   "uv" "run" "ty" "server" :initializationOptions (:experimental (:rename t)))))
 #+end_src
 
 To have ~eglot~ always start up for a python buffer, we would tangle this line
@@ -1571,6 +1577,11 @@ latter over the former, I've removed the =org-startup-indented= call.
 #+end_src
 
 ** SQL
+*** Products
+#+begin_src emacs-lisp
+  (use-package sql
+    :mode ("\\.sql\\'" . sql-mode))
+#+end_src
 *** DDL is SQL
 
 #+begin_src emacs-lisp
@@ -1785,7 +1796,7 @@ parse file name, line, and column number.
 #+begin_src emacs-lisp
   (with-eval-after-load 'compile
     (add-to-list 'compilation-error-regexp-alist-alist
-                 '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
+                 '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*" 1 2 3))
     (add-to-list 'compilation-error-regexp-alist 'pyright))
 #+end_src
 
@@ -1794,8 +1805,7 @@ It would be nice if we could also capture the =\\(error\\|warning\\)= part as
 
 *** Python check with "ruff"
 Another nice vanilla feature of ~python-mode~ is =M-x python-check=, which runs a
-pre-specified linter.  Setting that to ~mypy~ or ~pyright~ if either of those
-programs exist is a small time saver.
+pre-specified linter.
 
 #+begin_src emacs-lisp
   (use-package python
@@ -1878,7 +1888,7 @@ Handy for viewing data quickly.
     (setq js-mode-map (define-keymap "M-." #'xref-find-definitions))
     (setq js-ts-mode-map (copy-keymap js-mode-map))
     (add-hook 'js-mode-hook (lambda ()
-                              (setq indent-tabs-mode nil)
+                              (setq indent-tabs-mode t)
                               (setq tab-width 2)
                               (setq js-indent-level 2))))
 #+end_src

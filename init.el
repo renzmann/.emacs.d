@@ -376,14 +376,19 @@
 
 ;; [[file:README.org::*Language Server Protocol (LSP) with ~eglot~][Language Server Protocol (LSP) with ~eglot~:1]]
 (use-package eglot
-  :bind (("C-c l c" . eglot-reconnect)
-         ("C-c l d" . flymake-show-buffer-diagnostics)
-         ("C-c l f f" . eglot-format)
-         ("C-c l f b" . eglot-format-buffer)
-         ("C-c l l" . eglot)
-         ("C-c l r n" . eglot-rename)
-         ("C-c l s" . eglot-shutdown)
-         ("C-c l i" . eglot-inlay-hints-mode)))
+  :bind
+  (("C-c l c" . eglot-reconnect)
+   ("C-c l d" . flymake-show-buffer-diagnostics)
+   ("C-c l f f" . eglot-format)
+   ("C-c l f b" . eglot-format-buffer)
+   ("C-c l l" . eglot)
+   ("C-c l r n" . eglot-rename)
+   ("C-c l s" . eglot-shutdown)
+   ("C-c l i" . eglot-inlay-hints-mode))
+  :config
+  (add-to-list 'eglot-server-programs
+               '((python-mode python-ts-mode)
+                 "uv" "run" "ty" "server" :initializationOptions (:experimental (:rename t)))))
 ;; Language Server Protocol (LSP) with ~eglot~:1 ends here
 
 ;; [[file:README.org::*Shell commands][Shell commands:1]]
@@ -721,6 +726,11 @@ Jumps to an Org src block from tangled code."
      )))
 ;; Org-mode:3 ends here
 
+;; [[file:README.org::*Products][Products:1]]
+(use-package sql
+  :mode ("\\.sql\\'" . sql-mode))
+;; Products:1 ends here
+
 ;; [[file:README.org::*DDL is SQL][DDL is SQL:1]]
 (add-to-list 'auto-mode-alist '("\\.ddl\\'" . sql-mode))
 (add-to-list 'auto-mode-alist '("\\.bql\\'" . sql-mode))
@@ -841,7 +851,7 @@ select."
 ;; [[file:README.org::*Pyright error links in =*compilation*=][Pyright error links in =*compilation*=:1]]
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
-               '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*$" 1 2 3))
+               '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*" 1 2 3))
   (add-to-list 'compilation-error-regexp-alist 'pyright))
 ;; Pyright error links in =*compilation*=:1 ends here
 
@@ -885,7 +895,7 @@ select."
   (setq js-mode-map (define-keymap "M-." #'xref-find-definitions))
   (setq js-ts-mode-map (copy-keymap js-mode-map))
   (add-hook 'js-mode-hook (lambda ()
-                            (setq indent-tabs-mode nil)
+                            (setq indent-tabs-mode t)
                             (setq tab-width 2)
                             (setq js-indent-level 2))))
 ;; JavaScript:1 ends here
