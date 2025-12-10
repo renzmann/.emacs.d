@@ -388,7 +388,10 @@
   :config
   (add-to-list 'eglot-server-programs
                '((python-mode python-ts-mode)
-                 "uv" "run" "ty" "server" :initializationOptions (:experimental (:rename t)))))
+                 "uv" "run" "ty" "server"
+                 :initializationOptions
+                 (:experimental (:rename t)
+                                (:autoImport t)))))
 ;; Language Server Protocol (LSP) with ~eglot~:1 ends here
 
 ;; [[file:README.org::*Shell commands][Shell commands:1]]

@@ -1016,7 +1016,10 @@ client side configuration for the [[https://microsoft.github.io/language-server-
     :config
     (add-to-list 'eglot-server-programs
                  '((python-mode python-ts-mode)
-                   "uv" "run" "ty" "server" :initializationOptions (:experimental (:rename t)))))
+                   "uv" "run" "ty" "server"
+                   :initializationOptions
+                   (:experimental (:rename t)
+                                  (:autoImport t)))))
 #+end_src
 
 To have ~eglot~ always start up for a python buffer, we would tangle this line
