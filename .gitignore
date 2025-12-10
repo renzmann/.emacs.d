@@ -71,7 +71,8 @@ org-persist/
 token
 places
 .DS_Store
-
+bookmarks.eld
+*.value
 
 # VC Packages
 elpa/treesit-auto
