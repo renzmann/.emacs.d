@@ -73,6 +73,7 @@ places
 .DS_Store
 bookmarks.eld
 *.value
+ghtoken
 
 # VC Packages
 elpa/treesit-auto
