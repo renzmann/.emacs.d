@@ -64,9 +64,6 @@ TAGS
 proxy.el
 ellama-config.el
 ellama-sessions/
-site-lisp/bigquery-mode
-site-lisp/python-venv
-site-lisp/treesit-auto
 org-persist/
 token
 places
