@@ -7,11 +7,11 @@
  '(column-number-mode t)
  '(mode-line-in-non-selected-windows t)
  '(package-selected-packages
-   '(go-mode caddyfile-mode clojure-ts-mode corfu csv-mode dart-ts-mode direnv
-             dockerfile-mode ellama exec-path-from-shell go-mode
-             groovy-mode jq-mode marginalia markdown-mode orderless
-             package-lint powershell sql-indent typescript-mode vertico
-             vterm yaml-mode yasnippet))
+   '(caddyfile-mode clojure-ts-mode corfu csv-mode dart-ts-mode direnv
+                    dockerfile-mode ellama exec-path-from-shell go-mode go-mode
+                    groovy-mode jq-mode marginalia markdown-mode orderless
+                    package-lint powershell sql-indent typescript-mode vertico
+                    vterm yaml-mode yasnippet))
  '(package-vc-selected-packages
    '((treesit-auto :vc-backend Git :url "https://github.com/renzmann/treesit-auto")))
  '(safe-local-variable-values
