@@ -1,0 +1,3 @@
+[submodule "site-lisp/treesit-auto"]
+	path = site-lisp/treesit-auto
+	url = git@github.com:renzmann/treesit-auto
