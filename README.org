@@ -918,9 +918,10 @@ A handy "bookmark" system (aside from actual bookmarks) is to set common buffers
 and files to registers pre-emptively.
 
 #+begin_src emacs-lisp
-  (set-register ?S '(buffer . "*scratch*"))
-  (set-register ?I `(file . ,(expand-file-name "README.org" user-emacs-directory)))
-  (set-register ?B `(file . "~/.bashrc"))
+(set-register ?S '(buffer . "*scratch*"))
+(set-register ?I `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+(set-register ?B `(file . "~/.bashrc"))
+(set-register ?C `(file . "~/.ssh/config"))
 #+end_src
 
 The default keybinding for ~jump-to-register~ is =C-x r j R=, where =R= is the name of
@@ -1138,6 +1139,12 @@ tandem with =completing-read=.
 
   (renz/add-relative-to-exec-path "scripts")
 #+end_src
+
+** Editorconfig
+#+begin_src emacs-lisp
+(editorconfig-mode t)
+#+end_src
+
 * Keybindings
 
 ** Expanded/better defaults
@@ -1913,7 +1920,7 @@ These are tweaks for third party packages.
 ** Automatically install and use tree-sitter modes
 #+begin_src emacs-lisp
   (use-package treesit-auto
-    :load-path site-packages/treesit-auto
+    :load-path "site-lisp/treesit-auto"
     :custom
     (treesit-auto-install 'prompt)
     (treesit-auto-langs

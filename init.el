@@ -330,9 +330,10 @@
 ;; Mark rings and registers: bigger, faster, stronger:1 ends here
 
 ;; [[file:README.org::*Mark rings and registers: bigger, faster, stronger][Mark rings and registers: bigger, faster, stronger:2]]
-  (set-register ?S '(buffer . "*scratch*"))
-  (set-register ?I `(file . ,(expand-file-name "README.org" user-emacs-directory)))
-  (set-register ?B `(file . "~/.bashrc"))
+(set-register ?S '(buffer . "*scratch*"))
+(set-register ?I `(file . ,(expand-file-name "README.org" user-emacs-directory)))
+(set-register ?B `(file . "~/.bashrc"))
+(set-register ?C `(file . "~/.ssh/config"))
 ;; Mark rings and registers: bigger, faster, stronger:2 ends here
 
 ;; [[file:README.org::*=eldoc=][=eldoc=:1]]
@@ -443,6 +444,10 @@
 
   (renz/add-relative-to-exec-path "scripts")
 ;; Keep some executables in this config directory:1 ends here
+
+;; [[file:README.org::*Editorconfig][Editorconfig:1]]
+(editorconfig-mode t)
+;; Editorconfig:1 ends here
 
 ;; [[file:README.org::*Expanded/better defaults][Expanded/better defaults:1]]
   (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
@@ -916,7 +921,7 @@
 
 ;; [[file:README.org::*Automatically install and use tree-sitter modes][Automatically install and use tree-sitter modes:1]]
   (use-package treesit-auto
-    :load-path site-packages/treesit-auto
+    :load-path "site-lisp/treesit-auto"
     :custom
     (treesit-auto-install 'prompt)
     (treesit-auto-langs
