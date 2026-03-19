@@ -16,23 +16,6 @@ All external dependencies, except for Fonts, are explicitly included under the
 ~elpa/~ directory, meaning it's as simple as "clone-n-go".  Getting a font you
 like is left to you.
 
-* Notable Features
-This configuration is largely based on tools designed to integrate well with
-Emacs 29+'s built-in APIs.  See sections for "Tools" and "Text completion" for
-up-to-date commentary on what I'm choosing lately that fits this description.
-
-Most of my time is spent in Org, SQL, Python, Bash, YAML, TOML, and Markdown, so
-the majority of configuration lies around these sections.
-
-I do make changes to things that I feel "should have been included."  Some
-examples of this are:
-
-1. Additional major modes for common file types like Markdown and CSV
-2. Error message support for =pyright= in a =*Compilation*= buffer
-3. Reasonable indentation behavior for SQL files
-4. Updating buffers automatically if their contents change on disk
-5. Handling ANSI color escape codes in shell output, compilation, and VC buffers
-
 * Tangling
 My configuration is a single literate programming document, which is tangled
 into the standard =init.el= and supporting files.  This is so I can keep track of
@@ -44,9 +27,7 @@ view this document in Emacs itself.
 Why use a literate document for my configuration?  Basically, as I added more
 comments and reminders about what some line of code was doing, where I got it
 from, and why it might be commented out, the prose grew longer than the actual
-code, and so a change of medium felt prudent.  In my case, that's the venerable
-[[https://orgmode.org/][Org mode]], which comes with Emacs and serves as a way to seamlessly weave
-commentary and code together.
+code, and so a change of medium felt prudent.
 
 * Inspirations
 I steal quite a lot from other, more qualified Emacs community contributors,
@@ -191,7 +172,7 @@ have the following header and [[Footer][footer:]]
 #+begin_src emacs-lisp :comments no
   ;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
 
-  ;; Copyright (C) 2022 Robert Enzmann
+  ;; Copyright (C) 2026 Robert Enzmann
 
   ;; Author: Robb Enzmann <robbenzmann@gmail.com>
   ;; Keywords: internal
@@ -1355,12 +1336,8 @@ sometimes take up the whole screen when there are a lot of candidates.
     (setq completions-max-height 15))
 #+end_src
 
-Some time ago, Prot wrote a package called [[https://github.com/protesilaos/mct/blob/main/mct.el][MCT]] (Minibuffer and Completions in
-Tandem) that enhanced the default minibuffer and ~*Completions*~ buffer behavior
-to act more like what we expect of a modern editor's auto-complete.  He
-discontinued development of that project once it became clear that Emacs 29 was
-going to include similar behavior as a configurable option.  These are the
-options in question.
+Emacs 29 introduces many features that help keep the minibuffer and completions
+in tandem.
 
 #+begin_src emacs-lisp
   (unless (version< emacs-version "29.0")

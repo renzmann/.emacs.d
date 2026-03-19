@@ -1,6 +1,6 @@
   ;;; init.el --- Robb's Emacs configuration -*- lexical-binding: t -*-
 
-  ;; Copyright (C) 2022 Robert Enzmann
+  ;; Copyright (C) 2026 Robert Enzmann
 
   ;; Author: Robb Enzmann <robbenzmann@gmail.com>
   ;; Keywords: internal
