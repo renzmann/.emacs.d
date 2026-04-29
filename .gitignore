@@ -71,6 +71,7 @@ places
 bookmarks.eld
 *.value
 ghtoken
+games/
 
 # VC Packages
 elpa/treesit-auto
