@@ -8,7 +8,7 @@ Want to use it? Go ahead!  You can give it a try without affecting any existing
 configuration like this:
 
 #+begin_src shell :eval never
-  git clone https://github.com/renzmann/.emacs.d ~/renzmann.emacs.d
+  git clone --recursive https://github.com/renzmann/.emacs.d ~/renzmann.emacs.d
   emacs --init-directory=~/renzmann.emacs.d
 #+end_src
 
@@ -1920,19 +1920,6 @@ These are tweaks for third party packages.
     "Log in to GCP"
     (interactive)
     (shell-command "gcloud auth login --update-adc"))
-#+end_src
-
-** =ellama= LLM interaction
-#+begin_src emacs-lisp
-(use-package ellama
-  :init
-  (require 'llm-vertex)
-  (when (file-exists-p (expand-file-name "ellama-config.el" user-emacs-directory))
-    (load-file config-file)
-    (setopt ellama-provider
-            (make-llm-vertex
-             :project vertex-project
-             :chat-model vertex-model))))
 #+end_src
 
 * Wishlist

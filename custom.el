@@ -8,7 +8,7 @@
  '(mode-line-in-non-selected-windows t)
  '(package-selected-packages
    '(caddyfile-mode clojure-ts-mode corfu csv-mode dart-ts-mode direnv
-                    dockerfile-mode ellama exec-path-from-shell go-mode go-mode
+                    dockerfile-mode exec-path-from-shell go-mode go-mode
                     groovy-mode jq-mode marginalia markdown-mode orderless
                     package-lint powershell sql-indent typescript-mode vertico
                     vterm yaml-mode yasnippet))

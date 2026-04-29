@@ -938,17 +938,5 @@
     (shell-command "gcloud auth login --update-adc"))
 ;; Cloud stuff:1 ends here
 
-;; [[file:README.org::*=ellama= LLM interaction][=ellama= LLM interaction:1]]
-(use-package ellama
-  :init
-  (require 'llm-vertex)
-  (when (file-exists-p (expand-file-name "ellama-config.el" user-emacs-directory))
-    (load-file config-file)
-    (setopt ellama-provider
-            (make-llm-vertex
-             :project vertex-project
-             :chat-model vertex-model))))
-;; =ellama= LLM interaction:1 ends here
-
 (provide 'init.el)
 ;;; init.el ends here
