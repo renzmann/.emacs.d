@@ -11,6 +11,55 @@
 
 ;;; Code:
 
+;; Declarations for variables/functions defined in packages loaded at runtime
+(defvar url-proxy-services)
+(defvar url-http-proxy-basic-auth-storage)
+(defvar renz/proxy-host)
+(defvar renz/proxy-port)
+(defvar renz/proxy-login)
+(defvar exec-path-from-shell-arguments)
+(defvar modus-themes-to-toggle)
+(defvar default-buffer-file-coding-system)
+(defvar recentf-list)
+(defvar compilation-scroll-output)
+(defvar pixel-scroll-precision-large-scroll-height)
+(defvar ispell-program-name)
+(defvar ispell-really-aspell)
+(defvar ispell-really-hunspell)
+(defvar org-imenu-depth)
+(defvar apropos-do-all)
+(defvar ediff-window-setup-function)
+(defvar completion-preview-active-mode-map)
+(defvar css-indent-offset)
+(defvar renz/org-home)
+(defvar sqlind-indentation-offsets-alist)
+(defvar sqlind-basic-offset)
+(defvar markdown-command)
+(defvar markdown-fontify-code-blocks-natively)
+
+(declare-function exec-path-from-shell-initialize "exec-path-from-shell")
+(declare-function modus-themes-toggle "modus-themes")
+(declare-function password-read "auth-source")
+(declare-function ansi-color-apply-on-region "ansi-color")
+(declare-function ansi-color-apply "ansi-color")
+(declare-function grep-apply-setting "grep")
+(declare-function recompile "compile")
+(declare-function log-edit-show-diff "log-edit")
+(declare-function completion-preview-prev-candidate "completion-preview")
+(declare-function completion-preview-next-candidate "completion-preview")
+(declare-function completion-preview-insert-word "completion-preview")
+(declare-function completion-preview-insert-sexp "completion-preview")
+(declare-function global-corfu-mode "corfu")
+(declare-function vertico-mode "vertico")
+(declare-function marginalia-mode "marginalia")
+(declare-function treesit-auto-add-to-auto-mode-alist "treesit-auto")
+(declare-function global-treesit-auto-mode "treesit-auto")
+(declare-function json-to-org-table-parse-json-string "json-to-org-table")
+(declare-function org-babel-execute:shell "ob-shell")
+(declare-function org-babel-execute:sql "ob-sql")
+(declare-function tramp-file-local-name "tramp")
+(declare-function vc-git-root "vc-git")
+
 ;;;; Custom
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -20,8 +69,8 @@
 ;;;; Proxy
 
 (defun renz/enable-proxy ()
-  (interactive)
   "Turn on HTTP proxy."
+  (interactive)
   (let ((proxy-file (expand-file-name "proxy.el" user-emacs-directory)))
     (when (file-exists-p proxy-file)
       (load-file proxy-file)
@@ -38,8 +87,8 @@
                      (concat renz/proxy-login ":" (password-read "Proxy password: "))))))))))
 
 (defun renz/disable-proxy ()
-  (interactive)
   "Turn off HTTP proxy."
+  (interactive)
   (setq url-proxy-services nil)
   (setq url-http-proxy-basic-auth-storage nil))
 
@@ -76,11 +125,13 @@
 ;;;; OS -- Windows
 
 (defun renz/find-file (chosen-dir regex)
+  "Find file matching REGEX under CHOSEN-DIR with completion."
   (interactive "DSearch dir: \nsRegexp: ")
+  (require 'find-lisp)
   (let ((chosen-file (completing-read "File: " (find-lisp-find-files chosen-dir regex))))
     (find-file chosen-file)))
 
-(global-set-key (kbd "C-c f f") #'renz/find)
+(global-set-key (kbd "C-c f f") #'renz/find-file)
 (global-set-key (kbd "C-c f d") #'find-lisp-find-dired)
 
 ;;;; OS -- macOS
@@ -130,7 +181,7 @@
 ;;;;; ANSI colors
 
 (defun renz/display-ansi-colors ()
-  "Render colors in a buffer that contains ASCII color escape codes."
+  "Render colors in a buffer that contain ASCII color escape codes."
   (interactive)
   (require 'ansi-color)
   (let ((inhibit-read-only t))
@@ -183,6 +234,7 @@
 (add-hook 'shell-mode-hook (lambda () (setq-local truncate-lines nil)))
 
 (defun renz/display-relative-lines ()
+  "Enable relative line numbers with fixed-width gutter."
   (setq display-line-numbers-width 3)
   (setq display-line-numbers 'relative))
 
@@ -344,7 +396,7 @@
 ;;;;; Scripts directory
 
 (defun renz/add-relative-to-exec-path (dir)
-  "Add DIR relative to user Emacs configuration directory to 'exec-path'."
+  "Add DIR relative to user Emacs configuration directory to `exec-path'."
   (let ((dir-path (expand-file-name dir user-emacs-directory)))
     (mkdir dir-path t)
     (add-to-list 'exec-path dir-path)))
@@ -395,6 +447,7 @@
 (global-set-key (kbd "C-c u") #'browse-url-at-point)
 
 (defun renz/git-commit ()
+  "Stage, show diff, and start commit."
   (interactive)
   (vc-next-action nil)
   (log-edit-show-diff)
@@ -473,6 +526,7 @@
 ;;;;; Shell
 
 (defun renz/sh-indentation ()
+  "Set shell script indentation to 8-wide tabs."
   (setq tab-width 8))
 
 (add-hook 'sh-mode-hook #'renz/sh-indentation)
@@ -549,6 +603,7 @@
 (add-to-list 'auto-mode-alist '("\\.bql\\'" . sql-mode))
 
 (defun renz/sql-mode-hook ()
+  "Set SQL tab width to 4."
   (setq tab-width 4))
 
 (defvar renz/sql-indentation-offsets-alist
@@ -589,9 +644,11 @@
     (delete-clause 0)
     (in-delete-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)
     (update-clause 0)
-    (in-update-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator)))
+    (in-update-clause sqlind-lineup-to-clause-end sqlind-right-justify-logical-operator))
+  "Custom SQL indentation rules for sqlind.")
 
 (defun renz/sql-indentation-offsets ()
+  "Apply custom SQL indentation offsets."
   (setq sqlind-indentation-offsets-alist
         renz/sql-indentation-offsets-alist)
   (setq sqlind-basic-offset 4))
@@ -610,7 +667,8 @@
   :load-path "site-lisp"
   :demand t)
 
-(defun org-babel-execute:bq (orig-fun body params)
+(defun org-babel-execute:bq (_orig-fun body params)
+  "Run BODY as BigQuery when :engine is bq, else delegate to sql."
   (if (string-equal-ignore-case (cdr (assq :engine params)) "bq")
       (json-to-org-table-parse-json-string
        (org-babel-execute:shell (concat "bq query --format=json --nouse_legacy_sql '" body "'")
@@ -633,10 +691,9 @@
                                  'python-imenu-treesit-create-flat-index)))
 
 (defun pyrightconfig-write (virtualenv)
-  "Write a `pyrightconfig.json' file at the Git root of a project
-with `venvPath' and `venv' set to the absolute path of
-`virtualenv'.  When run interactively, prompts for a directory to
-select."
+  "Write a `pyrightconfig.json' at the Git root for VIRTUALENV.
+Sets `venvPath' and `venv' to the absolute path of VIRTUALENV.
+When run interactively, prompts for a directory to select."
   (interactive "DEnv: ")
   (let* ((venv-dir (tramp-file-local-name (file-truename virtualenv)))
          (venv-file-name (directory-file-name venv-dir))
@@ -719,7 +776,7 @@ select."
 ;;;;; Cloud
 
 (defun renz/glogin ()
-  "Log in to GCP"
+  "Log in to GCP."
   (interactive)
   (shell-command "gcloud auth login --update-adc"))
 
