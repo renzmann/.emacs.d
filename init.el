@@ -709,7 +709,13 @@ When run interactively, prompts for a directory to select."
 (with-eval-after-load 'compile
   (add-to-list 'compilation-error-regexp-alist-alist
                '(pyright "^[[:blank:]]+\\(.+\\):\\([0-9]+\\):\\([0-9]+\\).*" 1 2 3))
-  (add-to-list 'compilation-error-regexp-alist 'pyright))
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(ruff "^[[:blank:]]+-->[[:blank:]]?\\(.+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
+  (add-to-list 'compilation-error-regexp-alist-alist
+               '(pyrefly "^[[:blank:]]+-->[[:blank:]]?\\(.+\\):\\([0-9]+\\):\\([0-9]+\\)" 1 2 3))
+  (add-to-list 'compilation-error-regexp-alist 'pyright)
+  (add-to-list 'compilation-error-regexp-alist 'ruff)
+  (add-to-list 'compilation-error-regexp-alist 'pyrefly))
 
 (use-package python
   :config
