@@ -412,6 +412,7 @@
 (global-set-key (kbd "C-M-<backspace>") 'backward-kill-sexp)
 (global-set-key (kbd "C-z") #'zap-up-to-char)
 (global-set-key [remap list-buffers] 'ibuffer)
+(global-unset-key (kbd "M-`")) ;; Free up for switching between JA/EN
 
 (use-package flymake
   :bind (:map flymake-mode-map
@@ -774,7 +775,7 @@ When run interactively, prompts for a directory to select."
   :custom
   (treesit-auto-install 'prompt)
   (treesit-auto-langs
-   '(awk bash c css go html make markdown python r ruby rust toml yaml))
+   '(awk bash c go html make markdown python r ruby rust toml yaml))
   :config
   (treesit-auto-add-to-auto-mode-alist 'all)
   (global-treesit-auto-mode))
